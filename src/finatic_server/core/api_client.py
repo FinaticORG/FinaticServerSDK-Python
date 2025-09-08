@@ -48,6 +48,7 @@ from ..utils.errors import (
     OrderError,
     OrderValidationError,
     CompanyAccessError,
+    TradingNotEnabledError,
 )
 
 T = TypeVar('T')
@@ -268,7 +269,14 @@ class ApiClient:
         if status == 401:
             raise AuthenticationError(message)
         elif status == 403:
-            raise AuthorizationError(message)
+            # Check for specific 403 error codes
+            error_code = error_data.get("code") or error_data.get("detail", {}).get("code")
+            if error_code == "TRADING_NOT_ENABLED":
+                raise TradingNotEnabledError(message, error_data)
+            elif error_code == "NO_COMPANY_ACCESS":
+                raise CompanyAccessError(message, error_data)
+            else:
+                raise AuthorizationError(message)
         elif status == 422:
             raise ValidationError(message)
         elif status == 429:

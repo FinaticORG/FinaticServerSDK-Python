@@ -83,4 +83,12 @@ class CompanyAccessError(ApiError):
     
     def __init__(self, message: str, response_data: Optional[Dict[str, Any]] = None):
         super().__init__(message, 403, response_data)
-        self.code = "COMPANY_ACCESS_ERROR" 
+        self.code = "COMPANY_ACCESS_ERROR"
+
+
+class TradingNotEnabledError(ApiError):
+    """Raised when trading is not enabled for the company."""
+    
+    def __init__(self, message: str, response_data: Optional[Dict[str, Any]] = None):
+        super().__init__(message, 403, response_data)
+        self.code = "TRADING_NOT_ENABLED" 
