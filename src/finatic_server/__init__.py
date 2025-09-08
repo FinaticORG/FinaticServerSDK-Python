@@ -65,6 +65,7 @@ from .utils.errors import (
     OrderError,
     OrderValidationError,
     CompanyAccessError,
+    TradingNotEnabledError,
 )
 
 __version__ = "0.1.0"
@@ -130,4 +131,5 @@ __all__ = [
     "OrderError",
     "OrderValidationError",
     "CompanyAccessError",
+    "TradingNotEnabledError",
 ] 
