@@ -6,6 +6,11 @@ from .errors import (
     AuthenticationError,
     ValidationError,
     RateLimitError,
+    AuthorizationError,
+    OrderError,
+    OrderValidationError,
+    CompanyAccessError,
+    TradingNotEnabledError,
 )
 
 __all__ = [
@@ -14,4 +19,9 @@ __all__ = [
     "AuthenticationError",
     "ValidationError",
     "RateLimitError",
+    "AuthorizationError",
+    "OrderError",
+    "OrderValidationError",
+    "CompanyAccessError",
+    "TradingNotEnabledError",
 ] 
