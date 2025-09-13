@@ -21,11 +21,13 @@ from ..types import (
     BrokerAccount,
     BrokerOrder,
     BrokerPosition,
+    BrokerBalance,
     BrokerConnection,
     BrokerDataOptions,
     OrdersFilter,
     PositionsFilter,
     AccountsFilter,
+    BalancesFilter,
     OrderResponse,
     BrokerOrderParams,
     BrokerExtras,
@@ -539,6 +541,10 @@ class FinaticServerClient:
         """Get broker positions with pagination support."""
         return await self._api_client.get_broker_positions(page, per_page, options, filters)
     
+    async def get_broker_balances(self, page: int = 1, per_page: int = 100, options: Optional[BrokerDataOptions] = None, filters: Optional[BalancesFilter] = None) -> PaginatedResult:
+        """Get broker balances with pagination support."""
+        return await self._api_client.get_broker_balances(page, per_page, options, filters)
+    
     async def get_broker_connections(self) -> List[BrokerConnection]:
         """Get broker connections using stored access token."""
         return await self._api_client.get_broker_connections_auto()
@@ -555,6 +561,10 @@ class FinaticServerClient:
     async def get_all_broker_positions(self, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> List[BrokerPosition]:
         """Get all broker positions across all pages."""
         return await self._api_client.get_all_broker_positions(options, filters)
+
+    async def get_all_broker_balances(self, options: Optional[BrokerDataOptions] = None, filters: Optional[BalancesFilter] = None) -> List[BrokerBalance]:
+        """Get all broker balances across all pages."""
+        return await self._api_client.get_all_broker_balances(options, filters)
 
     # ============================================================================
     # TRADING METHODS

@@ -47,12 +47,14 @@ from .broker import (
     BrokerAccount,
     BrokerOrder,
     BrokerPosition,
+    BrokerBalance,
     BrokerInfo,
     BrokerConnection,
     BrokerDataOptions,
     OrdersFilter,
     PositionsFilter,
     AccountsFilter,
+    BalancesFilter,
 )
 
 __all__ = [
@@ -94,10 +96,12 @@ __all__ = [
     "BrokerAccount",
     "BrokerOrder",
     "BrokerPosition",
+    "BrokerBalance",
     "BrokerInfo",
     "BrokerConnection",
     "BrokerDataOptions",
     "OrdersFilter",
     "PositionsFilter",
     "AccountsFilter",
+    "BalancesFilter",
 ] 
