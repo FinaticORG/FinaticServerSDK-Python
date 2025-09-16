@@ -821,6 +821,27 @@ class ApiClient:
             access_token=access_token
         )
         return [BrokerConnection(**connection) for connection in response.get('response_data', [])]
+
+    async def get_balances(self, options: Optional[BrokerDataOptions] = None) -> List[Dict[str, Any]]:
+        """Get account balances."""
+        access_token = await self.get_valid_access_token()
+        response = await self._request(
+            method='GET',
+            path='/brokers/data/balances',
+            params=options or {},
+            access_token=access_token
+        )
+        return response.get('response_data', [])
+
+    async def disconnect_company(self, connection_id: str) -> Dict[str, Any]:
+        """Disconnect a company from a broker connection."""
+        access_token = await self.get_valid_access_token()
+        response = await self._request(
+            method='DELETE',
+            path=f'/brokers/connections/{connection_id}',
+            access_token=access_token
+        )
+        return response
     
     # Trading context methods
     def set_broker(self, broker: str):
