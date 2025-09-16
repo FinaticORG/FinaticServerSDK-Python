@@ -23,11 +23,13 @@ from ..types import (
     BrokerAccount,
     BrokerOrder,
     BrokerPosition,
+    BrokerBalance,
     BrokerConnection,
     BrokerDataOptions,
     OrdersFilter,
     PositionsFilter,
     AccountsFilter,
+    BalancesFilter,
     OrderResponse,
     BrokerOrderParams,
     BrokerExtras,
@@ -760,6 +762,68 @@ class ApiClient:
             navigation_callback
         )
     
+    async def get_broker_balances(self, page: int = 1, per_page: int = 100, options: Optional[BrokerDataOptions] = None, filters: Optional[BalancesFilter] = None) -> PaginatedResult:
+        """Get broker balances with pagination support."""
+        access_token = await self.get_valid_access_token()
+        offset = (page - 1) * per_page
+        
+        # Build query parameters
+        params = {
+            'limit': str(per_page),
+            'offset': str(offset),
+        }
+        
+        # Add options
+        if options:
+            if options.broker_name:
+                params['broker_id'] = options.broker_name
+            if options.account_id:
+                params['account_id'] = options.account_id
+            if options.symbol:
+                params['symbol'] = options.symbol
+        
+        # Add filters
+        if filters:
+            if filters.broker_id:
+                params['broker_id'] = filters.broker_id
+            if filters.connection_id:
+                params['connection_id'] = filters.connection_id
+            if filters.account_id:
+                params['account_id'] = filters.account_id
+            if filters.is_end_of_day_snapshot is not None:
+                params['is_end_of_day_snapshot'] = str(filters.is_end_of_day_snapshot).lower()
+            if filters.balance_created_after:
+                params['balance_created_after'] = filters.balance_created_after
+            if filters.balance_created_before:
+                params['balance_created_before'] = filters.balance_created_before
+            if filters.with_metadata is not None:
+                params['with_metadata'] = str(filters.with_metadata).lower()
+        
+        # Make the API request
+        response = await self._make_request(
+            'GET',
+            f'{self.base_url}/api/v1/brokers/data/balances',
+            headers={'Authorization': f'Bearer {access_token}'},
+            params=params
+        )
+        
+        # Create pagination info
+        pagination_info = ApiPaginationInfo(
+            has_more=response.get('pagination', {}).get('has_more', False),
+            next_offset=response.get('pagination', {}).get('next_offset', offset),
+            current_offset=response.get('pagination', {}).get('current_offset', offset),
+            limit=response.get('pagination', {}).get('limit', per_page),
+        )
+        
+        # Create navigation callback
+        navigation_callback = self._create_navigation_callback('brokers/data/balances', access_token, params)
+        
+        return PaginatedResult(
+            [BrokerBalance(**balance) for balance in response.get('response_data', [])],
+            pagination_info,
+            navigation_callback
+        )
+    
     # Helper methods to get all data across pages
     async def get_all_broker_accounts(self, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None) -> List[BrokerAccount]:
         """Get all broker accounts across all pages."""
@@ -811,6 +875,23 @@ class ApiClient:
             page += 1
         
         return all_positions
+
+    async def get_all_broker_balances(self, options: Optional[BrokerDataOptions] = None, filters: Optional[BalancesFilter] = None) -> List[BrokerBalance]:
+        """Get all broker balances across all pages."""
+        all_balances = []
+        page = 1
+        per_page = 100
+        
+        while True:
+            result = await self.get_broker_balances(page, per_page, options, filters)
+            if not result.data:
+                break
+            all_balances.extend(result.data)
+            if not result.has_next:
+                break
+            page += 1
+        
+        return all_balances
     
     async def get_broker_connections_auto(self) -> List[BrokerConnection]:
         """Get broker connections using stored access token."""
@@ -821,6 +902,27 @@ class ApiClient:
             access_token=access_token
         )
         return [BrokerConnection(**connection) for connection in response.get('response_data', [])]
+
+    async def get_balances(self, options: Optional[BrokerDataOptions] = None) -> List[Dict[str, Any]]:
+        """Get account balances."""
+        access_token = await self.get_valid_access_token()
+        response = await self._request(
+            method='GET',
+            path='/brokers/data/balances',
+            params=options or {},
+            access_token=access_token
+        )
+        return response.get('response_data', [])
+
+    async def disconnect_company(self, connection_id: str) -> Dict[str, Any]:
+        """Disconnect a company from a broker connection."""
+        access_token = await self.get_valid_access_token()
+        response = await self._request(
+            method='DELETE',
+            path=f'/brokers/connections/{connection_id}',
+            access_token=access_token
+        )
+        return response
     
     # Trading context methods
     def set_broker(self, broker: str):
