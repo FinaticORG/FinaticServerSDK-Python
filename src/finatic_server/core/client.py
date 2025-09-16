@@ -178,6 +178,23 @@ class FinaticServerClient:
             )
         
         return session_response
+
+    async def set_user_id(self, user_id: str) -> None:
+        """Set the user ID for the current session.
+        
+        Args:
+            user_id: The user ID to set for the session
+            
+        Raises:
+            AuthenticationError: If session is not initialized
+        """
+        if not self._session_id:
+            raise AuthenticationError("Session not initialized. Please start a session first.")
+        
+        self._user_id = user_id
+        # Update the API client with the new user ID if needed
+        if hasattr(self._api_client, 'set_user_id'):
+            await self._api_client.set_user_id(user_id)
     
     async def request_otp(self, email: str) -> OtpRequestResponse:
         """Request OTP for session authentication.
@@ -296,11 +313,16 @@ class FinaticServerClient:
         
         return auth_response
     
-    async def get_portal_url(self) -> str:
-        """Get the portal URL for user authentication.
+    async def get_portal_url(self, theme: Optional[Dict[str, Any]] = None, brokers: Optional[List[str]] = None, email: Optional[str] = None) -> str:
+        """Get the portal URL for user authentication with optional theming and configuration.
         
+        Args:
+            theme: Optional theme configuration (preset or custom)
+            brokers: Optional list of broker names to filter by
+            email: Optional email to pre-fill in the portal
+            
         Returns:
-            Portal URL string
+            Portal URL string with applied configuration
             
         Raises:
             AuthenticationError: If session is not initialized
@@ -310,9 +332,78 @@ class FinaticServerClient:
         
         try:
             response = await self._api_client.get_portal_url(self._session_id)
-            return response.data['portal_url']
+            portal_url = response.data['portal_url']
+            
+            # Use stored configuration as defaults if not provided
+            final_theme = theme or getattr(self, '_portal_theme', None)
+            final_brokers = brokers or getattr(self, '_portal_brokers', None)
+            final_email = email or getattr(self, '_portal_email', None)
+            
+            # Apply theming and configuration to the URL
+            portal_url = self._apply_portal_config(portal_url, final_theme, final_brokers, final_email)
+            
+            return portal_url
         except Exception as e:
             raise AuthenticationError(f"Failed to get portal URL: {str(e)}")
+    
+    def _apply_portal_config(self, base_url: str, theme: Optional[Dict[str, Any]] = None, brokers: Optional[List[str]] = None, email: Optional[str] = None) -> str:
+        """Apply theming and configuration to a portal URL."""
+        try:
+            from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+            import base64
+            import json
+            
+            parsed = urlparse(base_url)
+            query_params = parse_qs(parsed.query)
+            
+            # Apply theme configuration
+            if theme:
+                if theme.get('preset'):
+                    query_params['theme'] = [theme['preset']]
+                elif theme.get('custom'):
+                    # Encode custom theme as base64 JSON
+                    theme_json = json.dumps(theme['custom'])
+                    theme_b64 = base64.b64encode(theme_json.encode()).decode()
+                    query_params['theme'] = ['custom']
+                    query_params['themeObject'] = [theme_b64]
+            
+            # Apply broker filtering
+            if brokers:
+                # Convert broker names to IDs and encode
+                supported_brokers = {
+                    'alpaca': 'alpaca',
+                    'robinhood': 'robinhood',
+                    'tasty_trade': 'tasty_trade',
+                    'ninja_trader': 'ninja_trader',
+                    'tradovate': 'ninja_trader',  # Alias
+                    'interactive_brokers': 'interactive_brokers',
+                }
+                
+                broker_ids = []
+                for broker in brokers:
+                    broker_id = supported_brokers.get(broker.lower())
+                    if broker_id:
+                        broker_ids.append(broker_id)
+                
+                if broker_ids:
+                    brokers_json = json.dumps(broker_ids)
+                    brokers_b64 = base64.b64encode(brokers_json.encode()).decode()
+                    query_params['brokers'] = [brokers_b64]
+            
+            # Apply email parameter
+            if email:
+                query_params['email'] = [email]
+            
+            # Rebuild URL with new query parameters
+            new_query = urlencode(query_params, doseq=True)
+            new_parsed = parsed._replace(query=new_query)
+            
+            return urlunparse(new_parsed)
+            
+        except Exception as e:
+            # If URL manipulation fails, return original URL
+            print(f"Warning: Failed to apply portal configuration: {e}")
+            return base_url
 
     async def get_session_user(self) -> Dict[str, Any]:
         """Get the user and tokens for a completed session.
@@ -548,6 +639,13 @@ class FinaticServerClient:
     async def get_broker_connections(self) -> List[BrokerConnection]:
         """Get broker connections using stored access token."""
         return await self._api_client.get_broker_connections_auto()
+
+    async def get_balances(self, options: Optional[BrokerDataOptions] = None) -> List[Dict[str, Any]]:
+        """Get account balances for the authenticated user."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        return await self._api_client.get_balances(options)
     
     # Helper methods to get all data across pages
     async def get_all_broker_accounts(self, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None) -> List[BrokerAccount]:
@@ -561,6 +659,166 @@ class FinaticServerClient:
     async def get_all_broker_positions(self, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> List[BrokerPosition]:
         """Get all broker positions across all pages."""
         return await self._api_client.get_all_broker_positions(options, filters)
+
+    async def get_all_orders(self, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None) -> List[BrokerOrder]:
+        """Get all orders across all pages (convenience method)."""
+        return await self._api_client.get_all_broker_orders(options, filters)
+
+    async def get_all_positions(self, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> List[BrokerPosition]:
+        """Get all positions across all pages (convenience method)."""
+        return await self._api_client.get_all_broker_positions(options, filters)
+
+    async def get_all_accounts(self, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None) -> List[BrokerAccount]:
+        """Get all accounts across all pages (convenience method)."""
+        return await self._api_client.get_all_broker_accounts(options, filters)
+
+    async def disconnect_company(self, connection_id: str) -> Dict[str, Any]:
+        """Disconnect a company from a broker connection.
+        
+        Args:
+            connection_id: The connection ID to disconnect
+            
+        Returns:
+            Disconnect response data
+            
+        Raises:
+            AuthenticationError: If not authenticated
+        """
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        return await self._api_client.disconnect_company(connection_id)
+
+    # Convenience filtering methods
+    async def get_open_positions(self, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> List[BrokerPosition]:
+        """Get only open positions."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        open_filters = {**(filters or {}), 'position_status': 'open'}
+        result = await self.get_broker_positions(options=options, filters=open_filters)
+        return result.data or []
+
+    async def get_filled_orders(self, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None) -> List[BrokerOrder]:
+        """Get only filled orders."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        filled_filters = {**(filters or {}), 'status': 'filled'}
+        result = await self.get_broker_orders(options=options, filters=filled_filters)
+        return result.data or []
+
+    async def get_pending_orders(self, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None) -> List[BrokerOrder]:
+        """Get only pending orders."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        pending_filters = {**(filters or {}), 'status': 'pending'}
+        result = await self.get_broker_orders(options=options, filters=pending_filters)
+        return result.data or []
+
+    async def get_active_accounts(self, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None) -> List[BrokerAccount]:
+        """Get only active accounts."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        active_filters = {**(filters or {}), 'status': 'active'}
+        return await self.get_broker_accounts(options=options, filters=active_filters)
+
+    async def get_orders_by_symbol(self, symbol: str, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None) -> List[BrokerOrder]:
+        """Get orders filtered by symbol."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        symbol_filters = {**(filters or {}), 'symbol': symbol}
+        result = await self.get_broker_orders(options=options, filters=symbol_filters)
+        return result.data or []
+
+    async def get_positions_by_symbol(self, symbol: str, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> List[BrokerPosition]:
+        """Get positions filtered by symbol."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        symbol_filters = {**(filters or {}), 'symbol': symbol}
+        result = await self.get_broker_positions(options=options, filters=symbol_filters)
+        return result.data or []
+
+    async def get_orders_by_broker(self, broker_id: str, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None) -> List[BrokerOrder]:
+        """Get orders filtered by broker."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        broker_filters = {**(filters or {}), 'broker_id': broker_id}
+        result = await self.get_broker_orders(options=options, filters=broker_filters)
+        return result.data or []
+
+    async def get_positions_by_broker(self, broker_id: str, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> List[BrokerPosition]:
+        """Get positions filtered by broker."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        broker_filters = {**(filters or {}), 'broker_id': broker_id}
+        result = await self.get_broker_positions(options=options, filters=broker_filters)
+        return result.data or []
+
+    # Pagination helper methods
+    async def get_orders_page(self, page: int, per_page: int, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None) -> PaginatedResult:
+        """Get a specific page of orders."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        return await self.get_broker_orders(page=page, per_page=per_page, options=options, filters=filters)
+
+    async def get_positions_page(self, page: int, per_page: int, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None) -> PaginatedResult:
+        """Get a specific page of positions."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        return await self.get_broker_positions(page=page, per_page=per_page, options=options, filters=filters)
+
+    async def get_accounts_page(self, page: int, per_page: int, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None) -> List[BrokerAccount]:
+        """Get a specific page of accounts."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        return await self.get_broker_accounts(page=page, per_page=per_page, options=options, filters=filters)
+
+    async def get_next_orders_page(self, current_result: PaginatedResult) -> Optional[PaginatedResult]:
+        """Get the next page of orders."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        if not current_result.has_next():
+            return None
+        
+        # For now, return None as the API doesn't support cursor-based pagination
+        # This would need to be implemented based on the actual API pagination structure
+        return None
+
+    async def get_next_positions_page(self, current_result: PaginatedResult) -> Optional[PaginatedResult]:
+        """Get the next page of positions."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        if not current_result.has_next():
+            return None
+        
+        # For now, return None as the API doesn't support cursor-based pagination
+        # This would need to be implemented based on the actual API pagination structure
+        return None
+
+    async def get_next_accounts_page(self, current_page: int, per_page: int, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None) -> Optional[List[BrokerAccount]]:
+        """Get the next page of accounts."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+        
+        next_page = current_page + 1
+        accounts = await self.get_broker_accounts(page=next_page, per_page=per_page, options=options, filters=filters)
+        
+        if not accounts:
+            return None
+        
+        return accounts
 
     async def get_all_broker_balances(self, options: Optional[BrokerDataOptions] = None, filters: Optional[BalancesFilter] = None) -> List[BrokerBalance]:
         """Get all broker balances across all pages."""
@@ -948,6 +1206,49 @@ class FinaticServerClient:
                 await self._api_client.__aexit__(None, None, None)
         except Exception as e:
             print(f"Warning: Error during client close: {e}")
+    
+    # Portal configuration convenience methods
+    def set_portal_theme(self, theme: Dict[str, Any]) -> None:
+        """Set the default portal theme configuration.
+        
+        Args:
+            theme: Theme configuration (preset or custom)
+        """
+        self._portal_theme = theme
+    
+    def set_portal_brokers(self, brokers: List[str]) -> None:
+        """Set the default broker filter for the portal.
+        
+        Args:
+            brokers: List of broker names to filter by
+        """
+        self._portal_brokers = brokers
+    
+    def set_portal_email(self, email: str) -> None:
+        """Set the default email for the portal.
+        
+        Args:
+            email: Email to pre-fill in the portal
+        """
+        self._portal_email = email
+    
+    def get_portal_config(self) -> Dict[str, Any]:
+        """Get the current portal configuration.
+        
+        Returns:
+            Dictionary with current portal configuration
+        """
+        return {
+            'theme': getattr(self, '_portal_theme', None),
+            'brokers': getattr(self, '_portal_brokers', None),
+            'email': getattr(self, '_portal_email', None),
+        }
+    
+    def clear_portal_config(self) -> None:
+        """Clear all portal configuration settings."""
+        self._portal_theme = None
+        self._portal_brokers = None
+        self._portal_email = None
     
     def __del__(self):
         """Destructor to ensure cleanup if context manager is not used."""
