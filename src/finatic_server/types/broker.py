@@ -41,6 +41,12 @@ class BrokerAccount(BaseModel):
     created_at: str = Field(..., description="Creation timestamp")
     updated_at: str = Field(..., description="Last update timestamp")
     last_synced_at: str = Field(..., description="Last sync timestamp")
+    positions_synced_at: Optional[str] = Field(None, description="When positions were last synced")
+    orders_synced_at: Optional[str] = Field(None, description="When orders were last synced")
+    balances_synced_at: Optional[str] = Field(None, description="When balances were last synced")
+    account_created_at: Optional[str] = Field(None, description="When the account was created")
+    account_updated_at: Optional[str] = Field(None, description="When the account was last updated")
+    account_first_trade_at: Optional[str] = Field(None, description="When the first trade occurred")
 
 
 class BrokerOrder(BaseModel):
@@ -80,6 +86,25 @@ class BrokerPosition(BaseModel):
     current_price: Optional[float] = Field(None, description="Current price")
     last_price: Optional[float] = Field(None, description="Last price")
     last_price_updated_at: Optional[str] = Field(None, description="Last price update timestamp")
+    created_at: str = Field(..., description="Creation timestamp")
+    updated_at: str = Field(..., description="Last update timestamp")
+
+
+class BrokerBalance(BaseModel):
+    """Broker balance information."""
+    
+    id: str = Field(..., description="Balance ID")
+    account_id: str = Field(..., description="Account ID")
+    total_cash_value: Optional[float] = Field(None, description="Total cash value")
+    net_liquidation_value: Optional[float] = Field(None, description="Net liquidation value")
+    initial_margin: Optional[float] = Field(None, description="Initial margin")
+    maintenance_margin: Optional[float] = Field(None, description="Maintenance margin")
+    available_to_withdraw: Optional[float] = Field(None, description="Available to withdraw")
+    total_realized_pnl: Optional[float] = Field(None, description="Total realized P&L")
+    balance_created_at: Optional[str] = Field(None, description="Balance creation timestamp")
+    balance_updated_at: Optional[str] = Field(None, description="Balance update timestamp")
+    is_end_of_day_snapshot: Optional[bool] = Field(None, description="Whether this is an end-of-day snapshot")
+    raw_payload: Optional[Dict[str, Any]] = Field(None, description="Raw broker payload")
     created_at: str = Field(..., description="Creation timestamp")
     updated_at: str = Field(..., description="Last update timestamp")
 
@@ -144,4 +169,18 @@ class AccountsFilter(BaseModel):
     currency: Optional[str] = Field(None, description="Filter by currency")
     limit: Optional[int] = Field(None, description="Result limit")
     offset: Optional[int] = Field(None, description="Result offset")
+    with_metadata: Optional[bool] = Field(None, description="Include metadata")
+
+
+class BalancesFilter(BaseModel):
+    """Filter options for balances pagination."""
+    
+    broker_id: Optional[str] = Field(None, description="Filter by broker ID")
+    connection_id: Optional[str] = Field(None, description="Filter by connection ID")
+    account_id: Optional[str] = Field(None, description="Filter by account ID")
+    is_end_of_day_snapshot: Optional[bool] = Field(None, description="Filter by end-of-day snapshot status")
+    limit: Optional[int] = Field(None, description="Result limit")
+    offset: Optional[int] = Field(None, description="Result offset")
+    balance_created_after: Optional[str] = Field(None, description="Filter by balance creation date after (ISO 8601)")
+    balance_created_before: Optional[str] = Field(None, description="Filter by balance creation date before (ISO 8601)")
     with_metadata: Optional[bool] = Field(None, description="Include metadata") 
