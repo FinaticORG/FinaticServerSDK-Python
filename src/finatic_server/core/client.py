@@ -1250,6 +1250,64 @@ class FinaticServerClient:
         self._portal_brokers = None
         self._portal_email = None
     
+    async def test_webhook(self, event_type: str, sample_data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """Send a test webhook for the specified event type.
+        
+        Args:
+            event_type: Event type to test (e.g., 'order:filled', 'connection:needs_reauth')
+            sample_data: Optional custom sample data to include in the webhook
+            
+        Returns:
+            Dictionary containing test webhook response with success status, 
+            endpoints that received the webhook, and the webhook payload
+            
+        Raises:
+            AuthenticationError: If not authenticated
+            ApiError: If the API request fails
+            ValidationError: If the event type is invalid or not subscribed to
+            
+        Example:
+            ```python
+            # Test an order filled event
+            response = await client.test_webhook("order:filled")
+            print(f"Sent to {len(response['sent_to_endpoints'])} endpoints")
+            
+            # Test with custom sample data
+            custom_data = {
+                "new": {
+                    "id": "custom-order-123",
+                    "symbol": "TSLA",
+                    "quantity": 50,
+                    "status": "filled",
+                    "price": 200.50
+                }
+            }
+            response = await client.test_webhook("order:filled", custom_data)
+            ```
+        """
+        if not self._session_id:
+            raise AuthenticationError("Not authenticated. Please call authenticate_session() first.")
+        
+        try:
+            response = await self._api_client.post(
+                "/auth/webhook/test",
+                data={
+                    "event_type": event_type,
+                    "sample_data": sample_data
+                },
+                additional_headers={'Session-ID': self._session_id}
+            )
+            
+            return response
+            
+        except Exception as e:
+            if "not authenticated" in str(e).lower():
+                raise AuthenticationError(f"Authentication failed: {e}")
+            elif "not subscribed" in str(e).lower() or "invalid" in str(e).lower():
+                raise ValidationError(f"Invalid event type or subscription: {e}")
+            else:
+                raise ApiError(f"Failed to send test webhook: {e}")
+    
     def __del__(self):
         """Destructor to ensure cleanup if context manager is not used."""
         try:

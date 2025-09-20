@@ -57,6 +57,12 @@ from .broker import (
     BalancesFilter,
 )
 
+# Webhook types
+from .webhook import (
+    TestWebhookRequest,
+    TestWebhookResponse,
+)
+
 __all__ = [
     # Common
     "DeviceInfo",
@@ -104,4 +110,8 @@ __all__ = [
     "PositionsFilter",
     "AccountsFilter",
     "BalancesFilter",
+    
+    # Webhook
+    "TestWebhookRequest",
+    "TestWebhookResponse",
 ] 
