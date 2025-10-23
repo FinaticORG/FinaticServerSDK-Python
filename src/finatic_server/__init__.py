@@ -50,6 +50,10 @@ from .types import (
     OrdersFilter,
     PositionsFilter,
     AccountsFilter,
+    
+    # Webhook types
+    TestWebhookRequest,
+    TestWebhookResponse,
 )
 
 # Export all errors
@@ -118,6 +122,10 @@ __all__ = [
     "OrdersFilter",
     "PositionsFilter",
     "AccountsFilter",
+    
+    # Webhook
+    "TestWebhookRequest",
+    "TestWebhookResponse",
     
     # Errors
     "FinaticError",
