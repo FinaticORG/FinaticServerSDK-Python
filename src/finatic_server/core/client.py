@@ -9,9 +9,6 @@ from ..types import (
     DeviceInfo,
     SessionInitResponse,
     SessionResponse,
-    OtpRequestResponse,
-    OtpVerifyResponse,
-    SessionAuthenticateResponse,
     PortalUrlResponse,
     UserToken,
     Holding,
@@ -33,7 +30,6 @@ from ..types import (
     BrokerExtras,
     CryptoOrderOptions,
     OptionsOrderOptions,
-    TradingContext,
     ApiPaginationInfo,
     PaginatedResult,
 )
@@ -80,9 +76,6 @@ class FinaticServerClient:
         self._company_id: Optional[str] = None
         self._user_token: Optional[UserToken] = None
         self._one_time_token: Optional[str] = None
-
-        # Trading context
-        self._trading_context: TradingContext = TradingContext()
 
     async def __aenter__(self):
         """Async context manager entry."""
@@ -207,138 +200,6 @@ class FinaticServerClient:
 
         return session_response
 
-    async def set_user_id(self, user_id: str) -> None:
-        """Set the user ID for the current session.
-
-        Args:
-            user_id: The user ID to set for the session
-
-        Raises:
-            AuthenticationError: If session is not initialized
-        """
-        if not self._session_id:
-            raise AuthenticationError("Session not initialized. Please start a session first.")
-
-        self._user_id = user_id
-        # Update the API client with the new user ID if needed
-        if hasattr(self._api_client, "set_user_id"):
-            await self._api_client.set_user_id(user_id)
-
-    async def request_otp(self, email: str) -> OtpRequestResponse:
-        """Request OTP for session authentication.
-
-        Args:
-            email: Email address to send OTP to
-
-        Returns:
-            OTP request response
-
-        Raises:
-            AuthenticationError: If session is not active
-            ValidationError: If email is invalid
-            ApiError: For other API errors
-        """
-        if not self._session_id:
-            raise AuthenticationError("Session not initialized. Call start_session() first.")
-
-        response = await self._api_client._request(
-            method="POST", path="/auth/otp/request", data={"email": email}
-        )
-
-        return OtpRequestResponse(**response)
-
-    async def verify_otp(self, otp: str) -> OtpVerifyResponse:
-        """Verify OTP for session authentication.
-
-        Args:
-            otp: One-time password to verify
-
-        Returns:
-            OTP verification response with tokens
-
-        Raises:
-            AuthenticationError: If OTP is invalid or session is not active
-            ApiError: For other API errors
-        """
-        if not self._session_id:
-            raise AuthenticationError("Session not initialized. Call start_session() first.")
-
-        response = await self._api_client._request(
-            method="POST", path="/auth/otp/verify", data={"otp": otp}
-        )
-
-        otp_response = OtpVerifyResponse(**response)
-
-        # Store tokens
-        if otp_response.success and otp_response.data:
-            self._user_token = UserToken(
-                access_token=otp_response.data["access_token"],
-                refresh_token=otp_response.data["refresh_token"],
-                expires_in=otp_response.data["expires_in"],
-                user_id=otp_response.data["user_id"],
-                token_type=otp_response.data.get("token_type", "Bearer"),
-                scope=otp_response.data.get("scope", ""),
-            )
-
-            # Set tokens in API client
-            expires_at = (
-                datetime.now() + timedelta(seconds=otp_response.data["expires_in"])
-            ).isoformat()
-            self._api_client.set_tokens(
-                otp_response.data["access_token"],
-                otp_response.data["refresh_token"],
-                expires_at,
-                otp_response.data["user_id"],
-            )
-
-        return otp_response
-
-    async def authenticate_directly(self, user_id: str) -> SessionAuthenticateResponse:
-        """Authenticate session directly with user ID.
-
-        Args:
-            user_id: User ID for direct authentication
-
-        Returns:
-            Authentication response with tokens
-
-        Raises:
-            AuthenticationError: If authentication fails
-            ApiError: For other API errors
-        """
-        if not self._session_id:
-            raise AuthenticationError("Session not initialized. Call start_session() first.")
-
-        response = await self._api_client._request(
-            method="POST",
-            path="/session/authenticate",
-            data={"session_id": self._session_id, "user_id": user_id},
-        )
-
-        auth_response = SessionAuthenticateResponse(**response)
-
-        # Store tokens
-        if auth_response.success and auth_response.data:
-            self._user_token = UserToken(
-                access_token=auth_response.data["access_token"],
-                refresh_token=auth_response.data["refresh_token"],
-                expires_in=3600,  # Default 1 hour
-                user_id=user_id,
-                token_type="Bearer",
-                scope="api:access",
-            )
-
-            # Set tokens in API client
-            expires_at = (datetime.now() + timedelta(hours=1)).isoformat()
-            self._api_client.set_tokens(
-                auth_response.data["access_token"],
-                auth_response.data["refresh_token"],
-                expires_at,
-                user_id,
-            )
-
-        return auth_response
-
     async def get_portal_url(
         self,
         theme: Optional[Dict[str, Any]] = None,
@@ -444,44 +305,6 @@ class FinaticServerClient:
             print(f"Warning: Failed to apply portal configuration: {e}")
             return base_url
 
-    async def get_session_user(self) -> Dict[str, Any]:
-        """Get the user and tokens for a completed session.
-
-        Returns:
-            Dict containing user_id, access_token, refresh_token, and other user info
-
-        Raises:
-            AuthenticationError: If session is not initialized or not completed
-        """
-        if not self._session_id:
-            raise AuthenticationError("Session not initialized. Call start_session() first.")
-
-        if not self._company_id:
-            raise AuthenticationError(
-                "Company ID not available. Session may not be properly initialized."
-            )
-
-        try:
-            # Call the new endpoint with session ID as Bearer token and company ID header
-            response = await self._api_client.get_session_user(self._session_id, self._company_id)
-
-            # Store tokens internally for future API calls
-            self._store_tokens(response)
-
-            # Return user info using the getter methods
-            return {
-                "user_id": response.get_user_id(),
-                "access_token": response.get_access_token(),
-                "refresh_token": response.get_refresh_token(),
-                "expires_in": response.get_expires_in(),
-                "token_type": response.get_token_type(),
-                "scope": response.get_scope(),
-                "company_id": response.get_company_id(),
-            }
-
-        except Exception as e:
-            raise AuthenticationError(f"Failed to get session user: {str(e)}")
-
     def _store_tokens(self, user_response):
         """Store tokens internally for automatic use in API calls."""
         # Store in the API client for automatic token management
@@ -509,12 +332,8 @@ class FinaticServerClient:
         Returns:
             True if authenticated, False otherwise
         """
-        return (
-            self._user_token is not None
-            and self._user_token.access_token is not None
-            and self._user_token.refresh_token is not None
-            and self._user_token.user_id is not None
-        )
+        # For session-based authentication, we only need session info
+        return self.get_session_id() is not None and self.get_company_id() is not None
 
     async def _ensure_authenticated(self):
         """Ensure the client is authenticated.
@@ -528,43 +347,6 @@ class FinaticServerClient:
             )
 
     # Portfolio methods
-    async def get_holdings(self) -> List[Holding]:
-        """Get portfolio holdings.
-
-        Returns:
-            List of holdings
-
-        Raises:
-            AuthenticationError: If not authenticated
-            ApiError: For other API errors
-        """
-        await self._ensure_authenticated()
-        access_token = await self._api_client.get_valid_access_token()
-
-        response = await self._api_client._request(
-            method="GET", path="/portfolio/holdings", access_token=access_token
-        )
-
-        return [Holding(**holding) for holding in response.get("data", [])]
-
-    async def get_portfolio(self) -> Portfolio:
-        """Get portfolio information.
-
-        Returns:
-            Portfolio information
-
-        Raises:
-            AuthenticationError: If not authenticated
-            ApiError: For other API errors
-        """
-        await self._ensure_authenticated()
-        access_token = await self._api_client.get_valid_access_token()
-
-        response = await self._api_client._request(
-            method="GET", path="/portfolio", access_token=access_token
-        )
-
-        return Portfolio(**response["data"])
 
     async def get_orders(self) -> List[Order]:
         """Get portfolio orders.
@@ -585,27 +367,6 @@ class FinaticServerClient:
 
         return [Order(**order) for order in response.get("data", [])]
 
-    # Trading context methods
-    def set_broker(self, broker: str):
-        """Set the current broker."""
-        self._trading_context.broker = broker
-        self._api_client.set_broker(broker)
-
-    def set_account(self, account_number: str, account_id: Optional[str] = None):
-        """Set the current account."""
-        self._trading_context.account_number = account_number
-        self._trading_context.account_id = account_id
-        self._api_client.set_account(account_number, account_id)
-
-    def get_trading_context(self) -> TradingContext:
-        """Get the current trading context."""
-        return self._trading_context
-
-    def clear_trading_context(self):
-        """Clear the trading context."""
-        self._trading_context = TradingContext()
-        self._api_client.clear_trading_context()
-
     # Utility methods
     def get_user_id(self) -> Optional[str]:
         """Get the current user ID."""
@@ -619,33 +380,7 @@ class FinaticServerClient:
         """Get the current company ID."""
         return self._company_id
 
-    def is_authed(self) -> bool:
-        """Return True if the client has a valid access and refresh token."""
-        token_info = self._api_client.token_info
-        if not token_info:
-            return False
-        access_token = token_info.get("access_token")
-        refresh_token = token_info.get("refresh_token")
-        expires_at = token_info.get("expires_at")
-        if not access_token or not refresh_token:
-            return False
-        # Optionally, check if access token is expired
-        if expires_at:
-            from datetime import datetime
-
-            try:
-                expires_dt = datetime.fromisoformat(expires_at)
-                if expires_dt < datetime.now():
-                    return False
-            except Exception:
-                pass
-        return True
-
     # Simple methods that automatically use stored tokens
-    async def get_holdings(self) -> List[Holding]:
-        """Get holdings using stored access token."""
-        return await self._api_client.get_holdings_auto()
-
     async def get_orders(self) -> List[Order]:
         """Get orders using stored access token."""
         return await self._api_client.get_orders_auto()
@@ -654,55 +389,95 @@ class FinaticServerClient:
         """Get positions using stored access token."""
         return await self.get_all_positions()
 
-    async def get_portfolio(self) -> Portfolio:
-        """Get portfolio using stored access token."""
-        return await self._api_client.get_portfolio_auto()
-
-    async def get_broker_list(self) -> List[BrokerInfo]:
+    async def get_brokers(self) -> List[BrokerInfo]:
         """Get broker list using stored access token."""
         return await self._api_client.get_broker_list_auto()
 
-    async def get_broker_accounts(
+    async def get_accounts(
         self,
         page: int = 1,
         per_page: int = 100,
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[AccountsFilter] = None,
     ) -> PaginatedResult:
-        """Get broker accounts with pagination support."""
-        return await self._api_client.get_broker_accounts(page, per_page, options, filters)
+        """Get accounts with pagination support."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
-    async def get_broker_orders(
+        # Create navigation callback for pagination
+        async def navigation_callback(offset: int, limit: int) -> PaginatedResult:
+            return await self._api_client.get_broker_accounts(
+                page=(offset // limit) + 1, per_page=limit, options=options, filters=filters
+            )
+
+        result = await self._api_client.get_broker_accounts(page, per_page, options, filters)
+        result.navigation_callback = navigation_callback
+        return result
+
+    async def get_orders(
         self,
         page: int = 1,
         per_page: int = 100,
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[OrdersFilter] = None,
     ) -> PaginatedResult:
-        """Get broker orders with pagination support."""
-        return await self._api_client.get_broker_orders(page, per_page, options, filters)
+        """Get orders with pagination support."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
-    async def get_broker_positions(
+        # Create navigation callback for pagination
+        async def navigation_callback(offset: int, limit: int) -> PaginatedResult:
+            return await self._api_client.get_broker_orders(
+                page=(offset // limit) + 1, per_page=limit, options=options, filters=filters
+            )
+
+        result = await self._api_client.get_broker_orders(page, per_page, options, filters)
+        result.navigation_callback = navigation_callback
+        return result
+
+    async def get_positions(
         self,
         page: int = 1,
         per_page: int = 100,
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[PositionsFilter] = None,
     ) -> PaginatedResult:
-        """Get broker positions with pagination support."""
-        return await self._api_client.get_broker_positions(page, per_page, options, filters)
+        """Get positions with pagination support."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
-    async def get_broker_balances(
+        # Create navigation callback for pagination
+        async def navigation_callback(offset: int, limit: int) -> PaginatedResult:
+            return await self._api_client.get_broker_positions(
+                page=(offset // limit) + 1, per_page=limit, options=options, filters=filters
+            )
+
+        result = await self._api_client.get_broker_positions(page, per_page, options, filters)
+        result.navigation_callback = navigation_callback
+        return result
+
+    async def get_balances(
         self,
         page: int = 1,
         per_page: int = 100,
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[BalancesFilter] = None,
     ) -> PaginatedResult:
-        """Get broker balances with pagination support."""
-        return await self._api_client.get_broker_balances(page, per_page, options, filters)
+        """Get balances with pagination support."""
+        if not self.is_authenticated():
+            raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
-    async def get_broker_connections(self) -> List[BrokerConnection]:
+        # Create navigation callback for pagination
+        async def navigation_callback(offset: int, limit: int) -> PaginatedResult:
+            return await self._api_client.get_broker_balances(
+                page=(offset // limit) + 1, per_page=limit, options=options, filters=filters
+            )
+
+        result = await self._api_client.get_broker_balances(page, per_page, options, filters)
+        result.navigation_callback = navigation_callback
+        return result
+
+    async def get_connections(self) -> List[BrokerConnection]:
         """Get broker connections using stored access token."""
         return await self._api_client.get_broker_connections_auto()
 
@@ -716,41 +491,23 @@ class FinaticServerClient:
         return await self._api_client.get_balances(options)
 
     # Helper methods to get all data across pages
-    async def get_all_broker_accounts(
+    async def get_all_accounts(
         self, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None
     ) -> List[BrokerAccount]:
         """Get all broker accounts across all pages."""
         return await self._api_client.get_all_broker_accounts(options, filters)
 
-    async def get_all_broker_orders(
+    async def get_all_orders(
         self, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None
     ) -> List[BrokerOrder]:
         """Get all broker orders across all pages."""
         return await self._api_client.get_all_broker_orders(options, filters)
 
-    async def get_all_broker_positions(
+    async def get_all_positions(
         self, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None
     ) -> List[BrokerPosition]:
         """Get all broker positions across all pages."""
         return await self._api_client.get_all_broker_positions(options, filters)
-
-    async def get_all_orders(
-        self, options: Optional[BrokerDataOptions] = None, filters: Optional[OrdersFilter] = None
-    ) -> List[BrokerOrder]:
-        """Get all orders across all pages (convenience method)."""
-        return await self._api_client.get_all_broker_orders(options, filters)
-
-    async def get_all_positions(
-        self, options: Optional[BrokerDataOptions] = None, filters: Optional[PositionsFilter] = None
-    ) -> List[BrokerPosition]:
-        """Get all positions across all pages (convenience method)."""
-        return await self._api_client.get_all_broker_positions(options, filters)
-
-    async def get_all_accounts(
-        self, options: Optional[BrokerDataOptions] = None, filters: Optional[AccountsFilter] = None
-    ) -> List[BrokerAccount]:
-        """Get all accounts across all pages (convenience method)."""
-        return await self._api_client.get_all_broker_accounts(options, filters)
 
     async def disconnect_company(self, connection_id: str) -> Dict[str, Any]:
         """Disconnect a company from a broker connection.
@@ -778,7 +535,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         open_filters = {**(filters or {}), "position_status": "open"}
-        result = await self.get_broker_positions(options=options, filters=open_filters)
+        result = await self.get_all_broker_positions(options=options, filters=open_filters)
         return result.data or []
 
     async def get_filled_orders(
@@ -789,7 +546,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         filled_filters = {**(filters or {}), "status": "filled"}
-        result = await self.get_broker_orders(options=options, filters=filled_filters)
+        result = await self.get_all_broker_orders(options=options, filters=filled_filters)
         return result.data or []
 
     async def get_pending_orders(
@@ -800,7 +557,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         pending_filters = {**(filters or {}), "status": "pending"}
-        result = await self.get_broker_orders(options=options, filters=pending_filters)
+        result = await self.get_all_broker_orders(options=options, filters=pending_filters)
         return result.data or []
 
     async def get_active_accounts(
@@ -811,7 +568,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         active_filters = {**(filters or {}), "status": "active"}
-        return await self.get_broker_accounts(options=options, filters=active_filters)
+        return await self.get_all_broker_accounts(options=options, filters=active_filters)
 
     async def get_orders_by_symbol(
         self,
@@ -824,7 +581,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         symbol_filters = {**(filters or {}), "symbol": symbol}
-        result = await self.get_broker_orders(options=options, filters=symbol_filters)
+        result = await self.get_all_broker_orders(options=options, filters=symbol_filters)
         return result.data or []
 
     async def get_positions_by_symbol(
@@ -838,7 +595,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         symbol_filters = {**(filters or {}), "symbol": symbol}
-        result = await self.get_broker_positions(options=options, filters=symbol_filters)
+        result = await self.get_all_broker_positions(options=options, filters=symbol_filters)
         return result.data or []
 
     async def get_orders_by_broker(
@@ -852,7 +609,7 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         broker_filters = {**(filters or {}), "broker_id": broker_id}
-        result = await self.get_broker_orders(options=options, filters=broker_filters)
+        result = await self.get_all_broker_orders(options=options, filters=broker_filters)
         return result.data or []
 
     async def get_positions_by_broker(
@@ -866,105 +623,18 @@ class FinaticServerClient:
             raise AuthenticationError("Not authenticated. Please complete authentication first.")
 
         broker_filters = {**(filters or {}), "broker_id": broker_id}
-        result = await self.get_broker_positions(options=options, filters=broker_filters)
+        result = await self.get_all_broker_positions(options=options, filters=broker_filters)
         return result.data or []
 
-    # Pagination helper methods
-    async def get_orders_page(
-        self,
-        page: int,
-        per_page: int,
-        options: Optional[BrokerDataOptions] = None,
-        filters: Optional[OrdersFilter] = None,
-    ) -> PaginatedResult:
-        """Get a specific page of orders."""
-        if not self.is_authenticated():
-            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+    # Pagination helper methods removed - use get_all_* methods instead
 
-        return await self.get_broker_orders(
-            page=page, per_page=per_page, options=options, filters=filters
-        )
+    # get_next_orders_page removed - use response objects directly for pagination
 
-    async def get_positions_page(
-        self,
-        page: int,
-        per_page: int,
-        options: Optional[BrokerDataOptions] = None,
-        filters: Optional[PositionsFilter] = None,
-    ) -> PaginatedResult:
-        """Get a specific page of positions."""
-        if not self.is_authenticated():
-            raise AuthenticationError("Not authenticated. Please complete authentication first.")
+    # get_next_positions_page removed - use response objects directly for pagination
 
-        return await self.get_broker_positions(
-            page=page, per_page=per_page, options=options, filters=filters
-        )
+    # get_next_accounts_page removed - use response objects directly for pagination
 
-    async def get_accounts_page(
-        self,
-        page: int,
-        per_page: int,
-        options: Optional[BrokerDataOptions] = None,
-        filters: Optional[AccountsFilter] = None,
-    ) -> List[BrokerAccount]:
-        """Get a specific page of accounts."""
-        if not self.is_authenticated():
-            raise AuthenticationError("Not authenticated. Please complete authentication first.")
-
-        return await self.get_broker_accounts(
-            page=page, per_page=per_page, options=options, filters=filters
-        )
-
-    async def get_next_orders_page(
-        self, current_result: PaginatedResult
-    ) -> Optional[PaginatedResult]:
-        """Get the next page of orders."""
-        if not self.is_authenticated():
-            raise AuthenticationError("Not authenticated. Please complete authentication first.")
-
-        if not current_result.has_next():
-            return None
-
-        # For now, return None as the API doesn't support cursor-based pagination
-        # This would need to be implemented based on the actual API pagination structure
-        return None
-
-    async def get_next_positions_page(
-        self, current_result: PaginatedResult
-    ) -> Optional[PaginatedResult]:
-        """Get the next page of positions."""
-        if not self.is_authenticated():
-            raise AuthenticationError("Not authenticated. Please complete authentication first.")
-
-        if not current_result.has_next():
-            return None
-
-        # For now, return None as the API doesn't support cursor-based pagination
-        # This would need to be implemented based on the actual API pagination structure
-        return None
-
-    async def get_next_accounts_page(
-        self,
-        current_page: int,
-        per_page: int,
-        options: Optional[BrokerDataOptions] = None,
-        filters: Optional[AccountsFilter] = None,
-    ) -> Optional[List[BrokerAccount]]:
-        """Get the next page of accounts."""
-        if not self.is_authenticated():
-            raise AuthenticationError("Not authenticated. Please complete authentication first.")
-
-        next_page = current_page + 1
-        accounts = await self.get_broker_accounts(
-            page=next_page, per_page=per_page, options=options, filters=filters
-        )
-
-        if not accounts:
-            return None
-
-        return accounts
-
-    async def get_all_broker_balances(
+    async def get_all_balances(
         self, options: Optional[BrokerDataOptions] = None, filters: Optional[BalancesFilter] = None
     ) -> List[BrokerBalance]:
         """Get all broker balances across all pages."""
@@ -990,10 +660,8 @@ class FinaticServerClient:
 
         # Convert order format to match broker API
         broker_order = BrokerOrderParams(
-            broker=order.get("broker") or self._trading_context.broker or "robinhood",
-            account_number=order.get("account_number")
-            or self._trading_context.account_number
-            or "",
+            broker=order.get("broker", "robinhood"),
+            account_number=order.get("account_number", ""),
             symbol=order["symbol"],
             order_qty=order["quantity"],
             action="Buy" if order["side"].lower() == "buy" else "Sell",
@@ -1346,108 +1014,6 @@ class FinaticServerClient:
                 await self._api_client.__aexit__(None, None, None)
         except Exception as e:
             print(f"Warning: Error during client close: {e}")
-
-    # Portal configuration convenience methods
-    def set_portal_theme(self, theme: Dict[str, Any]) -> None:
-        """Set the default portal theme configuration.
-
-        Args:
-            theme: Theme configuration (preset or custom)
-        """
-        self._portal_theme = theme
-
-    def set_portal_brokers(self, brokers: List[str]) -> None:
-        """Set the default broker filter for the portal.
-
-        Args:
-            brokers: List of broker names to filter by
-        """
-        self._portal_brokers = brokers
-
-    def set_portal_email(self, email: str) -> None:
-        """Set the default email for the portal.
-
-        Args:
-            email: Email to pre-fill in the portal
-        """
-        self._portal_email = email
-
-    def get_portal_config(self) -> Dict[str, Any]:
-        """Get the current portal configuration.
-
-        Returns:
-            Dictionary with current portal configuration
-        """
-        return {
-            "theme": getattr(self, "_portal_theme", None),
-            "brokers": getattr(self, "_portal_brokers", None),
-            "email": getattr(self, "_portal_email", None),
-        }
-
-    def clear_portal_config(self) -> None:
-        """Clear all portal configuration settings."""
-        self._portal_theme = None
-        self._portal_brokers = None
-        self._portal_email = None
-
-    async def test_webhook(
-        self, event_type: str, sample_data: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        """Send a test webhook for the specified event type.
-
-        Args:
-            event_type: Event type to test (e.g., 'order:filled', 'connection:needs_reauth')
-            sample_data: Optional custom sample data to include in the webhook
-
-        Returns:
-            Dictionary containing test webhook response with success status,
-            endpoints that received the webhook, and the webhook payload
-
-        Raises:
-            AuthenticationError: If not authenticated
-            ApiError: If the API request fails
-            ValidationError: If the event type is invalid or not subscribed to
-
-        Example:
-            ```python
-            # Test an order filled event
-            response = await client.test_webhook("order:filled")
-            print(f"Sent to {len(response['sent_to_endpoints'])} endpoints")
-
-            # Test with custom sample data
-            custom_data = {
-                "new": {
-                    "id": "custom-order-123",
-                    "symbol": "TSLA",
-                    "quantity": 50,
-                    "status": "filled",
-                    "price": 200.50,
-                }
-            }
-            response = await client.test_webhook("order:filled", custom_data)
-            ```
-        """
-        if not self._session_id:
-            raise AuthenticationError(
-                "Not authenticated. Please call authenticate_session() first."
-            )
-
-        try:
-            response = await self._api_client.post(
-                "/auth/webhook/test",
-                data={"event_type": event_type, "sample_data": sample_data},
-                additional_headers={"Session-ID": self._session_id},
-            )
-
-            return response
-
-        except Exception as e:
-            if "not authenticated" in str(e).lower():
-                raise AuthenticationError(f"Authentication failed: {e}")
-            elif "not subscribed" in str(e).lower() or "invalid" in str(e).lower():
-                raise ValidationError(f"Invalid event type or subscription: {e}")
-            else:
-                raise ApiError(f"Failed to send test webhook: {e}")
 
     def __del__(self):
         """Destructor to ensure cleanup if context manager is not used."""

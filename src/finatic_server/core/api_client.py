@@ -458,31 +458,24 @@ class ApiClient:
 
     # Simple methods that automatically use stored tokens
     async def get_holdings_auto(self) -> List[Holding]:
-        """Get holdings using stored access token."""
-        access_token = await self.get_valid_access_token()
-        response = await self._request(
-            method="GET", path="/portfolio/holdings", access_token=access_token
-        )
+        """Get holdings using session-based authentication."""
+        response = await self._request(method="GET", path="/portfolio/holdings")
         return [Holding(**holding) for holding in response.get("data", [])]
 
     async def get_orders_auto(self) -> List[Order]:
-        """Get orders using stored access token."""
-        access_token = await self.get_valid_access_token()
-        response = await self._request(
-            method="GET", path="/brokers/data/orders", access_token=access_token
-        )
+        """Get orders using session-based authentication."""
+        response = await self._request(method="GET", path="/brokers/data/orders")
         return [Order(**order) for order in response.get("data", [])]
 
     async def get_portfolio_auto(self) -> Portfolio:
-        """Get portfolio using stored access token."""
-        access_token = await self.get_valid_access_token()
-        response = await self._request(method="GET", path="/portfolio/", access_token=access_token)
+        """Get portfolio using session-based authentication."""
+        response = await self._request(method="GET", path="/portfolio/")
         return Portfolio(**response.get("data", {}))
 
     async def get_broker_list_auto(self) -> List[BrokerInfo]:
-        """Get broker list using stored access token."""
-        access_token = await self.get_valid_access_token()
-        response = await self._request(method="GET", path="/brokers/", access_token=access_token)
+        """Get broker list using session-based authentication."""
+        response = await self._request(method="GET", path="/brokers/")
+
         return [BrokerInfo(**broker) for broker in response.get("response_data", [])]
 
     async def get_broker_accounts(
@@ -492,8 +485,7 @@ class ApiClient:
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[AccountsFilter] = None,
     ) -> PaginatedResult:
-        """Get broker accounts with pagination support."""
-        access_token = await self.get_valid_access_token()
+        """Get broker accounts with pagination support using session-based authentication."""
         offset = (page - 1) * per_page
 
         # Build query parameters
@@ -520,9 +512,7 @@ class ApiClient:
             if filters.currency:
                 params["currency"] = filters.currency
 
-        response = await self._request(
-            method="GET", path="/brokers/data/accounts", access_token=access_token, params=params
-        )
+        response = await self._request(method="GET", path="/brokers/data/accounts", params=params)
 
         # Create navigation callback for pagination
         async def navigation_callback(new_offset: int, new_limit: int) -> PaginatedResult:
@@ -552,7 +542,6 @@ class ApiClient:
             new_response = await self._request(
                 method="GET",
                 path="/brokers/data/accounts",
-                access_token=access_token,
                 params=new_params,
             )
 
@@ -589,8 +578,7 @@ class ApiClient:
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[OrdersFilter] = None,
     ) -> PaginatedResult:
-        """Get broker orders with pagination support."""
-        access_token = await self.get_valid_access_token()
+        """Get broker orders with pagination support using session-based authentication."""
         offset = (page - 1) * per_page
 
         # Build query parameters
@@ -627,9 +615,7 @@ class ApiClient:
             if filters.created_before:
                 params["created_before"] = filters.created_before
 
-        response = await self._request(
-            method="GET", path="/brokers/data/orders", access_token=access_token, params=params
-        )
+        response = await self._request(method="GET", path="/brokers/data/orders", params=params)
 
         # Create navigation callback for pagination
         async def navigation_callback(new_offset: int, new_limit: int) -> PaginatedResult:
@@ -669,7 +655,6 @@ class ApiClient:
             new_response = await self._request(
                 method="GET",
                 path="/brokers/data/orders",
-                access_token=access_token,
                 params=new_params,
             )
 
@@ -706,8 +691,7 @@ class ApiClient:
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[PositionsFilter] = None,
     ) -> PaginatedResult:
-        """Get broker positions with pagination support."""
-        access_token = await self.get_valid_access_token()
+        """Get broker positions with pagination support using session-based authentication."""
         offset = (page - 1) * per_page
 
         # Build query parameters
@@ -744,9 +728,7 @@ class ApiClient:
             if filters.updated_before:
                 params["updated_before"] = filters.updated_before
 
-        response = await self._request(
-            method="GET", path="/brokers/data/positions", access_token=access_token, params=params
-        )
+        response = await self._request(method="GET", path="/brokers/data/positions", params=params)
 
         # Create navigation callback for pagination
         async def navigation_callback(new_offset: int, new_limit: int) -> PaginatedResult:
@@ -786,7 +768,6 @@ class ApiClient:
             new_response = await self._request(
                 method="GET",
                 path="/brokers/data/positions",
-                access_token=access_token,
                 params=new_params,
             )
 
@@ -844,8 +825,7 @@ class ApiClient:
         options: Optional[BrokerDataOptions] = None,
         filters: Optional[BalancesFilter] = None,
     ) -> PaginatedResult:
-        """Get broker balances with pagination support."""
-        access_token = await self.get_valid_access_token()
+        """Get broker balances with pagination support using session-based authentication."""
         offset = (page - 1) * per_page
 
         # Build query parameters
@@ -880,11 +860,10 @@ class ApiClient:
             if filters.with_metadata is not None:
                 params["with_metadata"] = str(filters.with_metadata).lower()
 
-        # Make the API request
-        response = await self._make_request(
-            "GET",
-            f"{self.base_url}/api/v1/brokers/data/balances",
-            headers={"Authorization": f"Bearer {access_token}"},
+        # Make the API request using session-based authentication
+        response = await self._request(
+            method="GET",
+            path="/brokers/data/balances",
             params=params,
         )
 
@@ -896,15 +875,10 @@ class ApiClient:
             limit=response.get("pagination", {}).get("limit", per_page),
         )
 
-        # Create navigation callback
-        navigation_callback = self._create_navigation_callback(
-            "brokers/data/balances", access_token, params
-        )
-
         return PaginatedResult(
             [BrokerBalance(**balance) for balance in response.get("response_data", [])],
             pagination_info,
-            navigation_callback,
+            None,  # Navigation callback not implemented yet
         )
 
     # Helper methods to get all data across pages
@@ -985,31 +959,25 @@ class ApiClient:
         return all_balances
 
     async def get_broker_connections_auto(self) -> List[BrokerConnection]:
-        """Get broker connections using stored access token."""
-        access_token = await self.get_valid_access_token()
-        response = await self._request(
-            method="GET", path="/brokers/connections", access_token=access_token
-        )
+        """Get broker connections using session-based authentication."""
+        response = await self._request(method="GET", path="/brokers/connections")
         return [BrokerConnection(**connection) for connection in response.get("response_data", [])]
 
     async def get_balances(
         self, options: Optional[BrokerDataOptions] = None
     ) -> List[Dict[str, Any]]:
-        """Get account balances."""
-        access_token = await self.get_valid_access_token()
+        """Get account balances using session-based authentication."""
         response = await self._request(
             method="GET",
             path="/brokers/data/balances",
             params=options or {},
-            access_token=access_token,
         )
         return response.get("response_data", [])
 
     async def disconnect_company(self, connection_id: str) -> Dict[str, Any]:
-        """Disconnect a company from a broker connection."""
-        access_token = await self.get_valid_access_token()
+        """Disconnect a company from a broker connection using session-based authentication."""
         response = await self._request(
-            method="DELETE", path=f"/brokers/connections/{connection_id}", access_token=access_token
+            method="DELETE", path=f"/brokers/connections/{connection_id}"
         )
         return response
 
@@ -1048,32 +1016,6 @@ class ApiClient:
         print(f"✅ Portal URL response: {response}")
         return PortalUrlResponse(**response)
 
-    async def get_session_user(self, session_id: str, company_id: str):
-        """Get user and tokens for completed session.
-
-        Args:
-            session_id: Session ID to use as Bearer token
-            company_id: Company ID for session validation
-
-        Returns:
-            SessionUserResponse with user info and tokens
-        """
-        print(f"🔍 Getting session user for session: {session_id}, company: {company_id}")
-        response = await self._request(
-            method="GET",
-            path=f"/session/{session_id}/user",
-            additional_headers={
-                "Authorization": f"Bearer {session_id}",
-                "company-id": company_id,
-            },
-        )
-        print(f"✅ Session user response: {response}")
-
-        # Import here to avoid circular imports
-        from ..types.auth import SessionUserResponse
-
-        return SessionUserResponse(**response)
-
     # ============================================================================
     # TRADING METHODS
     # ============================================================================
@@ -1098,8 +1040,6 @@ class ApiClient:
             OrderError: If order placement fails
             OrderValidationError: If order validation fails
         """
-        access_token = await self.get_valid_access_token()
-
         # Convert dict to BrokerOrderParams if needed
         if isinstance(params, dict):
             params = BrokerOrderParams(**params)
@@ -1130,9 +1070,7 @@ class ApiClient:
             path="/brokers/orders",
             data=request_body,
             params=query_params,
-            access_token=access_token,
             additional_headers={
-                "Authorization": f"Bearer {access_token}",
                 "Session-ID": self.current_session_id or "",
                 "X-Session-ID": self.current_session_id or "",
                 "X-Device-Info": json.dumps(self.device_info) if self.device_info else "",
@@ -1159,8 +1097,6 @@ class ApiClient:
         Returns:
             OrderResponse with cancellation details
         """
-        access_token = await self.get_valid_access_token()
-
         selected_broker = broker or self.trading_context.broker
         if not selected_broker:
             raise ValidationError("Broker not set. Call set_broker() or pass broker parameter.")
@@ -1189,9 +1125,7 @@ class ApiClient:
             path=f"/brokers/orders/{order_id}",  # Fixed: order_id in URL path
             data=data,
             params=query_params,
-            access_token=access_token,
             additional_headers={
-                "Authorization": f"Bearer {access_token}",
                 "Session-ID": self.current_session_id or "",
                 "X-Session-ID": self.current_session_id or "",
                 "X-Device-Info": json.dumps(self.device_info) if self.device_info else "",
@@ -1220,8 +1154,6 @@ class ApiClient:
         Returns:
             OrderResponse with modification details
         """
-        access_token = await self.get_valid_access_token()
-
         selected_broker = broker or self.trading_context.broker
         if not selected_broker:
             raise ValidationError("Broker not set. Call set_broker() or pass broker parameter.")
@@ -1244,9 +1176,7 @@ class ApiClient:
             path=f"/brokers/orders/{order_id}",
             data=request_body,
             params=query_params,
-            access_token=access_token,
             additional_headers={
-                "Authorization": f"Bearer {access_token}",
                 "Session-ID": self.current_session_id or "",
                 "X-Session-ID": self.current_session_id or "",
                 "X-Device-Info": json.dumps(self.device_info) if self.device_info else "",
