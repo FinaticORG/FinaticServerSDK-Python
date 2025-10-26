@@ -1,6 +1,6 @@
 # Finatic Server Python SDK
 
-A Python SDK for integrating with Finatic's server-side trading and portfolio management APIs.
+A comprehensive Python SDK for integrating with Finatic's server-side trading and portfolio management APIs.
 
 ## Installation
 
@@ -17,26 +17,24 @@ from finatic_server import FinaticServerClient
 async def main():
     # Initialize with API key
     client = FinaticServerClient("your-api-key")
-    
-    # Option 1: Portal Authentication
+
+    # Start session
     await client.start_session()
+
+    # Get portal URL for user authentication
     portal_url = await client.get_portal_url()
     print(f"User should visit: {portal_url}")
-    
-    # After user completes authentication in portal, get user info
-    user_info = await client.get_session_user()
-    print(f"Authenticated user: {user_info['user_id']}")
-    
-    # Option 2: Direct Authentication (if you know the user ID)
-    # client = FinaticServerClient("your-api-key", user_id="user123")
-    # await client.start_session()
-    
-    # Now you can access broker data
+
+    # After user completes authentication in portal
+    # User is now authenticated
+    print(f"Authenticated user: {client.get_user_id()}")
+
+    # Get portfolio data
     brokers = await client.get_broker_list()
     print(f"Available brokers: {len(brokers)}")
-    
+
     # Get all orders across all pages
-    all_orders = await client.get_all_broker_orders()
+    all_orders = await client.get_all_orders()
     print(f"Total orders: {len(all_orders)}")
 
 # Run the example
@@ -60,9 +58,8 @@ portal_url = await client.get_portal_url()
 print(f"User should visit: {portal_url}")
 
 # After user completes authentication in portal
-user_info = await client.get_session_user()
-print(f"User ID: {user_info['user_id']}")
-print(f"Access Token: {user_info['access_token']}")
+# User is now authenticated
+print(f"User ID: {client.get_user_id()}")
 
 # Now you can make authenticated requests
 brokers = await client.get_broker_list()
@@ -71,10 +68,10 @@ brokers = await client.get_broker_list()
 ### 2. Direct Authentication (Server-side with known user ID)
 
 ```python
-client = FinaticServerClient("your-api-key", user_id="user123")
+client = FinaticServerClient("your-api-key")
 
-# Start session (automatically authenticates with user ID)
-await client.start_session()
+# Start session with user ID (automatically authenticates)
+await client.start_session(user_id="user123")
 
 # Now you can make authenticated requests immediately
 brokers = await client.get_broker_list()
@@ -83,12 +80,14 @@ brokers = await client.get_broker_list()
 ## Core Features
 
 - **API Key Authentication**: Secure server-side authentication
-- **Portal Integration**: Get portal URLs for user authentication
+- **Portal Integration**: Get portal URLs for user authentication with optional theming
 - **Automatic Token Management**: Handles access/refresh tokens automatically
 - **Pagination Support**: Built-in pagination for large datasets
 - **Type-safe API**: Full Pydantic model support
 - **Async/await Support**: Non-blocking operations
 - **Comprehensive Error Handling**: Detailed error types
+- **Convenience Methods**: Helper methods for common data filtering
+- **Asset-Specific Orders**: Simplified order placement for different asset types
 
 ## API Reference
 
@@ -97,196 +96,339 @@ brokers = await client.get_broker_list()
 ```python
 client = FinaticServerClient(
     api_key="your-api-key",
-    user_id="user123",                    # Optional - for direct authentication
+    base_url="https://api.finatic.dev",  # Optional
+    device_info={                        # Optional
+        "ip_address": "192.168.1.100",
+        "user_agent": "MyApp/1.0.0",
+    },
+    timeout=30                          # Optional
 )
 ```
 
-### Authentication Methods
-
-- `start_session()` - Start a new session (authenticates directly if user_id provided)
-- `get_portal_url()` - Get portal URL for user authentication (portal flow only)
-- `get_session_user()` - Get user info and tokens after portal completion (portal flow only)
-
-### Broker Data Methods
-
-#### Basic Methods (with pagination support)
-- `get_broker_list()` - Get list of available brokers
-- `get_broker_connections()` - Get broker connections
-- `get_broker_accounts(page=1, per_page=100, options=None, filters=None)` - Get broker accounts
-- `get_broker_orders(page=1, per_page=100, options=None, filters=None)` - Get broker orders
-- `get_broker_positions(page=1, per_page=100, options=None, filters=None)` - Get broker positions
-
-#### Get All Methods (automatically handles pagination)
-- `get_all_broker_accounts(options=None, filters=None)` - Get all broker accounts across all pages
-- `get_all_broker_orders(options=None, filters=None)` - Get all broker orders across all pages
-- `get_all_broker_positions(options=None, filters=None)` - Get all broker positions across all pages
-
-### Filter Options
+### Authentication
 
 ```python
-from finatic_server.types.broker import BrokerDataOptions, OrdersFilter, PositionsFilter, AccountsFilter
+# Start session
+await client.start_session()
 
-# Basic filtering
-options = BrokerDataOptions(
-    broker_name="robinhood",
-    account_id="123456",
-    symbol="AAPL"
+# Start session with user ID (direct auth)
+await client.start_session(user_id="user123")
+
+# Check authentication status
+is_authenticated = client.is_authenticated()
+
+# Get user information
+user_id = client.get_user_id()
+session_id = client.get_session_id()
+company_id = client.get_company_id()
+```
+
+### Portal Management
+
+```python
+# Get basic portal URL
+portal_url = await client.get_portal_url()
+
+# Get portal URL with theming
+portal_url = await client.get_portal_url(
+    theme={"primary_color": "#007bff", "logo_url": "https://example.com/logo.png"},
+    brokers=["robinhood", "tasty_trade"],
+    email="user@example.com"
 )
+```
 
-# Advanced filtering for orders
-order_filters = OrdersFilter(
-    status="filled",
-    side="buy",
-    asset_type="stock",
-    created_after="2024-01-01T00:00:00Z"
-)
+### Broker Data Access
 
-# Advanced filtering for positions
-position_filters = PositionsFilter(
+```python
+# Get broker information
+brokers = await client.get_broker_list()
+connections = await client.get_broker_connections()
+
+# Get accounts with pagination
+accounts = await client.get_accounts(page=1, per_page=100)
+all_accounts = await client.get_all_accounts()
+
+# Get orders with pagination
+orders = await client.get_orders(page=1, per_page=100)
+all_orders = await client.get_all_orders()
+
+# Get positions with pagination
+positions = await client.get_positions(page=1, per_page=100)
+all_positions = await client.get_all_positions()
+
+# Get balances with pagination
+balances = await client.get_balances(page=1, per_page=100)
+all_balances = await client.get_all_balances()
+```
+
+### Convenience Filter Methods
+
+```python
+# Get filtered data
+open_positions = await client.get_open_positions()
+filled_orders = await client.get_filled_orders()
+pending_orders = await client.get_pending_orders()
+active_accounts = await client.get_active_accounts()
+
+# Get data by symbol
+aapl_orders = await client.get_orders_by_symbol("AAPL")
+aapl_positions = await client.get_positions_by_symbol("AAPL")
+
+# Get data by broker
+robinhood_orders = await client.get_orders_by_broker("robinhood")
+robinhood_positions = await client.get_positions_by_broker("robinhood")
+```
+
+### Trading Operations
+
+#### General Order Placement
+
+```python
+from finatic_server.types.orders import BrokerOrderParams
+
+# Place a market order
+order_params = BrokerOrderParams(
+    broker="robinhood",
+    order_type="Market",
+    asset_type="equity",
+    action="Buy",
+    time_in_force="day",
+    account_number="123456789",
     symbol="AAPL",
-    side="long",
-    asset_type="stock"
+    order_qty=10
 )
 
-# Advanced filtering for accounts
-account_filters = AccountsFilter(
-    account_type="margin",
-    status="active",
-    currency="USD"
+response = await client.place_order(order_params)
+```
+
+#### Asset-Specific Order Methods
+
+##### Stock Orders
+
+```python
+# Stock market order
+response = await client.place_stock_market_order(
+    symbol="AAPL",
+    quantity=10,
+    side="buy",
+    broker="robinhood",
+    account_number="123456789"
+)
+
+# Stock limit order
+response = await client.place_stock_limit_order(
+    symbol="AAPL",
+    quantity=10,
+    side="buy",
+    price=150.00,
+    time_in_force="gtc",
+    broker="robinhood",
+    account_number="123456789"
+)
+
+# Stock stop order
+response = await client.place_stock_stop_order(
+    symbol="AAPL",
+    quantity=10,
+    side="sell",
+    stop_price=140.00,
+    time_in_force="gtc",
+    broker="robinhood",
+    account_number="123456789"
 )
 ```
 
-## Usage Examples
-
-### Get All Orders with Filtering
+##### Crypto Orders
 
 ```python
-# Get all filled orders for a specific symbol
-all_filled_orders = await client.get_all_broker_orders(
+# Crypto market order
+response = await client.place_crypto_market_order(
+    symbol="BTC-USD",
+    quantity=0.1,
+    side="buy",
+    broker="coinbase",
+    account_number="123456789"
+)
+
+# Crypto limit order
+response = await client.place_crypto_limit_order(
+    symbol="BTC-USD",
+    quantity=0.1,
+    side="buy",
+    price=50000.00,
+    time_in_force="gtc",
+    broker="coinbase",
+    account_number="123456789"
+)
+```
+
+##### Options Orders
+
+```python
+# Options market order
+response = await client.place_options_market_order(
+    symbol="AAPL240315C00150000",
+    quantity=1,
+    side="buy",
+    broker="tasty_trade",
+    account_number="123456789"
+)
+
+# Options limit order
+response = await client.place_options_limit_order(
+    symbol="AAPL240315C00150000",
+    quantity=1,
+    side="buy",
+    price=5.00,
+    time_in_force="gtc",
+    broker="tasty_trade",
+    account_number="123456789"
+)
+```
+
+##### Futures Orders
+
+```python
+# Futures market order
+response = await client.place_futures_market_order(
+    symbol="ES",
+    quantity=1,
+    side="buy",
+    broker="ninja_trader",
+    account_number="123456789"
+)
+
+# Futures limit order
+response = await client.place_futures_limit_order(
+    symbol="ES",
+    quantity=1,
+    side="buy",
+    price=4500.00,
+    time_in_force="gtc",
+    broker="ninja_trader",
+    account_number="123456789"
+)
+```
+
+#### Order Management
+
+```python
+# Cancel an order
+response = await client.cancel_order(
+    order_id="order-123",
+    broker="robinhood",
+    connection_id="connection-456"
+)
+
+# Modify an order
+response = await client.modify_order(
+    order_id="order-123",
+    modifications={"price": 155.00, "quantity": 5},
+    broker="robinhood",
+    connection_id="connection-456"
+)
+```
+
+### Broker Management
+
+```python
+# Disconnect a company from broker
+response = await client.disconnect_company("connection-123")
+```
+
+### Error Handling
+
+```python
+from finatic_server.utils.errors import AuthenticationError, ApiError, ValidationError
+
+try:
+    orders = await client.get_orders()
+except AuthenticationError as e:
+    print(f"Authentication failed: {e}")
+except ValidationError as e:
+    print(f"Invalid request: {e}")
+except ApiError as e:
+    print(f"API error: {e}")
+```
+
+### Context Manager Usage
+
+```python
+async with FinaticServerClient("your-api-key") as client:
+    await client.start_session()
+    brokers = await client.get_broker_list()
+    # Client automatically closes when exiting context
+```
+
+### Cleanup
+
+```python
+# Close the client and cleanup resources
+await client.close()
+```
+
+## Advanced Usage
+
+### Custom Filters
+
+```python
+from finatic_server.types import BrokerDataOptions, OrdersFilter
+
+# Get orders with custom filters
+orders = await client.get_orders(
+    page=1,
+    per_page=50,
+    options=BrokerDataOptions(
+        broker_name="robinhood",
+        account_id="123456789"
+    ),
     filters=OrdersFilter(
         status="filled",
         symbol="AAPL"
     )
 )
-print(f"Found {len(all_filled_orders)} filled AAPL orders")
 ```
 
-### Pagination Example
+### Pagination Navigation
 
 ```python
-# Get first page of 10 orders
-first_page = await client.get_broker_orders(page=1, per_page=10)
-print(f"First page: {len(first_page)} orders")
+# Get paginated results with navigation
+orders_page = await client.get_orders(page=1, per_page=100)
 
-# Get second page
-second_page = await client.get_broker_orders(page=2, per_page=10)
-print(f"Second page: {len(second_page)} orders")
+# Navigate through pages
+if orders_page.has_next:
+    next_page = await orders_page.next_page()
+
+if orders_page.has_previous:
+    prev_page = await orders_page.previous_page()
 ```
 
-### Get All Data for Analysis
+## Type Definitions
 
-```python
-# Get all accounts, orders, and positions
-all_accounts = await client.get_all_broker_accounts()
-all_orders = await client.get_all_broker_orders()
-all_positions = await client.get_all_broker_positions()
+The SDK includes comprehensive type definitions for all data structures:
 
-print(f"Total accounts: {len(all_accounts)}")
-print(f"Total orders: {len(all_orders)}")
-print(f"Total positions: {len(all_positions)}")
-```
+- `BrokerOrder`: Order information
+- `BrokerPosition`: Position information
+- `BrokerAccount`: Account information
+- `BrokerBalance`: Balance information
+- `BrokerInfo`: Broker information
+- `BrokerConnection`: Connection information
+- `OrderResponse`: Order operation responses
+- `PaginatedResult`: Paginated data responses
 
-### Filter by Broker
+## Error Types
 
-```python
-# Get all orders from Robinhood
-robinhood_orders = await client.get_all_broker_orders(
-    options=BrokerDataOptions(broker_name="robinhood")
-)
+- `AuthenticationError`: Authentication failures
+- `ApiError`: API request failures
+- `ValidationError`: Invalid request parameters
+- `ConnectionError`: Network connectivity issues
 
-# Get all positions from Tasty Trade
-tasty_positions = await client.get_all_broker_positions(
-    options=BrokerDataOptions(broker_name="tasty_trade")
-)
-```
+## Requirements
 
-## Error Handling
-
-The SDK provides comprehensive error handling:
-
-```python
-from finatic_server import AuthenticationError, ApiError, NetworkError
-
-try:
-    orders = await client.get_broker_orders()
-except AuthenticationError as e:
-    print(f"Authentication failed: {e}")
-except NetworkError as e:
-    print(f"Network error: {e}")
-except ApiError as e:
-    print(f"API error: {e}")
-```
-
-## Complete Example
-
-```python
-import asyncio
-from finatic_server import FinaticServerClient
-from finatic_server.types.broker import OrdersFilter, BrokerDataOptions
-
-async def main():
-    # Option 1: Portal Authentication (user completes auth in browser)
-    client = FinaticServerClient("your-api-key")
-    
-    try:
-        # Start session
-        await client.start_session()
-        
-        # Get portal URL
-        portal_url = await client.get_portal_url()
-        print(f"Please visit: {portal_url}")
-        
-        # Wait for user to complete authentication
-        input("Press Enter after completing authentication...")
-        
-        # Get user info
-        user_info = await client.get_session_user()
-        print(f"Authenticated as: {user_info['user_id']}")
-        
-        # Option 2: Direct Authentication (if you know the user ID)
-        # client = FinaticServerClient("your-api-key", user_id="user123")
-        # await client.start_session()
-        # print("Directly authenticated!")
-        
-        # Get broker information
-        brokers = await client.get_broker_list()
-        print(f"Available brokers: {[b.name for b in brokers]}")
-        
-        # Get all filled orders
-        filled_orders = await client.get_all_broker_orders(
-            filters=OrdersFilter(status="filled")
-        )
-        print(f"Total filled orders: {len(filled_orders)}")
-        
-        # Get all positions
-        positions = await client.get_all_broker_positions()
-        print(f"Total positions: {len(positions)}")
-        
-        # Get accounts with cash balance
-        accounts = await client.get_all_broker_accounts()
-        for account in accounts:
-            cash = account.cash_balance or 0.0
-            print(f"{account.account_name}: ${cash:,.2f}")
-            
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        await client.close()
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
+- Python 3.8+
+- aiohttp
+- pydantic
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details. 
+MIT License
