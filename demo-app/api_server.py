@@ -89,9 +89,9 @@ async def lifespan(app: FastAPI):
     """Initialize and cleanup SDK client"""
     global sdk_client
 
-    # Initialize SDK client with local API
+    # Initialize SDK client with API from env (defaults to local)
     api_key = os.getenv("FINATIC_API_KEY", "demo_key_123")
-    api_url = "http://localhost:8000"
+    api_url = os.getenv("FINATIC_API_URL", "http://localhost:8000")
 
     print(f"🚀 Initializing Python Server SDK with mock data...")
     print(f"   API URL: {api_url}")
