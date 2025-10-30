@@ -200,6 +200,22 @@ class FinaticServerClient:
 
         return session_response
 
+    async def get_token(self) -> str:
+        """Get a fresh one-time token for client SDK, requiring initialized client.
+
+        This does not modify the current server SDK session; it only returns a token
+        from /session/init that can be passed to the Client SDK.
+        """
+        # Ensure client is initialized (HTTP session exists)
+        if not hasattr(self._api_client, "_session") or self._api_client._session is None:
+            raise AuthenticationError(
+                "Client not initialized. Use 'async with' or call __aenter__() first."
+            )
+
+        # Call existing init logic and return the token
+        token = await self._initialize_session()
+        return token
+
     async def get_portal_url(
         self,
         theme: Optional[Dict[str, Any]] = None,

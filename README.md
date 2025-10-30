@@ -65,6 +65,23 @@ print(f"User ID: {client.get_user_id()}")
 brokers = await client.get_broker_list()
 ```
 
+### Server: Get one-time token for Client SDK (additive helper)
+
+```python
+async with FinaticServerClient("your-api-key") as client:
+    # Fetch a fresh one-time token without modifying the current server session
+    one_time_token = await client.get_token()
+
+    # Pass this token to the Client SDK on the frontend to start its session
+    # e.g., FinaticClient.init({ "token": one_time_token })
+```
+
+Notes:
+
+- Requires the client to be initialized (use the async context manager or call **aenter**()).
+- Does not call `/session/start` and does not change `session_id`/`company_id` state.
+- Safe to call multiple times; each call returns a new short-lived token.
+
 ### 2. Direct Authentication (Server-side with known user ID)
 
 ```python
