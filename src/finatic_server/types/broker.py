@@ -220,3 +220,139 @@ class BalancesFilter(BaseModel):
         None, description="Filter by balance creation date before (ISO 8601)"
     )
     with_metadata: Optional[bool] = Field(None, description="Include metadata")
+
+
+class OrderFill(BaseModel):
+    """Order fill information."""
+
+    id: str = Field(..., description="Fill ID")
+    order_id: str = Field(..., description="Order ID")
+    leg_id: Optional[str] = Field(None, description="Order leg ID")
+    price: float = Field(..., description="Fill price")
+    quantity: float = Field(..., description="Fill quantity")
+    executed_at: str = Field(..., description="Execution timestamp")
+    execution_id: Optional[str] = Field(None, description="Execution ID")
+    trade_id: Optional[str] = Field(None, description="Trade ID")
+    venue: Optional[str] = Field(None, description="Execution venue")
+    commission_fee: Optional[float] = Field(None, description="Commission fee")
+    created_at: str = Field(..., description="Creation timestamp")
+    updated_at: str = Field(..., description="Last update timestamp")
+
+
+class OrderEvent(BaseModel):
+    """Order event information."""
+
+    id: str = Field(..., description="Event ID")
+    order_id: str = Field(..., description="Order ID")
+    order_group_id: Optional[str] = Field(None, description="Order group ID")
+    event_type: Optional[str] = Field(None, description="Event type")
+    event_time: str = Field(..., description="Event timestamp")
+    event_id: Optional[str] = Field(None, description="Event ID")
+    order_status: Optional[str] = Field(None, description="Order status")
+    inferred: bool = Field(..., description="Whether event was inferred")
+    confidence: Optional[float] = Field(None, description="Confidence score")
+    reason_code: Optional[str] = Field(None, description="Reason code")
+    recorded_at: Optional[str] = Field(None, description="Recorded timestamp")
+
+
+class OrderGroup(BaseModel):
+    """Order group information."""
+
+    id: str = Field(..., description="Group ID")
+    user_broker_connection_id: Optional[str] = Field(None, description="User broker connection ID")
+    created_at: str = Field(..., description="Creation timestamp")
+    updated_at: str = Field(..., description="Last update timestamp")
+    orders: Optional[List[BrokerOrder]] = Field(None, description="Orders in group")
+
+
+class PositionLot(BaseModel):
+    """Position lot (tax lot) information."""
+
+    id: str = Field(..., description="Lot ID")
+    position_id: Optional[str] = Field(None, description="Position ID")
+    user_broker_connection_id: str = Field(..., description="User broker connection ID")
+    broker_provided_account_id: str = Field(..., description="Broker provided account ID")
+    instrument_key: str = Field(..., description="Instrument key")
+    asset_type: Optional[str] = Field(None, description="Asset type")
+    side: Optional[str] = Field(None, description="Position side")
+    open_quantity: float = Field(..., description="Open quantity")
+    closed_quantity: float = Field(..., description="Closed quantity")
+    remaining_quantity: float = Field(..., description="Remaining quantity")
+    open_price: float = Field(..., description="Open price")
+    close_price_avg: Optional[float] = Field(None, description="Average close price")
+    cost_basis: float = Field(..., description="Cost basis")
+    cost_basis_w_commission: float = Field(..., description="Cost basis with commission")
+    realized_pl: float = Field(..., description="Realized P&L")
+    realized_pl_w_commission: float = Field(..., description="Realized P&L with commission")
+    lot_opened_at: str = Field(..., description="Lot opened timestamp")
+    lot_closed_at: Optional[str] = Field(None, description="Lot closed timestamp")
+    position_group_id: Optional[str] = Field(None, description="Position group ID")
+    created_at: str = Field(..., description="Creation timestamp")
+    updated_at: str = Field(..., description="Last update timestamp")
+    position_lot_fills: Optional[List["PositionLotFill"]] = Field(None, description="Lot fills")
+
+
+class PositionLotFill(BaseModel):
+    """Position lot fill information."""
+
+    id: str = Field(..., description="Fill ID")
+    lot_id: str = Field(..., description="Lot ID")
+    order_fill_id: str = Field(..., description="Order fill ID")
+    fill_price: float = Field(..., description="Fill price")
+    fill_quantity: float = Field(..., description="Fill quantity")
+    executed_at: str = Field(..., description="Execution timestamp")
+    commission_share: Optional[float] = Field(None, description="Commission share")
+    created_at: str = Field(..., description="Creation timestamp")
+    updated_at: str = Field(..., description="Last update timestamp")
+
+
+# Filter types for detail endpoints
+class OrderFillsFilter(BaseModel):
+    """Filter options for order fills."""
+
+    connection_id: Optional[str] = Field(None, description="Filter by connection ID")
+    limit: Optional[int] = Field(None, description="Result limit")
+    offset: Optional[int] = Field(None, description="Result offset")
+
+
+class OrderEventsFilter(BaseModel):
+    """Filter options for order events."""
+
+    connection_id: Optional[str] = Field(None, description="Filter by connection ID")
+    limit: Optional[int] = Field(None, description="Result limit")
+    offset: Optional[int] = Field(None, description="Result offset")
+
+
+class OrderGroupsFilter(BaseModel):
+    """Filter options for order groups."""
+
+    broker_id: Optional[str] = Field(None, description="Filter by broker ID")
+    connection_id: Optional[str] = Field(None, description="Filter by connection ID")
+    limit: Optional[int] = Field(None, description="Result limit")
+    offset: Optional[int] = Field(None, description="Result offset")
+    created_after: Optional[str] = Field(
+        None, description="Filter by creation date after (ISO 8601)"
+    )
+    created_before: Optional[str] = Field(
+        None, description="Filter by creation date before (ISO 8601)"
+    )
+
+
+class PositionLotsFilter(BaseModel):
+    """Filter options for position lots."""
+
+    broker_id: Optional[str] = Field(None, description="Filter by broker ID")
+    connection_id: Optional[str] = Field(None, description="Filter by connection ID")
+    account_id: Optional[str] = Field(None, description="Filter by account ID")
+    symbol: Optional[str] = Field(None, description="Filter by symbol")
+    position_id: Optional[str] = Field(None, description="Filter by position ID")
+    limit: Optional[int] = Field(None, description="Result limit")
+    offset: Optional[int] = Field(None, description="Result offset")
+
+
+class PositionLotFillsFilter(BaseModel):
+    """Filter options for position lot fills."""
+
+    connection_id: Optional[str] = Field(None, description="Filter by connection ID")
+    limit: Optional[int] = Field(None, description="Result limit")
+    offset: Optional[int] = Field(None, description="Result offset")

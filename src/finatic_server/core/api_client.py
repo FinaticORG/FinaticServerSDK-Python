@@ -38,6 +38,16 @@ from ..types import (
     TradingContext,
     ApiPaginationInfo,
     PaginatedResult,
+    OrderFill,
+    OrderEvent,
+    OrderGroup,
+    PositionLot,
+    PositionLotFill,
+    OrderFillsFilter,
+    OrderEventsFilter,
+    OrderGroupsFilter,
+    PositionLotsFilter,
+    PositionLotFillsFilter,
 )
 from ..utils.errors import (
     ApiError,
@@ -980,6 +990,110 @@ class ApiClient:
             method="DELETE", path=f"/brokers/connections/{connection_id}"
         )
         return response
+
+    async def get_order_fills(
+        self, order_id: str, filters: Optional[OrderFillsFilter] = None
+    ) -> List[OrderFill]:
+        """Get order fills for a specific order using session-based authentication."""
+        params = {}
+        if filters:
+            if filters.connection_id:
+                params["connection_id"] = filters.connection_id
+            if filters.limit:
+                params["limit"] = str(filters.limit)
+            if filters.offset:
+                params["offset"] = str(filters.offset)
+
+        response = await self._request(
+            method="GET", path=f"/brokers/data/orders/{order_id}/fills", params=params
+        )
+        return [OrderFill(**fill) for fill in response.get("response_data", [])]
+
+    async def get_order_events(
+        self, order_id: str, filters: Optional[OrderEventsFilter] = None
+    ) -> List[OrderEvent]:
+        """Get order events for a specific order using session-based authentication."""
+        params = {}
+        if filters:
+            if filters.connection_id:
+                params["connection_id"] = filters.connection_id
+            if filters.limit:
+                params["limit"] = str(filters.limit)
+            if filters.offset:
+                params["offset"] = str(filters.offset)
+
+        response = await self._request(
+            method="GET", path=f"/brokers/data/orders/{order_id}/events", params=params
+        )
+        return [OrderEvent(**event) for event in response.get("response_data", [])]
+
+    async def get_order_groups(
+        self, filters: Optional[OrderGroupsFilter] = None
+    ) -> List[OrderGroup]:
+        """Get order groups using session-based authentication."""
+        params = {}
+        if filters:
+            if filters.broker_id:
+                params["broker_id"] = filters.broker_id
+            if filters.connection_id:
+                params["connection_id"] = filters.connection_id
+            if filters.limit:
+                params["limit"] = str(filters.limit)
+            if filters.offset:
+                params["offset"] = str(filters.offset)
+            if filters.created_after:
+                params["created_after"] = filters.created_after
+            if filters.created_before:
+                params["created_before"] = filters.created_before
+
+        response = await self._request(
+            method="GET", path="/brokers/data/orders/groups", params=params
+        )
+        return [OrderGroup(**group) for group in response.get("response_data", [])]
+
+    async def get_position_lots(
+        self, filters: Optional[PositionLotsFilter] = None
+    ) -> List[PositionLot]:
+        """Get position lots (tax lots) using session-based authentication."""
+        params = {}
+        if filters:
+            if filters.broker_id:
+                params["broker_id"] = filters.broker_id
+            if filters.connection_id:
+                params["connection_id"] = filters.connection_id
+            if filters.account_id:
+                params["account_id"] = filters.account_id
+            if filters.symbol:
+                params["symbol"] = filters.symbol
+            if filters.position_id:
+                params["position_id"] = filters.position_id
+            if filters.limit:
+                params["limit"] = str(filters.limit)
+            if filters.offset:
+                params["offset"] = str(filters.offset)
+
+        response = await self._request(
+            method="GET", path="/brokers/data/positions/lots", params=params
+        )
+        return [PositionLot(**lot) for lot in response.get("response_data", [])]
+
+    async def get_position_lot_fills(
+        self, lot_id: str, filters: Optional[PositionLotFillsFilter] = None
+    ) -> List[PositionLotFill]:
+        """Get position lot fills for a specific lot using session-based authentication."""
+        params = {}
+        if filters:
+            if filters.connection_id:
+                params["connection_id"] = filters.connection_id
+            if filters.limit:
+                params["limit"] = str(filters.limit)
+            if filters.offset:
+                params["offset"] = str(filters.offset)
+
+        response = await self._request(
+            method="GET", path=f"/brokers/data/positions/lots/{lot_id}/fills", params=params
+        )
+        return [PositionLotFill(**fill) for fill in response.get("response_data", [])]
 
     # Trading context methods
     def set_broker(self, broker: str):
