@@ -255,14 +255,37 @@ class OrderEvent(BaseModel):
     recorded_at: Optional[str] = Field(None, description="Recorded timestamp")
 
 
+class OrderLeg(BaseModel):
+    """Order leg information."""
+
+    id: str = Field(..., description="Leg ID")
+    order_id: str = Field(..., description="Order ID")
+    leg_index: int = Field(..., description="Leg index")
+    asset_type: str = Field(..., description="Asset type")
+    broker_provided_symbol: Optional[str] = Field(None, description="Broker provided symbol")
+    quantity: float = Field(..., description="Quantity")
+    filled_quantity: Optional[float] = Field(None, description="Filled quantity")
+    avg_fill_price: Optional[float] = Field(None, description="Average fill price")
+    created_at: Optional[str] = Field(None, description="Creation timestamp")
+    updated_at: Optional[str] = Field(None, description="Last update timestamp")
+
+
+class OrderGroupOrder(BrokerOrder):
+    """Order within a group with legs."""
+
+    legs: List[OrderLeg] = Field(default_factory=list, description="Order legs")
+
+
 class OrderGroup(BaseModel):
-    """Order group information."""
+    """Order group information with nested orders and legs."""
 
     id: str = Field(..., description="Group ID")
     user_broker_connection_id: Optional[str] = Field(None, description="User broker connection ID")
     created_at: str = Field(..., description="Creation timestamp")
     updated_at: str = Field(..., description="Last update timestamp")
-    orders: Optional[List[BrokerOrder]] = Field(None, description="Orders in group")
+    orders: List[OrderGroupOrder] = Field(
+        default_factory=list, description="Orders in group with their legs"
+    )
 
 
 class PositionLot(BaseModel):
