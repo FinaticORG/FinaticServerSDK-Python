@@ -55,6 +55,16 @@ from .broker import (
     PositionsFilter,
     AccountsFilter,
     BalancesFilter,
+    OrderFill,
+    OrderEvent,
+    OrderGroup,
+    PositionLot,
+    PositionLotFill,
+    OrderFillsFilter,
+    OrderEventsFilter,
+    OrderGroupsFilter,
+    PositionLotsFilter,
+    PositionLotFillsFilter,
 )
 
 # Webhook types
@@ -110,6 +120,16 @@ __all__ = [
     "PositionsFilter",
     "AccountsFilter",
     "BalancesFilter",
+    "OrderFill",
+    "OrderEvent",
+    "OrderGroup",
+    "PositionLot",
+    "PositionLotFill",
+    "OrderFillsFilter",
+    "OrderEventsFilter",
+    "OrderGroupsFilter",
+    "PositionLotsFilter",
+    "PositionLotFillsFilter",
     
     # Webhook
     "TestWebhookRequest",
