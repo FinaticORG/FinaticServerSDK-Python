@@ -74,8 +74,10 @@ class MarketDataWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/market-data/futures/historical', {"symbol": symbol, "start_date": start_date, "end_date": end_date, "expiration": expiration, "provider": provider}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -100,18 +102,33 @@ class MarketDataWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.get_futures_historical_api_v1_market_data_futures_historical_get(symbol=symbol, start_date=start_date, end_date=end_date, expiration=expiration, provider=provider)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/market-data/futures/historical', {"symbol": symbol, "start_date": start_date, "end_date": end_date, "expiration": expiration, "provider": provider}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Futures Historical completed',
@@ -119,7 +136,7 @@ class MarketDataWrapper:
                 action='get_futures_historical'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)

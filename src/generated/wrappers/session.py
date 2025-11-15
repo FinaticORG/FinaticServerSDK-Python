@@ -84,8 +84,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/session/init', {"x_api_key": x_api_key}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -106,18 +108,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.init_session_api_v1_session_init_post(x_api_key=x_api_key)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/session/init', {"x_api_key": x_api_key}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Init Session completed',
@@ -125,7 +142,7 @@ class SessionWrapper:
                 action='init_session'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -166,8 +183,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/session/start', {"one_time_token": one_time_token, "session_start_request": session_start_request}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -189,18 +208,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.start_session_api_v1_session_start_post(one_time_token=one_time_token, session_start_request=session_start_request)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/session/start', {"one_time_token": one_time_token, "session_start_request": session_start_request}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Start Session completed',
@@ -208,7 +242,7 @@ class SessionWrapper:
                 action='start_session'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -252,8 +286,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not True
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/session/portal', {"session_id": session_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -274,13 +310,21 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.get_portal_url_api_v1_session_portal_get(session_id=session_id)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
             # Handle multiple response structures from different unwrapping scenarios
-            if response and isinstance(response, dict) and 'data' in response and response.get('data') and isinstance(response.get('data'), dict) and 'data' in response.get('data'):
+            # The response might be:
+            # 1. FinaticResponsePortalUrlResponse (Pydantic model with .data property containing PortalUrlResponse)
+            # 2. PortalUrlResponse (Pydantic model directly)
+            # 3. Dict with nested structures (for debugging/fallback)
+            if response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (Pydantic model with .data property)
+                result = response.data
+            elif response and isinstance(response, dict) and 'data' in response and response.get('data') and isinstance(response.get('data'), dict) and 'data' in response.get('data'):
                 # FinaticResponse wrapper from axios: { data: { success: True, data: { portal_url: "..." } } }
                 result = response['data']['data']
             elif response and isinstance(response, dict) and 'data' in response and response.get('data') and isinstance(response.get('data'), dict) and 'portal_url' in response.get('data'):
@@ -289,22 +333,32 @@ class SessionWrapper:
             elif response and isinstance(response, dict) and 'portal_url' in response:
                 # PortalUrlResponse directly: { portal_url: "..." }
                 result = response
-            elif response and isinstance(response, dict) and 'data' in response:
-                # Fallback: { data: ... }
-                result = response['data']
             else:
-                # Direct response
+                # Direct response (already unwrapped Pydantic model or other structure)
                 result = response
             
-            # Validate result structure
-            if not result or not isinstance(result, dict) or 'portal_url' not in result:
-                raise ValueError(f'Failed to unwrap portal URL response: expected PortalUrlResponse with portal_url property')
+            # Validate result structure (check for portal_url in Pydantic model or dict)
+            has_portal_url = False
+            if result:
+                if hasattr(result, 'portal_url'):
+                    # Pydantic model with portal_url attribute
+                    has_portal_url = True
+                elif isinstance(result, dict) and 'portal_url' in result:
+                    # Dict with portal_url key
+                    has_portal_url = True
+            
+            if not result or not has_portal_url:
+                raise ValueError(f'Failed to unwrap portal URL response: expected PortalUrlResponse with portal_url property. Got type: {type(result).__name__}, keys: {list(result.keys()) if isinstance(result, dict) else "N/A"}')
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/session/portal', {"session_id": session_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Portal Url completed',
@@ -312,7 +366,7 @@ class SessionWrapper:
                 action='get_portal_url'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -363,8 +417,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/session/{session_id}/user', {"company_id": company_id, "session_id": session_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -386,18 +442,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.get_session_user_api_v1_session_session_id_user_get(company_id=company_id, session_id=session_id)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/session/{session_id}/user', {"company_id": company_id, "session_id": session_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Session User completed',
@@ -405,7 +476,7 @@ class SessionWrapper:
                 action='get_session_user'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -450,8 +521,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/session/authenticate', {"direct_auth_request": direct_auth_request}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -472,18 +545,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.authenticate_session_api_v1_session_authenticate_post(direct_auth_request=direct_auth_request)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/session/authenticate', {"direct_auth_request": direct_auth_request}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Authenticate Session completed',
@@ -491,7 +579,7 @@ class SessionWrapper:
                 action='authenticate_session'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -539,8 +627,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/session/refresh', {"session_id": session_id, "company_id": company_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -562,18 +652,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.refresh_session_api_v1_session_refresh_post(session_id=session_id, company_id=company_id)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/session/refresh', {"session_id": session_id, "company_id": company_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Refresh Session completed',
@@ -581,7 +686,7 @@ class SessionWrapper:
                 action='refresh_session'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -626,8 +731,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/session/webhook/test', {"finaticapi_api_v1_routers_session_session_router_test_webhook_request": finaticapi_api_v1_routers_session_session_router_test_webhook_request}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -648,18 +755,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.test_webhook_api_v1_session_webhook_test_post(finaticapi_api_v1_routers_session_session_router_test_webhook_request=finaticapi_api_v1_routers_session_session_router_test_webhook_request)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/session/webhook/test', {"finaticapi_api_v1_routers_session_session_router_test_webhook_request": finaticapi_api_v1_routers_session_session_router_test_webhook_request}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Test Webhook completed',
@@ -667,7 +789,7 @@ class SessionWrapper:
                 action='test_webhook'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -715,8 +837,10 @@ class SessionWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/session/link-user', {"session_id": session_id, "session_link_request": session_link_request}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -738,18 +862,33 @@ class SessionWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.link_user_to_session_api_v1_session_link_user_post(session_id=session_id, session_link_request=session_link_request)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/session/link-user', {"session_id": session_id, "session_link_request": session_link_request}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Link User To Session completed',
@@ -757,7 +896,7 @@ class SessionWrapper:
                 action='link_user_to_session'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)

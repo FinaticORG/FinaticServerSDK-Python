@@ -17,6 +17,7 @@ from typing import Any, Dict, List, Optional
 # Load environment variables from .env file
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     # dotenv is optional - will use system environment variables if not available
@@ -51,8 +52,7 @@ from finatic_server_python import FinaticServer
 # Configuration
 API_URL = os.getenv("FINATIC_API_URL", "https://api.finatic.dev")
 API_KEY = os.getenv("FINATIC_API_KEY")
-DEMO_EMAIL = os.getenv("DEMO_EMAIL", "demo@finatic.com")
-DEMO_PASSWORD = os.getenv("DEMO_PASSWORD", "demo_password_123")
+DEMO_EMAIL = os.getenv("DEMO_EMAIL", "demo@finatic.dev")
 ACCOUNT_ID_FILTER = "1c0e6a5e-f6d7-4af8-b69d-09aa17f73762"
 
 console = Console()
@@ -80,7 +80,10 @@ class FinaticDemo:
         self.client = FinaticServer(
             api_key=API_KEY,
             base_url=API_URL,
-            sdk_config={"log_level": "debug" if self.is_dev else "error", "structured_logging": True},
+            sdk_config={
+                "log_level": "debug" if self.is_dev else "error",
+                "structured_logging": True,
+            },
         )
 
     async def run(self) -> None:
@@ -105,11 +108,13 @@ class FinaticDemo:
                 # Use the convenience method that combines init_session and start_session
                 # This takes the API key (optional, uses instance key) and optional user_id
                 result = await self.client.init_session(api_key=API_KEY, user_id=None)
-                
+
                 if not result.get("success"):
-                    console.print(f"[red]❌ Failed to initialize session: {result.get('error')}[/red]")
+                    console.print(
+                        f"[red]❌ Failed to initialize session: {result.get('error')}[/red]"
+                    )
                     return
-                
+
                 session_id = result.get("session_id")
                 company_id = result.get("company_id")
                 console.print(f"[green]✅ Session initialized successfully[/green]")
@@ -126,13 +131,14 @@ class FinaticDemo:
                 error_msg = str(e)
                 error_type = type(e).__name__
                 console.print(f"[red]❌ Error: {error_type}: {error_msg}[/red]")
-                
+
                 # Print full traceback in debug mode
                 import traceback
+
                 if self.is_dev:
                     console.print("\n[dim]Full traceback:[/dim]")
                     console.print(f"[dim]{traceback.format_exc()}[/dim]")
-                
+
                 if "401" in error_msg or "Unauthorized" in error_msg:
                     console.print("[red]❌ Authentication failed (401)[/red]")
                     console.print("[yellow]💡 This usually means:[/yellow]")
@@ -140,22 +146,30 @@ class FinaticDemo:
                     console.print("[dim]  • API endpoint not accessible[/dim]")
                     console.print("[dim]  • Network connectivity issues[/dim]")
                     console.print("\n[yellow]🔧 To fix this:[/yellow]")
-                    console.print("[dim]  1. Check your .env file has a valid FINATIC_API_KEY[/dim]")
+                    console.print(
+                        "[dim]  1. Check your .env file has a valid FINATIC_API_KEY[/dim]"
+                    )
                     console.print("[dim]  2. Verify the API_URL is correct[/dim]")
-                    console.print("[dim]  3. For localhost testing, ensure your local API is running[/dim]")
+                    console.print(
+                        "[dim]  3. For localhost testing, ensure your local API is running[/dim]"
+                    )
                     return
                 elif "Session not initialized" in error_msg:
                     console.print("[red]❌ Session initialization error[/red]")
                     console.print("[yellow]💡 This usually means:[/yellow]")
                     console.print("[dim]  • Session context was not set properly[/dim]")
                     console.print("[dim]  • start_session() did not complete successfully[/dim]")
-                    console.print(f"[dim]  • Current session_id: {self.client.get_session_id()}[/dim]")
+                    console.print(
+                        f"[dim]  • Current session_id: {self.client.get_session_id()}[/dim]"
+                    )
                     return
                 raise
 
             # Step 4: Wait for user confirmation
             console.print("\n[yellow]Step 4: Waiting for authentication...[/yellow]")
-            confirmed = Confirm.ask("Have you completed authentication in the portal?", default=False)
+            confirmed = Confirm.ask(
+                "Have you completed authentication in the portal?", default=False
+            )
 
             if not confirmed:
                 console.print("[red]❌ Authentication not completed. Exiting...[/red]")
@@ -204,7 +218,9 @@ class FinaticDemo:
                         order_id = order.get("id") or order.get("order_id") or "Unknown"
                         symbol = order.get("symbol") or "Unknown"
                         status = order.get("status") or order.get("order_status") or "Unknown"
-                        console.print(f"[dim]  {index}. Order ID: {order_id} - Symbol: {symbol} - Status: {status}[/dim]")
+                        console.print(
+                            f"[dim]  {index}. Order ID: {order_id} - Symbol: {symbol} - Status: {status}[/dim]"
+                        )
             except Exception:
                 # Error already logged by test_core
                 pass
@@ -213,18 +229,33 @@ class FinaticDemo:
             console.print("\n[yellow]Step 6: Testing getBrokerConnections...[/yellow]")
             connections: List[Any] = []
             try:
-                console.print(f"[dim]  Session ID: {self.client.get_session_id() or 'Not set'}[/dim]")
-                console.print(f"[dim]  Company ID: {self.client.get_company_id() or 'Not set'}[/dim]")
-                connections = await test_core(
-                    "getBrokerConnections", lambda: self.client.get_broker_connections(), show_details=False
+                console.print(
+                    f"[dim]  Session ID: {self.client.get_session_id() or 'Not set'}[/dim]"
                 )
-                console.print(f"[green]✅ Successfully retrieved {len(connections)} broker connections[/green]")
+                console.print(
+                    f"[dim]  Company ID: {self.client.get_company_id() or 'Not set'}[/dim]"
+                )
+                connections = await test_core(
+                    "getBrokerConnections",
+                    lambda: self.client.get_broker_connections(),
+                    show_details=False,
+                )
+                console.print(
+                    f"[green]✅ Successfully retrieved {len(connections)} broker connections[/green]"
+                )
                 if len(connections) > 0:
                     console.print("[dim]Connection details:[/dim]")
                     for index, conn in enumerate(connections[:3], 1):
-                        broker_id = conn.get("broker_id") or "Unknown"
-                        status = conn.get("status") or "Unknown"
-                        console.print(f"[dim]  {index}. Broker ID: {broker_id} - Status: {status}[/dim]")
+                        # Handle both Pydantic models and dicts
+                        if hasattr(conn, "broker_id"):
+                            broker_id = conn.broker_id or "Unknown"
+                            status = str(conn.status) if conn.status else "Unknown"
+                        else:
+                            broker_id = conn.get("broker_id") or "Unknown"
+                            status = conn.get("status") or "Unknown"
+                        console.print(
+                            f"[dim]  {index}. Broker ID: {broker_id} - Status: {status}[/dim]"
+                        )
             except Exception:
                 # Error already logged by test_core
                 pass
@@ -244,9 +275,13 @@ class FinaticDemo:
                 if len(data) > 0:
                     console.print("[dim]Account details:[/dim]")
                     for index, account in enumerate(data[:3], 1):
-                        account_number = account.get("account_number") or account.get("id") or "Unknown"
+                        account_number = (
+                            account.get("account_number") or account.get("id") or "Unknown"
+                        )
                         broker_id = account.get("broker_id") or "Unknown"
-                        console.print(f"[dim]  {index}. Account: {account_number} - Broker: {broker_id}[/dim]")
+                        console.print(
+                            f"[dim]  {index}. Account: {account_number} - Broker: {broker_id}[/dim]"
+                        )
             except Exception:
                 # Error already logged by test_core
                 pass
@@ -256,7 +291,9 @@ class FinaticDemo:
             orders_result: Optional[List[Any]] = None
             try:
                 orders_result = await test_core(
-                    "getOrders (paginated)", lambda: self.client.get_orders(page=1, per_page=10), show_details=False
+                    "getOrders (paginated)",
+                    lambda: self.client.get_orders(page=1, per_page=10),
+                    show_details=False,
                 )
                 # Python SDK returns list directly, not paginated result
                 data = orders_result if isinstance(orders_result, list) else []
@@ -267,7 +304,9 @@ class FinaticDemo:
                         symbol = order.get("symbol") or "Unknown"
                         status = order.get("status") or order.get("order_status") or "Unknown"
                         quantity = order.get("quantity") or order.get("order_qty") or "Unknown"
-                        console.print(f"[dim]  {index}. Symbol: {symbol} - Status: {status} - Quantity: {quantity}[/dim]")
+                        console.print(
+                            f"[dim]  {index}. Symbol: {symbol} - Status: {status} - Quantity: {quantity}[/dim]"
+                        )
             except Exception:
                 # Error already logged by test_core
                 pass
@@ -276,7 +315,9 @@ class FinaticDemo:
             console.print("\n[yellow]Step 9: Testing getBalances...[/yellow]")
             try:
                 balances_result = await test_core(
-                    "getBalances (paginated)", lambda: self.client.get_balances(page=1, per_page=10), show_details=False
+                    "getBalances (paginated)",
+                    lambda: self.client.get_balances(page=1, per_page=10),
+                    show_details=False,
                 )
                 # Python SDK returns list directly, not paginated result
                 data = balances_result if isinstance(balances_result, list) else []
@@ -290,8 +331,12 @@ class FinaticDemo:
                             or balance.get("account_value")
                             or "Unknown"
                         )
-                        account_number = balance.get("account_number") or balance.get("account_id") or "Unknown"
-                        console.print(f"[dim]  {index}. Account: {account_number} - Balance: {cash_balance}[/dim]")
+                        account_number = (
+                            balance.get("account_number") or balance.get("account_id") or "Unknown"
+                        )
+                        console.print(
+                            f"[dim]  {index}. Account: {account_number} - Balance: {cash_balance}[/dim]"
+                        )
             except Exception:
                 # Error already logged by test_core
                 pass
@@ -300,7 +345,9 @@ class FinaticDemo:
             console.print("\n[yellow]Step 10: Testing getPositions...[/yellow]")
             try:
                 positions_result = await test_core(
-                    "getPositions (paginated)", lambda: self.client.get_positions(page=1, per_page=10), show_details=False
+                    "getPositions (paginated)",
+                    lambda: self.client.get_positions(page=1, per_page=10),
+                    show_details=False,
                 )
                 # Python SDK returns list directly, not paginated result
                 data = positions_result if isinstance(positions_result, list) else []
@@ -311,7 +358,9 @@ class FinaticDemo:
                         symbol = position.get("symbol") or "Unknown"
                         quantity = position.get("quantity") or position.get("qty") or "Unknown"
                         side = position.get("side") or "Unknown"
-                        console.print(f"[dim]  {index}. Symbol: {symbol} - Quantity: {quantity} - Side: {side}[/dim]")
+                        console.print(
+                            f"[dim]  {index}. Symbol: {symbol} - Quantity: {quantity} - Side: {side}[/dim]"
+                        )
             except Exception:
                 # Error already logged by test_core
                 pass
@@ -321,7 +370,9 @@ class FinaticDemo:
                 f"\n[dim]  Core Methods Summary: {core_results['passed']}/{core_results['total']} passed[/dim]"
             )
             if core_results["failed"] > 0:
-                console.print(f"[yellow]  {core_results['failed']} core method(s) failed (see details above)[/yellow]")
+                console.print(
+                    f"[yellow]  {core_results['failed']} core method(s) failed (see details above)[/yellow]"
+                )
             else:
                 console.print("[green]  ✅ All core methods passed![/green]")
 
@@ -335,7 +386,9 @@ class FinaticDemo:
                 try:
                     result = await fn()
                     is_valid = (
-                        isinstance(result, list) if expected_type == "array" else (result and isinstance(result, dict))
+                        isinstance(result, list)
+                        if expected_type == "array"
+                        else (result and isinstance(result, dict))
                     )
 
                     if is_valid:
@@ -357,9 +410,18 @@ class FinaticDemo:
 
             # Test filtered helper methods (use symbols/statuses from earlier results if available)
             sample_symbol = (
-                orders_result[0].get("symbol") if orders_result and len(orders_result) > 0 else "AAPL"
+                orders_result[0].get("symbol")
+                if orders_result and len(orders_result) > 0
+                else "AAPL"
             )
-            sample_broker_id = connections[0].get("broker_id") if connections else None
+            # Handle both Pydantic models and dicts
+            sample_broker_id = None
+            if connections and len(connections) > 0:
+                conn = connections[0]
+                if hasattr(conn, "broker_id"):
+                    sample_broker_id = conn.broker_id
+                else:
+                    sample_broker_id = conn.get("broker_id")
 
             await test_helper("getOpenPositions", lambda: self.client.get_open_positions())
             await test_helper("getFilledOrders", lambda: self.client.get_filled_orders())
@@ -402,22 +464,50 @@ class FinaticDemo:
                 console.print("\n[yellow]Step 12: Disconnecting first connection...[/yellow]")
                 try:
                     first_connection = connections[0]
-                    connection_id = first_connection.get("id") or first_connection.get("connection_id")
+                    # Handle both Pydantic models and dicts
+                    if hasattr(first_connection, "id"):
+                        connection_id = (
+                            str(first_connection.id)
+                            if first_connection.id
+                            else (
+                                str(first_connection.connection_id)
+                                if hasattr(first_connection, "connection_id")
+                                else None
+                            )
+                        )
+                        broker_id = (
+                            first_connection.broker_id
+                            if hasattr(first_connection, "broker_id")
+                            else "Unknown"
+                        )
+                    else:
+                        connection_id = first_connection.get("id") or first_connection.get(
+                            "connection_id"
+                        )
+                        broker_id = first_connection.get("broker_id") or "Unknown"
                     console.print(f"[dim]  Disconnecting connection: {connection_id}[/dim]")
-                    console.print(f"[dim]  Broker: {first_connection.get('broker_id') or 'Unknown'}[/dim]")
+                    console.print(f"[dim]  Broker: {broker_id}[/dim]")
 
                     await self.client.brokers.disconnect_company_from_broker(connection_id)
-                    console.print(f"[green]✅ Successfully disconnected connection {connection_id}[/green]")
+                    console.print(
+                        f"[green]✅ Successfully disconnected connection {connection_id}[/green]"
+                    )
                 except Exception as e:
                     console.print(f"[red]❌ Failed to disconnect connection: {str(e)}[/red]")
                     raise
             else:
-                console.print("\n[yellow]Step 12: Skipping disconnect - no connections available[/yellow]")
+                console.print(
+                    "\n[yellow]Step 12: Skipping disconnect - no connections available[/yellow]"
+                )
 
             console.print("\n[green]🎉 Demo completed successfully![/green]")
             console.print("\n[dim]📊 Test Summary:[/dim]")
-            console.print(f"[dim]  Core methods: {core_results['passed']}/{core_results['total']} passed[/dim]")
-            console.print(f"[dim]  Helper methods: {helper_results['passed']}/{helper_results['total']} passed[/dim]")
+            console.print(
+                f"[dim]  Core methods: {core_results['passed']}/{core_results['total']} passed[/dim]"
+            )
+            console.print(
+                f"[dim]  Helper methods: {helper_results['passed']}/{helper_results['total']} passed[/dim]"
+            )
             total_passed = core_results["passed"] + helper_results["passed"]
             total_tests = core_results["total"] + helper_results["total"]
             if total_passed == total_tests:
@@ -443,4 +533,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-

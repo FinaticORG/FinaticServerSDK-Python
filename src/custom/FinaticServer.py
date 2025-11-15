@@ -6,48 +6,27 @@ Add custom logic to extend or override generated FinaticServer behavior.
 """
 
 from typing import Optional, Dict, Any
-from src.generated.FinaticServerClient import FinaticServerClient as GeneratedFinaticServer
+from src.generated.FinaticServer import FinaticServer as GeneratedFinaticServer
 from src.generated.config import SdkConfig
-from src.generated.api.session_api import SessionApi
-from src.generated.api.brokers_api import BrokersApi
-from src.custom.wrappers.session import CustomSessionWrapper
-from src.custom.wrappers.brokers import CustomBrokersWrapper
 
 
 class FinaticServer(GeneratedFinaticServer):
     """Custom FinaticServer class that extends the generated class.
 
     Use this to add custom initialization logic or override methods.
+    
+    NOTE: Session headers, portal URL caching, and metadata transformation
+    are now handled by the generator. No wrapper replacements needed.
     """
 
     # Marker to verify custom class is being used
     __CUSTOM_CLASS__ = True
 
-    def __init__(
-        self,
-        api_key: str,
-        base_url: Optional[str] = None,
-        sdk_config: Optional[SdkConfig] = None,
-    ):
-        """Override constructor to use custom wrappers:
-
-        - Custom session wrapper that disables caching for portal URLs
-        - Custom brokers wrapper that automatically adds session headers
-        """
-        super().__init__(api_key, base_url, sdk_config)
-
-        # Replace session wrapper with custom one that disables portal URL caching
-        # This is needed because portal tokens are single-use
-        # SessionApi expects ApiClient, not Configuration
-        from src.generated.api_client import ApiClient
-        session_api = SessionApi(ApiClient(self.config))
-        self.session = CustomSessionWrapper(session_api, self.config, self.sdk_config)
-
-        # Replace brokers wrapper with custom one that automatically adds session headers
-        # This ensures all broker endpoints include x-session-id, x-company-id, and x-csrf-token headers
-        # BrokersApi expects ApiClient, not Configuration
-        brokers_api = BrokersApi(ApiClient(self.config))
-        self.brokers = CustomBrokersWrapper(brokers_api, self.config, self.sdk_config)
+    # Generator now handles:
+    # - Session headers for broker endpoints (via _headers parameter)
+    # - Portal URL no-cache handling
+    # - Metadata transformation for with_metadata parameter
+    # No custom wrapper replacements needed
 
     async def init_session(
         self, api_key: Optional[str] = None, user_id: Optional[str] = None
@@ -84,9 +63,30 @@ class FinaticServer(GeneratedFinaticServer):
             
             # Step 1: Get one-time token
             token_response = await self.session.init_session(key_to_use)
-            one_time_token = token_response.one_time_token if hasattr(token_response, 'one_time_token') else str(token_response)
             
-            if not one_time_token:
+            # Unwrap FinaticResponse wrapper if needed
+            # The response might be FinaticResponseTokenResponseData (with .data property) or TokenResponseData
+            if hasattr(token_response, 'data') and token_response.data:
+                # Unwrap FinaticResponse wrapper
+                token_response_data = token_response.data
+            else:
+                token_response_data = token_response
+            
+            # Extract one_time_token from TokenResponseData object
+            if hasattr(token_response_data, 'one_time_token'):
+                one_time_token = token_response_data.one_time_token
+            elif isinstance(token_response_data, dict) and 'one_time_token' in token_response_data:
+                one_time_token = token_response_data['one_time_token']
+            else:
+                # If we can't extract the token, return error
+                return {
+                    "success": False,
+                    "session_id": None,
+                    "company_id": None,
+                    "error": f"Failed to extract one-time token from response. Response type: {type(token_response).__name__}, Unwrapped type: {type(token_response_data).__name__}",
+                }
+            
+            if not one_time_token or not isinstance(one_time_token, str):
                 return {
                     "success": False,
                     "session_id": None,

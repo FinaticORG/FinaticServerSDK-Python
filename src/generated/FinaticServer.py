@@ -7,6 +7,7 @@ For custom logic, extend this class or use custom wrappers.
 
 from typing import Optional, Dict, Any, List
 from .configuration import Configuration
+from .api_client import ApiClient
 from .config import SdkConfig, get_config
 from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url
 from .models.session_start_request import SessionStartRequest
@@ -40,6 +41,8 @@ class FinaticServer:
             host=base_url or 'https://api.finatic.dev',
             api_key={'X-API-Key': api_key},
         )
+        # Create ApiClient from Configuration for API classes
+        self.api_client = ApiClient(self.config)
         # Merge sdk_config with defaults
         if sdk_config:
             default = get_config()
@@ -61,9 +64,9 @@ class FinaticServer:
         self.company_id: Optional[str] = None
         self.csrf_token: Optional[str] = None
 
-        self.brokers = BrokersWrapper(BrokersApi(self.config), self.config, self.sdk_config)
-        self.market_data = MarketDataWrapper(MarketDataApi(self.config), self.config, self.sdk_config)
-        self.session = SessionWrapper(SessionApi(self.config), self.config, self.sdk_config)
+        self.brokers = BrokersWrapper(BrokersApi(self.api_client), self.config, self.sdk_config)
+        self.market_data = MarketDataWrapper(MarketDataApi(self.api_client), self.config, self.sdk_config)
+        self.session = SessionWrapper(SessionApi(self.api_client), self.config, self.sdk_config)
 
     async def initialize(self) -> None:
         """Initialize the client (no-op for now, can be extended)."""

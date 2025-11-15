@@ -85,8 +85,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/', {}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -106,18 +108,33 @@ class BrokersWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.get_brokers_api_v1_brokers_get()
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/', {}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Brokers completed',
@@ -125,7 +142,7 @@ class BrokersWrapper:
                 action='get_brokers'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -176,8 +193,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/brokers/connect', {"broker_connection_request": broker_connection_request}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -197,19 +216,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.connect_broker_api_v1_brokers_connect_post(broker_connection_request=broker_connection_request)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.connect_broker_api_v1_brokers_connect_post(broker_connection_request=broker_connection_request, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/brokers/connect', {"broker_connection_request": broker_connection_request}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Connect Broker completed',
@@ -217,7 +261,7 @@ class BrokersWrapper:
                 action='connect_broker'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -265,8 +309,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/connections', {}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -285,19 +331,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.list_broker_connections_api_v1_brokers_connections_get()
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.list_broker_connections_api_v1_brokers_connections_get(_headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/connections', {}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('List Broker Connections completed',
@@ -305,7 +376,7 @@ class BrokersWrapper:
                 action='list_broker_connections'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -350,8 +421,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('PUT', '/api/v1/brokers/connections/{connection_id}', {"connection_id": connection_id, "broker_connection_update_request": broker_connection_update_request}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -372,19 +445,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.update_connection_api_v1_brokers_connections_connection_id_put(connection_id=connection_id, broker_connection_update_request=broker_connection_update_request)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.update_connection_api_v1_brokers_connections_connection_id_put(connection_id=connection_id, broker_connection_update_request=broker_connection_update_request, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('PUT', '/api/v1/brokers/connections/{connection_id}', {"connection_id": connection_id, "broker_connection_update_request": broker_connection_update_request}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Update Connection completed',
@@ -392,7 +490,7 @@ class BrokersWrapper:
                 action='update_connection'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -437,8 +535,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('DELETE', '/api/v1/brokers/connections/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -458,19 +558,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.delete_connection_api_v1_brokers_connections_connection_id_delete(connection_id=connection_id)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.delete_connection_api_v1_brokers_connections_connection_id_delete(connection_id=connection_id, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/connections/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Delete Connection completed',
@@ -478,7 +603,7 @@ class BrokersWrapper:
                 action='delete_connection'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -523,8 +648,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -544,19 +671,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.disconnect_broker_api_v1_brokers_disconnect_connection_id_delete(connection_id=connection_id)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.disconnect_broker_api_v1_brokers_disconnect_connection_id_delete(connection_id=connection_id, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Disconnect Broker completed',
@@ -564,7 +716,7 @@ class BrokersWrapper:
                 action='disconnect_broker'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -612,8 +764,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect-company/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -633,19 +787,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete(connection_id=connection_id)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete(connection_id=connection_id, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect-company/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Disconnect Company From Broker completed',
@@ -653,7 +832,7 @@ class BrokersWrapper:
                 action='disconnect_company_from_broker'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -701,8 +880,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "order_status": order_status, "side": side, "asset_type": asset_type, "limit": limit, "offset": offset, "created_after": created_after, "created_before": created_before, "with_metadata": with_metadata}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -733,19 +914,90 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_orders_api_v1_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, with_metadata=with_metadata)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_orders_api_v1_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, with_metadata=with_metadata, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            # Transform to metadata structure if with_metadata is True
+            if with_metadata is True:
+                # If result has response_data (snake_case from API), transform it
+                if result and isinstance(result, dict) and 'response_data' in result:
+                    data_array = result['response_data'] if isinstance(result.get('response_data'), list) else []
+                    metadata = {}
+                    
+                    # Extract pagination if present
+                    if result.get('pagination') and isinstance(result.get('pagination'), dict):
+                        metadata['pagination'] = result['pagination']
+                        if result['pagination'].get('has_more') is not None:
+                            metadata['has_more'] = result['pagination']['has_more']
+                    
+                    # Extract warnings if present
+                    if result.get('warnings') and isinstance(result.get('warnings'), list):
+                        metadata['warnings'] = result['warnings']
+                    
+                    # Extract errors if present
+                    if result.get('errors') and isinstance(result.get('errors'), list):
+                        metadata['errors'] = result['errors']
+                    
+                    self.logger.debug('get_orders returning metadata structure from response_data',
+                        data_length=len(data_array),
+                        has_pagination=bool(metadata.get('pagination')),
+                        has_warnings=bool(metadata.get('warnings')),
+                        has_errors=bool(metadata.get('errors')),
+                    )
+                    
+                    final_result = {'data': data_array, 'metadata': metadata}
+                elif result and isinstance(result, dict) and 'data' in result and 'metadata' in result and isinstance(result.get('data'), list):
+                    # If result already has data and metadata structure, return as-is
+                    self.logger.debug('get_orders returning metadata structure from unwrapped result',
+                        data_length=len(result.get('data', [])),
+                        has_metadata=bool(result.get('metadata')),
+                    )
+                    final_result = result
+                else:
+                    # Otherwise, return list (or empty list if not a list)
+                    final_result = result if isinstance(result, list) else []
+                    self.logger.debug('get_orders returning list (no metadata structure found)',
+                        list_length=len(final_result),
+                        result_type=type(result).__name__,
+                        result_keys=list(result.keys()) if isinstance(result, dict) else [],
+                    )
+            else:
+                # If with_metadata is False or None, return list (or empty list if not a list)
+                final_result = result if isinstance(result, list) else []
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "order_status": order_status, "side": side, "asset_type": asset_type, "limit": limit, "offset": offset, "created_after": created_after, "created_before": created_before, "with_metadata": with_metadata}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Orders completed',
@@ -753,7 +1005,7 @@ class BrokersWrapper:
                 action='get_orders'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -801,8 +1053,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "side": side, "asset_type": asset_type, "position_status": position_status, "limit": limit, "offset": offset, "updated_after": updated_after, "updated_before": updated_before, "with_metadata": with_metadata}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -833,19 +1087,90 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_positions_api_v1_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, with_metadata=with_metadata)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_positions_api_v1_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, with_metadata=with_metadata, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            # Transform to metadata structure if with_metadata is True
+            if with_metadata is True:
+                # If result has response_data (snake_case from API), transform it
+                if result and isinstance(result, dict) and 'response_data' in result:
+                    data_array = result['response_data'] if isinstance(result.get('response_data'), list) else []
+                    metadata = {}
+                    
+                    # Extract pagination if present
+                    if result.get('pagination') and isinstance(result.get('pagination'), dict):
+                        metadata['pagination'] = result['pagination']
+                        if result['pagination'].get('has_more') is not None:
+                            metadata['has_more'] = result['pagination']['has_more']
+                    
+                    # Extract warnings if present
+                    if result.get('warnings') and isinstance(result.get('warnings'), list):
+                        metadata['warnings'] = result['warnings']
+                    
+                    # Extract errors if present
+                    if result.get('errors') and isinstance(result.get('errors'), list):
+                        metadata['errors'] = result['errors']
+                    
+                    self.logger.debug('get_positions returning metadata structure from response_data',
+                        data_length=len(data_array),
+                        has_pagination=bool(metadata.get('pagination')),
+                        has_warnings=bool(metadata.get('warnings')),
+                        has_errors=bool(metadata.get('errors')),
+                    )
+                    
+                    final_result = {'data': data_array, 'metadata': metadata}
+                elif result and isinstance(result, dict) and 'data' in result and 'metadata' in result and isinstance(result.get('data'), list):
+                    # If result already has data and metadata structure, return as-is
+                    self.logger.debug('get_positions returning metadata structure from unwrapped result',
+                        data_length=len(result.get('data', [])),
+                        has_metadata=bool(result.get('metadata')),
+                    )
+                    final_result = result
+                else:
+                    # Otherwise, return list (or empty list if not a list)
+                    final_result = result if isinstance(result, list) else []
+                    self.logger.debug('get_positions returning list (no metadata structure found)',
+                        list_length=len(final_result),
+                        result_type=type(result).__name__,
+                        result_keys=list(result.keys()) if isinstance(result, dict) else [],
+                    )
+            else:
+                # If with_metadata is False or None, return list (or empty list if not a list)
+                final_result = result if isinstance(result, list) else []
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "side": side, "asset_type": asset_type, "position_status": position_status, "limit": limit, "offset": offset, "updated_after": updated_after, "updated_before": updated_before, "with_metadata": with_metadata}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Positions completed',
@@ -853,7 +1178,7 @@ class BrokersWrapper:
                 action='get_positions'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -901,8 +1226,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/balances', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "is_end_of_day_snapshot": is_end_of_day_snapshot, "limit": limit, "offset": offset, "balance_created_after": balance_created_after, "balance_created_before": balance_created_before, "with_metadata": with_metadata}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -930,19 +1257,90 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_balances_api_v1_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, is_end_of_day_snapshot=is_end_of_day_snapshot, limit=limit, offset=offset, balance_created_after=balance_created_after, balance_created_before=balance_created_before, with_metadata=with_metadata)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_balances_api_v1_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, is_end_of_day_snapshot=is_end_of_day_snapshot, limit=limit, offset=offset, balance_created_after=balance_created_after, balance_created_before=balance_created_before, with_metadata=with_metadata, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            # Transform to metadata structure if with_metadata is True
+            if with_metadata is True:
+                # If result has response_data (snake_case from API), transform it
+                if result and isinstance(result, dict) and 'response_data' in result:
+                    data_array = result['response_data'] if isinstance(result.get('response_data'), list) else []
+                    metadata = {}
+                    
+                    # Extract pagination if present
+                    if result.get('pagination') and isinstance(result.get('pagination'), dict):
+                        metadata['pagination'] = result['pagination']
+                        if result['pagination'].get('has_more') is not None:
+                            metadata['has_more'] = result['pagination']['has_more']
+                    
+                    # Extract warnings if present
+                    if result.get('warnings') and isinstance(result.get('warnings'), list):
+                        metadata['warnings'] = result['warnings']
+                    
+                    # Extract errors if present
+                    if result.get('errors') and isinstance(result.get('errors'), list):
+                        metadata['errors'] = result['errors']
+                    
+                    self.logger.debug('get_balances returning metadata structure from response_data',
+                        data_length=len(data_array),
+                        has_pagination=bool(metadata.get('pagination')),
+                        has_warnings=bool(metadata.get('warnings')),
+                        has_errors=bool(metadata.get('errors')),
+                    )
+                    
+                    final_result = {'data': data_array, 'metadata': metadata}
+                elif result and isinstance(result, dict) and 'data' in result and 'metadata' in result and isinstance(result.get('data'), list):
+                    # If result already has data and metadata structure, return as-is
+                    self.logger.debug('get_balances returning metadata structure from unwrapped result',
+                        data_length=len(result.get('data', [])),
+                        has_metadata=bool(result.get('metadata')),
+                    )
+                    final_result = result
+                else:
+                    # Otherwise, return list (or empty list if not a list)
+                    final_result = result if isinstance(result, list) else []
+                    self.logger.debug('get_balances returning list (no metadata structure found)',
+                        list_length=len(final_result),
+                        result_type=type(result).__name__,
+                        result_keys=list(result.keys()) if isinstance(result, dict) else [],
+                    )
+            else:
+                # If with_metadata is False or None, return list (or empty list if not a list)
+                final_result = result if isinstance(result, list) else []
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/balances', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "is_end_of_day_snapshot": is_end_of_day_snapshot, "limit": limit, "offset": offset, "balance_created_after": balance_created_after, "balance_created_before": balance_created_before, "with_metadata": with_metadata}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Balances completed',
@@ -950,7 +1348,7 @@ class BrokersWrapper:
                 action='get_balances'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -998,8 +1396,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/accounts', {"broker_id": broker_id, "connection_id": connection_id, "account_type": account_type, "status": status, "currency": currency, "limit": limit, "offset": offset, "with_metadata": with_metadata}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1026,19 +1426,90 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, status=status, currency=currency, limit=limit, offset=offset, with_metadata=with_metadata)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, status=status, currency=currency, limit=limit, offset=offset, with_metadata=with_metadata, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            # Transform to metadata structure if with_metadata is True
+            if with_metadata is True:
+                # If result has response_data (snake_case from API), transform it
+                if result and isinstance(result, dict) and 'response_data' in result:
+                    data_array = result['response_data'] if isinstance(result.get('response_data'), list) else []
+                    metadata = {}
+                    
+                    # Extract pagination if present
+                    if result.get('pagination') and isinstance(result.get('pagination'), dict):
+                        metadata['pagination'] = result['pagination']
+                        if result['pagination'].get('has_more') is not None:
+                            metadata['has_more'] = result['pagination']['has_more']
+                    
+                    # Extract warnings if present
+                    if result.get('warnings') and isinstance(result.get('warnings'), list):
+                        metadata['warnings'] = result['warnings']
+                    
+                    # Extract errors if present
+                    if result.get('errors') and isinstance(result.get('errors'), list):
+                        metadata['errors'] = result['errors']
+                    
+                    self.logger.debug('get_accounts returning metadata structure from response_data',
+                        data_length=len(data_array),
+                        has_pagination=bool(metadata.get('pagination')),
+                        has_warnings=bool(metadata.get('warnings')),
+                        has_errors=bool(metadata.get('errors')),
+                    )
+                    
+                    final_result = {'data': data_array, 'metadata': metadata}
+                elif result and isinstance(result, dict) and 'data' in result and 'metadata' in result and isinstance(result.get('data'), list):
+                    # If result already has data and metadata structure, return as-is
+                    self.logger.debug('get_accounts returning metadata structure from unwrapped result',
+                        data_length=len(result.get('data', [])),
+                        has_metadata=bool(result.get('metadata')),
+                    )
+                    final_result = result
+                else:
+                    # Otherwise, return list (or empty list if not a list)
+                    final_result = result if isinstance(result, list) else []
+                    self.logger.debug('get_accounts returning list (no metadata structure found)',
+                        list_length=len(final_result),
+                        result_type=type(result).__name__,
+                        result_keys=list(result.keys()) if isinstance(result, dict) else [],
+                    )
+            else:
+                # If with_metadata is False or None, return list (or empty list if not a list)
+                final_result = result if isinstance(result, list) else []
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/accounts', {"broker_id": broker_id, "connection_id": connection_id, "account_type": account_type, "status": status, "currency": currency, "limit": limit, "offset": offset, "with_metadata": with_metadata}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Accounts completed',
@@ -1046,7 +1517,7 @@ class BrokersWrapper:
                 action='get_accounts'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1093,8 +1564,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/fills', {"order_id": order_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1117,19 +1590,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_order_fills_api_v1_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_order_fills_api_v1_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/fills', {"order_id": order_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Order Fills completed',
@@ -1137,7 +1635,7 @@ class BrokersWrapper:
                 action='get_order_fills'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1184,8 +1682,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/events', {"order_id": order_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1208,19 +1708,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_order_events_api_v1_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_order_events_api_v1_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/events', {"order_id": order_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Order Events completed',
@@ -1228,7 +1753,7 @@ class BrokersWrapper:
                 action='get_order_events'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1275,8 +1800,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/groups', {"broker_id": broker_id, "connection_id": connection_id, "limit": limit, "offset": offset, "created_after": created_after, "created_before": created_before}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1301,19 +1828,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_order_groups_api_v1_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_order_groups_api_v1_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/groups', {"broker_id": broker_id, "connection_id": connection_id, "limit": limit, "offset": offset, "created_after": created_after, "created_before": created_before}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Order Groups completed',
@@ -1321,7 +1873,7 @@ class BrokersWrapper:
                 action='get_order_groups'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1369,8 +1921,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "position_id": position_id, "limit": limit, "offset": offset}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1396,19 +1950,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_position_lots_api_v1_brokers_data_positions_lots_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, position_id=position_id, limit=limit, offset=offset)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_position_lots_api_v1_brokers_data_positions_lots_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, position_id=position_id, limit=limit, offset=offset, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "position_id": position_id, "limit": limit, "offset": offset}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Position Lots completed',
@@ -1416,7 +1995,7 @@ class BrokersWrapper:
                 action='get_position_lots'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1463,8 +2042,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots/{lot_id}/fills', {"lot_id": lot_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1487,19 +2068,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get(lot_id=lot_id, connection_id=connection_id, limit=limit, offset=offset)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get(lot_id=lot_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots/{lot_id}/fills', {"lot_id": lot_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Get Position Lot Fills completed',
@@ -1507,7 +2113,7 @@ class BrokersWrapper:
                 action='get_position_lot_fills'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1551,8 +2157,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/sandbox-callback/{broker_id}', {"broker_id": broker_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1573,18 +2181,33 @@ class BrokersWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get(broker_id=broker_id)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/sandbox-callback/{broker_id}', {"broker_id": broker_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Sandbox Callback completed',
@@ -1592,7 +2215,7 @@ class BrokersWrapper:
                 action='sandbox_callback'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1648,8 +2271,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/callback/tastytrade', {}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1669,18 +2294,33 @@ class BrokersWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get()
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/callback/tastytrade', {}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Oauth Callback Tastytrade completed',
@@ -1688,7 +2328,7 @@ class BrokersWrapper:
                 action='oauth_callback_tastytrade'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1746,8 +2386,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('GET', '/api/v1/brokers/callback/{broker_id}', {"broker_id": broker_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1768,18 +2410,33 @@ class BrokersWrapper:
             async def api_call():
                 # Apply request interceptors (Phase 2B)
                 response = await self.api.oauth_callback_api_v1_brokers_callback_broker_id_get(broker_id=broker_id)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/callback/{broker_id}', {"broker_id": broker_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Oauth Callback completed',
@@ -1787,7 +2444,7 @@ class BrokersWrapper:
                 action='oauth_callback'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1885,8 +2542,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('POST', '/api/v1/brokers/orders', {"place_order_api_v1_brokers_orders_post_request": place_order_api_v1_brokers_orders_post_request, "connection_id": connection_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1907,19 +2566,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.place_order_api_v1_brokers_orders_post(place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request, connection_id=connection_id)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.place_order_api_v1_brokers_orders_post(place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request, connection_id=connection_id, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('POST', '/api/v1/brokers/orders', {"place_order_api_v1_brokers_orders_post_request": place_order_api_v1_brokers_orders_post_request, "connection_id": connection_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Place Order completed',
@@ -1927,7 +2611,7 @@ class BrokersWrapper:
                 action='place_order'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -1975,8 +2659,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('DELETE', '/api/v1/brokers/orders/{order_id}', {"order_id": order_id, "cancel_order_api_v1_brokers_orders_order_id_delete_request": cancel_order_api_v1_brokers_orders_order_id_delete_request, "account_number": account_number, "connection_id": connection_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -1999,19 +2685,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.cancel_order_api_v1_brokers_orders_order_id_delete(order_id=order_id, cancel_order_api_v1_brokers_orders_order_id_delete_request=cancel_order_api_v1_brokers_orders_order_id_delete_request, account_number=account_number, connection_id=connection_id)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.cancel_order_api_v1_brokers_orders_order_id_delete(order_id=order_id, cancel_order_api_v1_brokers_orders_order_id_delete_request=cancel_order_api_v1_brokers_orders_order_id_delete_request, account_number=account_number, connection_id=connection_id, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/orders/{order_id}', {"order_id": order_id, "cancel_order_api_v1_brokers_orders_order_id_delete_request": cancel_order_api_v1_brokers_orders_order_id_delete_request, "account_number": account_number, "connection_id": connection_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Cancel Order completed',
@@ -2019,7 +2730,7 @@ class BrokersWrapper:
                 action='cancel_order'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
@@ -2067,8 +2778,10 @@ class BrokersWrapper:
             pass  # Placeholder until validation is implemented
 
         # Check cache (Phase 2B: optional caching)
+        # Portal URLs are single-use tokens - must NOT be cached
+        should_cache = not False
         cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled:
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             cache_key = generate_cache_key('PATCH', '/api/v1/brokers/orders/{order_id}', {"order_id": order_id, "modify_order_api_v1_brokers_orders_order_id_patch_request": modify_order_api_v1_brokers_orders_order_id_patch_request, "account_number": account_number, "connection_id": connection_id}, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
@@ -2091,19 +2804,44 @@ class BrokersWrapper:
             # Full retry logic (Phase 2B: tenacity)
             async def api_call():
                 # Apply request interceptors (Phase 2B)
-                response = await self.api.modify_order_api_v1_brokers_orders_order_id_patch(order_id=order_id, modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request, account_number=account_number, connection_id=connection_id)
+                # Get session headers for broker endpoints
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.modify_order_api_v1_brokers_orders_order_id_patch(order_id=order_id, modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request, account_number=account_number, connection_id=connection_id, _headers=headers)
+
                 # Apply response interceptors (Phase 2B)
                 return await apply_response_interceptors(response, self.sdk_config)
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Unwrap FinaticResponse wrapper if present
+            # The API might return FinaticResponse[Model] (with .data property) or FinaticResponseList[...] (with .response_data property)
+            if response and hasattr(response, 'response_data') and response.response_data is not None:
+                # Unwrap FinaticResponseList wrapper (e.g., FinaticResponseListUserBrokerConnections -> List[UserBrokerConnections])
+                result = response.response_data
+            elif response and hasattr(response, 'data') and response.data:
+                # Unwrap FinaticResponse wrapper (e.g., FinaticResponseTokenResponseData -> TokenResponseData)
+                result = response.data
+            else:
+                # Response is already unwrapped (e.g., TokenResponseData, List[...])
+                result = response
+            
+
+            final_result = result
             
 
             # Store in cache (Phase 2B)
-            if cache and self.sdk_config and self.sdk_config.cache_enabled:
+            # Portal URLs are single-use tokens - must NOT be cached
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 cache_key = generate_cache_key('PATCH', '/api/v1/brokers/orders/{order_id}', {"order_id": order_id, "modify_order_api_v1_brokers_orders_order_id_patch_request": modify_order_api_v1_brokers_orders_order_id_patch_request, "account_number": account_number, "connection_id": connection_id}, self.sdk_config)
-                cache[cache_key] = result
+                cache[cache_key] = final_result
             
             # Structured logging (Phase 2B)
             self.logger.debug('Modify Order completed',
@@ -2111,7 +2849,7 @@ class BrokersWrapper:
                 action='modify_order'
             )
             
-            return result
+            return final_result
             
         except Exception as e:
             # Error handling with interceptors (Phase 2B)
