@@ -107,6 +107,7 @@ class MarketDataWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/market-data/futures/historical', {"symbol": symbol, "start_date": start_date, "end_date": end_date, "expiration": expiration, "provider": provider}, self.sdk_config)

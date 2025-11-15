@@ -113,6 +113,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/', {}, self.sdk_config)
@@ -204,6 +205,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/brokers/connect', {"broker_connection_request": broker_connection_request}, self.sdk_config)
@@ -291,6 +293,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/connections', {}, self.sdk_config)
@@ -377,6 +380,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('PUT', '/api/v1/brokers/connections/{connection_id}', {"connection_id": connection_id, "broker_connection_update_request": broker_connection_update_request}, self.sdk_config)
@@ -462,6 +466,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/connections/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
@@ -547,6 +552,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
@@ -635,6 +641,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect-company/{connection_id}', {"connection_id": connection_id}, self.sdk_config)
@@ -734,6 +741,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "order_status": order_status, "side": side, "asset_type": asset_type, "limit": limit, "offset": offset, "created_after": created_after, "created_before": created_before, "with_metadata": with_metadata}, self.sdk_config)
@@ -833,6 +841,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "side": side, "asset_type": asset_type, "position_status": position_status, "limit": limit, "offset": offset, "updated_after": updated_after, "updated_before": updated_before, "with_metadata": with_metadata}, self.sdk_config)
@@ -929,6 +938,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/balances', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "is_end_of_day_snapshot": is_end_of_day_snapshot, "limit": limit, "offset": offset, "balance_created_after": balance_created_after, "balance_created_before": balance_created_before, "with_metadata": with_metadata}, self.sdk_config)
@@ -1024,6 +1034,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/accounts', {"broker_id": broker_id, "connection_id": connection_id, "account_type": account_type, "status": status, "currency": currency, "limit": limit, "offset": offset, "with_metadata": with_metadata}, self.sdk_config)
@@ -1114,6 +1125,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/fills', {"order_id": order_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
@@ -1204,6 +1216,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/events', {"order_id": order_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
@@ -1296,6 +1309,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/groups', {"broker_id": broker_id, "connection_id": connection_id, "limit": limit, "offset": offset, "created_after": created_after, "created_before": created_before}, self.sdk_config)
@@ -1390,6 +1404,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots', {"broker_id": broker_id, "connection_id": connection_id, "account_id": account_id, "symbol": symbol, "position_id": position_id, "limit": limit, "offset": offset}, self.sdk_config)
@@ -1480,6 +1495,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots/{lot_id}/fills', {"lot_id": lot_id, "connection_id": connection_id, "limit": limit, "offset": offset}, self.sdk_config)
@@ -1564,6 +1580,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/sandbox-callback/{broker_id}', {"broker_id": broker_id}, self.sdk_config)
@@ -1659,6 +1676,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/callback/tastytrade', {}, self.sdk_config)
@@ -1757,6 +1775,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/brokers/callback/{broker_id}', {"broker_id": broker_id}, self.sdk_config)
@@ -1896,6 +1915,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/brokers/orders', {"place_order_api_v1_brokers_orders_post_request": place_order_api_v1_brokers_orders_post_request, "connection_id": connection_id}, self.sdk_config)
@@ -1987,6 +2007,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('DELETE', '/api/v1/brokers/orders/{order_id}', {"order_id": order_id, "cancel_order_api_v1_brokers_orders_order_id_delete_request": cancel_order_api_v1_brokers_orders_order_id_delete_request, "account_number": account_number, "connection_id": connection_id}, self.sdk_config)
@@ -2078,6 +2099,7 @@ class BrokersWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('PATCH', '/api/v1/brokers/orders/{order_id}', {"order_id": order_id, "modify_order_api_v1_brokers_orders_order_id_patch_request": modify_order_api_v1_brokers_orders_order_id_patch_request, "account_number": account_number, "connection_id": connection_id}, self.sdk_config)

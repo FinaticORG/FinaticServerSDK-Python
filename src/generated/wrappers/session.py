@@ -113,6 +113,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/session/init', {"x_api_key": x_api_key}, self.sdk_config)
@@ -195,6 +196,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/session/start', {"one_time_token": one_time_token, "session_start_request": session_start_request}, self.sdk_config)
@@ -277,8 +279,28 @@ class SessionWrapper:
             
             response = await retry_api_call(api_call, config=self.sdk_config)
             
-            result = response.data.data  # Unwrap FinaticResponse
+            # Handle multiple response structures from different unwrapping scenarios
+            if response and isinstance(response, dict) and 'data' in response and response.get('data') and isinstance(response.get('data'), dict) and 'data' in response.get('data'):
+                # FinaticResponse wrapper from axios: { data: { success: True, data: { portal_url: "..." } } }
+                result = response['data']['data']
+            elif response and isinstance(response, dict) and 'data' in response and response.get('data') and isinstance(response.get('data'), dict) and 'portal_url' in response.get('data'):
+                # FinaticResponse already unwrapped: { data: { portal_url: "..." } }
+                result = response['data']
+            elif response and isinstance(response, dict) and 'portal_url' in response:
+                # PortalUrlResponse directly: { portal_url: "..." }
+                result = response
+            elif response and isinstance(response, dict) and 'data' in response:
+                # Fallback: { data: ... }
+                result = response['data']
+            else:
+                # Direct response
+                result = response
             
+            # Validate result structure
+            if not result or not isinstance(result, dict) or 'portal_url' not in result:
+                raise ValueError(f'Failed to unwrap portal URL response: expected PortalUrlResponse with portal_url property')
+            
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/session/portal', {"session_id": session_id}, self.sdk_config)
@@ -371,6 +393,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('GET', '/api/v1/session/{session_id}/user', {"company_id": company_id, "session_id": session_id}, self.sdk_config)
@@ -456,6 +479,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/session/authenticate', {"direct_auth_request": direct_auth_request}, self.sdk_config)
@@ -545,6 +569,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/session/refresh', {"session_id": session_id, "company_id": company_id}, self.sdk_config)
@@ -630,6 +655,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/session/webhook/test', {"finaticapi_api_v1_routers_session_session_router_test_webhook_request": finaticapi_api_v1_routers_session_session_router_test_webhook_request}, self.sdk_config)
@@ -719,6 +745,7 @@ class SessionWrapper:
             
             result = response.data.data  # Unwrap FinaticResponse
             
+
             # Store in cache (Phase 2B)
             if cache and self.sdk_config and self.sdk_config.cache_enabled:
                 cache_key = generate_cache_key('POST', '/api/v1/session/link-user', {"session_id": session_id, "session_link_request": session_link_request}, self.sdk_config)
