@@ -57,15 +57,10 @@ Repository = "https://github.com/finatic/finatic-server-python"
 Issues = "https://github.com/finatic/finatic-server-python/issues"
 
 [tool.hatch.build.targets.wheel]
-# Include both src (internal) and finatic_server_python (public API)
-# Users import as: from finatic_server_python import FinaticServer
-# This matches the pattern: @finatic/server-node and @finatic/client
-# Package name: finatic-server-python (pip install finatic-server-python)
-# Import name: finatic_server_python (from finatic_server_python import ...)
-packages = ["src", "finatic_server_python"]
+packages = ["src/generated", "src/custom"]
 
 [tool.hatch.build.targets.editable]
-packages = ["src", "finatic_server_python"]
+packages = ["src/generated", "src/custom"]
 
 [tool.black]
 line-length = 88
