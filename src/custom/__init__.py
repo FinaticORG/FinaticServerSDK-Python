@@ -4,11 +4,13 @@ Custom code exports.
 This file is protected - add your custom exports here.
 """
 
-# Core
-# from .core.client.api_client import ApiClient
+# Core - Export custom FinaticServer that extends generated class
+from .FinaticServer import FinaticServer
 
 # Wrappers
-# from .wrappers.session import CustomSessionWrapper
+from .wrappers.session import CustomSessionWrapper
+from .wrappers.brokers import CustomBrokersWrapper
+from .wrappers.market_data import CustomMarketDataWrapper
 
 # Utils
 # from .utils.errors import *

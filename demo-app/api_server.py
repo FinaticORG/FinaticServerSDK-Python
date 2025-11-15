@@ -23,11 +23,18 @@ load_dotenv()
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "src"))
-from finatic_server import FinaticServerClient
+# Add parent directory to path so finatic_server_python can be imported
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+# Import SDK - matches pattern: @finatic/server-node and @finatic/client
+# Package: finatic-server-python (pip install)
+# Import: finatic_server_python (from finatic_server_python import ...)
+from finatic_server_python import FinaticServer
 
 # Global SDK client instance
-sdk_client: Optional[FinaticServerClient] = None
+sdk_client: Optional[FinaticServer] = None
 
 
 # Request/Response models
@@ -97,7 +104,7 @@ async def lifespan(app: FastAPI):
     print(f"   API URL: {api_url}")
     print(f"   API Key: {api_key}")
 
-    sdk_client = FinaticServerClient(api_key=api_key, base_url=api_url)
+    sdk_client = FinaticServer(api_key=api_key, base_url=api_url)
 
     print("✅ Python Server SDK initialized successfully")
 

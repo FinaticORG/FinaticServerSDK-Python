@@ -7,5 +7,9 @@ This file is protected - customize exports as needed.
 # Re-export all generated code
 from .generated import *
 
-# Re-export all custom code
+# Re-export main client class explicitly (custom version that extends generated class)
+# MUST come before export * from './custom' to ensure custom version is used
+from .custom import FinaticServer
+
+# Re-export all other custom code (wrappers, utils, etc.)
 from .custom import *
