@@ -61,6 +61,7 @@ class FinaticServer:
         self.session_id: Optional[str] = None
         self.company_id: Optional[str] = None
         self.csrf_token: Optional[str] = None
+        self.user_id: Optional[str] = None
 
         self.brokers = BrokersWrapper(BrokersApi(self.api_client), self.config, self.sdk_config)
         self.session = SessionWrapper(SessionApi(self.api_client), self.config, self.sdk_config)
@@ -96,6 +97,10 @@ class FinaticServer:
     def get_company_id(self) -> Optional[str]:
         """Get current company ID."""
         return self.company_id
+
+    def get_user_id(self) -> Optional[str]:
+        """Get current user ID (set after portal authentication)."""
+        return self.user_id
 
     async def init_session(self, x_api_key: str) -> str:
         """Initialize a session by getting a one-time token.
@@ -207,9 +212,16 @@ class FinaticServer:
         
         # get_session_user uses session_id in the path and company_id from session context
         response = await self.session.get_session_user(self.session_id)
+        user_id = response.user_id or ''
+        company_id = response.company_id or self.company_id or ''
+        
+        # Store user_id for get_user_id() method
+        if user_id:
+            self.user_id = user_id
+        
         return {
-            'user_id': response.user_id or '',
-            'company_id': response.company_id or self.company_id or '',
+            'user_id': user_id,
+            'company_id': company_id,
             'token_type': response.token_type or 'Bearer',
         }
 
@@ -406,6 +418,128 @@ class FinaticServer:
         """Get positions filtered by broker."""
         merged_filter = {**(filter or {}), 'broker_id': broker_id}
         return await self.get_all_positions(merged_filter)
+
+    async def get_all_order_groups(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
+        """Get all order groups across all pages."""
+        all_data: List[Any] = []
+        offset = 0
+        limit = 100
+        
+        while True:
+            result = await self.brokers.get_order_groups(
+                broker_id=filter.get('broker_id') if filter else None,
+                connection_id=filter.get('connection_id') if filter else None,
+                limit=limit,
+                offset=offset,
+                created_after=filter.get('created_after') if filter else None,
+                created_before=filter.get('created_before') if filter else None
+            )
+            if not result or len(result) == 0:
+                break
+            all_data.extend(result)
+            if len(result) < limit:
+                break
+            offset += limit
+        
+        return self._convert_to_dict(all_data)
+
+    async def get_order_groups(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
+        """Get paginated order groups."""
+        offset = (page - 1) * per_page
+        result = await self.brokers.get_order_groups(
+            broker_id=filter.get('broker_id') if filter else None,
+            connection_id=filter.get('connection_id') if filter else None,
+            limit=per_page,
+            offset=offset,
+            created_after=filter.get('created_after') if filter else None,
+            created_before=filter.get('created_before') if filter else None
+        )
+        return self._convert_to_dict(result)
+
+    async def get_all_position_lots(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
+        """Get all position lots across all pages."""
+        all_data: List[Any] = []
+        offset = 0
+        limit = 100
+        
+        while True:
+            result = await self.brokers.get_position_lots(
+                broker_id=filter.get('broker_id') if filter else None,
+                connection_id=filter.get('connection_id') if filter else None,
+                account_id=filter.get('account_id') if filter else None,
+                symbol=filter.get('symbol') if filter else None,
+                position_id=filter.get('position_id') if filter else None,
+                limit=limit,
+                offset=offset
+            )
+            if not result or len(result) == 0:
+                break
+            all_data.extend(result)
+            if len(result) < limit:
+                break
+            offset += limit
+        
+        return self._convert_to_dict(all_data)
+
+    async def get_position_lots(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
+        """Get paginated position lots."""
+        offset = (page - 1) * per_page
+        result = await self.brokers.get_position_lots(
+            broker_id=filter.get('broker_id') if filter else None,
+            connection_id=filter.get('connection_id') if filter else None,
+            account_id=filter.get('account_id') if filter else None,
+            symbol=filter.get('symbol') if filter else None,
+            position_id=filter.get('position_id') if filter else None,
+            limit=per_page,
+            offset=offset
+        )
+        return self._convert_to_dict(result)
+
+    async def disconnect_company(self, connection_id: str) -> Any:
+        """Disconnect company from broker."""
+        if not self.session_id:
+            raise ValueError('Session not initialized. Call start_session() first.')
+        result = await self.brokers.disconnect_company_from_broker(connection_id)
+        return self._convert_to_dict(result)
+
+    async def get_order_fills(self, order_id: str, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
+        """Get order fills for a specific order."""
+        if not self.session_id:
+            raise ValueError('Session not initialized. Call start_session() first.')
+        offset = (page - 1) * per_page
+        result = await self.brokers.get_order_fills(
+            order_id=order_id,
+            connection_id=filter.get('connection_id') if filter else None,
+            limit=per_page,
+            offset=offset
+        )
+        return self._convert_to_dict(result)
+
+    async def get_order_events(self, order_id: str, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
+        """Get order events for a specific order."""
+        if not self.session_id:
+            raise ValueError('Session not initialized. Call start_session() first.')
+        offset = (page - 1) * per_page
+        result = await self.brokers.get_order_events(
+            order_id=order_id,
+            connection_id=filter.get('connection_id') if filter else None,
+            limit=per_page,
+            offset=offset
+        )
+        return self._convert_to_dict(result)
+
+    async def get_position_lot_fills(self, lot_id: str, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
+        """Get position lot fills for a specific lot."""
+        if not self.session_id:
+            raise ValueError('Session not initialized. Call start_session() first.')
+        offset = (page - 1) * per_page
+        result = await self.brokers.get_position_lot_fills(
+            lot_id=lot_id,
+            connection_id=filter.get('connection_id') if filter else None,
+            limit=per_page,
+            offset=offset
+        )
+        return self._convert_to_dict(result)
 
 
 

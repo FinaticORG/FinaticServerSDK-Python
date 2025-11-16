@@ -55,6 +55,9 @@ API_KEY = os.getenv("FINATIC_API_KEY")
 DEMO_EMAIL = os.getenv("DEMO_EMAIL", "demo@finatic.dev")
 ACCOUNT_ID_FILTER = "1c0e6a5e-f6d7-4af8-b69d-09aa17f73762"
 
+# Feature flags
+ENABLE_DISCONNECT = os.getenv("ENABLE_DISCONNECT", "false").lower() == "true"
+
 console = Console()
 
 
@@ -182,6 +185,49 @@ class FinaticDemo:
             console.print(f"[dim]User ID: {user_info.get('user_id')}[/dim]")
             console.print(f"[dim]Company ID: {user_info.get('company_id')}[/dim]")
             console.print(f"[dim]Token Type: {user_info.get('token_type')}[/dim]")
+
+            # Test session/auth methods
+            console.print("\n[yellow]Step 5.1: Testing session/auth methods...[/yellow]")
+            session_results = {"passed": 0, "failed": 0, "total": 0}
+
+            async def test_session(name: str, fn, expected_type: str = "object") -> None:
+                session_results["total"] += 1
+                try:
+                    # Always await fn() - if it's not a coroutine, this will work fine
+                    # If it returns a coroutine, we need to await it
+                    coro_or_result = fn()
+                    if asyncio.iscoroutine(coro_or_result):
+                        result = await coro_or_result
+                    else:
+                        result = coro_or_result
+                    is_valid = (
+                        isinstance(result, dict)
+                        if expected_type == "object"
+                        else isinstance(result, str)
+                        if expected_type == "string"
+                        else isinstance(result, list)
+                        if expected_type == "array"
+                        else result is not None
+                    )
+                    if is_valid:
+                        session_results["passed"] += 1
+                        console.print(f"[dim]  ✅ {name}[/dim]")
+                    else:
+                        session_results["failed"] += 1
+                        console.print(f"[red]  ❌ {name} (invalid return type)[/red]")
+                except Exception as e:
+                    session_results["failed"] += 1
+                    error_msg = str(e)[:50] if str(e) else "error"
+                    console.print(f"[red]  ❌ {name} ({error_msg})[/red]")
+
+            await test_session("getSessionId", lambda: self.client.get_session_id(), "string")
+            await test_session("getCompanyId", lambda: self.client.get_company_id(), "string")
+            await test_session("getUserId", lambda: self.client.get_user_id(), "string")
+            await test_session("getPortalUrl", lambda: self.client.get_portal_url(), "string")
+
+            console.print(
+                f"[dim]  Session Methods Summary: {session_results['passed']}/{session_results['total']} passed[/dim]"
+            )
 
             # Track core method results
             core_results = {"passed": 0, "failed": 0, "total": 0}
@@ -402,11 +448,16 @@ class FinaticDemo:
                     error_msg = str(e)[:50] if str(e) else "error"
                     console.print(f"[red]  ❌ {name} ({error_msg})[/red]")
 
+            # Test broker list (getBrokerConnections is already tested in core methods)
+            await test_helper("getBrokerList", lambda: self.client.get_broker_list())
+
             # Test getAll* methods (fetch all data across pages)
             await test_helper("getAllAccounts", lambda: self.client.get_all_accounts())
             await test_helper("getAllOrders", lambda: self.client.get_all_orders())
             await test_helper("getAllPositions", lambda: self.client.get_all_positions())
             await test_helper("getAllBalances", lambda: self.client.get_all_balances())
+            await test_helper("getAllOrderGroups", lambda: self.client.get_all_order_groups())
+            await test_helper("getAllPositionLots", lambda: self.client.get_all_position_lots())
 
             # Test filtered helper methods (use symbols/statuses from earlier results if available)
             sample_symbol = (
@@ -446,6 +497,105 @@ class FinaticDemo:
                 await test_helper(
                     f'getPositionsByBroker("{sample_broker_id}")',
                     lambda: self.client.get_positions_by_broker(sample_broker_id),
+                )
+
+            # Test paginated methods (these return lists, not objects)
+            await test_helper(
+                "getAccounts",
+                lambda: self.client.get_accounts(page=1, per_page=10),
+                expected_type="array",
+            )
+            await test_helper(
+                "getOrders",
+                lambda: self.client.get_orders(page=1, per_page=10),
+                expected_type="array",
+            )
+            await test_helper(
+                "getPositions",
+                lambda: self.client.get_positions(page=1, per_page=10),
+                expected_type="array",
+            )
+            await test_helper(
+                "getBalances",
+                lambda: self.client.get_balances(page=1, per_page=10),
+                expected_type="array",
+            )
+            await test_helper(
+                "getOrderGroups",
+                lambda: self.client.get_order_groups(page=1, per_page=10),
+                expected_type="array",
+            )
+            await test_helper(
+                "getPositionLots",
+                lambda: self.client.get_position_lots(page=1, per_page=10),
+                expected_type="array",
+            )
+
+            # Test order/position detail methods (require IDs from earlier results)
+            if orders_result and len(orders_result) > 0:
+                sample_order_id = orders_result[0].get("id") or orders_result[0].get("order_id")
+                if sample_order_id:
+                    await test_helper(
+                        f'getOrderFills("{sample_order_id}")',
+                        lambda: self.client.get_order_fills(
+                            order_id=sample_order_id, page=1, per_page=10
+                        ),
+                        expected_type="array",
+                    )
+                    await test_helper(
+                        f'getOrderEvents("{sample_order_id}")',
+                        lambda: self.client.get_order_events(
+                            order_id=sample_order_id, page=1, per_page=10
+                        ),
+                        expected_type="array",
+                    )
+
+            # Get position lots to find a lot ID for getPositionLotFills
+            try:
+                position_lots_result = await self.client.get_position_lots(page=1, per_page=10)
+                if position_lots_result and len(position_lots_result) > 0:
+                    sample_lot_id = (
+                        position_lots_result[0].get("id")
+                        or position_lots_result[0].get("lot_id")
+                        or position_lots_result[0].get("position_lot_id")
+                    )
+                    if sample_lot_id:
+                        await test_helper(
+                            f'getPositionLotFills("{sample_lot_id}")',
+                            lambda: self.client.get_position_lot_fills(
+                                lot_id=sample_lot_id, page=1, per_page=10
+                            ),
+                            expected_type="array",
+                        )
+            except Exception:
+                # If getPositionLots fails, skip getPositionLotFills test
+                pass
+
+            # Test disconnect (if enabled)
+            if ENABLE_DISCONNECT and connections and len(connections) > 0:
+                console.print("\n[yellow]Step 11.1: Testing disconnectCompany...[/yellow]")
+                try:
+                    conn = connections[0]
+                    connection_id = (
+                        conn.get("id")
+                        if isinstance(conn, dict)
+                        else (conn.id if hasattr(conn, "id") else None)
+                    )
+                    if connection_id:
+                        await test_helper(
+                            "disconnectCompany",
+                            lambda: self.client.disconnect_company(connection_id),
+                        )
+                        console.print("[green]✅ Disconnect test completed[/green]")
+                    else:
+                        console.print(
+                            "[yellow]⚠️  No connection ID available for disconnect test[/yellow]"
+                        )
+                except Exception as e:
+                    console.print(f"[red]❌ Disconnect test failed: {str(e)[:50]}[/red]")
+            elif ENABLE_DISCONNECT:
+                console.print(
+                    "[yellow]⚠️  ENABLE_DISCONNECT is true but no connections available[/yellow]"
                 )
 
             # Summary
@@ -503,13 +653,18 @@ class FinaticDemo:
             console.print("\n[green]🎉 Demo completed successfully![/green]")
             console.print("\n[dim]📊 Test Summary:[/dim]")
             console.print(
+                f"[dim]  Session methods: {session_results['passed']}/{session_results['total']} passed[/dim]"
+            )
+            console.print(
                 f"[dim]  Core methods: {core_results['passed']}/{core_results['total']} passed[/dim]"
             )
             console.print(
                 f"[dim]  Helper methods: {helper_results['passed']}/{helper_results['total']} passed[/dim]"
             )
-            total_passed = core_results["passed"] + helper_results["passed"]
-            total_tests = core_results["total"] + helper_results["total"]
+            total_passed = (
+                session_results["passed"] + core_results["passed"] + helper_results["passed"]
+            )
+            total_tests = session_results["total"] + core_results["total"] + helper_results["total"]
             if total_passed == total_tests:
                 console.print(f"[green]  Total: {total_passed}/{total_tests} passed ✅[/green]")
             else:
