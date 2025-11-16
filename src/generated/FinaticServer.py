@@ -205,8 +205,8 @@ class FinaticServer:
         if not self.session_id or not self.company_id:
             raise ValueError('Session not initialized. Call start_session() first.')
         
-        # get_session_user requires both company_id and session_id (in that order)
-        response = await self.session.get_session_user(self.company_id, self.session_id)
+        # get_session_user uses session_id in the path and company_id from session context
+        response = await self.session.get_session_user(self.session_id)
         return {
             'user_id': response.user_id or '',
             'company_id': response.company_id or self.company_id or '',
@@ -214,13 +214,30 @@ class FinaticServer:
         }
 
 
+    def _convert_to_dict(self, data: Any) -> Any:
+        """Convert Pydantic models to dictionaries for consistency with other SDKs."""
+        if data is None:
+            return None
+        if isinstance(data, list):
+            return [self._convert_to_dict(item) for item in data]
+        # Check if it's a Pydantic model (has model_dump or dict method)
+        if hasattr(data, 'model_dump'):
+            return data.model_dump()
+        elif hasattr(data, 'dict'):
+            return data.dict()
+        elif isinstance(data, dict):
+            return {k: self._convert_to_dict(v) for k, v in data.items()}
+        return data
+
     async def get_broker_list(self) -> List[Any]:
         """Get list of supported brokers."""
-        return await self.brokers.get_brokers()
+        result = await self.brokers.get_brokers()
+        return self._convert_to_dict(result)
 
     async def get_broker_connections(self) -> List[Any]:
         """Get user's broker connections."""
-        return await self.brokers.list_broker_connections()
+        result = await self.brokers.list_broker_connections()
+        return self._convert_to_dict(result)
 
     async def get_all_accounts(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
         """Get all accounts across all pages."""
@@ -237,7 +254,7 @@ class FinaticServer:
                 break
             offset += limit
         
-        return all_data
+        return self._convert_to_dict(all_data)
 
     async def get_all_orders(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
         """Get all orders across all pages."""
@@ -261,7 +278,7 @@ class FinaticServer:
                 break
             offset += limit
         
-        return all_data
+        return self._convert_to_dict(all_data)
 
     async def get_all_positions(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
         """Get all positions across all pages."""
@@ -285,7 +302,7 @@ class FinaticServer:
                 break
             offset += limit
         
-        return all_data
+        return self._convert_to_dict(all_data)
 
     async def get_all_balances(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
         """Get all balances across all pages."""
@@ -306,17 +323,18 @@ class FinaticServer:
                 break
             offset += limit
         
-        return all_data
+        return self._convert_to_dict(all_data)
 
     async def get_accounts(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
         """Get paginated accounts."""
         offset = (page - 1) * per_page
-        return await self.brokers.get_accounts(limit=per_page, offset=offset)
+        result = await self.brokers.get_accounts(limit=per_page, offset=offset)
+        return self._convert_to_dict(result)
 
     async def get_orders(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
         """Get paginated orders."""
         offset = (page - 1) * per_page
-        return await self.brokers.get_orders(
+        result = await self.brokers.get_orders(
             symbol=filter.get('symbol') if filter else None,
             order_status=filter.get('order_status') if filter else None,
             side=filter.get('side') if filter else None,
@@ -324,11 +342,12 @@ class FinaticServer:
             limit=per_page,
             offset=offset
         )
+        return self._convert_to_dict(result)
 
     async def get_positions(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
         """Get paginated positions."""
         offset = (page - 1) * per_page
-        return await self.brokers.get_positions(
+        result = await self.brokers.get_positions(
             symbol=filter.get('symbol') if filter else None,
             side=filter.get('side') if filter else None,
             asset_type=filter.get('asset_type') if filter else None,
@@ -336,19 +355,21 @@ class FinaticServer:
             limit=per_page,
             offset=offset
         )
+        return self._convert_to_dict(result)
 
     async def get_balances(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
         """Get paginated balances."""
         offset = (page - 1) * per_page
-        return await self.brokers.get_balances(
+        result = await self.brokers.get_balances(
             is_end_of_day_snapshot=filter.get('is_end_of_day_snapshot') if filter else None,
             limit=per_page,
             offset=offset
         )
+        return self._convert_to_dict(result)
 
     async def get_open_positions(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
         """Get only open positions."""
-        merged_filter = {**(filter or {}), 'position_status': 'open'}
+        merged_filter = {**(filter or {}), 'position_status': 'active'}
         return await self.get_all_positions(merged_filter)
 
     async def get_filled_orders(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
@@ -358,7 +379,7 @@ class FinaticServer:
 
     async def get_pending_orders(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
         """Get only pending orders."""
-        merged_filter = {**(filter or {}), 'order_status': 'pending'}
+        merged_filter = {**(filter or {}), 'order_status': 'new'}
         return await self.get_all_orders(merged_filter)
 
     async def get_active_accounts(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:

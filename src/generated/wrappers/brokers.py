@@ -22,11 +22,11 @@ from ..models.position_lot_fill_response import PositionLotFillResponse
 from ..models.position_lot_response import PositionLotResponse
 from ..models.position_response import PositionResponse
 from ..models.user_broker_connections import UserBrokerConnections
-from ..models.order_status import OrderStatus
-from ..models.order_side import OrderSide
-from ..models.asset_type import AssetType
-from ..models.position_status import PositionStatus
-from ..models.account_type import AccountType
+from ..models.public_order_status_enum import PublicOrderStatusEnum
+from ..models.public_order_side_enum import PublicOrderSideEnum
+from ..models.public_asset_type_enum import PublicAssetTypeEnum
+from ..models.public_position_status_enum import PublicPositionStatusEnum
+from ..models.public_account_type_enum import PublicAccountTypeEnum
 from ..models.account_status import AccountStatus
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
@@ -417,7 +417,7 @@ class BrokersWrapper:
         # TODO Phase 2C: Add orphaned method detection
         # TODO Phase 2C: Add advanced convenience methods
 
-    async def get_orders(self, broker_id: str = None, connection_id: str = None, account_id: str = None, symbol: str = None, order_status: OrderStatus = None, side: OrderSide = None, asset_type: AssetType = None, limit: Optional[int] = None, offset: Optional[int] = None, created_after: str = None, created_before: str = None, with_metadata: Optional[bool] = None, with_envelope: bool = False) -> list[OrderResponse]:
+    async def get_orders(self, broker_id: str = None, connection_id: str = None, account_id: str = None, symbol: str = None, order_status: PublicOrderStatusEnum = None, side: PublicOrderSideEnum = None, asset_type: PublicAssetTypeEnum = None, limit: Optional[int] = None, offset: Optional[int] = None, created_after: str = None, created_before: str = None, with_metadata: Optional[bool] = None, with_envelope: bool = False) -> list[OrderResponse]:
         """Get Orders
         
         Get orders for all authorized broker connections.
@@ -430,9 +430,9 @@ class BrokersWrapper:
         - connection_id: str
         - account_id: str
         - symbol: str
-        - order_status: OrderStatus
-        - side: OrderSide
-        - asset_type: AssetType
+        - order_status: PublicOrderStatusEnum
+        - side: PublicOrderSideEnum
+        - asset_type: PublicAssetTypeEnum
         - limit: int
         - offset: int
         - created_after: str
@@ -557,7 +557,7 @@ class BrokersWrapper:
         # TODO Phase 2C: Add orphaned method detection
         # TODO Phase 2C: Add advanced convenience methods
 
-    async def get_positions(self, broker_id: str = None, connection_id: str = None, account_id: str = None, symbol: str = None, side: OrderSide = None, asset_type: AssetType = None, position_status: PositionStatus = None, limit: Optional[int] = None, offset: Optional[int] = None, updated_after: str = None, updated_before: str = None, with_metadata: Optional[bool] = None, with_envelope: bool = False) -> list[PositionResponse]:
+    async def get_positions(self, broker_id: str = None, connection_id: str = None, account_id: str = None, symbol: str = None, side: PublicOrderSideEnum = None, asset_type: PublicAssetTypeEnum = None, position_status: PublicPositionStatusEnum = None, limit: Optional[int] = None, offset: Optional[int] = None, updated_after: str = None, updated_before: str = None, with_metadata: Optional[bool] = None, with_envelope: bool = False) -> list[PositionResponse]:
         """Get Positions
         
         Get positions for all authorized broker connections.
@@ -570,9 +570,9 @@ class BrokersWrapper:
         - connection_id: str
         - account_id: str
         - symbol: str
-        - side: OrderSide
-        - asset_type: AssetType
-        - position_status: PositionStatus
+        - side: PublicOrderSideEnum
+        - asset_type: PublicAssetTypeEnum
+        - position_status: PublicPositionStatusEnum
         - limit: int
         - offset: int
         - updated_after: str
@@ -831,7 +831,7 @@ class BrokersWrapper:
         # TODO Phase 2C: Add orphaned method detection
         # TODO Phase 2C: Add advanced convenience methods
 
-    async def get_accounts(self, broker_id: str = None, connection_id: str = None, account_type: AccountType = None, status: AccountStatus = None, currency: str = None, limit: Optional[int] = None, offset: Optional[int] = None, with_metadata: Optional[bool] = None, with_envelope: bool = False) -> list[Accounts]:
+    async def get_accounts(self, broker_id: str = None, connection_id: str = None, account_type: PublicAccountTypeEnum = None, status: AccountStatus = None, currency: str = None, limit: Optional[int] = None, offset: Optional[int] = None, with_metadata: Optional[bool] = None, with_envelope: bool = False) -> list[Accounts]:
         """Get Accounts
         
         Get accounts for all authorized broker connections.
@@ -842,7 +842,7 @@ class BrokersWrapper:
         Args:
         - broker_id: str
         - connection_id: str
-        - account_type: AccountType
+        - account_type: PublicAccountTypeEnum
         - status: AccountStatus
         - currency: str
         - limit: int

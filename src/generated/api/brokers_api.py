@@ -22,8 +22,6 @@ from typing import Optional
 from typing_extensions import Annotated
 from uuid import UUID
 from ..models.account_status import AccountStatus
-from ..models.account_type import AccountType
-from ..models.asset_type import AssetType
 from ..models.cancel_order_api_v1_brokers_orders_order_id_delete_request import CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest
 from ..models.finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult
 from ..models.finatic_response_list_accounts import FinaticResponseListAccounts
@@ -39,10 +37,12 @@ from ..models.finatic_response_list_position_response import FinaticResponseList
 from ..models.finatic_response_list_user_broker_connections import FinaticResponseListUserBrokerConnections
 from ..models.finatic_response_order_action_result import FinaticResponseOrderActionResult
 from ..models.modify_order_api_v1_brokers_orders_order_id_patch_request import ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
-from ..models.order_side import OrderSide
-from ..models.order_status import OrderStatus
 from ..models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest
-from ..models.position_status import PositionStatus
+from ..models.public_account_type_enum import PublicAccountTypeEnum
+from ..models.public_asset_type_enum import PublicAssetTypeEnum
+from ..models.public_order_side_enum import PublicOrderSideEnum
+from ..models.public_order_status_enum import PublicOrderStatusEnum
+from ..models.public_position_status_enum import PublicPositionStatusEnum
 
 from ..api_client import ApiClient, RequestSerialized
 from ..api_response import ApiResponse
@@ -697,7 +697,7 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[AccountType], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        account_type: Annotated[Optional[PublicAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
@@ -725,7 +725,7 @@ class BrokersApi:
         :param connection_id: Filter by connection ID
         :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: AccountType
+        :type account_type: PublicAccountTypeEnum
         :param status: Filter by account status (e.g., 'active', 'inactive')
         :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -800,7 +800,7 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[AccountType], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        account_type: Annotated[Optional[PublicAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
@@ -828,7 +828,7 @@ class BrokersApi:
         :param connection_id: Filter by connection ID
         :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: AccountType
+        :type account_type: PublicAccountTypeEnum
         :param status: Filter by account status (e.g., 'active', 'inactive')
         :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -903,7 +903,7 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[AccountType], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        account_type: Annotated[Optional[PublicAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
@@ -931,7 +931,7 @@ class BrokersApi:
         :param connection_id: Filter by connection ID
         :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: AccountType
+        :type account_type: PublicAccountTypeEnum
         :param status: Filter by account status (e.g., 'active', 'inactive')
         :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -2872,9 +2872,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[OrderStatus], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[OrderSide], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        order_status: Annotated[Optional[PublicOrderStatusEnum], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
+        side: Annotated[Optional[PublicOrderSideEnum], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[PublicAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -2906,11 +2906,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: OrderStatus
+        :type order_status: PublicOrderStatusEnum
         :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: OrderSide
+        :type side: PublicOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: AssetType
+        :type asset_type: PublicAssetTypeEnum
         :param limit: Maximum number of orders to return
         :type limit: int
         :param offset: Number of orders to skip for pagination
@@ -2991,9 +2991,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[OrderStatus], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[OrderSide], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        order_status: Annotated[Optional[PublicOrderStatusEnum], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
+        side: Annotated[Optional[PublicOrderSideEnum], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[PublicAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -3025,11 +3025,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: OrderStatus
+        :type order_status: PublicOrderStatusEnum
         :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: OrderSide
+        :type side: PublicOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: AssetType
+        :type asset_type: PublicAssetTypeEnum
         :param limit: Maximum number of orders to return
         :type limit: int
         :param offset: Number of orders to skip for pagination
@@ -3110,9 +3110,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[OrderStatus], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[OrderSide], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        order_status: Annotated[Optional[PublicOrderStatusEnum], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
+        side: Annotated[Optional[PublicOrderSideEnum], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[PublicAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -3144,11 +3144,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: OrderStatus
+        :type order_status: PublicOrderStatusEnum
         :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: OrderSide
+        :type side: PublicOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: AssetType
+        :type asset_type: PublicAssetTypeEnum
         :param limit: Maximum number of orders to return
         :type limit: int
         :param offset: Number of orders to skip for pagination
@@ -4065,9 +4065,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[OrderSide], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[PositionStatus], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[PublicOrderSideEnum], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[PublicAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[PublicPositionStatusEnum], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4099,11 +4099,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: OrderSide
+        :type side: PublicOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: AssetType
+        :type asset_type: PublicAssetTypeEnum
         :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
-        :type position_status: PositionStatus
+        :type position_status: PublicPositionStatusEnum
         :param limit: Maximum number of positions to return
         :type limit: int
         :param offset: Number of positions to skip for pagination
@@ -4184,9 +4184,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[OrderSide], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[PositionStatus], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[PublicOrderSideEnum], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[PublicAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[PublicPositionStatusEnum], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4218,11 +4218,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: OrderSide
+        :type side: PublicOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: AssetType
+        :type asset_type: PublicAssetTypeEnum
         :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
-        :type position_status: PositionStatus
+        :type position_status: PublicPositionStatusEnum
         :param limit: Maximum number of positions to return
         :type limit: int
         :param offset: Number of positions to skip for pagination
@@ -4303,9 +4303,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[OrderSide], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[PositionStatus], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[PublicOrderSideEnum], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[PublicAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[PublicPositionStatusEnum], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4337,11 +4337,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: OrderSide
+        :type side: PublicOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: AssetType
+        :type asset_type: PublicAssetTypeEnum
         :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
-        :type position_status: PositionStatus
+        :type position_status: PublicPositionStatusEnum
         :param limit: Maximum number of positions to return
         :type limit: int
         :param offset: Number of positions to skip for pagination

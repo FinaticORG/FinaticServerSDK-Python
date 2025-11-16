@@ -10,7 +10,6 @@ from .FinaticServer import FinaticServer
 # Wrappers
 from .wrappers.session import CustomSessionWrapper
 from .wrappers.brokers import CustomBrokersWrapper
-from .wrappers.market_data import CustomMarketDataWrapper
 
 # Utils
 # from .utils.errors import *

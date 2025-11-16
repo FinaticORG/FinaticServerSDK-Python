@@ -30,10 +30,8 @@ __all__ = [
     "ApiAttributeError",
     "ApiException",
     "AccountStatus",
-    "AccountType",
     "Accountnumber",
     "Accounts",
-    "AssetType",
     "Balances",
     "BrokerInfo",
     "CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest",
@@ -96,17 +94,17 @@ __all__ = [
     "OrderGroupResponse",
     "OrderLeg",
     "OrderResponse",
-    "OrderSide",
-    "OrderStatus",
     "PlaceOrderApiV1BrokersOrdersPostRequest",
     "PortalUrlResponse",
     "PositionLotFillResponse",
     "PositionLotResponse",
     "PositionResponse",
-    "PositionStatus",
     "PublicAccountTypeEnum",
     "PublicAssetTypeEnum",
     "PublicConnectionStatusEnum",
+    "PublicOrderSideEnum",
+    "PublicOrderStatusEnum",
+    "PublicPositionStatusEnum",
     "RobinhoodLimitOrderPlaceQueryParams",
     "RobinhoodMarketOrderPlaceQueryParams",
     "RobinhoodOrderCancelRequest",
@@ -158,10 +156,8 @@ from .exceptions import ApiException as ApiException
 
 # import models into sdk package
 from .models.account_status import AccountStatus as AccountStatus
-from .models.account_type import AccountType as AccountType
 from .models.accountnumber import Accountnumber as Accountnumber
 from .models.accounts import Accounts as Accounts
-from .models.asset_type import AssetType as AssetType
 from .models.balances import Balances as Balances
 from .models.broker_info import BrokerInfo as BrokerInfo
 from .models.cancel_order_api_v1_brokers_orders_order_id_delete_request import CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest as CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest
@@ -224,17 +220,17 @@ from .models.order_group_order import OrderGroupOrder as OrderGroupOrder
 from .models.order_group_response import OrderGroupResponse as OrderGroupResponse
 from .models.order_leg import OrderLeg as OrderLeg
 from .models.order_response import OrderResponse as OrderResponse
-from .models.order_side import OrderSide as OrderSide
-from .models.order_status import OrderStatus as OrderStatus
 from .models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest as PlaceOrderApiV1BrokersOrdersPostRequest
 from .models.portal_url_response import PortalUrlResponse as PortalUrlResponse
 from .models.position_lot_fill_response import PositionLotFillResponse as PositionLotFillResponse
 from .models.position_lot_response import PositionLotResponse as PositionLotResponse
 from .models.position_response import PositionResponse as PositionResponse
-from .models.position_status import PositionStatus as PositionStatus
 from .models.public_account_type_enum import PublicAccountTypeEnum as PublicAccountTypeEnum
 from .models.public_asset_type_enum import PublicAssetTypeEnum as PublicAssetTypeEnum
 from .models.public_connection_status_enum import PublicConnectionStatusEnum as PublicConnectionStatusEnum
+from .models.public_order_side_enum import PublicOrderSideEnum as PublicOrderSideEnum
+from .models.public_order_status_enum import PublicOrderStatusEnum as PublicOrderStatusEnum
+from .models.public_position_status_enum import PublicPositionStatusEnum as PublicPositionStatusEnum
 from .models.robinhood_limit_order_place_query_params import RobinhoodLimitOrderPlaceQueryParams as RobinhoodLimitOrderPlaceQueryParams
 from .models.robinhood_market_order_place_query_params import RobinhoodMarketOrderPlaceQueryParams as RobinhoodMarketOrderPlaceQueryParams
 from .models.robinhood_order_cancel_request import RobinhoodOrderCancelRequest as RobinhoodOrderCancelRequest

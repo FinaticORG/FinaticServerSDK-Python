@@ -18,20 +18,28 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class OrderSide(str, Enum):
+class PublicOrderStatusEnum(str, Enum):
     """
-    OrderSide
+    PublicOrderStatusEnum
     """
 
     """
     allowed enum values
     """
-    BUY = 'buy'
-    SELL = 'sell'
+    SUBMITTED = 'submitted'
+    NEW = 'new'
+    PARTIALLY_FILLED = 'partially_filled'
+    FILLED = 'filled'
+    PENDING_CANCEL = 'pending_cancel'
+    CANCELLED = 'cancelled'
+    REJECTED = 'rejected'
+    EXPIRED = 'expired'
+    CREATED = 'created'
+    RECEIVED = 'received'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of OrderSide from a JSON string"""
+        """Create an instance of PublicOrderStatusEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 
