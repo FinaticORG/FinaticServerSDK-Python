@@ -12,8 +12,8 @@ class CustomSessionWrapper(SessionWrapper):
     """Custom wrapper for session operations.
 
     Extend or override generated functions as needed.
-    
-    NOTE: 
+
+    NOTE:
     - Portal URL caching is now handled in the generator (no-cache for get_portal_url)
     - Session creation methods (init_session, start_session) no longer have auth checks in generator
     - Response unwrapping is handled by the generator
