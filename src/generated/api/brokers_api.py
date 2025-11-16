@@ -18,22 +18,31 @@ from typing_extensions import Annotated
 
 from datetime import datetime
 from pydantic import Field, StrictBool, StrictStr
-from typing import Any, Optional
+from typing import Optional
 from typing_extensions import Annotated
 from uuid import UUID
-from ..models.broker_connection_request import BrokerConnectionRequest
-from ..models.broker_connection_update_request import BrokerConnectionUpdateRequest
+from ..models.account_status import AccountStatus
+from ..models.account_type import AccountType
+from ..models.asset_type import AssetType
 from ..models.cancel_order_api_v1_brokers_orders_order_id_delete_request import CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest
+from ..models.finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult
 from ..models.finatic_response_list_accounts import FinaticResponseListAccounts
 from ..models.finatic_response_list_balances import FinaticResponseListBalances
 from ..models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo
-from ..models.finatic_response_list_dict import FinaticResponseListDict
+from ..models.finatic_response_list_order_event_response import FinaticResponseListOrderEventResponse
+from ..models.finatic_response_list_order_fill_response import FinaticResponseListOrderFillResponse
+from ..models.finatic_response_list_order_group_response import FinaticResponseListOrderGroupResponse
+from ..models.finatic_response_list_order_response import FinaticResponseListOrderResponse
+from ..models.finatic_response_list_position_lot_fill_response import FinaticResponseListPositionLotFillResponse
+from ..models.finatic_response_list_position_lot_response import FinaticResponseListPositionLotResponse
 from ..models.finatic_response_list_position_response import FinaticResponseListPositionResponse
 from ..models.finatic_response_list_user_broker_connections import FinaticResponseListUserBrokerConnections
-from ..models.finatic_response_user_broker_connections import FinaticResponseUserBrokerConnections
-from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse
+from ..models.finatic_response_order_action_result import FinaticResponseOrderActionResult
 from ..models.modify_order_api_v1_brokers_orders_order_id_patch_request import ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+from ..models.order_side import OrderSide
+from ..models.order_status import OrderStatus
 from ..models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest
+from ..models.position_status import PositionStatus
 
 from ..api_client import ApiClient, RequestSerialized
 from ..api_response import ApiResponse
@@ -72,7 +81,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
+    ) -> FinaticResponseOrderActionResult:
         """Cancel Order
 
         Cancel an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
@@ -119,8 +128,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -152,7 +168,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
+    ) -> ApiResponse[FinaticResponseOrderActionResult]:
         """Cancel Order
 
         Cancel an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
@@ -199,8 +215,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -279,8 +302,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -379,808 +409,6 @@ class BrokersApi:
 
 
     @validate_call
-    async def connect_broker_api_v1_brokers_connect_post(
-        self,
-        broker_connection_request: BrokerConnectionRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
-        """Connect Broker
-
-        Connect to a broker or reconnect to an existing connection.  This endpoint handles both new connections and reconnections: - New connections: Provide broker_id, credentials, and permissions - Reconnections: Provide connection_id, broker_id, credentials, and permissions  For reconnections, the connection must be in \"needs_reauth\" status.
-
-        :param broker_connection_request: (required)
-        :type broker_connection_request: BrokerConnectionRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._connect_broker_api_v1_brokers_connect_post_serialize(
-            broker_connection_request=broker_connection_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def connect_broker_api_v1_brokers_connect_post_with_http_info(
-        self,
-        broker_connection_request: BrokerConnectionRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
-        """Connect Broker
-
-        Connect to a broker or reconnect to an existing connection.  This endpoint handles both new connections and reconnections: - New connections: Provide broker_id, credentials, and permissions - Reconnections: Provide connection_id, broker_id, credentials, and permissions  For reconnections, the connection must be in \"needs_reauth\" status.
-
-        :param broker_connection_request: (required)
-        :type broker_connection_request: BrokerConnectionRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._connect_broker_api_v1_brokers_connect_post_serialize(
-            broker_connection_request=broker_connection_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def connect_broker_api_v1_brokers_connect_post_without_preload_content(
-        self,
-        broker_connection_request: BrokerConnectionRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Connect Broker
-
-        Connect to a broker or reconnect to an existing connection.  This endpoint handles both new connections and reconnections: - New connections: Provide broker_id, credentials, and permissions - Reconnections: Provide connection_id, broker_id, credentials, and permissions  For reconnections, the connection must be in \"needs_reauth\" status.
-
-        :param broker_connection_request: (required)
-        :type broker_connection_request: BrokerConnectionRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._connect_broker_api_v1_brokers_connect_post_serialize(
-            broker_connection_request=broker_connection_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _connect_broker_api_v1_brokers_connect_post_serialize(
-        self,
-        broker_connection_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if broker_connection_request is not None:
-            _body_params = broker_connection_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/api/v1/brokers/connect',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def delete_connection_api_v1_brokers_connections_connection_id_delete(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
-        """Delete Connection
-
-        Delete a broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._delete_connection_api_v1_brokers_connections_connection_id_delete_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def delete_connection_api_v1_brokers_connections_connection_id_delete_with_http_info(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
-        """Delete Connection
-
-        Delete a broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._delete_connection_api_v1_brokers_connections_connection_id_delete_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def delete_connection_api_v1_brokers_connections_connection_id_delete_without_preload_content(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Delete Connection
-
-        Delete a broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._delete_connection_api_v1_brokers_connections_connection_id_delete_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _delete_connection_api_v1_brokers_connections_connection_id_delete_serialize(
-        self,
-        connection_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if connection_id is not None:
-            _path_params['connection_id'] = connection_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='DELETE',
-            resource_path='/api/v1/brokers/connections/{connection_id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def disconnect_broker_api_v1_brokers_disconnect_connection_id_delete(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
-        """Disconnect Broker
-
-        Disconnect a broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._disconnect_broker_api_v1_brokers_disconnect_connection_id_delete_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def disconnect_broker_api_v1_brokers_disconnect_connection_id_delete_with_http_info(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
-        """Disconnect Broker
-
-        Disconnect a broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._disconnect_broker_api_v1_brokers_disconnect_connection_id_delete_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def disconnect_broker_api_v1_brokers_disconnect_connection_id_delete_without_preload_content(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Disconnect Broker
-
-        Disconnect a broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._disconnect_broker_api_v1_brokers_disconnect_connection_id_delete_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _disconnect_broker_api_v1_brokers_disconnect_connection_id_delete_serialize(
-        self,
-        connection_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if connection_id is not None:
-            _path_params['connection_id'] = connection_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='DELETE',
-            resource_path='/api/v1/brokers/disconnect/{connection_id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     async def disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete(
         self,
         connection_id: UUID,
@@ -1196,7 +424,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
+    ) -> FinaticResponseDisconnectActionResult:
         """Disconnect Company From Broker
 
         Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
@@ -1234,8 +462,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseDisconnectActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1264,7 +499,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
+    ) -> ApiResponse[FinaticResponseDisconnectActionResult]:
         """Disconnect Company From Broker
 
         Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
@@ -1302,8 +537,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseDisconnectActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1370,8 +612,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseDisconnectActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1448,8 +697,8 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[StrictStr], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        status: Annotated[Optional[StrictStr], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
+        account_type: Annotated[Optional[AccountType], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1476,9 +725,9 @@ class BrokersApi:
         :param connection_id: Filter by connection ID
         :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: str
+        :type account_type: AccountType
         :param status: Filter by account status (e.g., 'active', 'inactive')
-        :type status: str
+        :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
         :type currency: str
         :param limit: Maximum number of accounts to return
@@ -1526,7 +775,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListAccounts",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1544,8 +800,8 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[StrictStr], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        status: Annotated[Optional[StrictStr], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
+        account_type: Annotated[Optional[AccountType], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1572,9 +828,9 @@ class BrokersApi:
         :param connection_id: Filter by connection ID
         :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: str
+        :type account_type: AccountType
         :param status: Filter by account status (e.g., 'active', 'inactive')
-        :type status: str
+        :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
         :type currency: str
         :param limit: Maximum number of accounts to return
@@ -1622,7 +878,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListAccounts",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1640,8 +903,8 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[StrictStr], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        status: Annotated[Optional[StrictStr], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
+        account_type: Annotated[Optional[AccountType], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1668,9 +931,9 @@ class BrokersApi:
         :param connection_id: Filter by connection ID
         :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: str
+        :type account_type: AccountType
         :param status: Filter by account status (e.g., 'active', 'inactive')
-        :type status: str
+        :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
         :type currency: str
         :param limit: Maximum number of accounts to return
@@ -1718,7 +981,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListAccounts",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1769,11 +1039,11 @@ class BrokersApi:
             
         if account_type is not None:
             
-            _query_params.append(('account_type', account_type))
+            _query_params.append(('account_type', account_type.value))
             
         if status is not None:
             
-            _query_params.append(('status', status))
+            _query_params.append(('status', status.value))
             
         if currency is not None:
             
@@ -1914,7 +1184,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBalances",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2014,7 +1291,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBalances",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2114,7 +1398,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBalances",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2297,6 +1588,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBrokerInfo",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2360,6 +1659,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBrokerInfo",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2423,6 +1730,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBrokerInfo",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2510,7 +1825,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDict:
+    ) -> FinaticResponseListOrderEventResponse:
         """Get Order Events
 
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
@@ -2557,8 +1872,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderEventResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2590,7 +1912,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDict]:
+    ) -> ApiResponse[FinaticResponseListOrderEventResponse]:
         """Get Order Events
 
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
@@ -2637,8 +1959,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderEventResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2717,8 +2046,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderEventResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2824,7 +2160,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDict:
+    ) -> FinaticResponseListOrderFillResponse:
         """Get Order Fills
 
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
@@ -2871,8 +2207,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderFillResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2904,7 +2247,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDict]:
+    ) -> ApiResponse[FinaticResponseListOrderFillResponse]:
         """Get Order Fills
 
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
@@ -2951,8 +2294,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderFillResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3031,8 +2381,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderFillResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3140,7 +2497,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDict:
+    ) -> FinaticResponseListOrderGroupResponse:
         """Get Order Groups
 
         Get order groups.  This endpoint returns order groups that contain multiple orders.
@@ -3193,8 +2550,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderGroupResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3228,7 +2592,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDict]:
+    ) -> ApiResponse[FinaticResponseListOrderGroupResponse]:
         """Get Order Groups
 
         Get order groups.  This endpoint returns order groups that contain multiple orders.
@@ -3281,8 +2645,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderGroupResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3369,8 +2740,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderGroupResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3494,9 +2872,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[StrictStr], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[StrictStr], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        order_status: Annotated[Optional[OrderStatus], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
+        side: Annotated[Optional[OrderSide], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -3514,7 +2892,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDict:
+    ) -> FinaticResponseListOrderResponse:
         """Get Orders
 
         Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
@@ -3528,11 +2906,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: str
+        :type order_status: OrderStatus
         :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: str
+        :type side: OrderSide
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: str
+        :type asset_type: AssetType
         :param limit: Maximum number of orders to return
         :type limit: int
         :param offset: Number of orders to skip for pagination
@@ -3585,8 +2963,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3606,9 +2991,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[StrictStr], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[StrictStr], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        order_status: Annotated[Optional[OrderStatus], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
+        side: Annotated[Optional[OrderSide], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -3626,7 +3011,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDict]:
+    ) -> ApiResponse[FinaticResponseListOrderResponse]:
         """Get Orders
 
         Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
@@ -3640,11 +3025,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: str
+        :type order_status: OrderStatus
         :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: str
+        :type side: OrderSide
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: str
+        :type asset_type: AssetType
         :param limit: Maximum number of orders to return
         :type limit: int
         :param offset: Number of orders to skip for pagination
@@ -3697,8 +3082,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3718,9 +3110,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[StrictStr], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[StrictStr], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        order_status: Annotated[Optional[OrderStatus], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
+        side: Annotated[Optional[OrderSide], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -3752,11 +3144,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: str
+        :type order_status: OrderStatus
         :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: str
+        :type side: OrderSide
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: str
+        :type asset_type: AssetType
         :param limit: Maximum number of orders to return
         :type limit: int
         :param offset: Number of orders to skip for pagination
@@ -3809,8 +3201,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListOrderResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3873,15 +3272,15 @@ class BrokersApi:
             
         if order_status is not None:
             
-            _query_params.append(('order_status', order_status))
+            _query_params.append(('order_status', order_status.value))
             
         if side is not None:
             
-            _query_params.append(('side', side))
+            _query_params.append(('side', side.value))
             
         if asset_type is not None:
             
-            _query_params.append(('asset_type', asset_type))
+            _query_params.append(('asset_type', asset_type.value))
             
         if limit is not None:
             
@@ -3976,7 +3375,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDict:
+    ) -> FinaticResponseListPositionLotFillResponse:
         """Get Position Lot Fills
 
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
@@ -4023,7 +3422,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
+            '200': "FinaticResponseListPositionLotFillResponse",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -4056,7 +3455,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDict]:
+    ) -> ApiResponse[FinaticResponseListPositionLotFillResponse]:
         """Get Position Lot Fills
 
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
@@ -4103,7 +3502,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
+            '200': "FinaticResponseListPositionLotFillResponse",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -4183,7 +3582,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
+            '200': "FinaticResponseListPositionLotFillResponse",
             '422': "HTTPValidationError",
         }
         response_data = await self.api_client.call_api(
@@ -4293,7 +3692,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDict:
+    ) -> FinaticResponseListPositionLotResponse:
         """Get Position Lots
 
         Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
@@ -4349,8 +3748,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListPositionLotResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4385,7 +3791,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDict]:
+    ) -> ApiResponse[FinaticResponseListPositionLotResponse]:
         """Get Position Lots
 
         Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
@@ -4441,8 +3847,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListPositionLotResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4533,8 +3946,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDict",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseListPositionLotResponse",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4645,9 +4065,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[StrictStr], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[StrictStr], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[StrictStr], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[OrderSide], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[PositionStatus], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4679,11 +4099,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: str
+        :type side: OrderSide
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: str
+        :type asset_type: AssetType
         :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
-        :type position_status: str
+        :type position_status: PositionStatus
         :param limit: Maximum number of positions to return
         :type limit: int
         :param offset: Number of positions to skip for pagination
@@ -4737,7 +4157,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListPositionResponse",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4757,9 +4184,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[StrictStr], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[StrictStr], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[StrictStr], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[OrderSide], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[PositionStatus], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4791,11 +4218,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: str
+        :type side: OrderSide
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: str
+        :type asset_type: AssetType
         :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
-        :type position_status: str
+        :type position_status: PositionStatus
         :param limit: Maximum number of positions to return
         :type limit: int
         :param offset: Number of positions to skip for pagination
@@ -4849,7 +4276,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListPositionResponse",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4869,9 +4303,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[StrictStr], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[StrictStr], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[StrictStr], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[OrderSide], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[AssetType], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[PositionStatus], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4903,11 +4337,11 @@ class BrokersApi:
         :param symbol: Filter by symbol
         :type symbol: str
         :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: str
+        :type side: OrderSide
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: str
+        :type asset_type: AssetType
         :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
-        :type position_status: str
+        :type position_status: PositionStatus
         :param limit: Maximum number of positions to return
         :type limit: int
         :param offset: Number of positions to skip for pagination
@@ -4961,7 +4395,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListPositionResponse",
-            '422': "HTTPValidationError",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5024,15 +4465,15 @@ class BrokersApi:
             
         if side is not None:
             
-            _query_params.append(('side', side))
+            _query_params.append(('side', side.value))
             
         if asset_type is not None:
             
-            _query_params.append(('asset_type', asset_type))
+            _query_params.append(('asset_type', asset_type.value))
             
         if position_status is not None:
             
-            _query_params.append(('position_status', position_status))
+            _query_params.append(('position_status', position_status.value))
             
         if limit is not None:
             
@@ -5159,6 +4600,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListUserBrokerConnections",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5222,6 +4671,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListUserBrokerConnections",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5285,6 +4742,14 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListUserBrokerConnections",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5372,7 +4837,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
+    ) -> FinaticResponseOrderActionResult:
         """Modify Order
 
         Modify an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
@@ -5419,8 +4884,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5452,7 +4924,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
+    ) -> ApiResponse[FinaticResponseOrderActionResult]:
         """Modify Order
 
         Modify an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
@@ -5499,8 +4971,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5579,8 +5058,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -5679,514 +5165,6 @@ class BrokersApi:
 
 
     @validate_call
-    async def oauth_callback_api_v1_brokers_callback_broker_id_get(
-        self,
-        broker_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
-        """Oauth Callback
-
-        Handle OAuth callback for broker authentication.  This endpoint serves as the redirect URI for OAuth flows. It captures all query parameters from the callback URL and completes the authentication process with the specified broker. All authentication data is passed via URL query parameters as per OAuth 2.0 specification.  Parameters ---------- broker_id : str     The ID of the broker handling the OAuth callback request : Request     FastAPI request object containing the callback URL with OAuth parameters  Returns ------- HTMLResponse     Returns HTML that closes the popup and notifies the parent window
-
-        :param broker_id: (required)
-        :type broker_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._oauth_callback_api_v1_brokers_callback_broker_id_get_serialize(
-            broker_id=broker_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def oauth_callback_api_v1_brokers_callback_broker_id_get_with_http_info(
-        self,
-        broker_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
-        """Oauth Callback
-
-        Handle OAuth callback for broker authentication.  This endpoint serves as the redirect URI for OAuth flows. It captures all query parameters from the callback URL and completes the authentication process with the specified broker. All authentication data is passed via URL query parameters as per OAuth 2.0 specification.  Parameters ---------- broker_id : str     The ID of the broker handling the OAuth callback request : Request     FastAPI request object containing the callback URL with OAuth parameters  Returns ------- HTMLResponse     Returns HTML that closes the popup and notifies the parent window
-
-        :param broker_id: (required)
-        :type broker_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._oauth_callback_api_v1_brokers_callback_broker_id_get_serialize(
-            broker_id=broker_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def oauth_callback_api_v1_brokers_callback_broker_id_get_without_preload_content(
-        self,
-        broker_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Oauth Callback
-
-        Handle OAuth callback for broker authentication.  This endpoint serves as the redirect URI for OAuth flows. It captures all query parameters from the callback URL and completes the authentication process with the specified broker. All authentication data is passed via URL query parameters as per OAuth 2.0 specification.  Parameters ---------- broker_id : str     The ID of the broker handling the OAuth callback request : Request     FastAPI request object containing the callback URL with OAuth parameters  Returns ------- HTMLResponse     Returns HTML that closes the popup and notifies the parent window
-
-        :param broker_id: (required)
-        :type broker_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._oauth_callback_api_v1_brokers_callback_broker_id_get_serialize(
-            broker_id=broker_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _oauth_callback_api_v1_brokers_callback_broker_id_get_serialize(
-        self,
-        broker_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if broker_id is not None:
-            _path_params['broker_id'] = broker_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/v1/brokers/callback/{broker_id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> object:
-        """Oauth Callback Tastytrade
-
-        Handle OAuth callback for TastyTrade sandbox authentication.  This endpoint serves as the redirect URI for TastyTrade OAuth flows in sandbox mode. It captures all query parameters from the callback URL and completes the authentication process with TastyTrade. All authentication data is passed via URL query parameters as per OAuth 2.0 specification.  Parameters ---------- request : Request     FastAPI request object containing the callback URL with OAuth parameters  Returns ------- HTMLResponse     Returns HTML that closes the popup and notifies the parent window
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get_with_http_info(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[object]:
-        """Oauth Callback Tastytrade
-
-        Handle OAuth callback for TastyTrade sandbox authentication.  This endpoint serves as the redirect URI for TastyTrade OAuth flows in sandbox mode. It captures all query parameters from the callback URL and completes the authentication process with TastyTrade. All authentication data is passed via URL query parameters as per OAuth 2.0 specification.  Parameters ---------- request : Request     FastAPI request object containing the callback URL with OAuth parameters  Returns ------- HTMLResponse     Returns HTML that closes the popup and notifies the parent window
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get_without_preload_content(
-        self,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Oauth Callback Tastytrade
-
-        Handle OAuth callback for TastyTrade sandbox authentication.  This endpoint serves as the redirect URI for TastyTrade OAuth flows in sandbox mode. It captures all query parameters from the callback URL and completes the authentication process with TastyTrade. All authentication data is passed via URL query parameters as per OAuth 2.0 specification.  Parameters ---------- request : Request     FastAPI request object containing the callback URL with OAuth parameters  Returns ------- HTMLResponse     Returns HTML that closes the popup and notifies the parent window
-
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get_serialize(
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "object",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _oauth_callback_tastytrade_api_v1_brokers_callback_tastytrade_get_serialize(
-        self,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/v1/brokers/callback/tastytrade',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     async def place_order_api_v1_brokers_orders_post(
         self,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
@@ -6203,7 +5181,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse:
+    ) -> FinaticResponseOrderActionResult:
         """Place Order
 
         Create a new order via the specified broker connection.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  Standard parameters ------------------- The following fields constitute the unified Finatic *common order schema* and therefore appear individually as query parameters in the autogenerated OpenAPI documentation:  - ``broker`` - ``account_number`` - ``order_type`` - ``asset_type`` - ``action`` - ``time_in_force`` - ``symbol`` - ``order_qty``  They are surfaced as *query* parameters **only to make the accepted fields obvious in the interactive docs**. In production usage you should send these fields inside the JSON body (see ``order_request``) so that the entire order specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)  Body payload & broker-specific extras -------------------------------------  Put the standard parameters plus any broker-specific extensions under the ``order`` key of the body. Refer to the bundled OpenAPI examples below to see complete payloads for common order types (market, limit, spreads, etc.) across supported brokers.  For a formal reference of broker-specific extensions inspect the ``BrokerOrderPlaceExtras`` schema.  The endpoint resolves the active ``user_broker_connection`` by calling the ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active connection exists it returns a list of *available* brokers so your client can guide the user accordingly.  Broker Notes ------------ - The responses that you get back from the broker are not always the same. The response models are validated for each broker, but we do not standardize the repsonses.  - Tasty Trade: If you want to trade options for a particular stock, first fetch the full option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint. This endpoint returns all available expirations that tastytrade offers for that equity symbol. Each expiration contains a list of strikes, where each strike has a call and put field representing the call symbol and put symbol respectively.  We are planning to add a new endpoint to fetch the option chain for a particular stock and handle this logic for you, but for now you need to fetch the option chain manually.
@@ -6244,8 +5222,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -6275,7 +5260,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse]:
+    ) -> ApiResponse[FinaticResponseOrderActionResult]:
         """Place Order
 
         Create a new order via the specified broker connection.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  Standard parameters ------------------- The following fields constitute the unified Finatic *common order schema* and therefore appear individually as query parameters in the autogenerated OpenAPI documentation:  - ``broker`` - ``account_number`` - ``order_type`` - ``asset_type`` - ``action`` - ``time_in_force`` - ``symbol`` - ``order_qty``  They are surfaced as *query* parameters **only to make the accepted fields obvious in the interactive docs**. In production usage you should send these fields inside the JSON body (see ``order_request``) so that the entire order specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)  Body payload & broker-specific extras -------------------------------------  Put the standard parameters plus any broker-specific extensions under the ``order`` key of the body. Refer to the bundled OpenAPI examples below to see complete payloads for common order types (market, limit, spreads, etc.) across supported brokers.  For a formal reference of broker-specific extensions inspect the ``BrokerOrderPlaceExtras`` schema.  The endpoint resolves the active ``user_broker_connection`` by calling the ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active connection exists it returns a list of *available* brokers so your client can guide the user accordingly.  Broker Notes ------------ - The responses that you get back from the broker are not always the same. The response models are validated for each broker, but we do not standardize the repsonses.  - Tasty Trade: If you want to trade options for a particular stock, first fetch the full option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint. This endpoint returns all available expirations that tastytrade offers for that equity symbol. Each expiration contains a list of strikes, where each strike has a call and put field representing the call symbol and put symbol respectively.  We are planning to add a new endpoint to fetch the option chain for a particular stock and handle this logic for you, but for now you need to fetch the option chain manually.
@@ -6316,8 +5301,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -6388,8 +5380,15 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-            '422': "HTTPValidationError",
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticError",
+            '401': "FinaticError",
+            '403': "FinaticError",
+            '404': "FinaticError",
+            '409': "FinaticError",
+            '422': "FinaticError",
+            '429': "FinaticError",
+            '500': "FinaticError",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -6464,560 +5463,6 @@ class BrokersApi:
         return self.api_client.param_serialize(
             method='POST',
             resource_path='/api/v1/brokers/orders',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get(
-        self,
-        broker_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> str:
-        """Sandbox Callback
-
-        Handle sandbox authentication callback.  This endpoint handles the completion of sandbox authentication flows. It creates sandbox connections with mock data instead of real broker connections.
-
-        :param broker_id: (required)
-        :type broker_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get_serialize(
-            broker_id=broker_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get_with_http_info(
-        self,
-        broker_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[str]:
-        """Sandbox Callback
-
-        Handle sandbox authentication callback.  This endpoint handles the completion of sandbox authentication flows. It creates sandbox connections with mock data instead of real broker connections.
-
-        :param broker_id: (required)
-        :type broker_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get_serialize(
-            broker_id=broker_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get_without_preload_content(
-        self,
-        broker_id: StrictStr,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Sandbox Callback
-
-        Handle sandbox authentication callback.  This endpoint handles the completion of sandbox authentication flows. It creates sandbox connections with mock data instead of real broker connections.
-
-        :param broker_id: (required)
-        :type broker_id: str
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get_serialize(
-            broker_id=broker_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "str",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _sandbox_callback_api_v1_brokers_sandbox_callback_broker_id_get_serialize(
-        self,
-        broker_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if broker_id is not None:
-            _path_params['broker_id'] = broker_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/v1/brokers/sandbox-callback/{broker_id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    async def update_connection_api_v1_brokers_connections_connection_id_put(
-        self,
-        connection_id: UUID,
-        broker_connection_update_request: BrokerConnectionUpdateRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseUserBrokerConnections:
-        """Update Connection
-
-        Update a broker connection's permissions.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param broker_connection_update_request: (required)
-        :type broker_connection_update_request: BrokerConnectionUpdateRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._update_connection_api_v1_brokers_connections_connection_id_put_serialize(
-            connection_id=connection_id,
-            broker_connection_update_request=broker_connection_update_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseUserBrokerConnections",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def update_connection_api_v1_brokers_connections_connection_id_put_with_http_info(
-        self,
-        connection_id: UUID,
-        broker_connection_update_request: BrokerConnectionUpdateRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseUserBrokerConnections]:
-        """Update Connection
-
-        Update a broker connection's permissions.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param broker_connection_update_request: (required)
-        :type broker_connection_update_request: BrokerConnectionUpdateRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._update_connection_api_v1_brokers_connections_connection_id_put_serialize(
-            connection_id=connection_id,
-            broker_connection_update_request=broker_connection_update_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseUserBrokerConnections",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def update_connection_api_v1_brokers_connections_connection_id_put_without_preload_content(
-        self,
-        connection_id: UUID,
-        broker_connection_update_request: BrokerConnectionUpdateRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Update Connection
-
-        Update a broker connection's permissions.
-
-        :param connection_id: (required)
-        :type connection_id: str
-        :param broker_connection_update_request: (required)
-        :type broker_connection_update_request: BrokerConnectionUpdateRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._update_connection_api_v1_brokers_connections_connection_id_put_serialize(
-            connection_id=connection_id,
-            broker_connection_update_request=broker_connection_update_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseUserBrokerConnections",
-            '422': "HTTPValidationError",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _update_connection_api_v1_brokers_connections_connection_id_put_serialize(
-        self,
-        connection_id,
-        broker_connection_update_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if connection_id is not None:
-            _path_params['connection_id'] = connection_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if broker_connection_update_request is not None:
-            _body_params = broker_connection_update_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='PUT',
-            resource_path='/api/v1/brokers/connections/{connection_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

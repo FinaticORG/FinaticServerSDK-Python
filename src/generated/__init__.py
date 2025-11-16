@@ -19,7 +19,6 @@ __version__ = "0.1.0"
 # Define package exports
 __all__ = [
     "BrokersApi",
-    "MarketDataApi",
     "SessionApi",
     "ApiResponse",
     "ApiClient",
@@ -30,34 +29,40 @@ __all__ = [
     "ApiKeyError",
     "ApiAttributeError",
     "ApiException",
+    "AccountStatus",
+    "AccountType",
     "Accountnumber",
     "Accounts",
+    "AssetType",
     "Balances",
-    "BrokerConnectionRequest",
-    "BrokerConnectionUpdateRequest",
     "BrokerInfo",
-    "BrokerPermissions",
     "CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest",
     "DayTIF",
     "DirectAuthRequest",
+    "DisconnectActionResult",
     "FOKTIF",
     "FinaticAPIWarning",
+    "FinaticError",
+    "FinaticResponseDisconnectActionResult",
     "FinaticResponseListAccounts",
     "FinaticResponseListBalances",
     "FinaticResponseListBrokerInfo",
-    "FinaticResponseListDict",
+    "FinaticResponseListOrderEventResponse",
+    "FinaticResponseListOrderFillResponse",
+    "FinaticResponseListOrderGroupResponse",
+    "FinaticResponseListOrderResponse",
+    "FinaticResponseListPositionLotFillResponse",
+    "FinaticResponseListPositionLotResponse",
     "FinaticResponseListPositionResponse",
     "FinaticResponseListUserBrokerConnections",
+    "FinaticResponseOrderActionResult",
     "FinaticResponsePortalUrlResponse",
     "FinaticResponseSessionResponseData",
     "FinaticResponseSessionUserResponse",
     "FinaticResponseTestWebhookResponse",
     "FinaticResponseTokenData",
     "FinaticResponseTokenResponseData",
-    "FinaticResponseUserBrokerConnections",
     "FinaticapiApiV1RoutersSessionSessionRouterTestWebhookRequest",
-    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse",
-    "FinaticapiCoreStandardModelsFinaticResponse",
     "GTCTIF",
     "GTDTIF",
     "HTTPValidationError",
@@ -83,10 +88,22 @@ __all__ = [
     "Order3",
     "Order4",
     "Order5",
+    "OrderActionResult",
     "OrderCancelQueryParams",
+    "OrderEventResponse",
+    "OrderFillResponse",
+    "OrderGroupOrder",
+    "OrderGroupResponse",
+    "OrderLeg",
+    "OrderResponse",
+    "OrderSide",
+    "OrderStatus",
     "PlaceOrderApiV1BrokersOrdersPostRequest",
     "PortalUrlResponse",
+    "PositionLotFillResponse",
+    "PositionLotResponse",
     "PositionResponse",
+    "PositionStatus",
     "PublicAccountTypeEnum",
     "PublicAssetTypeEnum",
     "PublicConnectionStatusEnum",
@@ -97,7 +114,6 @@ __all__ = [
     "RobinhoodOrderPlaceRequest",
     "RobinhoodStopOrderPlaceQueryParams",
     "RobinhoodTrailingStopOrderPlaceQueryParams",
-    "SessionLinkRequest",
     "SessionResponseData",
     "SessionStartRequest",
     "SessionStatus",
@@ -127,7 +143,6 @@ __all__ = [
 
 # import apis into sdk package
 from .api.brokers_api import BrokersApi as BrokersApi
-from .api.market_data_api import MarketDataApi as MarketDataApi
 from .api.session_api import SessionApi as SessionApi
 
 # import ApiClient
@@ -142,34 +157,40 @@ from .exceptions import ApiAttributeError as ApiAttributeError
 from .exceptions import ApiException as ApiException
 
 # import models into sdk package
+from .models.account_status import AccountStatus as AccountStatus
+from .models.account_type import AccountType as AccountType
 from .models.accountnumber import Accountnumber as Accountnumber
 from .models.accounts import Accounts as Accounts
+from .models.asset_type import AssetType as AssetType
 from .models.balances import Balances as Balances
-from .models.broker_connection_request import BrokerConnectionRequest as BrokerConnectionRequest
-from .models.broker_connection_update_request import BrokerConnectionUpdateRequest as BrokerConnectionUpdateRequest
 from .models.broker_info import BrokerInfo as BrokerInfo
-from .models.broker_permissions import BrokerPermissions as BrokerPermissions
 from .models.cancel_order_api_v1_brokers_orders_order_id_delete_request import CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest as CancelOrderApiV1BrokersOrdersOrderIdDeleteRequest
 from .models.day_tif import DayTIF as DayTIF
 from .models.direct_auth_request import DirectAuthRequest as DirectAuthRequest
+from .models.disconnect_action_result import DisconnectActionResult as DisconnectActionResult
 from .models.foktif import FOKTIF as FOKTIF
 from .models.finatic_api_warning import FinaticAPIWarning as FinaticAPIWarning
+from .models.finatic_error import FinaticError as FinaticError
+from .models.finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult as FinaticResponseDisconnectActionResult
 from .models.finatic_response_list_accounts import FinaticResponseListAccounts as FinaticResponseListAccounts
 from .models.finatic_response_list_balances import FinaticResponseListBalances as FinaticResponseListBalances
 from .models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo as FinaticResponseListBrokerInfo
-from .models.finatic_response_list_dict import FinaticResponseListDict as FinaticResponseListDict
+from .models.finatic_response_list_order_event_response import FinaticResponseListOrderEventResponse as FinaticResponseListOrderEventResponse
+from .models.finatic_response_list_order_fill_response import FinaticResponseListOrderFillResponse as FinaticResponseListOrderFillResponse
+from .models.finatic_response_list_order_group_response import FinaticResponseListOrderGroupResponse as FinaticResponseListOrderGroupResponse
+from .models.finatic_response_list_order_response import FinaticResponseListOrderResponse as FinaticResponseListOrderResponse
+from .models.finatic_response_list_position_lot_fill_response import FinaticResponseListPositionLotFillResponse as FinaticResponseListPositionLotFillResponse
+from .models.finatic_response_list_position_lot_response import FinaticResponseListPositionLotResponse as FinaticResponseListPositionLotResponse
 from .models.finatic_response_list_position_response import FinaticResponseListPositionResponse as FinaticResponseListPositionResponse
 from .models.finatic_response_list_user_broker_connections import FinaticResponseListUserBrokerConnections as FinaticResponseListUserBrokerConnections
+from .models.finatic_response_order_action_result import FinaticResponseOrderActionResult as FinaticResponseOrderActionResult
 from .models.finatic_response_portal_url_response import FinaticResponsePortalUrlResponse as FinaticResponsePortalUrlResponse
 from .models.finatic_response_session_response_data import FinaticResponseSessionResponseData as FinaticResponseSessionResponseData
 from .models.finatic_response_session_user_response import FinaticResponseSessionUserResponse as FinaticResponseSessionUserResponse
 from .models.finatic_response_test_webhook_response import FinaticResponseTestWebhookResponse as FinaticResponseTestWebhookResponse
 from .models.finatic_response_token_data import FinaticResponseTokenData as FinaticResponseTokenData
 from .models.finatic_response_token_response_data import FinaticResponseTokenResponseData as FinaticResponseTokenResponseData
-from .models.finatic_response_user_broker_connections import FinaticResponseUserBrokerConnections as FinaticResponseUserBrokerConnections
 from .models.finaticapi_api_v1_routers_session_session_router_test_webhook_request import FinaticapiApiV1RoutersSessionSessionRouterTestWebhookRequest as FinaticapiApiV1RoutersSessionSessionRouterTestWebhookRequest
-from .models.finaticapi_core_standard_models_abstract_responses_finatic_response import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponse
-from .models.finaticapi_core_standard_models_finatic_response import FinaticapiCoreStandardModelsFinaticResponse as FinaticapiCoreStandardModelsFinaticResponse
 from .models.gtctif import GTCTIF as GTCTIF
 from .models.gtdtif import GTDTIF as GTDTIF
 from .models.http_validation_error import HTTPValidationError as HTTPValidationError
@@ -195,10 +216,22 @@ from .models.order2 import Order2 as Order2
 from .models.order3 import Order3 as Order3
 from .models.order4 import Order4 as Order4
 from .models.order5 import Order5 as Order5
+from .models.order_action_result import OrderActionResult as OrderActionResult
 from .models.order_cancel_query_params import OrderCancelQueryParams as OrderCancelQueryParams
+from .models.order_event_response import OrderEventResponse as OrderEventResponse
+from .models.order_fill_response import OrderFillResponse as OrderFillResponse
+from .models.order_group_order import OrderGroupOrder as OrderGroupOrder
+from .models.order_group_response import OrderGroupResponse as OrderGroupResponse
+from .models.order_leg import OrderLeg as OrderLeg
+from .models.order_response import OrderResponse as OrderResponse
+from .models.order_side import OrderSide as OrderSide
+from .models.order_status import OrderStatus as OrderStatus
 from .models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest as PlaceOrderApiV1BrokersOrdersPostRequest
 from .models.portal_url_response import PortalUrlResponse as PortalUrlResponse
+from .models.position_lot_fill_response import PositionLotFillResponse as PositionLotFillResponse
+from .models.position_lot_response import PositionLotResponse as PositionLotResponse
 from .models.position_response import PositionResponse as PositionResponse
+from .models.position_status import PositionStatus as PositionStatus
 from .models.public_account_type_enum import PublicAccountTypeEnum as PublicAccountTypeEnum
 from .models.public_asset_type_enum import PublicAssetTypeEnum as PublicAssetTypeEnum
 from .models.public_connection_status_enum import PublicConnectionStatusEnum as PublicConnectionStatusEnum
@@ -209,7 +242,6 @@ from .models.robinhood_order_modify_request import RobinhoodOrderModifyRequest a
 from .models.robinhood_order_place_request import RobinhoodOrderPlaceRequest as RobinhoodOrderPlaceRequest
 from .models.robinhood_stop_order_place_query_params import RobinhoodStopOrderPlaceQueryParams as RobinhoodStopOrderPlaceQueryParams
 from .models.robinhood_trailing_stop_order_place_query_params import RobinhoodTrailingStopOrderPlaceQueryParams as RobinhoodTrailingStopOrderPlaceQueryParams
-from .models.session_link_request import SessionLinkRequest as SessionLinkRequest
 from .models.session_response_data import SessionResponseData as SessionResponseData
 from .models.session_start_request import SessionStartRequest as SessionStartRequest
 from .models.session_status import SessionStatus as SessionStatus

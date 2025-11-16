@@ -13,11 +13,9 @@ from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url
 from .models.session_start_request import SessionStartRequest
 
 from .api.brokers_api import BrokersApi
-from .api.market_data_api import MarketDataApi
 from .api.session_api import SessionApi
 
 from .wrappers.brokers import BrokersWrapper
-from .wrappers.market_data import MarketDataWrapper
 from .wrappers.session import SessionWrapper
 
 
@@ -65,7 +63,6 @@ class FinaticServer:
         self.csrf_token: Optional[str] = None
 
         self.brokers = BrokersWrapper(BrokersApi(self.api_client), self.config, self.sdk_config)
-        self.market_data = MarketDataWrapper(MarketDataApi(self.api_client), self.config, self.sdk_config)
         self.session = SessionWrapper(SessionApi(self.api_client), self.config, self.sdk_config)
 
     async def initialize(self) -> None:
@@ -90,7 +87,6 @@ class FinaticServer:
         
         # Update all wrappers with session context
         self.brokers.set_session_context(session_id, company_id, csrf_token)
-        self.market_data.set_session_context(session_id, company_id, csrf_token)
         self.session.set_session_context(session_id, company_id, csrf_token)
 
     def get_session_id(self) -> Optional[str]:

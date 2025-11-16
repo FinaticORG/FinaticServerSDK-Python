@@ -30,14 +30,16 @@ class FinaticResponseListUserBrokerConnections(BaseModel):
     """ # noqa: E501
     id: Optional[StrictStr] = Field(default=None, alias="_id")
     success: StrictBool = Field(description="Whether the request was successful")
+    data: Optional[List[UserBrokerConnections]] = None
     response_data: Optional[List[UserBrokerConnections]] = None
     message: Optional[StrictStr] = None
     status_code: Optional[StrictInt] = Field(default=200, description="HTTP status code")
     warnings: Optional[List[FinaticAPIWarning]] = None
     errors: Optional[List[Dict[str, Any]]] = None
     pagination: Optional[Dict[str, Any]] = None
+    meta: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "success", "response_data", "message", "status_code", "warnings", "errors", "pagination"]
+    __properties: ClassVar[List[str]] = ["_id", "success", "data", "response_data", "message", "status_code", "warnings", "errors", "pagination", "meta"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,6 +82,13 @@ class FinaticResponseListUserBrokerConnections(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in data (list)
+        _items = []
+        if self.data:
+            for _item_data in self.data:
+                if _item_data:
+                    _items.append(_item_data.to_dict())
+            _dict['data'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in response_data (list)
         _items = []
         if self.response_data:
@@ -98,6 +107,11 @@ class FinaticResponseListUserBrokerConnections(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if data (nullable) is None
+        # and model_fields_set contains the field
+        if self.data is None and "data" in self.model_fields_set:
+            _dict['data'] = None
 
         # set to None if response_data (nullable) is None
         # and model_fields_set contains the field
@@ -124,6 +138,11 @@ class FinaticResponseListUserBrokerConnections(BaseModel):
         if self.pagination is None and "pagination" in self.model_fields_set:
             _dict['pagination'] = None
 
+        # set to None if meta (nullable) is None
+        # and model_fields_set contains the field
+        if self.meta is None and "meta" in self.model_fields_set:
+            _dict['meta'] = None
+
         return _dict
 
     @classmethod
@@ -138,12 +157,14 @@ class FinaticResponseListUserBrokerConnections(BaseModel):
         _obj = cls.model_validate({
             "_id": obj.get("_id"),
             "success": obj.get("success"),
+            "data": [UserBrokerConnections.from_dict(_item) for _item in obj["data"]] if obj.get("data") is not None else None,
             "response_data": [UserBrokerConnections.from_dict(_item) for _item in obj["response_data"]] if obj.get("response_data") is not None else None,
             "message": obj.get("message"),
             "status_code": obj.get("status_code") if obj.get("status_code") is not None else 200,
             "warnings": [FinaticAPIWarning.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None,
             "errors": obj.get("errors"),
-            "pagination": obj.get("pagination")
+            "pagination": obj.get("pagination"),
+            "meta": obj.get("meta")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

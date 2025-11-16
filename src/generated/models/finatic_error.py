@@ -17,19 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SessionLinkRequest(BaseModel):
+class FinaticError(BaseModel):
     """
-    Request model for linking user to session.
+    Standard error response envelope for API non-2xx responses.
     """ # noqa: E501
-    user_id: StrictStr
-    email: Optional[StrictStr] = None
+    error: Dict[str, Any] = Field(description="Error details including type, code, message, and trace_id. Shape: { type: FinaticErrorType, code: string, message: string, trace_id: string, details?: any, fields?: FinaticErrorField[] }")
+    meta: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["user_id", "email"]
+    __properties: ClassVar[List[str]] = ["error", "meta"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +49,7 @@ class SessionLinkRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SessionLinkRequest from a JSON string"""
+        """Create an instance of FinaticError from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,16 +77,16 @@ class SessionLinkRequest(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if email (nullable) is None
+        # set to None if meta (nullable) is None
         # and model_fields_set contains the field
-        if self.email is None and "email" in self.model_fields_set:
-            _dict['email'] = None
+        if self.meta is None and "meta" in self.model_fields_set:
+            _dict['meta'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SessionLinkRequest from a dict"""
+        """Create an instance of FinaticError from a dict"""
         if obj is None:
             return None
 
@@ -94,8 +94,8 @@ class SessionLinkRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "user_id": obj.get("user_id"),
-            "email": obj.get("email")
+            "error": obj.get("error"),
+            "meta": obj.get("meta")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

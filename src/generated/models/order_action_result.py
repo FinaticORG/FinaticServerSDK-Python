@@ -17,22 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FinaticAPIWarning(BaseModel):
+class OrderActionResult(BaseModel):
     """
-    First-class API warning used in responses.  Fields ------ type: str     High-level warning type (e.g., DEPRECATION, RATE_LIMIT). code: str     Stable programmatic code (e.g., BROKER_PARTIAL_DATA). message: str     Human-readable warning message. details: dict[str, Any] | None     Optional structured details.  Back-compat ----------- category: str     Legacy alias for type. If provided, it is mirrored to type.
+    Unified order action result for place/cancel/modify.
     """ # noqa: E501
-    type: Optional[StrictStr] = None
-    code: Optional[StrictStr] = None
-    message: StrictStr
-    details: Optional[Dict[str, Any]] = None
-    category: Optional[StrictStr] = None
+    id: Optional[StrictStr] = Field(default=None, alias="_id")
+    order_id: Optional[StrictStr] = None
+    status: Optional[StrictStr] = None
+    message: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["type", "code", "message", "details", "category"]
+    __properties: ClassVar[List[str]] = ["_id", "order_id", "status", "message"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +51,7 @@ class FinaticAPIWarning(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FinaticAPIWarning from a JSON string"""
+        """Create an instance of OrderActionResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -80,31 +79,26 @@ class FinaticAPIWarning(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if type (nullable) is None
+        # set to None if order_id (nullable) is None
         # and model_fields_set contains the field
-        if self.type is None and "type" in self.model_fields_set:
-            _dict['type'] = None
+        if self.order_id is None and "order_id" in self.model_fields_set:
+            _dict['order_id'] = None
 
-        # set to None if code (nullable) is None
+        # set to None if status (nullable) is None
         # and model_fields_set contains the field
-        if self.code is None and "code" in self.model_fields_set:
-            _dict['code'] = None
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
 
-        # set to None if details (nullable) is None
+        # set to None if message (nullable) is None
         # and model_fields_set contains the field
-        if self.details is None and "details" in self.model_fields_set:
-            _dict['details'] = None
-
-        # set to None if category (nullable) is None
-        # and model_fields_set contains the field
-        if self.category is None and "category" in self.model_fields_set:
-            _dict['category'] = None
+        if self.message is None and "message" in self.model_fields_set:
+            _dict['message'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FinaticAPIWarning from a dict"""
+        """Create an instance of OrderActionResult from a dict"""
         if obj is None:
             return None
 
@@ -112,11 +106,10 @@ class FinaticAPIWarning(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "type": obj.get("type"),
-            "code": obj.get("code"),
-            "message": obj.get("message"),
-            "details": obj.get("details"),
-            "category": obj.get("category")
+            "_id": obj.get("_id"),
+            "order_id": obj.get("order_id"),
+            "status": obj.get("status"),
+            "message": obj.get("message")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

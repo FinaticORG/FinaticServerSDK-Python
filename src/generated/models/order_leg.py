@@ -17,20 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from .broker_permissions import BrokerPermissions
+from pydantic import BaseModel, ConfigDict, StrictFloat, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BrokerConnectionUpdateRequest(BaseModel):
+class OrderLeg(BaseModel):
     """
-    Request model for updating a broker connection.
+    Minimal order leg model; extra fields allowed for broker specifics.
     """ # noqa: E501
-    permissions: Optional[BrokerPermissions] = None
-    metadata: Optional[Dict[str, StrictStr]] = None
+    symbol: Optional[StrictStr] = None
+    side: Optional[StrictStr] = None
+    quantity: Optional[Union[StrictFloat, StrictInt]] = None
+    price: Optional[Union[StrictFloat, StrictInt]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["permissions", "metadata"]
+    __properties: ClassVar[List[str]] = ["symbol", "side", "quantity", "price"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +51,7 @@ class BrokerConnectionUpdateRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BrokerConnectionUpdateRequest from a JSON string"""
+        """Create an instance of OrderLeg from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,29 +74,36 @@ class BrokerConnectionUpdateRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of permissions
-        if self.permissions:
-            _dict['permissions'] = self.permissions.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if permissions (nullable) is None
+        # set to None if symbol (nullable) is None
         # and model_fields_set contains the field
-        if self.permissions is None and "permissions" in self.model_fields_set:
-            _dict['permissions'] = None
+        if self.symbol is None and "symbol" in self.model_fields_set:
+            _dict['symbol'] = None
 
-        # set to None if metadata (nullable) is None
+        # set to None if side (nullable) is None
         # and model_fields_set contains the field
-        if self.metadata is None and "metadata" in self.model_fields_set:
-            _dict['metadata'] = None
+        if self.side is None and "side" in self.model_fields_set:
+            _dict['side'] = None
+
+        # set to None if quantity (nullable) is None
+        # and model_fields_set contains the field
+        if self.quantity is None and "quantity" in self.model_fields_set:
+            _dict['quantity'] = None
+
+        # set to None if price (nullable) is None
+        # and model_fields_set contains the field
+        if self.price is None and "price" in self.model_fields_set:
+            _dict['price'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BrokerConnectionUpdateRequest from a dict"""
+        """Create an instance of OrderLeg from a dict"""
         if obj is None:
             return None
 
@@ -103,8 +111,10 @@ class BrokerConnectionUpdateRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "permissions": BrokerPermissions.from_dict(obj["permissions"]) if obj.get("permissions") is not None else None,
-            "metadata": obj.get("metadata")
+            "symbol": obj.get("symbol"),
+            "side": obj.get("side"),
+            "quantity": obj.get("quantity"),
+            "price": obj.get("price")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

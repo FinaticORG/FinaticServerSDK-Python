@@ -19,19 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from .balances import Balances
 from .finatic_api_warning import FinaticAPIWarning
+from .order_response import OrderResponse
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FinaticResponseListBalances(BaseModel):
+class FinaticResponseListOrderResponse(BaseModel):
     """
-    FinaticResponseListBalances
+    FinaticResponseListOrderResponse
     """ # noqa: E501
     id: Optional[StrictStr] = Field(default=None, alias="_id")
     success: StrictBool = Field(description="Whether the request was successful")
-    data: Optional[List[Balances]] = None
-    response_data: Optional[List[Balances]] = None
+    data: Optional[List[OrderResponse]] = None
+    response_data: Optional[List[OrderResponse]] = None
     message: Optional[StrictStr] = None
     status_code: Optional[StrictInt] = Field(default=200, description="HTTP status code")
     warnings: Optional[List[FinaticAPIWarning]] = None
@@ -59,7 +59,7 @@ class FinaticResponseListBalances(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FinaticResponseListBalances from a JSON string"""
+        """Create an instance of FinaticResponseListOrderResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -147,7 +147,7 @@ class FinaticResponseListBalances(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FinaticResponseListBalances from a dict"""
+        """Create an instance of FinaticResponseListOrderResponse from a dict"""
         if obj is None:
             return None
 
@@ -157,8 +157,8 @@ class FinaticResponseListBalances(BaseModel):
         _obj = cls.model_validate({
             "_id": obj.get("_id"),
             "success": obj.get("success"),
-            "data": [Balances.from_dict(_item) for _item in obj["data"]] if obj.get("data") is not None else None,
-            "response_data": [Balances.from_dict(_item) for _item in obj["response_data"]] if obj.get("response_data") is not None else None,
+            "data": [OrderResponse.from_dict(_item) for _item in obj["data"]] if obj.get("data") is not None else None,
+            "response_data": [OrderResponse.from_dict(_item) for _item in obj["response_data"]] if obj.get("response_data") is not None else None,
             "message": obj.get("message"),
             "status_code": obj.get("status_code") if obj.get("status_code") is not None else 200,
             "warnings": [FinaticAPIWarning.from_dict(_item) for _item in obj["warnings"]] if obj.get("warnings") is not None else None,

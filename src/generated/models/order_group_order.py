@@ -17,20 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FinaticapiCoreStandardModelsFinaticResponse(BaseModel):
+class OrderGroupOrder(BaseModel):
     """
-    Standard API response model.  Attributes ----------     success: Whether the request was successful     message: Optional message to provide context     data: Optional data payload of type T
+    Order inside an order group.
     """ # noqa: E501
-    success: Optional[StrictBool] = True
-    message: Optional[StrictStr] = None
-    data: Optional[Any] = None
+    id: Optional[StrictStr] = None
+    symbol: Optional[StrictStr] = None
+    status: Optional[StrictStr] = None
+    legs: Optional[List[Dict[str, Any]]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["success", "message", "data"]
+    __properties: ClassVar[List[str]] = ["id", "symbol", "status", "legs"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -50,7 +51,7 @@ class FinaticapiCoreStandardModelsFinaticResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FinaticapiCoreStandardModelsFinaticResponse from a JSON string"""
+        """Create an instance of OrderGroupOrder from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,29 +74,36 @@ class FinaticapiCoreStandardModelsFinaticResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of data
-        if self.data:
-            _dict['data'] = self.data.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if message (nullable) is None
+        # set to None if id (nullable) is None
         # and model_fields_set contains the field
-        if self.message is None and "message" in self.model_fields_set:
-            _dict['message'] = None
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
 
-        # set to None if data (nullable) is None
+        # set to None if symbol (nullable) is None
         # and model_fields_set contains the field
-        if self.data is None and "data" in self.model_fields_set:
-            _dict['data'] = None
+        if self.symbol is None and "symbol" in self.model_fields_set:
+            _dict['symbol'] = None
+
+        # set to None if status (nullable) is None
+        # and model_fields_set contains the field
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
+
+        # set to None if legs (nullable) is None
+        # and model_fields_set contains the field
+        if self.legs is None and "legs" in self.model_fields_set:
+            _dict['legs'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FinaticapiCoreStandardModelsFinaticResponse from a dict"""
+        """Create an instance of OrderGroupOrder from a dict"""
         if obj is None:
             return None
 
@@ -103,9 +111,10 @@ class FinaticapiCoreStandardModelsFinaticResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "success": obj.get("success") if obj.get("success") is not None else True,
-            "message": obj.get("message"),
-            "data": obj["data"] if obj.get("data") is not None else None
+            "id": obj.get("id"),
+            "symbol": obj.get("symbol"),
+            "status": obj.get("status"),
+            "legs": obj.get("legs")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

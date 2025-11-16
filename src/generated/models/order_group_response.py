@@ -17,19 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from .order_group_order import OrderGroupOrder
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BrokerPermissions(BaseModel):
+class OrderGroupResponse(BaseModel):
     """
-    Broker permissions model.
+    Unified order group response.
     """ # noqa: E501
-    read: Optional[StrictBool] = Field(default=True, description="Access to read data (positions, orders, accounts)")
-    write: Optional[StrictBool] = Field(default=False, description="Access to place trades")
+    id: Optional[StrictStr] = None
+    user_broker_connection_id: Optional[StrictStr] = None
+    created_at: Optional[StrictStr] = None
+    updated_at: Optional[StrictStr] = None
+    orders: Optional[List[OrderGroupOrder]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["read", "write"]
+    __properties: ClassVar[List[str]] = ["id", "user_broker_connection_id", "created_at", "updated_at", "orders"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -49,7 +53,7 @@ class BrokerPermissions(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BrokerPermissions from a JSON string"""
+        """Create an instance of OrderGroupResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -72,16 +76,48 @@ class BrokerPermissions(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in orders (list)
+        _items = []
+        if self.orders:
+            for _item_orders in self.orders:
+                if _item_orders:
+                    _items.append(_item_orders.to_dict())
+            _dict['orders'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if id (nullable) is None
+        # and model_fields_set contains the field
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
+
+        # set to None if user_broker_connection_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_broker_connection_id is None and "user_broker_connection_id" in self.model_fields_set:
+            _dict['user_broker_connection_id'] = None
+
+        # set to None if created_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
+
+        # set to None if orders (nullable) is None
+        # and model_fields_set contains the field
+        if self.orders is None and "orders" in self.model_fields_set:
+            _dict['orders'] = None
+
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BrokerPermissions from a dict"""
+        """Create an instance of OrderGroupResponse from a dict"""
         if obj is None:
             return None
 
@@ -89,8 +125,11 @@ class BrokerPermissions(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "read": obj.get("read") if obj.get("read") is not None else True,
-            "write": obj.get("write") if obj.get("write") is not None else False
+            "id": obj.get("id"),
+            "user_broker_connection_id": obj.get("user_broker_connection_id"),
+            "created_at": obj.get("created_at"),
+            "updated_at": obj.get("updated_at"),
+            "orders": [OrderGroupOrder.from_dict(_item) for _item in obj["orders"]] if obj.get("orders") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

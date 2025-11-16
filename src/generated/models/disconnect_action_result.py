@@ -17,23 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
-from .broker_permissions import BrokerPermissions
 from typing import Optional, Set
 from typing_extensions import Self
 
-class BrokerConnectionRequest(BaseModel):
+class DisconnectActionResult(BaseModel):
     """
-    Request model for creating a broker connection.
+    Generic disconnect action result.
     """ # noqa: E501
-    broker_id: StrictStr
-    credentials: Dict[str, Any]
-    permissions: Optional[BrokerPermissions] = None
-    connection_id: Optional[UUID] = None
+    id: Optional[StrictStr] = Field(default=None, alias="_id")
+    success: Optional[StrictBool] = True
+    message: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["broker_id", "credentials", "permissions", "connection_id"]
+    __properties: ClassVar[List[str]] = ["_id", "success", "message"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -53,7 +50,7 @@ class BrokerConnectionRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of BrokerConnectionRequest from a JSON string"""
+        """Create an instance of DisconnectActionResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -76,29 +73,21 @@ class BrokerConnectionRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of permissions
-        if self.permissions:
-            _dict['permissions'] = self.permissions.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if permissions (nullable) is None
+        # set to None if message (nullable) is None
         # and model_fields_set contains the field
-        if self.permissions is None and "permissions" in self.model_fields_set:
-            _dict['permissions'] = None
-
-        # set to None if connection_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.connection_id is None and "connection_id" in self.model_fields_set:
-            _dict['connection_id'] = None
+        if self.message is None and "message" in self.model_fields_set:
+            _dict['message'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of BrokerConnectionRequest from a dict"""
+        """Create an instance of DisconnectActionResult from a dict"""
         if obj is None:
             return None
 
@@ -106,10 +95,9 @@ class BrokerConnectionRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "broker_id": obj.get("broker_id"),
-            "credentials": obj.get("credentials"),
-            "permissions": BrokerPermissions.from_dict(obj["permissions"]) if obj.get("permissions") is not None else None,
-            "connection_id": obj.get("connection_id")
+            "_id": obj.get("_id"),
+            "success": obj.get("success") if obj.get("success") is not None else True,
+            "message": obj.get("message")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

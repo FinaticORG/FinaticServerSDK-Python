@@ -460,45 +460,45 @@ class FinaticDemo:
                 console.print("[green]  ✅ All helper methods passed![/green]")
 
             # Step 12: Disconnect the first connection
-            if connections and len(connections) > 0:
-                console.print("\n[yellow]Step 12: Disconnecting first connection...[/yellow]")
-                try:
-                    first_connection = connections[0]
-                    # Handle both Pydantic models and dicts
-                    if hasattr(first_connection, "id"):
-                        connection_id = (
-                            str(first_connection.id)
-                            if first_connection.id
-                            else (
-                                str(first_connection.connection_id)
-                                if hasattr(first_connection, "connection_id")
-                                else None
-                            )
-                        )
-                        broker_id = (
-                            first_connection.broker_id
-                            if hasattr(first_connection, "broker_id")
-                            else "Unknown"
-                        )
-                    else:
-                        connection_id = first_connection.get("id") or first_connection.get(
-                            "connection_id"
-                        )
-                        broker_id = first_connection.get("broker_id") or "Unknown"
-                    console.print(f"[dim]  Disconnecting connection: {connection_id}[/dim]")
-                    console.print(f"[dim]  Broker: {broker_id}[/dim]")
+            # if connections and len(connections) > 0:
+            #     console.print("\n[yellow]Step 12: Disconnecting first connection...[/yellow]")
+            #     try:
+            #         first_connection = connections[0]
+            #         # Handle both Pydantic models and dicts
+            #         if hasattr(first_connection, "id"):
+            #             connection_id = (
+            #                 str(first_connection.id)
+            #                 if first_connection.id
+            #                 else (
+            #                     str(first_connection.connection_id)
+            #                     if hasattr(first_connection, "connection_id")
+            #                     else None
+            #                 )
+            #             )
+            #             broker_id = (
+            #                 first_connection.broker_id
+            #                 if hasattr(first_connection, "broker_id")
+            #                 else "Unknown"
+            #             )
+            #         else:
+            #             connection_id = first_connection.get("id") or first_connection.get(
+            #                 "connection_id"
+            #             )
+            #             broker_id = first_connection.get("broker_id") or "Unknown"
+            #         console.print(f"[dim]  Disconnecting connection: {connection_id}[/dim]")
+            #         console.print(f"[dim]  Broker: {broker_id}[/dim]")
 
-                    await self.client.brokers.disconnect_company_from_broker(connection_id)
-                    console.print(
-                        f"[green]✅ Successfully disconnected connection {connection_id}[/green]"
-                    )
-                except Exception as e:
-                    console.print(f"[red]❌ Failed to disconnect connection: {str(e)}[/red]")
-                    raise
-            else:
-                console.print(
-                    "\n[yellow]Step 12: Skipping disconnect - no connections available[/yellow]"
-                )
+            #         await self.client.brokers.disconnect_company_from_broker(connection_id)
+            #         console.print(
+            #             f"[green]✅ Successfully disconnected connection {connection_id}[/green]"
+            #         )
+            #     except Exception as e:
+            #         console.print(f"[red]❌ Failed to disconnect connection: {str(e)}[/red]")
+            #         raise
+            # else:
+            #     console.print(
+            #         "\n[yellow]Step 12: Skipping disconnect - no connections available[/yellow]"
+            #     )
 
             console.print("\n[green]🎉 Demo completed successfully![/green]")
             console.print("\n[dim]📊 Test Summary:[/dim]")
