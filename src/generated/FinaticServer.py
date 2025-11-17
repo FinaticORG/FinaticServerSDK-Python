@@ -10,6 +10,7 @@ from .configuration import Configuration
 from .api_client import ApiClient
 from .config import SdkConfig, get_config
 from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url
+from .utils.logger import get_logger
 from .models.session_start_request import SessionStartRequest
 from .wrappers.session import InitSessionParams, StartSessionParams
 
@@ -63,6 +64,9 @@ class FinaticServer:
         self.company_id: Optional[str] = None
         self.csrf_token: Optional[str] = None
         self.user_id: Optional[str] = None
+        
+        # Initialize logger
+        self.logger = get_logger(self.sdk_config)
 
         self.brokers = BrokersWrapper(BrokersApi(self.api_client), self.config, self.sdk_config)
         self.session = SessionWrapper(SessionApi(self.api_client), self.config, self.sdk_config)
@@ -224,9 +228,10 @@ class FinaticServer:
         self,
         theme: Optional[str | Dict[str, Any]] = None,
         brokers: Optional[List[str]] = None,
-        email: Optional[str] = None
+        email: Optional[str] = None,
+        mode: Optional[str] = None
     ) -> str:
-        """Get portal URL with optional theme and broker filters.
+        """Get portal URL with optional theme, broker filters, email, and mode.
         
         This is where URL manipulation happens (not in session wrapper).
         Returns the URL - app can use it as needed.
@@ -235,6 +240,7 @@ class FinaticServer:
             theme: Optional theme configuration (preset string or custom dict)
             brokers: Optional list of broker names/IDs to filter
             email: Optional email for pre-filling
+            mode: Optional mode ('light' or 'dark')
         
         Returns:
             Portal URL with all parameters appended
@@ -246,12 +252,37 @@ class FinaticServer:
         from .wrappers.session import GetPortalUrlParams
         response = await self.session.get_portal_url(GetPortalUrlParams())
         
+        # Check for errors
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get portal URL') if isinstance(response.Error, dict) else str(response.Error)
+            self.logger.error('Failed to get portal URL', extra={
+                'error': error_msg,
+                'code': response.Error.get('code') if isinstance(response.Error, dict) else None,
+                'status': response.Error.get('status') if isinstance(response.Error, dict) else None,
+            })
+            raise Exception(error_msg)
+        
         # Extract portal URL from standard response structure
         if response.success and isinstance(response.success, dict):
             data = response.success.get('data', {})
             portal_url = data.get('portal_url', '') if isinstance(data, dict) else ''
         else:
-            portal_url = ''
+            self.logger.error('Invalid portal URL response: missing data', extra={})
+            raise ValueError('Invalid portal URL response: missing portal_url')
+        
+        if not portal_url:
+            self.logger.error('Empty portal URL from API', extra={})
+            raise ValueError('Empty portal URL received from API')
+
+        # Validate URL before manipulation
+        from urllib.parse import urlparse
+        try:
+            parsed = urlparse(portal_url)
+            if not parsed.scheme or not parsed.netloc:
+                raise ValueError(f'Invalid portal URL format: {portal_url}')
+        except Exception as e:
+            self.logger.error('Invalid portal URL from API', extra={'portal_url': portal_url, 'error': str(e)})
+            raise ValueError(f'Invalid portal URL received from API: {portal_url}')
 
         # Append theme if provided
         if theme:
@@ -271,6 +302,16 @@ class FinaticServer:
             new_parsed = parsed._replace(query=new_query)
             portal_url = urlunparse(new_parsed)
 
+        # Append mode if provided (light or dark)
+        if mode:
+            from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
+            parsed = urlparse(portal_url)
+            query_params = parse_qs(parsed.query)
+            query_params['mode'] = [mode]
+            new_query = urlencode(query_params, doseq=True)
+            new_parsed = parsed._replace(query=new_query)
+            portal_url = urlunparse(new_parsed)
+
         # Add session ID and company ID to URL
         from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
         parsed = urlparse(portal_url)
@@ -283,6 +324,7 @@ class FinaticServer:
         new_parsed = parsed._replace(query=new_query)
         portal_url = urlunparse(new_parsed)
 
+        self.logger.debug('Portal URL generated', extra={'portal_url': portal_url})
         return portal_url
 
     async def get_session_user(self) -> Dict[str, str]:
