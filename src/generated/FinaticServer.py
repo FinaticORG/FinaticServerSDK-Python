@@ -11,6 +11,7 @@ from .api_client import ApiClient
 from .config import SdkConfig, get_config
 from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url
 from .models.session_start_request import SessionStartRequest
+from .wrappers.session import InitSessionParams, StartSessionParams
 
 from .api.brokers_api import BrokersApi
 from .api.session_api import SessionApi
@@ -102,8 +103,8 @@ class FinaticServer:
         """Get current user ID (set after portal authentication)."""
         return self.user_id
 
-    async def init_session(self, x_api_key: str) -> str:
-        """Initialize a session by getting a one-time token.
+    async def _init_session(self, x_api_key: str) -> str:
+        """Initialize a session by getting a one-time token (internal/private).
         
         Args:
             x_api_key: Company API key
@@ -111,8 +112,11 @@ class FinaticServer:
         Returns:
             One-time token
         """
-        response = await self.session.init_session(x_api_key)
-        return response.one_time_token or ''
+        response = await self.session.init_session(InitSessionParams(x_api_key=x_api_key))
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to initialize session') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', {}).get('one_time_token', '') if response.success and isinstance(response.success, dict) else ''
 
     async def start_session(
         self,
@@ -130,9 +134,16 @@ class FinaticServer:
         """
         # Create SessionStartRequest with optional user_id
         session_start_request = SessionStartRequest(user_id=user_id) if user_id else SessionStartRequest()
-        response = await self.session.start_session(one_time_token, session_start_request)
-        session_id = response.session_id or ''
-        company_id = response.company_id or ''
+        response = await self.session.start_session(StartSessionParams(
+            one_time_token=one_time_token,
+            session_start_request=session_start_request
+        ))
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to start session') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        session_data = response.success.get('data', {}) if response.success and isinstance(response.success, dict) else {}
+        session_id = session_data.get('session_id', '') if isinstance(session_data, dict) else ''
+        company_id = session_data.get('company_id', '') if isinstance(session_data, dict) else ''
         
         # Note: csrf_token is not available in SessionResponseData
         # It should be obtained from session context or another source if needed
@@ -142,6 +153,72 @@ class FinaticServer:
             self.set_session_context(session_id, company_id, csrf_token)
         
         return {'session_id': session_id, 'company_id': company_id}
+
+    async def init_session(
+        self, api_key: Optional[str] = None, user_id: Optional[str] = None
+    ) -> Dict[str, Any]:
+        """Convenience method that combines init_session and start_session (Phase 2C).
+        
+        This method:
+        1. Gets a one-time token using the API key
+        2. Starts a session with that token
+        3. Sets the session context automatically
+        4. Returns success/error information
+        
+        Args:
+            api_key: Company API key (uses instance API key if not provided)
+            user_id: Optional user ID for direct authentication
+        
+        Returns:
+            Dictionary with:
+            - success: bool - Whether the session was initialized successfully
+            - session_id: str | None - Session ID if successful
+            - company_id: str | None - Company ID if successful
+            - error: str | None - Error message if failed
+        """
+        try:
+            # Use provided API key or fall back to instance API key
+            key_to_use = api_key or (
+                self.config.api_key.get("X-API-Key") if self.config.api_key else None
+            )
+            if not key_to_use:
+                return {
+                    "success": False,
+                    "session_id": None,
+                    "company_id": None,
+                    "error": "API key is required",
+                }
+
+            # Step 1: Get one-time token
+            one_time_token = await self._init_session(key_to_use)
+            
+            if not one_time_token or not isinstance(one_time_token, str):
+                return {
+                    "success": False,
+                    "session_id": None,
+                    "company_id": None,
+                    "error": "Failed to get one-time token",
+                }
+
+            # Step 2: Start session with the token
+            session_result = await self.start_session(one_time_token, user_id)
+            
+            session_id = session_result.get("session_id") if isinstance(session_result, dict) else None
+            company_id = session_result.get("company_id") if isinstance(session_result, dict) else None
+
+            return {
+                "success": True,
+                "session_id": session_id,
+                "company_id": company_id,
+                "error": None,
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "session_id": None,
+                "company_id": None,
+                "error": str(e),
+            }
 
     async def get_portal_url(
         self,
@@ -165,9 +242,16 @@ class FinaticServer:
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
 
-        # Get raw portal URL from session wrapper (requires session_id parameter)
-        response = await self.session.get_portal_url(self.session_id)
-        portal_url = response.portal_url or ''
+        # Get raw portal URL from session wrapper (requires GetPortalUrlParams object)
+        from .wrappers.session import GetPortalUrlParams
+        response = await self.session.get_portal_url(GetPortalUrlParams())
+        
+        # Extract portal URL from standard response structure
+        if response.success and isinstance(response.success, dict):
+            data = response.success.get('data', {})
+            portal_url = data.get('portal_url', '') if isinstance(data, dict) else ''
+        else:
+            portal_url = ''
 
         # Append theme if provided
         if theme:
@@ -211,54 +295,75 @@ class FinaticServer:
             raise ValueError('Session not initialized. Call start_session() first.')
         
         # get_session_user uses session_id in the path and company_id from session context
-        response = await self.session.get_session_user(self.session_id)
-        user_id = response.user_id or ''
-        company_id = response.company_id or self.company_id or ''
+        from .wrappers.session import GetSessionUserParams
+        response = await self.session.get_session_user(GetSessionUserParams(session_id=self.session_id))
+        
+        # Extract data from standard response structure
+        if response.success and isinstance(response.success, dict):
+            data = response.success.get('data', {})
+            user_id = data.get('user_id', '') if isinstance(data, dict) else ''
+            company_id = data.get('company_id', self.company_id or '') if isinstance(data, dict) else (self.company_id or '')
+        else:
+            user_id = ''
+            company_id = self.company_id or ''
         
         # Store user_id for get_user_id() method
         if user_id:
             self.user_id = user_id
         
+        # Extract token_type from data if available, otherwise default to 'Bearer'
+        token_type = data.get('token_type', 'Bearer') if isinstance(data, dict) else 'Bearer'
+        
         return {
             'user_id': user_id,
             'company_id': company_id,
-            'token_type': response.token_type or 'Bearer',
+            'token_type': token_type,
         }
 
 
-    def _convert_to_dict(self, data: Any) -> Any:
-        """Convert Pydantic models to dictionaries for consistency with other SDKs."""
-        if data is None:
-            return None
-        if isinstance(data, list):
-            return [self._convert_to_dict(item) for item in data]
-        # Check if it's a Pydantic model (has model_dump or dict method)
-        if hasattr(data, 'model_dump'):
-            return data.model_dump()
-        elif hasattr(data, 'dict'):
-            return data.dict()
-        elif isinstance(data, dict):
-            return {k: self._convert_to_dict(v) for k, v in data.items()}
-        return data
+    # Phase 2C: _convert_to_dict removed - now handled in generated methods via convert_to_plain_object utility
 
     async def get_broker_list(self) -> List[Any]:
-        """Get list of supported brokers."""
-        result = await self.brokers.get_brokers()
-        return self._convert_to_dict(result)
+        """Get list of supported brokers.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetBrokersParams
+        response = await self.brokers.get_brokers(GetBrokersParams())
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get broker list') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_broker_connections(self) -> List[Any]:
-        """Get user's broker connections."""
-        result = await self.brokers.list_broker_connections()
-        return self._convert_to_dict(result)
+        """Get user's broker connections.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import ListBrokerConnectionsParams
+        response = await self.brokers.list_broker_connections(ListBrokerConnectionsParams())
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get broker connections') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_all_accounts(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get all accounts across all pages."""
+        """Get all accounts across all pages.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetAccountsParams
         all_data: List[Any] = []
         offset = 0
         limit = 100
         
         while True:
-            result = await self.brokers.get_accounts(limit=limit, offset=offset)
+            params = GetAccountsParams(limit=limit, offset=offset)
+            response = await self.brokers.get_accounts(params)
+            if response.Error:
+                error_msg = response.Error.get('message', 'Failed to get accounts') if isinstance(response.Error, dict) else str(response.Error)
+                raise Exception(error_msg)
+            result = response.success.get('data', []) if response.success else []
             if not result or len(result) == 0:
                 break
             all_data.extend(result)
@@ -266,23 +371,30 @@ class FinaticServer:
                 break
             offset += limit
         
-        return self._convert_to_dict(all_data)
+        return all_data
 
     async def get_all_orders(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get all orders across all pages."""
+        """Get all orders across all pages.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        Enum coercion happens automatically via typed input objects.
+        """
+        from ..generated.wrappers.brokers import GetOrdersParams
         all_data: List[Any] = []
         offset = 0
         limit = 100
         
         while True:
-            result = await self.brokers.get_orders(
+            params = GetOrdersParams(
                 symbol=filter.get('symbol') if filter else None,
-                order_status=filter.get('order_status') if filter else None,
-                side=filter.get('side') if filter else None,
-                asset_type=filter.get('asset_type') if filter else None,
+                order_status=filter.get('order_status') if filter else None,  # Will be coerced to enum
+                side=filter.get('side') if filter else None,  # Will be coerced to enum
+                asset_type=filter.get('asset_type') if filter else None,  # Will be coerced to enum
                 limit=limit,
                 offset=offset
             )
+            response = await self.brokers.get_orders(params)
+            result = response.success.get('data', []) if response.success else []
             if not result or len(result) == 0:
                 break
             all_data.extend(result)
@@ -290,23 +402,30 @@ class FinaticServer:
                 break
             offset += limit
         
-        return self._convert_to_dict(all_data)
+        return all_data
 
     async def get_all_positions(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get all positions across all pages."""
+        """Get all positions across all pages.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        Enum coercion happens automatically via typed input objects.
+        """
+        from ..generated.wrappers.brokers import GetPositionsParams
         all_data: List[Any] = []
         offset = 0
         limit = 100
         
         while True:
-            result = await self.brokers.get_positions(
+            params = GetPositionsParams(
                 symbol=filter.get('symbol') if filter else None,
-                side=filter.get('side') if filter else None,
-                asset_type=filter.get('asset_type') if filter else None,
-                position_status=filter.get('position_status') if filter else None,
+                side=filter.get('side') if filter else None,  # Will be coerced to enum
+                asset_type=filter.get('asset_type') if filter else None,  # Will be coerced to enum
+                position_status=filter.get('position_status') if filter else None,  # Will be coerced to enum
                 limit=limit,
                 offset=offset
             )
+            response = await self.brokers.get_positions(params)
+            result = response.success.get('data', []) if response.success else []
             if not result or len(result) == 0:
                 break
             all_data.extend(result)
@@ -314,20 +433,26 @@ class FinaticServer:
                 break
             offset += limit
         
-        return self._convert_to_dict(all_data)
+        return all_data
 
     async def get_all_balances(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get all balances across all pages."""
+        """Get all balances across all pages.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetBalancesParams
         all_data: List[Any] = []
         offset = 0
         limit = 100
         
         while True:
-            result = await self.brokers.get_balances(
+            params = GetBalancesParams(
                 is_end_of_day_snapshot=filter.get('is_end_of_day_snapshot') if filter else None,
                 limit=limit,
                 offset=offset
             )
+            response = await self.brokers.get_balances(params)
+            result = response.success.get('data', []) if response.success else []
             if not result or len(result) == 0:
                 break
             all_data.extend(result)
@@ -335,67 +460,113 @@ class FinaticServer:
                 break
             offset += limit
         
-        return self._convert_to_dict(all_data)
+        return all_data
 
     async def get_accounts(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
-        """Get paginated accounts."""
+        """Get paginated accounts.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetAccountsParams
         offset = (page - 1) * per_page
-        result = await self.brokers.get_accounts(limit=per_page, offset=offset)
-        return self._convert_to_dict(result)
+        params = GetAccountsParams(limit=per_page, offset=offset)
+        response = await self.brokers.get_accounts(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get accounts') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_orders(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
-        """Get paginated orders."""
+        """Get paginated orders.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        Enum coercion happens automatically via typed input objects.
+        """
+        from ..generated.wrappers.brokers import GetOrdersParams
         offset = (page - 1) * per_page
-        result = await self.brokers.get_orders(
+        params = GetOrdersParams(
             symbol=filter.get('symbol') if filter else None,
-            order_status=filter.get('order_status') if filter else None,
-            side=filter.get('side') if filter else None,
-            asset_type=filter.get('asset_type') if filter else None,
+            order_status=filter.get('order_status') if filter else None,  # Will be coerced to enum
+            side=filter.get('side') if filter else None,  # Will be coerced to enum
+            asset_type=filter.get('asset_type') if filter else None,  # Will be coerced to enum
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_orders(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get orders') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_positions(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
-        """Get paginated positions."""
+        """Get paginated positions.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        Enum coercion happens automatically via typed input objects.
+        """
+        from ..generated.wrappers.brokers import GetPositionsParams
         offset = (page - 1) * per_page
-        result = await self.brokers.get_positions(
+        params = GetPositionsParams(
             symbol=filter.get('symbol') if filter else None,
-            side=filter.get('side') if filter else None,
-            asset_type=filter.get('asset_type') if filter else None,
-            position_status=filter.get('position_status') if filter else None,
+            side=filter.get('side') if filter else None,  # Will be coerced to enum
+            asset_type=filter.get('asset_type') if filter else None,  # Will be coerced to enum
+            position_status=filter.get('position_status') if filter else None,  # Will be coerced to enum
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_positions(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get positions') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_balances(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
-        """Get paginated balances."""
+        """Get paginated balances.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetBalancesParams
         offset = (page - 1) * per_page
-        result = await self.brokers.get_balances(
+        params = GetBalancesParams(
             is_end_of_day_snapshot=filter.get('is_end_of_day_snapshot') if filter else None,
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_balances(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get balances') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_open_positions(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get only open positions."""
+        """Get only open positions.
+        
+        Phase 2C: Uses enum coercion (case-insensitive string matching).
+        """
         merged_filter = {**(filter or {}), 'position_status': 'active'}
         return await self.get_all_positions(merged_filter)
 
     async def get_filled_orders(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get only filled orders."""
+        """Get only filled orders.
+        
+        Phase 2C: Uses enum coercion (case-insensitive string matching).
+        """
         merged_filter = {**(filter or {}), 'order_status': 'filled'}
         return await self.get_all_orders(merged_filter)
 
     async def get_pending_orders(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get only pending orders."""
+        """Get only pending orders.
+        
+        Phase 2C: Uses enum coercion (case-insensitive string matching).
+        """
         merged_filter = {**(filter or {}), 'order_status': 'new'}
         return await self.get_all_orders(merged_filter)
 
     async def get_active_accounts(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get only active accounts."""
+        """Get only active accounts.
+        
+        Phase 2C: Uses enum coercion (case-insensitive string matching).
+        """
         merged_filter = {**(filter or {}), 'status': 'active'}
         return await self.get_all_accounts(merged_filter)
 
@@ -420,13 +591,17 @@ class FinaticServer:
         return await self.get_all_positions(merged_filter)
 
     async def get_all_order_groups(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get all order groups across all pages."""
+        """Get all order groups across all pages.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetOrderGroupsParams
         all_data: List[Any] = []
         offset = 0
         limit = 100
         
         while True:
-            result = await self.brokers.get_order_groups(
+            params = GetOrderGroupsParams(
                 broker_id=filter.get('broker_id') if filter else None,
                 connection_id=filter.get('connection_id') if filter else None,
                 limit=limit,
@@ -434,6 +609,8 @@ class FinaticServer:
                 created_after=filter.get('created_after') if filter else None,
                 created_before=filter.get('created_before') if filter else None
             )
+            response = await self.brokers.get_order_groups(params)
+            result = response.success.get('data', []) if response.success else []
             if not result or len(result) == 0:
                 break
             all_data.extend(result)
@@ -441,12 +618,16 @@ class FinaticServer:
                 break
             offset += limit
         
-        return self._convert_to_dict(all_data)
+        return all_data
 
     async def get_order_groups(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
-        """Get paginated order groups."""
+        """Get paginated order groups.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetOrderGroupsParams
         offset = (page - 1) * per_page
-        result = await self.brokers.get_order_groups(
+        params = GetOrderGroupsParams(
             broker_id=filter.get('broker_id') if filter else None,
             connection_id=filter.get('connection_id') if filter else None,
             limit=per_page,
@@ -454,16 +635,24 @@ class FinaticServer:
             created_after=filter.get('created_after') if filter else None,
             created_before=filter.get('created_before') if filter else None
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_order_groups(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get order groups') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_all_position_lots(self, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get all position lots across all pages."""
+        """Get all position lots across all pages.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetPositionLotsParams
         all_data: List[Any] = []
         offset = 0
         limit = 100
         
         while True:
-            result = await self.brokers.get_position_lots(
+            params = GetPositionLotsParams(
                 broker_id=filter.get('broker_id') if filter else None,
                 connection_id=filter.get('connection_id') if filter else None,
                 account_id=filter.get('account_id') if filter else None,
@@ -472,6 +661,8 @@ class FinaticServer:
                 limit=limit,
                 offset=offset
             )
+            response = await self.brokers.get_position_lots(params)
+            result = response.success.get('data', []) if response.success else []
             if not result or len(result) == 0:
                 break
             all_data.extend(result)
@@ -479,12 +670,16 @@ class FinaticServer:
                 break
             offset += limit
         
-        return self._convert_to_dict(all_data)
+        return all_data
 
     async def get_position_lots(self, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> Any:
-        """Get paginated position lots."""
+        """Get paginated position lots.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetPositionLotsParams
         offset = (page - 1) * per_page
-        result = await self.brokers.get_position_lots(
+        params = GetPositionLotsParams(
             broker_id=filter.get('broker_id') if filter else None,
             connection_id=filter.get('connection_id') if filter else None,
             account_id=filter.get('account_id') if filter else None,
@@ -493,53 +688,86 @@ class FinaticServer:
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_position_lots(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get position lots') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def disconnect_company(self, connection_id: str) -> Any:
-        """Disconnect company from broker."""
+        """Disconnect company from broker.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import DisconnectCompanyFromBrokerParams
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
-        result = await self.brokers.disconnect_company_from_broker(connection_id)
-        return self._convert_to_dict(result)
+        params = DisconnectCompanyFromBrokerParams(connection_id=connection_id)
+        response = await self.brokers.disconnect_company_from_broker(params)
+        return response.success.get('data') if response.success else None
 
     async def get_order_fills(self, order_id: str, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get order fills for a specific order."""
+        """Get order fills for a specific order.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetOrderFillsParams
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
         offset = (page - 1) * per_page
-        result = await self.brokers.get_order_fills(
+        params = GetOrderFillsParams(
             order_id=order_id,
             connection_id=filter.get('connection_id') if filter else None,
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_order_fills(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get order fills') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_order_events(self, order_id: str, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get order events for a specific order."""
+        """Get order events for a specific order.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetOrderEventsParams
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
         offset = (page - 1) * per_page
-        result = await self.brokers.get_order_events(
+        params = GetOrderEventsParams(
             order_id=order_id,
             connection_id=filter.get('connection_id') if filter else None,
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_order_events(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get order events') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
     async def get_position_lot_fills(self, lot_id: str, page: int = 1, per_page: int = 100, filter: Optional[Dict[str, Any]] = None) -> List[Any]:
-        """Get position lot fills for a specific lot."""
+        """Get position lot fills for a specific lot.
+        
+        Phase 2C: Uses typed input objects and handles standard response structure.
+        """
+        from ..generated.wrappers.brokers import GetPositionLotFillsParams
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
         offset = (page - 1) * per_page
-        result = await self.brokers.get_position_lot_fills(
+        params = GetPositionLotFillsParams(
             lot_id=lot_id,
             connection_id=filter.get('connection_id') if filter else None,
             limit=per_page,
             offset=offset
         )
-        return self._convert_to_dict(result)
+        response = await self.brokers.get_position_lot_fills(params)
+        if response.Error:
+            error_msg = response.Error.get('message', 'Failed to get position lot fills') if isinstance(response.Error, dict) else str(response.Error)
+            raise Exception(error_msg)
+        return response.success.get('data', []) if response.success else []
 
 
 

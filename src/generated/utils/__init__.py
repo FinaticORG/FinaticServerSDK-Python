@@ -19,6 +19,8 @@ from .interceptors import (
     apply_error_interceptors,
 )
 from .url_utils import append_theme_to_url, append_broker_filter_to_url
+from .enum_coercion import coerce_enum_value
+from .plain_object import convert_to_plain_object
 
 __all__ = [
     'generate_request_id',
@@ -37,4 +39,8 @@ __all__ = [
     'apply_request_interceptors',
     'apply_response_interceptors',
     'apply_error_interceptors',
+    'append_theme_to_url',
+    'append_broker_filter_to_url',
+    'coerce_enum_value',
+    'convert_to_plain_object',
 ]

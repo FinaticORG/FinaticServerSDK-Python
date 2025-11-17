@@ -27,7 +27,16 @@ def get_logger(config: Optional[SdkConfig] = None) -> structlog.BoundLogger:
     if _logger is not None:
         return _logger
     
-    log_level = (config.log_level if config else None) or 'error'
+    import os
+    log_level = (config.log_level if config else None) or os.getenv('FINATIC_LOG_LEVEL', 'error')
+    
+    # Determine if we should use structured (JSON) or pretty (console) logging
+    # Use pretty console renderer in development unless explicitly requested
+    is_production = os.getenv('NODE_ENV', '').lower() in ('production', 'prod')
+    use_structured = (
+        (config.structured_logging if config else None) is True or
+        (is_production and (config.structured_logging if config else None) is not False)
+    )
     
     # Configure structlog
     structlog.configure(
@@ -40,7 +49,7 @@ def get_logger(config: Optional[SdkConfig] = None) -> structlog.BoundLogger:
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
             structlog.processors.UnicodeDecoder(),
-            structlog.processors.JSONRenderer() if (config.structured_logging if config else False) else structlog.dev.ConsoleRenderer(),
+            structlog.processors.JSONRenderer() if use_structured else structlog.dev.ConsoleRenderer(),
         ],
         wrapper_class=structlog.stdlib.BoundLogger,
         context_class=dict,
