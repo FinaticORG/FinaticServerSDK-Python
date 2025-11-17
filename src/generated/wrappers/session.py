@@ -329,9 +329,9 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def start_session(self, params: StartSessionParams) -> StartSessionResponse:
         """Start Session
@@ -508,9 +508,9 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_portal_url(self, params: GetPortalUrlParams) -> GetPortalUrlResponse:
         """Get Portal Url
@@ -693,9 +693,9 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_session_user(self, params: GetSessionUserParams) -> GetSessionUserResponse:
         """Get Session User
@@ -880,9 +880,9 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def authenticate_session(self, params: AuthenticateSessionParams) -> AuthenticateSessionResponse:
         """Authenticate Session
@@ -1063,9 +1063,9 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def refresh_session(self, params: RefreshSessionParams) -> RefreshSessionResponse:
         """Refresh Session
@@ -1252,9 +1252,9 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def test_webhook(self, params: TestWebhookParams) -> TestWebhookResponse:
         """Test Webhook
@@ -1452,6 +1452,6 @@ class SessionWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods

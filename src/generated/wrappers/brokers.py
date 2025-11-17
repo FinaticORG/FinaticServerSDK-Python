@@ -500,9 +500,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def list_broker_connections(self, params: ListBrokerConnectionsParams) -> ListBrokerConnectionsResponse:
         """List Broker Connections
@@ -689,9 +689,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def disconnect_company_from_broker(self, params: DisconnectCompanyFromBrokerParams) -> DisconnectCompanyFromBrokerResponse:
         """Disconnect Company From Broker
@@ -882,9 +882,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_orders(self, params: GetOrdersParams) -> GetOrdersResponse:
         """Get Orders
@@ -1101,9 +1101,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_positions(self, params: GetPositionsParams) -> GetPositionsResponse:
         """Get Positions
@@ -1320,9 +1320,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_balances(self, params: GetBalancesParams) -> GetBalancesResponse:
         """Get Balances
@@ -1536,9 +1536,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_accounts(self, params: GetAccountsParams) -> GetAccountsResponse:
         """Get Accounts
@@ -1751,9 +1751,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_order_fills(self, params: GetOrderFillsParams) -> GetOrderFillsResponse:
         """Get Order Fills
@@ -1966,9 +1966,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_order_events(self, params: GetOrderEventsParams) -> GetOrderEventsResponse:
         """Get Order Events
@@ -2181,9 +2181,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_order_groups(self, params: GetOrderGroupsParams) -> GetOrderGroupsResponse:
         """Get Order Groups
@@ -2393,9 +2393,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_position_lots(self, params: GetPositionLotsParams) -> GetPositionLotsResponse:
         """Get Position Lots
@@ -2607,9 +2607,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def get_position_lot_fills(self, params: GetPositionLotFillsParams) -> GetPositionLotFillsResponse:
         """Get Position Lot Fills
@@ -2822,9 +2822,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def place_order(self, params: PlaceOrderParams) -> PlaceOrderResponse:
         """Place Order
@@ -3080,9 +3080,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def cancel_order(self, params: CancelOrderParams) -> CancelOrderResponse:
         """Cancel Order
@@ -3296,9 +3296,9 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
 
     async def modify_order(self, params: ModifyOrderParams) -> ModifyOrderResponse:
         """Modify Order
@@ -3512,6 +3512,6 @@ class BrokersWrapper:
             
             return error_response
 
-        # TODO Phase 2C: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2C: Add orphaned method detection
-        # TODO Phase 2C: Add advanced convenience methods
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
