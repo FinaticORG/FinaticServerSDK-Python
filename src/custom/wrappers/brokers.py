@@ -12,7 +12,7 @@ class CustomBrokersWrapper(BrokersWrapper):
     """Custom wrapper for brokers operations.
 
     Extend or override generated functions as needed.
-    
+
     NOTE: Session headers and metadata transformation are now handled in the generator.
     """
 
