@@ -5,22 +5,131 @@ This file is regenerated on each run - do not edit directly.
 For custom logic, extend this class or use custom wrappers.
 """
 
-from typing import Any, Dict, List, Optional
+from __future__ import annotations
 
-from .api.brokers_api import BrokersApi
-from .api.session_api import SessionApi
+from typing import Optional, Dict, Any, List, Union
+from .configuration import Configuration
 from .api_client import ApiClient
 from .config import SdkConfig, get_config
-from .configuration import Configuration
-from .models.session_start_request import SessionStartRequest
+from .types import FinaticResponse
+from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url
 from .utils.logger import get_logger
-from .utils.url_utils import append_broker_filter_to_url, append_theme_to_url
+from .models.session_response_data import SessionResponseData
+from .models.session_user_response import SessionUserResponse
+
+from .api.brokers_api import BrokersApi
+from .api.company_api import CompanyApi
+from .api.session_api import SessionApi
+
 from .wrappers.brokers import BrokersWrapper
-from .wrappers.session import InitSessionParams, SessionWrapper, StartSessionParams
+from .wrappers.company import CompanyWrapper
+from .wrappers.session import SessionWrapper
+
+from .wrappers.brokers import GetOrdersParams
+from .models.order_response import OrderResponse
+from .wrappers.brokers import GetPositionsParams
+from .models.position_response import PositionResponse
+from .wrappers.brokers import GetBalancesParams
+from .models.balances import Balances
+from .wrappers.brokers import GetAccountsParams
+from .models.accounts import Accounts
+from .wrappers.brokers import GetOrderFillsParams
+from .models.order_fill_response import OrderFillResponse
+from .wrappers.brokers import GetOrderEventsParams
+from .models.order_event_response import OrderEventResponse
+from .wrappers.brokers import GetOrderGroupsParams
+from .models.order_group_response import OrderGroupResponse
+from .wrappers.brokers import GetPositionLotsParams
+from .models.position_lot_response import PositionLotResponse
+from .wrappers.brokers import GetPositionLotFillsParams
+from .models.position_lot_fill_response import PositionLotFillResponse
 
 
 class FinaticServer:
     """Main client class for Finatic Server SDK."""
+
+    @classmethod
+    async def init(
+        cls,
+        api_key: str,
+        user_id: Optional[str] = None,
+        sdk_config: Optional[SdkConfig] = None,
+    ):
+        """Initialize and create a FinaticServer instance with session started.
+        
+        This is the recommended way to initialize the SDK. It creates an instance
+        and automatically starts a session using the provided API key.
+        
+        Args:
+            api_key: Company API key (required)
+            user_id: Optional user ID for direct authentication
+            sdk_config: Optional SDK configuration overrides (includes base_url)
+        
+        Returns:
+            FinaticServer instance with session already initialized
+        
+        Example:
+            client = await FinaticServer.init(
+                api_key="fntc_live_your_key",
+                user_id="optional_user_id",
+                sdk_config={'base_url': 'https://api.finatic.dev', 'log_level': 'debug'}
+            )
+            # Session is already started, ready to use
+            orders = await client.get_all_orders()
+        """
+        # Create instance - extract base_url from sdk_config if provided
+        base_url = sdk_config.get('base_url') if isinstance(sdk_config, dict) else (sdk_config.base_url if sdk_config and hasattr(sdk_config, 'base_url') else None)
+        instance = cls(api_key, base_url, sdk_config)
+        
+        # Initialize session automatically
+        try:
+            # Start session using the instance's start_session method
+            # This will use the API key from constructor and get token internally
+            # Returns FinaticResponse[SessionResponseData] format
+            session_result = await instance.start_session(user_id=user_id) if user_id else await instance.start_session()
+            
+            # Check if session was started successfully (FinaticResponse[SessionResponseData] format)
+            if session_result.get('error'):
+                error_data = session_result.get('error', {})
+                if isinstance(error_data, dict):
+                    error_msg = error_data.get('message', 'Unknown error')
+                else:
+                    error_msg = str(error_data)
+                raise ValueError(
+                    f"Session initialization failed: {error_msg}. "
+                    "Please check that the API endpoint returned a valid session response and ensure the API key is valid."
+                )
+            
+            # Verify session was initialized correctly
+            session_id = instance.get_session_id()
+            if not session_id:
+                raise ValueError(
+                    "Session initialization failed: start_session() did not return a session_id. "
+                    "Please check that the API endpoint returned a valid session response."
+                )
+            
+            return instance
+        except ValueError:
+            # Re-raise ValueError as-is (already has good error message)
+            raise
+        except Exception as e:
+            # Re-raise with more context if it's a session initialization error
+            # Safely convert exception to string to avoid type formatting issues
+            try:
+                error_str = str(e) if e else 'Unknown error'
+            except Exception:
+                error_str = f'Exception of type {type(e).__name__}'
+            
+            if "Session not initialized" in error_str or "session_id" in error_str.lower():
+                raise ValueError(
+                    f"Failed to initialize Finatic session: {error_str}. "
+                    "This may indicate that start_session() was called but did not successfully create a session. "
+                    "Please check the API response and ensure the API key is valid."
+                ) from e
+            raise ValueError(
+                f"Session initialization failed: {error_str}. "
+                "Please check that the API endpoint returned a valid session response and ensure the API key is valid."
+            ) from e
 
     def __init__(
         self,
@@ -29,15 +138,19 @@ class FinaticServer:
         sdk_config: Optional[SdkConfig] = None,
     ):
         """Initialize the client.
-
+        
+        Note: For automatic session initialization, use FinaticServer.init() instead.
+        This constructor creates an instance but does not start a session.
+        
         Args:
             api_key: Company API key
             base_url: Base URL for API (defaults to https://api.finatic.dev)
             sdk_config: Optional SDK configuration overrides
         """
+        self.api_key = api_key
         self.config = Configuration(
-            host=base_url or "https://api.finatic.dev",
-            api_key={"X-API-Key": api_key},
+            host=base_url or 'https://api.finatic.dev',
+            api_key={'X-API-Key': api_key},
         )
         # Create ApiClient from Configuration for API classes
         self.api_client = ApiClient(self.config)
@@ -57,21 +170,18 @@ class FinaticServer:
             self.sdk_config = default
         else:
             self.sdk_config = get_config()
-
+        
         self.session_id: Optional[str] = None
         self.company_id: Optional[str] = None
         self.csrf_token: Optional[str] = None
         self.user_id: Optional[str] = None
-
+        
         # Initialize logger
         self.logger = get_logger(self.sdk_config)
 
-        self.brokers = BrokersWrapper(
-            BrokersApi(self.api_client), self.config, self.sdk_config
-        )
-        self.session = SessionWrapper(
-            SessionApi(self.api_client), self.config, self.sdk_config
-        )
+        self._brokers = BrokersWrapper(BrokersApi(self.api_client), self.config, self.sdk_config)
+        self._company = CompanyWrapper(CompanyApi(self.api_client), self.config, self.sdk_config)
+        self._session = SessionWrapper(SessionApi(self.api_client), self.config, self.sdk_config)
 
     async def initialize(self) -> None:
         """Initialize the client (no-op for now, can be extended)."""
@@ -81,11 +191,9 @@ class FinaticServer:
         """Close the client and cleanup resources."""
         pass
 
-    def set_session_context(
-        self, session_id: str, company_id: str, csrf_token: str
-    ) -> None:
+    def set_session_context(self, session_id: str, company_id: str, csrf_token: str) -> None:
         """Set session context for all wrappers.
-
+        
         Args:
             session_id: Session ID
             company_id: Company ID
@@ -94,10 +202,11 @@ class FinaticServer:
         self.session_id = session_id
         self.company_id = company_id
         self.csrf_token = csrf_token
-
+        
         # Update all wrappers with session context
-        self.brokers.set_session_context(session_id, company_id, csrf_token)
-        self.session.set_session_context(session_id, company_id, csrf_token)
+        self._brokers.set_session_context(session_id, company_id, csrf_token)
+        self._company.set_session_context(session_id, company_id, csrf_token)
+        self._session.set_session_context(session_id, company_id, csrf_token)
 
     def get_session_id(self) -> Optional[str]:
         """Get current session ID."""
@@ -111,153 +220,111 @@ class FinaticServer:
         """Get current user ID (set after portal authentication)."""
         return self.user_id
 
+    def is_authed(self) -> bool:
+        """Check if user is authenticated (has userId)."""
+        return bool(self.user_id)
+
     async def _init_session(self, x_api_key: str) -> str:
         """Initialize a session by getting a one-time token (internal/private).
-
+        
         Args:
             x_api_key: Company API key
-
+        
         Returns:
             One-time token
         """
-        response = await self.session.init_session(
-            InitSessionParams(x_api_key=x_api_key)
-        )
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to initialize session")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
+        # Call wrapper method with keyword arguments (standardized format)
+        # Returns dict (FinaticResponse[TokenResponseData])
+        response = await self._session.init_session(x_api_key=x_api_key)
+        if response.get('error'):
+            error_msg = response.get('error', {}).get('message', 'Failed to initialize session') if isinstance(response.get('error'), dict) else str(response.get('error'))
             raise Exception(error_msg)
-        return (
-            response.success.get("data", {}).get("one_time_token", "")
-            if response.success and isinstance(response.success, dict)
-            else ""
-        )
+        success_data = response.get('success', {})
+        return success_data.get('data', {}).get('one_time_token', '') if isinstance(success_data, dict) else ''
 
-    async def start_session(
-        self, one_time_token: str, user_id: Optional[str] = None
-    ) -> Dict[str, str]:
-        """Start a session with a one-time token.
-
-        Args:
-            one_time_token: One-time token from init_session
-            user_id: Optional user ID for direct authentication
-
-        Returns:
-            Dictionary with session_id and company_id
-        """
-        # Create SessionStartRequest with optional user_id
-        session_start_request = (
-            SessionStartRequest(user_id=user_id) if user_id else SessionStartRequest()
-        )
-        response = await self.session.start_session(
-            StartSessionParams(
-                one_time_token=one_time_token,
-                session_start_request=session_start_request,
-            )
-        )
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to start session")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        session_data = (
-            response.success.get("data", {})
-            if response.success and isinstance(response.success, dict)
-            else {}
-        )
-        session_id = (
-            session_data.get("session_id", "") if isinstance(session_data, dict) else ""
-        )
-        company_id = (
-            session_data.get("company_id", "") if isinstance(session_data, dict) else ""
-        )
-
-        # Note: csrf_token is not available in SessionResponseData
-        # It should be obtained from session context or another source if needed
-        csrf_token = ""
-
-        if session_id and company_id:
-            self.set_session_context(session_id, company_id, csrf_token)
-
-        return {"session_id": session_id, "company_id": company_id}
-
-    async def init_session(
-        self, api_key: Optional[str] = None, user_id: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """Convenience method that combines init_session and start_session (Phase 2C).
-
-        This method:
-        1. Gets a one-time token using the API key
-        2. Starts a session with that token
-        3. Sets the session context automatically
-        4. Returns success/error information
-
+    async def get_token(self, api_key: Optional[str] = None) -> str:
+        """Get a one-time token from an API key.
+        
+        This method only retrieves the token and returns it - it does NOT start a session
+        or set any session context. Useful for generating tokens to pass to clients.
+        
         Args:
             api_key: Company API key (uses instance API key if not provided)
-            user_id: Optional user ID for direct authentication
-
+        
         Returns:
-            Dictionary with:
-            - success: bool - Whether the session was initialized successfully
-            - session_id: str | None - Session ID if successful
-            - company_id: str | None - Company ID if successful
-            - error: str | None - Error message if failed
+            One-time token string
+        
+        Raises:
+            Exception: If API key is missing or token generation fails
         """
+        key_to_use = api_key or self.api_key
+        if not key_to_use:
+            raise Exception('API key is required. Provide it as a parameter or in the constructor.')
+        return await self._init_session(key_to_use)
+
+    async def start_session(
+        self,
+        user_id: Optional[str] = None
+    ) -> FinaticResponse[SessionResponseData]:
+        """Start a session using the API key from constructor.
+        
+        Gets a one-time token using the API key from constructor, then starts the session.
+        This method is exposed for advanced use cases. For most use cases, use FinaticServer.init() instead.
+        
+        Args:
+            user_id: Optional user ID for direct authentication
+        
+        Returns:
+            Dict[str, Any]: FinaticResponse[SessionResponseData] format
+                success: {data: SessionResponseData, meta: dict | None}
+                error: dict | None
+                warning: list[dict] | None
+        
+        Raises:
+            Exception: If API key is missing or session start fails
+        """
+        if not self.api_key:
+            return {
+                'success': {'data': None, 'meta': None},
+                'error': {'message': 'API key is required. Provide it in the constructor.'},
+                'warning': None
+            }
+
         try:
-            # Use provided API key or fall back to instance API key
-            key_to_use = api_key or (
-                self.config.api_key.get("X-API-Key") if self.config.api_key else None
-            )
-            if not key_to_use:
-                return {
-                    "success": False,
-                    "session_id": None,
-                    "company_id": None,
-                    "error": "API key is required",
-                }
-
-            # Step 1: Get one-time token
-            one_time_token = await self._init_session(key_to_use)
-
+            # Step 1: Get one-time token using API key from constructor
+            one_time_token = await self._init_session(self.api_key)
+            
             if not one_time_token or not isinstance(one_time_token, str):
                 return {
-                    "success": False,
-                    "session_id": None,
-                    "company_id": None,
-                    "error": "Failed to get one-time token",
+                    'success': {'data': None, 'meta': None},
+                    'error': {'message': 'Failed to get one-time token'},
+                    'warning': None
                 }
 
-            # Step 2: Start session with the token
-            session_result = await self.start_session(one_time_token, user_id)
-
-            session_id = (
-                session_result.get("session_id")
-                if isinstance(session_result, dict)
-                else None
+            # Step 2: Start session with the token - returns FinaticResponse[SessionResponseData]
+            session_start_request = {"user_id": user_id} if user_id else {}
+            response = await self._session.start_session(
+                one_time_token=one_time_token,
+                session_start_request=session_start_request
             )
-            company_id = (
-                session_result.get("company_id")
-                if isinstance(session_result, dict)
-                else None
-            )
-
-            return {
-                "success": True,
-                "session_id": session_id,
-                "company_id": company_id,
-                "error": None,
-            }
+            
+            # Extract session data and set context if successful
+            if response.get('success') and not response.get('error'):
+                session_data = response['success'].get('data', {}) if isinstance(response.get('success'), dict) else {}
+                session_id = session_data.get('session_id', '') if isinstance(session_data, dict) else ''
+                company_id = session_data.get('company_id', '') if isinstance(session_data, dict) else ''
+                csrf_token = ''
+                
+                if session_id and company_id:
+                    self.set_session_context(session_id, company_id, csrf_token)
+            
+            # Return the standard response format (already FinaticResponse[SessionResponseData])
+            return response
         except Exception as e:
             return {
-                "success": False,
-                "session_id": None,
-                "company_id": None,
-                "error": str(e),
+                'success': {'data': None, 'meta': None},
+                'error': {'message': str(e)},
+                'warning': None
             }
 
     async def get_portal_url(
@@ -265,80 +332,61 @@ class FinaticServer:
         theme: Optional[str | Dict[str, Any]] = None,
         brokers: Optional[List[str]] = None,
         email: Optional[str] = None,
-        mode: Optional[str] = None,
+        mode: Optional[str] = None
     ) -> str:
         """Get portal URL with optional theme, broker filters, email, and mode.
-
+        
         This is where URL manipulation happens (not in session wrapper).
         Returns the URL - app can use it as needed.
-
+        
         Args:
             theme: Optional theme configuration (preset string or custom dict)
             brokers: Optional list of broker names/IDs to filter
             email: Optional email for pre-filling
             mode: Optional mode ('light' or 'dark')
-
+        
         Returns:
             Portal URL with all parameters appended
         """
         if not self.session_id:
-            raise ValueError("Session not initialized. Call start_session() first.")
+            raise ValueError('Session not initialized. Call start_session() first.')
 
-        # Get raw portal URL from session wrapper (requires GetPortalUrlParams object)
-        from .wrappers.session import GetPortalUrlParams
-
-        response = await self.session.get_portal_url(GetPortalUrlParams())
-
+        # Get raw portal URL from session wrapper (using keyword arguments)
+        # Returns dict (FinaticResponse[PortalUrlResponse])
+        response = await self._session.get_portal_url()
+        
         # Check for errors
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get portal URL")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            self.logger.error(
-                "Failed to get portal URL",
-                extra={
-                    "error": error_msg,
-                    "code": (
-                        response.Error.get("code")
-                        if isinstance(response.Error, dict)
-                        else None
-                    ),
-                    "status": (
-                        response.Error.get("status")
-                        if isinstance(response.Error, dict)
-                        else None
-                    ),
-                },
-            )
+        if response.get('error'):
+            error_msg = response.get('error', {}).get('message', 'Failed to get portal URL') if isinstance(response.get('error'), dict) else str(response.get('error'))
+            self.logger.error('Failed to get portal URL', extra={
+                'error': error_msg,
+                'code': response.get('error', {}).get('code') if isinstance(response.get('error'), dict) else None,
+                'status': response.get('error', {}).get('status') if isinstance(response.get('error'), dict) else None,
+            })
             raise Exception(error_msg)
-
+        
         # Extract portal URL from standard response structure
-        if response.success and isinstance(response.success, dict):
-            data = response.success.get("data", {})
-            portal_url = data.get("portal_url", "") if isinstance(data, dict) else ""
+        success_data = response.get('success', {})
+        if success_data and isinstance(success_data, dict):
+            data = success_data.get('data', {})
+            portal_url = data.get('portal_url', '') if isinstance(data, dict) else ''
         else:
-            self.logger.error("Invalid portal URL response: missing data", extra={})
-            raise ValueError("Invalid portal URL response: missing portal_url")
-
+            self.logger.error('Invalid portal URL response: missing data', extra={})
+            raise ValueError('Invalid portal URL response: missing portal_url')
+        
         if not portal_url:
-            self.logger.error("Empty portal URL from API", extra={})
-            raise ValueError("Empty portal URL received from API")
+            self.logger.error('Empty portal URL from API', extra={})
+            raise ValueError('Empty portal URL received from API')
 
         # Validate URL before manipulation
         from urllib.parse import urlparse
-
         try:
             parsed = urlparse(portal_url)
             if not parsed.scheme or not parsed.netloc:
-                raise ValueError(f"Invalid portal URL format: {portal_url}")
+                raise ValueError(f'Invalid portal URL format: {portal_url}')
         except Exception as e:
-            self.logger.error(
-                "Invalid portal URL from API",
-                extra={"portal_url": portal_url, "error": str(e)},
-            )
-            raise ValueError(f"Invalid portal URL received from API: {portal_url}")
+            self.logger.error('Invalid portal URL from API', extra={'portal_url': portal_url, 'error': str(e)})
+            raise ValueError(f'Invalid portal URL received from API: {portal_url}')
 
         # Append theme if provided
         if theme:
@@ -350,925 +398,1051 @@ class FinaticServer:
 
         # Append email if provided
         if email:
-            from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
-
+            from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
             parsed = urlparse(portal_url)
             query_params = parse_qs(parsed.query)
-            query_params["email"] = [email]
+            query_params['email'] = [email]
             new_query = urlencode(query_params, doseq=True)
             new_parsed = parsed._replace(query=new_query)
             portal_url = urlunparse(new_parsed)
 
         # Append mode if provided (light or dark)
         if mode:
-            from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
-
+            from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
             parsed = urlparse(portal_url)
             query_params = parse_qs(parsed.query)
-            query_params["mode"] = [mode]
+            query_params['mode'] = [mode]
             new_query = urlencode(query_params, doseq=True)
             new_parsed = parsed._replace(query=new_query)
             portal_url = urlunparse(new_parsed)
 
         # Add session ID and company ID to URL
-        from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
-
+        from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
         parsed = urlparse(portal_url)
         query_params = parse_qs(parsed.query)
         if self.session_id:
-            query_params["session_id"] = [self.session_id]
+            query_params['session_id'] = [self.session_id]
         if self.company_id:
-            query_params["company_id"] = [self.company_id]
+            query_params['company_id'] = [self.company_id]
         new_query = urlencode(query_params, doseq=True)
         new_parsed = parsed._replace(query=new_query)
         portal_url = urlunparse(new_parsed)
 
-        self.logger.debug("Portal URL generated", extra={"portal_url": portal_url})
+        self.logger.debug('Portal URL generated', extra={'portal_url': portal_url})
         return portal_url
 
-    async def get_session_user(self) -> Dict[str, str]:
+    async def get_session_user(self) -> FinaticResponse[SessionUserResponse]:
         """Get session user information after portal authentication.
-
+        
         Returns:
-            Dictionary with user_id, company_id, and token_type
+            Dict[str, Any]: FinaticResponse[SessionUserResponse] format
+                success: {data: SessionUserResponse, meta: dict | None}
+                error: dict | None
+                warning: list[dict] | None
         """
         if not self.session_id or not self.company_id:
-            raise ValueError("Session not initialized. Call start_session() first.")
-
+            raise ValueError('Session not initialized. Call start_session() first.')
+        
         # get_session_user uses session_id in the path and company_id from session context
-        from .wrappers.session import GetSessionUserParams
+        # Call wrapper method with keyword arguments (standardized format)
+        # Returns FinaticResponse[SessionUserResponse] - maintain the structure
+        response = await self._session.get_session_user(session_id=self.session_id)
+        
+        # Extract user_id from response for internal state management
+        if response.get('success') and isinstance(response.get('success'), dict):
+            data = response['success'].get('data', {})
+            user_id = data.get('user_id', '') if isinstance(data, dict) else ''
+            # Store user_id for get_user_id() method
+            if user_id:
+                self.user_id = user_id
+        
+        # Return the full FinaticResponse[SessionUserResponse] structure
+        return response
 
-        response = await self.session.get_session_user(
-            GetSessionUserParams(session_id=self.session_id)
-        )
 
-        # Extract data from standard response structure
-        if response.success and isinstance(response.success, dict):
-            data = response.success.get("data", {})
-            user_id = data.get("user_id", "") if isinstance(data, dict) else ""
-            company_id = (
-                data.get("company_id", self.company_id or "")
-                if isinstance(data, dict)
-                else (self.company_id or "")
-            )
-        else:
-            user_id = ""
-            company_id = self.company_id or ""
-
-        # Store user_id for get_user_id() method
-        if user_id:
-            self.user_id = user_id
-
-        # Extract token_type from data if available, otherwise default to 'Bearer'
-        token_type = (
-            data.get("token_type", "Bearer") if isinstance(data, dict) else "Bearer"
-        )
-
-        return {
-            "user_id": user_id,
-            "company_id": company_id,
-            "token_type": token_type,
-        }
-
-    # Phase 2C: _convert_to_dict removed - now handled in generated methods via convert_to_plain_object utility
-
-    async def get_broker_list(self) -> List[Any]:
-        """Get list of supported brokers.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        """
-        from ..generated.wrappers.brokers import GetBrokersParams
-
-        response = await self.brokers.get_brokers(GetBrokersParams())
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get broker list")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_broker_connections(self) -> List[Any]:
-        """Get user's broker connections.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        """
-        from ..generated.wrappers.brokers import ListBrokerConnectionsParams
-
-        response = await self.brokers.list_broker_connections(
-            ListBrokerConnectionsParams()
-        )
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get broker connections")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_all_accounts(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get all accounts across all pages.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        """
-        from ..generated.wrappers.brokers import GetAccountsParams
-
-        all_data: List[Any] = []
-        offset = 0
-        limit = 100
-
-        while True:
-            params = GetAccountsParams(limit=limit, offset=offset)
-            response = await self.brokers.get_accounts(params)
-            if response.Error:
-                error_msg = (
-                    response.Error.get("message", "Failed to get accounts")
-                    if isinstance(response.Error, dict)
-                    else str(response.Error)
-                )
-                raise Exception(error_msg)
-            result = response.success.get("data", []) if response.success else []
-            if not result or len(result) == 0:
-                break
-            all_data.extend(result)
-            if len(result) < limit:
-                break
-            offset += limit
-
-        return all_data
-
-    async def get_all_orders(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
+    async def get_all_orders(self, **kwargs) -> FinaticResponse[list[OrderResponse]]:
         """Get all orders across all pages.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        Enum coercion happens automatically via typed input objects.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetOrdersParams
-
-        all_data: List[Any] = []
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetOrdersParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetOrdersParams(**filtered_kwargs) if filtered_kwargs else GetOrdersParams()
+        else:
+            params = GetOrdersParams()
+        
+        all_data: list[OrderResponse] = []
         offset = 0
-        limit = 100
-
+        limit = 1000
+        last_error = None
+        warnings = []
+        
         while True:
-            params = GetOrdersParams(
-                symbol=filter.get("symbol") if filter else None,
-                order_status=(
-                    filter.get("order_status") if filter else None
-                ),  # Will be coerced to enum
-                side=filter.get("side") if filter else None,  # Will be coerced to enum
-                asset_type=(
-                    filter.get("asset_type") if filter else None
-                ),  # Will be coerced to enum
-                limit=limit,
-                offset=offset,
-            )
-            response = await self.brokers.get_orders(params)
-            result = response.success.get("data", []) if response.success else []
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_orders(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
             if not result or len(result) == 0:
                 break
-            all_data.extend(result)
+            all_data.extend(result if isinstance(result, list) else [result])
             if len(result) < limit:
                 break
             offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        return all_data
-
-    async def get_all_positions(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
+    async def get_all_positions(self, **kwargs) -> FinaticResponse[list[PositionResponse]]:
         """Get all positions across all pages.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        Enum coercion happens automatically via typed input objects.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetPositionsParams
-
-        all_data: List[Any] = []
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetPositionsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetPositionsParams(**filtered_kwargs) if filtered_kwargs else GetPositionsParams()
+        else:
+            params = GetPositionsParams()
+        
+        all_data: list[PositionResponse] = []
         offset = 0
-        limit = 100
-
+        limit = 1000
+        last_error = None
+        warnings = []
+        
         while True:
-            params = GetPositionsParams(
-                symbol=filter.get("symbol") if filter else None,
-                side=filter.get("side") if filter else None,  # Will be coerced to enum
-                asset_type=(
-                    filter.get("asset_type") if filter else None
-                ),  # Will be coerced to enum
-                position_status=(
-                    filter.get("position_status") if filter else None
-                ),  # Will be coerced to enum
-                limit=limit,
-                offset=offset,
-            )
-            response = await self.brokers.get_positions(params)
-            result = response.success.get("data", []) if response.success else []
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_positions(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
             if not result or len(result) == 0:
                 break
-            all_data.extend(result)
+            all_data.extend(result if isinstance(result, list) else [result])
             if len(result) < limit:
                 break
             offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        return all_data
-
-    async def get_all_balances(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
+    async def get_all_balances(self, **kwargs) -> FinaticResponse[list[Balances]]:
         """Get all balances across all pages.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetBalancesParams
-
-        all_data: List[Any] = []
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetBalancesParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetBalancesParams(**filtered_kwargs) if filtered_kwargs else GetBalancesParams()
+        else:
+            params = GetBalancesParams()
+        
+        all_data: list[Balances] = []
         offset = 0
-        limit = 100
-
+        limit = 1000
+        last_error = None
+        warnings = []
+        
         while True:
-            params = GetBalancesParams(
-                is_end_of_day_snapshot=(
-                    filter.get("is_end_of_day_snapshot") if filter else None
-                ),
-                limit=limit,
-                offset=offset,
-            )
-            response = await self.brokers.get_balances(params)
-            result = response.success.get("data", []) if response.success else []
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_balances(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
             if not result or len(result) == 0:
                 break
-            all_data.extend(result)
+            all_data.extend(result if isinstance(result, list) else [result])
             if len(result) < limit:
                 break
             offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        return all_data
-
-    async def get_accounts(
-        self,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get paginated accounts.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_all_accounts(self, **kwargs) -> FinaticResponse[list[Accounts]]:
+        """Get all accounts across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetAccountsParams
-
-        offset = (page - 1) * per_page
-        params = GetAccountsParams(limit=per_page, offset=offset)
-        response = await self.brokers.get_accounts(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get accounts")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_orders(
-        self,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get paginated orders.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        Enum coercion happens automatically via typed input objects.
-        """
-        from ..generated.wrappers.brokers import GetOrdersParams
-
-        offset = (page - 1) * per_page
-        params = GetOrdersParams(
-            symbol=filter.get("symbol") if filter else None,
-            order_status=(
-                filter.get("order_status") if filter else None
-            ),  # Will be coerced to enum
-            side=filter.get("side") if filter else None,  # Will be coerced to enum
-            asset_type=(
-                filter.get("asset_type") if filter else None
-            ),  # Will be coerced to enum
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_orders(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get orders")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_positions(
-        self,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get paginated positions.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        Enum coercion happens automatically via typed input objects.
-        """
-        from ..generated.wrappers.brokers import GetPositionsParams
-
-        offset = (page - 1) * per_page
-        params = GetPositionsParams(
-            symbol=filter.get("symbol") if filter else None,
-            side=filter.get("side") if filter else None,  # Will be coerced to enum
-            asset_type=(
-                filter.get("asset_type") if filter else None
-            ),  # Will be coerced to enum
-            position_status=(
-                filter.get("position_status") if filter else None
-            ),  # Will be coerced to enum
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_positions(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get positions")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_balances(
-        self,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get paginated balances.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        """
-        from ..generated.wrappers.brokers import GetBalancesParams
-
-        offset = (page - 1) * per_page
-        params = GetBalancesParams(
-            is_end_of_day_snapshot=(
-                filter.get("is_end_of_day_snapshot") if filter else None
-            ),
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_balances(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get balances")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_open_positions(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get only open positions.
-
-        Phase 2C: Uses enum coercion (case-insensitive string matching).
-        """
-        merged_filter = {**(filter or {}), "position_status": "active"}
-        return await self.get_all_positions(merged_filter)
-
-    async def get_filled_orders(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get only filled orders.
-
-        Phase 2C: Uses enum coercion (case-insensitive string matching).
-        """
-        merged_filter = {**(filter or {}), "order_status": "filled"}
-        return await self.get_all_orders(merged_filter)
-
-    async def get_pending_orders(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get only pending orders.
-
-        Phase 2C: Uses enum coercion (case-insensitive string matching).
-        """
-        merged_filter = {**(filter or {}), "order_status": "new"}
-        return await self.get_all_orders(merged_filter)
-
-    async def get_active_accounts(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get only active accounts.
-
-        Phase 2C: Uses enum coercion (case-insensitive string matching).
-        """
-        merged_filter = {**(filter or {}), "status": "active"}
-        return await self.get_all_accounts(merged_filter)
-
-    async def get_orders_by_symbol(
-        self, symbol: str, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get orders filtered by symbol."""
-        merged_filter = {**(filter or {}), "symbol": symbol}
-        return await self.get_all_orders(merged_filter)
-
-    async def get_positions_by_symbol(
-        self, symbol: str, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get positions filtered by symbol."""
-        merged_filter = {**(filter or {}), "symbol": symbol}
-        return await self.get_all_positions(merged_filter)
-
-    async def get_orders_by_broker(
-        self, broker_id: str, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get orders filtered by broker."""
-        merged_filter = {**(filter or {}), "broker_id": broker_id}
-        return await self.get_all_orders(merged_filter)
-
-    async def get_positions_by_broker(
-        self, broker_id: str, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get positions filtered by broker."""
-        merged_filter = {**(filter or {}), "broker_id": broker_id}
-        return await self.get_all_positions(merged_filter)
-
-    async def get_all_order_groups(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get all order groups across all pages.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        """
-        from ..generated.wrappers.brokers import GetOrderGroupsParams
-
-        all_data: List[Any] = []
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetAccountsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetAccountsParams(**filtered_kwargs) if filtered_kwargs else GetAccountsParams()
+        else:
+            params = GetAccountsParams()
+        
+        all_data: list[Accounts] = []
         offset = 0
-        limit = 100
-
+        limit = 1000
+        last_error = None
+        warnings = []
+        
         while True:
-            params = GetOrderGroupsParams(
-                broker_id=filter.get("broker_id") if filter else None,
-                connection_id=filter.get("connection_id") if filter else None,
-                limit=limit,
-                offset=offset,
-                created_after=filter.get("created_after") if filter else None,
-                created_before=filter.get("created_before") if filter else None,
-            )
-            response = await self.brokers.get_order_groups(params)
-            result = response.success.get("data", []) if response.success else []
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_accounts(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
             if not result or len(result) == 0:
                 break
-            all_data.extend(result)
+            all_data.extend(result if isinstance(result, list) else [result])
             if len(result) < limit:
                 break
             offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        return all_data
-
-    async def get_order_groups(
-        self,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get paginated order groups.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_all_order_fills(self, **kwargs) -> FinaticResponse[list[OrderFillResponse]]:
+        """Get all order_fills across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetOrderGroupsParams
-
-        offset = (page - 1) * per_page
-        params = GetOrderGroupsParams(
-            broker_id=filter.get("broker_id") if filter else None,
-            connection_id=filter.get("connection_id") if filter else None,
-            limit=per_page,
-            offset=offset,
-            created_after=filter.get("created_after") if filter else None,
-            created_before=filter.get("created_before") if filter else None,
-        )
-        response = await self.brokers.get_order_groups(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get order groups")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_all_position_lots(
-        self, filter: Optional[Dict[str, Any]] = None
-    ) -> List[Any]:
-        """Get all position lots across all pages.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
-        """
-        from ..generated.wrappers.brokers import GetPositionLotsParams
-
-        all_data: List[Any] = []
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetOrderFillsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetOrderFillsParams(**filtered_kwargs) if filtered_kwargs else GetOrderFillsParams()
+        else:
+            params = GetOrderFillsParams()
+        
+        all_data: list[OrderFillResponse] = []
         offset = 0
-        limit = 100
-
+        limit = 1000
+        last_error = None
+        warnings = []
+        
         while True:
-            params = GetPositionLotsParams(
-                broker_id=filter.get("broker_id") if filter else None,
-                connection_id=filter.get("connection_id") if filter else None,
-                account_id=filter.get("account_id") if filter else None,
-                symbol=filter.get("symbol") if filter else None,
-                position_id=filter.get("position_id") if filter else None,
-                limit=limit,
-                offset=offset,
-            )
-            response = await self.brokers.get_position_lots(params)
-            result = response.success.get("data", []) if response.success else []
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_order_fills(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
             if not result or len(result) == 0:
                 break
-            all_data.extend(result)
+            all_data.extend(result if isinstance(result, list) else [result])
             if len(result) < limit:
                 break
             offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        return all_data
-
-    async def get_position_lots(
-        self,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Get paginated position lots.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_all_order_events(self, **kwargs) -> FinaticResponse[list[OrderEventResponse]]:
+        """Get all order_events across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetPositionLotsParams
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetOrderEventsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetOrderEventsParams(**filtered_kwargs) if filtered_kwargs else GetOrderEventsParams()
+        else:
+            params = GetOrderEventsParams()
+        
+        all_data: list[OrderEventResponse] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_order_events(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            if not result or len(result) == 0:
+                break
+            all_data.extend(result if isinstance(result, list) else [result])
+            if len(result) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        offset = (page - 1) * per_page
-        params = GetPositionLotsParams(
-            broker_id=filter.get("broker_id") if filter else None,
-            connection_id=filter.get("connection_id") if filter else None,
-            account_id=filter.get("account_id") if filter else None,
-            symbol=filter.get("symbol") if filter else None,
-            position_id=filter.get("position_id") if filter else None,
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_position_lots(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get position lots")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def disconnect_company(self, connection_id: str) -> Any:
-        """Disconnect company from broker.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_all_order_groups(self, **kwargs) -> FinaticResponse[list[OrderGroupResponse]]:
+        """Get all order_groups across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import DisconnectCompanyFromBrokerParams
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetOrderGroupsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetOrderGroupsParams(**filtered_kwargs) if filtered_kwargs else GetOrderGroupsParams()
+        else:
+            params = GetOrderGroupsParams()
+        
+        all_data: list[OrderGroupResponse] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_order_groups(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            if not result or len(result) == 0:
+                break
+            all_data.extend(result if isinstance(result, list) else [result])
+            if len(result) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        if not self.session_id:
-            raise ValueError("Session not initialized. Call start_session() first.")
-        params = DisconnectCompanyFromBrokerParams(connection_id=connection_id)
-        response = await self.brokers.disconnect_company_from_broker(params)
-        return response.success.get("data") if response.success else None
-
-    async def get_order_fills(
-        self,
-        order_id: str,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> List[Any]:
-        """Get order fills for a specific order.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_all_position_lots(self, **kwargs) -> FinaticResponse[list[PositionLotResponse]]:
+        """Get all position_lots across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetOrderFillsParams
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetPositionLotsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetPositionLotsParams(**filtered_kwargs) if filtered_kwargs else GetPositionLotsParams()
+        else:
+            params = GetPositionLotsParams()
+        
+        all_data: list[PositionLotResponse] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_position_lots(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            if not result or len(result) == 0:
+                break
+            all_data.extend(result if isinstance(result, list) else [result])
+            if len(result) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        if not self.session_id:
-            raise ValueError("Session not initialized. Call start_session() first.")
-        offset = (page - 1) * per_page
-        params = GetOrderFillsParams(
-            order_id=order_id,
-            connection_id=filter.get("connection_id") if filter else None,
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_order_fills(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get order fills")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
-
-    async def get_order_events(
-        self,
-        order_id: str,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> List[Any]:
-        """Get order events for a specific order.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_all_position_lot_fills(self, **kwargs) -> FinaticResponse[list[PositionLotFillResponse]]:
+        """Get all position_lot_fills across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_orders(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
         """
-        from ..generated.wrappers.brokers import GetOrderEventsParams
+        from dataclasses import replace, fields
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetPositionLotFillsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetPositionLotFillsParams(**filtered_kwargs) if filtered_kwargs else GetPositionLotFillsParams()
+        else:
+            params = GetPositionLotFillsParams()
+        
+        all_data: list[PositionLotFillResponse] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_position_lot_fills(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            if not result or len(result) == 0:
+                break
+            all_data.extend(result if isinstance(result, list) else [result])
+            if len(result) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
 
-        if not self.session_id:
-            raise ValueError("Session not initialized. Call start_session() first.")
-        offset = (page - 1) * per_page
-        params = GetOrderEventsParams(
-            order_id=order_id,
-            connection_id=filter.get("connection_id") if filter else None,
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_order_events(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get order events")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
 
-    async def get_position_lot_fills(
-        self,
-        lot_id: str,
-        page: int = 1,
-        per_page: int = 100,
-        filter: Optional[Dict[str, Any]] = None,
-    ) -> List[Any]:
-        """Get position lot fills for a specific lot.
-
-        Phase 2C: Uses typed input objects and handles standard response structure.
+    async def get_company(self, **kwargs) -> FinaticResponse[CompanyResponse]:
+        """Get Company
+        
+        Convenience method that delegates to company wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[CompanyResponse]: Standard FinaticResponse format
         """
-        from ..generated.wrappers.brokers import GetPositionLotFillsParams
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetCompanyParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._company.get_company(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._company.get_company(**kwargs)
+        else:
+            return await self._company.get_company()
 
-        if not self.session_id:
-            raise ValueError("Session not initialized. Call start_session() first.")
-        offset = (page - 1) * per_page
-        params = GetPositionLotFillsParams(
-            lot_id=lot_id,
-            connection_id=filter.get("connection_id") if filter else None,
-            limit=per_page,
-            offset=offset,
-        )
-        response = await self.brokers.get_position_lot_fills(params)
-        if response.Error:
-            error_msg = (
-                response.Error.get("message", "Failed to get position lot fills")
-                if isinstance(response.Error, dict)
-                else str(response.Error)
-            )
-            raise Exception(error_msg)
-        return response.success.get("data", []) if response.success else []
+    async def get_brokers(self, **kwargs) -> FinaticResponse[list[BrokerInfo]]:
+        """Get Brokers
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[BrokerInfo]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetBrokersParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_brokers(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_brokers(**kwargs)
+        else:
+            return await self._brokers.get_brokers()
 
-    async def place_stock_market_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a stock market order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Market",
-            "asset_type": "equity",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": "day",
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_broker_connections(self, **kwargs) -> FinaticResponse[list[UserBrokerConnections]]:
+        """List Broker Connections
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[UserBrokerConnections]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetBrokerConnectionsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_broker_connections(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_broker_connections(**kwargs)
+        else:
+            return await self._brokers.get_broker_connections()
 
-    async def place_stock_limit_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        price: float,
-        time_in_force: str = "gtc",
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a stock limit order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Limit",
-            "asset_type": "equity",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": time_in_force,
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-            "price": price,
-        }
-        return await self.brokers.place_order(order_params)
+    async def disconnect_company_from_broker(self, **kwargs) -> FinaticResponse[DisconnectActionResult]:
+        """Disconnect Company From Broker
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[DisconnectActionResult]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(DisconnectCompanyFromBrokerParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.disconnect_company_from_broker(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.disconnect_company_from_broker(**kwargs)
+        else:
+            return await self._brokers.disconnect_company_from_broker()
 
-    async def place_stock_stop_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        stop_price: float,
-        time_in_force: str = "gtc",
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a stock stop order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Stop",
-            "asset_type": "equity",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": time_in_force,
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-            "stop_price": stop_price,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_orders(self, **kwargs) -> FinaticResponse[list[OrderResponse]]:
+        """Get Orders
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[OrderResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetOrdersParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_orders(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_orders(**kwargs)
+        else:
+            return await self._brokers.get_orders()
 
-    async def place_crypto_market_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a crypto market order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Market",
-            "asset_type": "crypto",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": "day",
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_positions(self, **kwargs) -> FinaticResponse[list[PositionResponse]]:
+        """Get Positions
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[PositionResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetPositionsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_positions(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_positions(**kwargs)
+        else:
+            return await self._brokers.get_positions()
 
-    async def place_crypto_limit_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        price: float,
-        time_in_force: str = "gtc",
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a crypto limit order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Limit",
-            "asset_type": "crypto",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": time_in_force,
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-            "price": price,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_balances(self, **kwargs) -> FinaticResponse[list[Balances]]:
+        """Get Balances
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[Balances]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetBalancesParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_balances(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_balances(**kwargs)
+        else:
+            return await self._brokers.get_balances()
 
-    async def place_options_market_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place an options market order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Market",
-            "asset_type": "equity_option",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": "day",
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_accounts(self, **kwargs) -> FinaticResponse[list[Accounts]]:
+        """Get Accounts
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[Accounts]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetAccountsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_accounts(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_accounts(**kwargs)
+        else:
+            return await self._brokers.get_accounts()
 
-    async def place_options_limit_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        price: float,
-        time_in_force: str = "gtc",
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place an options limit order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Limit",
-            "asset_type": "equity_option",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": time_in_force,
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-            "price": price,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[OrderFillResponse]]:
+        """Get Order Fills
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[OrderFillResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetOrderFillsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_order_fills(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_order_fills(**kwargs)
+        else:
+            return await self._brokers.get_order_fills()
 
-    async def place_futures_market_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a futures market order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Market",
-            "asset_type": "future",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": "day",
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_order_events(self, **kwargs) -> FinaticResponse[list[OrderEventResponse]]:
+        """Get Order Events
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[OrderEventResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetOrderEventsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_order_events(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_order_events(**kwargs)
+        else:
+            return await self._brokers.get_order_events()
 
-    async def place_futures_limit_order(
-        self,
-        symbol: str,
-        quantity: int,
-        side: str,
-        price: float,
-        time_in_force: str = "gtc",
-        broker: Optional[str] = None,
-        account_number: Optional[str] = None,
-    ) -> Any:
-        """Place a futures limit order."""
-        order_params: Dict[str, Any] = {
-            "broker": broker or "robinhood",
-            "order_type": "Limit",
-            "asset_type": "future",
-            "action": "Buy" if side == "buy" else "Sell",
-            "time_in_force": time_in_force,
-            "account_number": account_number or "",
-            "symbol": symbol,
-            "order_qty": quantity,
-            "price": price,
-        }
-        return await self.brokers.place_order(order_params)
+    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[OrderGroupResponse]]:
+        """Get Order Groups
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[OrderGroupResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetOrderGroupsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_order_groups(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_order_groups(**kwargs)
+        else:
+            return await self._brokers.get_order_groups()
 
-    async def place_order(
-        self, order_params: Dict[str, Any], extras: Optional[Dict[str, Any]] = None
-    ) -> Any:
-        """Place a generic order."""
-        return await self.brokers.place_order(order_params, extras)
+    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[PositionLotResponse]]:
+        """Get Position Lots
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[PositionLotResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetPositionLotsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_position_lots(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_position_lots(**kwargs)
+        else:
+            return await self._brokers.get_position_lots()
 
-    async def modify_order(
-        self,
-        order_id: str,
-        order_params: Dict[str, Any],
-        extras: Optional[Dict[str, Any]] = None,
-    ) -> Any:
-        """Modify an existing order."""
-        return await self.brokers.modify_order(order_id, order_params, extras)
-
-    async def cancel_order(
-        self,
-        order_id: str,
-        account_number: Optional[str] = None,
-        connection_id: Optional[str] = None,
-    ) -> Any:
-        """Cancel an existing order."""
-        # cancel_order signature: (order_id, cancel_order_request=None, account_number=None, connection_id=None)
-        return await self.brokers.cancel_order(
-            order_id, None, account_number, connection_id
-        )
+    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[PositionLotFillResponse]]:
+        """Get Position Lot Fills
+        
+        Convenience method that delegates to brokers wrapper.
+        
+        Args:
+            **kwargs: Optional keyword arguments passed to wrapper method.
+                     Only valid parameter fields are passed through (invalid keys are filtered out).
+        
+        Returns:
+            FinaticResponse[list[PositionLotFillResponse]]: Standard FinaticResponse format
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetPositionLotFillsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_position_lot_fills(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_position_lot_fills(**kwargs)
+        else:
+            return await self._brokers.get_position_lot_fills()

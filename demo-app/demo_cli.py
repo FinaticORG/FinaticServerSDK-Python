@@ -75,19 +75,15 @@ class FinaticDemo:
             console.print("[dim]FINATIC_API_URL=http://localhost:8000[/dim]")
             sys.exit(1)
 
-        # Initialize client like Node SDK - only API key required
-        # baseUrl is optional and defaults to https://api.finatic.dev
-        # For localhost testing, pass the API_URL as second parameter
-        # Enable debug logging in dev mode
+        # Store config for later use in async init
         self.is_dev = os.getenv("NODE_ENV") != "production" or "localhost" in API_URL
-        self.client = FinaticServer(
-            api_key=API_KEY,
-            base_url=API_URL,
-            sdk_config={
-                "log_level": "debug" if self.is_dev else "error",
-                "structured_logging": True,
-            },
-        )
+        self.api_key = API_KEY
+        self.api_url = API_URL
+        self.sdk_config = {
+            "log_level": "debug" if self.is_dev else "error",
+            "structured_logging": True,
+        }
+        self.client = None  # Will be initialized in run()
 
     async def run(self) -> None:
         """Run the demo application."""
@@ -100,27 +96,22 @@ class FinaticDemo:
         console.print(f"[dim]  API Key: {API_KEY[:10]}...\n[/dim]")
 
         try:
-            # Step 1: Initialize SDK
-            console.print("[yellow]Step 1: Initializing SDK...[/yellow]")
-            await self.client.initialize()
-            console.print("[green]✅ SDK initialized successfully[/green]")
-
-            # Step 2: Initialize session (convenience method that does init + start)
-            console.print("\n[yellow]Step 2: Initializing session...[/yellow]")
+            # Step 1: Initialize SDK with session (single call - creates instance and starts session)
+            console.print("[yellow]Step 1: Initializing SDK and starting session...[/yellow]")
             try:
-                # Use the convenience method that combines init_session and start_session
-                # This takes the API key (optional, uses instance key) and optional user_id
-                result = await self.client.init_session(api_key=API_KEY, user_id=None)
-
-                if not result.get("success"):
-                    console.print(
-                        f"[red]❌ Failed to initialize session: {result.get('error')}[/red]"
-                    )
-                    return
-
-                session_id = result.get("session_id")
-                company_id = result.get("company_id")
-                console.print(f"[green]✅ Session initialized successfully[/green]")
+                # Use the classmethod init() - creates instance AND starts session automatically
+                # This matches the client SDK pattern: FinaticConnect.init()
+                # Update sdk_config to include base_url
+                sdk_config_with_url = {**self.sdk_config, 'base_url': API_URL}
+                self.client = await FinaticServer.init(
+                    api_key=API_KEY,
+                    user_id=None,
+                    sdk_config=sdk_config_with_url
+                )
+                
+                session_id = self.client.get_session_id()
+                company_id = self.client.get_company_id()
+                console.print(f"[green]✅ SDK initialized and session started successfully[/green]")
                 console.print(f"[dim]Session ID: {session_id}[/dim]")
                 console.print(f"[dim]Company ID: {company_id}[/dim]")
 
@@ -157,14 +148,15 @@ class FinaticDemo:
                         "[dim]  3. For localhost testing, ensure your local API is running[/dim]"
                     )
                     return
-                elif "Session not initialized" in error_msg:
+                elif "Session not initialized" in error_msg or "session" in error_msg.lower():
                     console.print("[red]❌ Session initialization error[/red]")
                     console.print("[yellow]💡 This usually means:[/yellow]")
                     console.print("[dim]  • Session context was not set properly[/dim]")
                     console.print("[dim]  • start_session() did not complete successfully[/dim]")
-                    console.print(
-                        f"[dim]  • Current session_id: {self.client.get_session_id()}[/dim]"
-                    )
+                    if self.client:
+                        console.print(
+                            f"[dim]  • Current session_id: {self.client.get_session_id()}[/dim]"
+                        )
                     return
                 raise
 
@@ -184,7 +176,7 @@ class FinaticDemo:
             console.print("[green]✅ User authenticated successfully![/green]")
             console.print(f"[dim]User ID: {user_info.get('user_id')}[/dim]")
             console.print(f"[dim]Company ID: {user_info.get('company_id')}[/dim]")
-            console.print(f"[dim]Token Type: {user_info.get('token_type')}[/dim]")
+                    # token_type removed - no longer returned
 
             # Test session/auth methods
             console.print("\n[yellow]Step 5.1: Testing session/auth methods...[/yellow]")
@@ -247,14 +239,25 @@ class FinaticDemo:
                     console.print(f"[red]  ❌ {name} ({error_msg})[/red]")
                     raise
 
+            # Helper to extract data from FinaticResponse
+            def extract_data(response):
+                """Extract data from FinaticResponse dict."""
+                if isinstance(response, dict) and 'success' in response:
+                    return response.get('success', {}).get('data', []) if isinstance(response.get('success'), dict) else []
+                # Fallback for direct data (backward compatibility)
+                return response if isinstance(response, list) else []
+
             # Step 5.1: Fetch orders for a specific Finatic account id
             console.print("\n[yellow]Step 5.1: Testing core methods...[/yellow]")
             try:
-                filtered_orders = await test_core(
+                # Use dict or kwargs - SDK converts to params object internally
+                # get_all_orders returns FinaticResponse[list[OrderResponse]], extract data
+                filtered_orders_response = await test_core(
                     "getAllOrders (filtered)",
-                    lambda: self.client.get_all_orders({"account_id": ACCOUNT_ID_FILTER}),
+                    lambda: self.client.get_all_orders(account_id=ACCOUNT_ID_FILTER),
                     show_details=False,
                 )
+                filtered_orders = extract_data(filtered_orders_response)
                 console.print(
                     f"[green]✅ Retrieved {len(filtered_orders)} orders for account {ACCOUNT_ID_FILTER}[/green]"
                 )
@@ -281,11 +284,13 @@ class FinaticDemo:
                 console.print(
                     f"[dim]  Company ID: {self.client.get_company_id() or 'Not set'}[/dim]"
                 )
-                connections = await test_core(
+                # get_broker_connections returns FinaticResponse[list[UserBrokerConnections]], extract data
+                broker_connections_response = await test_core(
                     "getBrokerConnections",
                     lambda: self.client.get_broker_connections(),
                     show_details=False,
                 )
+                connections = broker_connections_response.get('success', {}).get('data', []) if isinstance(broker_connections_response, dict) else []
                 console.print(
                     f"[green]✅ Successfully retrieved {len(connections)} broker connections[/green]"
                 )
@@ -310,13 +315,14 @@ class FinaticDemo:
             console.print("\n[yellow]Step 7: Testing getAccounts...[/yellow]")
             accounts_result: Optional[List[Any]] = None
             try:
-                accounts_result = await test_core(
-                    "getAccounts (paginated)",
-                    lambda: self.client.get_accounts(page=1, per_page=10),
+                # get_accounts returns FinaticResponse[list[Accounts]], extract data
+                # Use limit/offset instead of page/per_page
+                accounts_response = await test_core(
+                    "getAccounts",
+                    lambda: self.client.get_accounts(limit=10, offset=0),
                     show_details=False,
                 )
-                # Python SDK returns list directly, not paginated result
-                data = accounts_result if isinstance(accounts_result, list) else []
+                data = accounts_response.get('success', {}).get('data', []) if isinstance(accounts_response, dict) else []
                 console.print(f"[green]✅ Successfully retrieved {len(data)} accounts[/green]")
                 if len(data) > 0:
                     console.print("[dim]Account details:[/dim]")
@@ -335,14 +341,17 @@ class FinaticDemo:
             # Step 8: Test get_orders
             console.print("\n[yellow]Step 8: Testing getOrders...[/yellow]")
             orders_result: Optional[List[Any]] = None
+            orders_response = None
             try:
-                orders_result = await test_core(
-                    "getOrders (paginated)",
-                    lambda: self.client.get_orders(page=1, per_page=10),
+                # get_orders returns FinaticResponse[list[OrderResponse]], extract data
+                # Use limit/offset instead of page/per_page
+                orders_response = await test_core(
+                    "getOrders",
+                    lambda: self.client.get_orders(limit=10, offset=0),
                     show_details=False,
                 )
-                # Python SDK returns list directly, not paginated result
-                data = orders_result if isinstance(orders_result, list) else []
+                data = orders_response.get('success', {}).get('data', []) if isinstance(orders_response, dict) else []
+                orders_result = data  # Store for later use
                 console.print(f"[green]✅ Successfully retrieved {len(data)} orders[/green]")
                 if len(data) > 0:
                     console.print("[dim]Order details:[/dim]")
@@ -360,13 +369,14 @@ class FinaticDemo:
             # Step 9: Test get_balances
             console.print("\n[yellow]Step 9: Testing getBalances...[/yellow]")
             try:
-                balances_result = await test_core(
-                    "getBalances (paginated)",
-                    lambda: self.client.get_balances(page=1, per_page=10),
+                # get_balances returns FinaticResponse[list[Balances]], extract data
+                # Use limit/offset instead of page/per_page
+                balances_response = await test_core(
+                    "getBalances",
+                    lambda: self.client.get_balances(limit=10, offset=0),
                     show_details=False,
                 )
-                # Python SDK returns list directly, not paginated result
-                data = balances_result if isinstance(balances_result, list) else []
+                data = balances_response.get('success', {}).get('data', []) if isinstance(balances_response, dict) else []
                 console.print(f"[green]✅ Successfully retrieved {len(data)} balances[/green]")
                 if len(data) > 0:
                     console.print("[dim]Balance details:[/dim]")
@@ -390,13 +400,14 @@ class FinaticDemo:
             # Step 10: Test get_positions
             console.print("\n[yellow]Step 10: Testing getPositions...[/yellow]")
             try:
-                positions_result = await test_core(
-                    "getPositions (paginated)",
-                    lambda: self.client.get_positions(page=1, per_page=10),
+                # get_positions returns FinaticResponse[list[PositionResponse]], extract data
+                # Use limit/offset instead of page/per_page
+                positions_response = await test_core(
+                    "getPositions",
+                    lambda: self.client.get_positions(limit=10, offset=0),
                     show_details=False,
                 )
-                # Python SDK returns list directly, not paginated result
-                data = positions_result if isinstance(positions_result, list) else []
+                data = positions_response.get('success', {}).get('data', []) if isinstance(positions_response, dict) else []
                 console.print(f"[green]✅ Successfully retrieved {len(data)} positions[/green]")
                 if len(data) > 0:
                     console.print("[dim]Position details:[/dim]")
@@ -430,7 +441,9 @@ class FinaticDemo:
             async def test_helper(name: str, fn, expected_type: str = "array") -> None:
                 helper_results["total"] += 1
                 try:
-                    result = await fn()
+                    response = await fn()
+                    # Extract data from FinaticResponse if present
+                    result = extract_data(response)
                     is_valid = (
                         isinstance(result, list)
                         if expected_type == "array"
@@ -449,127 +462,58 @@ class FinaticDemo:
                     console.print(f"[red]  ❌ {name} ({error_msg})[/red]")
 
             # Test broker list (getBrokerConnections is already tested in core methods)
-            await test_helper("getBrokerList", lambda: self.client.get_broker_list())
+            # get_brokers returns FinaticResponse[list[BrokerInfo]], extract data from response
+            async def get_brokers_data():
+                response = await self.client.get_brokers()
+                return response.get('success', {}).get('data', []) if isinstance(response, dict) else []
+            await test_helper("getBrokers", get_brokers_data)
 
             # Test getAll* methods (fetch all data across pages)
+            # These return FinaticResponse[list[...]], test_helper will extract data
             await test_helper("getAllAccounts", lambda: self.client.get_all_accounts())
             await test_helper("getAllOrders", lambda: self.client.get_all_orders())
             await test_helper("getAllPositions", lambda: self.client.get_all_positions())
             await test_helper("getAllBalances", lambda: self.client.get_all_balances())
             await test_helper("getAllOrderGroups", lambda: self.client.get_all_order_groups())
+            
+            # Test getAllPositionLots and use result for getAllPositionLotFills
+            all_position_lots_result: List[Any] = []
+            try:
+                all_position_lots_response = await self.client.get_all_position_lots()
+                all_position_lots_result = extract_data(all_position_lots_response)
+            except Exception:
+                # Error will be logged by test_helper below
+                pass
             await test_helper("getAllPositionLots", lambda: self.client.get_all_position_lots())
 
-            # Test filtered helper methods (use symbols/statuses from earlier results if available)
-            sample_symbol = (
-                orders_result[0].get("symbol")
-                if orders_result and len(orders_result) > 0
-                else "AAPL"
-            )
-            # Handle both Pydantic models and dicts
-            sample_broker_id = None
-            if connections and len(connections) > 0:
-                conn = connections[0]
-                if hasattr(conn, "broker_id"):
-                    sample_broker_id = conn.broker_id
-                else:
-                    sample_broker_id = conn.get("broker_id")
-
-            await test_helper("getOpenPositions", lambda: self.client.get_open_positions())
-            await test_helper("getFilledOrders", lambda: self.client.get_filled_orders())
-            await test_helper("getPendingOrders", lambda: self.client.get_pending_orders())
-            await test_helper("getActiveAccounts", lambda: self.client.get_active_accounts())
-
-            if sample_symbol:
-                await test_helper(
-                    f'getOrdersBySymbol("{sample_symbol}")',
-                    lambda: self.client.get_orders_by_symbol(sample_symbol),
-                )
-                await test_helper(
-                    f'getPositionsBySymbol("{sample_symbol}")',
-                    lambda: self.client.get_positions_by_symbol(sample_symbol),
-                )
-
-            if sample_broker_id:
-                await test_helper(
-                    f'getOrdersByBroker("{sample_broker_id}")',
-                    lambda: self.client.get_orders_by_broker(sample_broker_id),
-                )
-                await test_helper(
-                    f'getPositionsByBroker("{sample_broker_id}")',
-                    lambda: self.client.get_positions_by_broker(sample_broker_id),
-                )
-
-            # Test paginated methods (these return lists, not objects)
-            await test_helper(
-                "getAccounts",
-                lambda: self.client.get_accounts(page=1, per_page=10),
-                expected_type="array",
-            )
-            await test_helper(
-                "getOrders",
-                lambda: self.client.get_orders(page=1, per_page=10),
-                expected_type="array",
-            )
-            await test_helper(
-                "getPositions",
-                lambda: self.client.get_positions(page=1, per_page=10),
-                expected_type="array",
-            )
-            await test_helper(
-                "getBalances",
-                lambda: self.client.get_balances(page=1, per_page=10),
-                expected_type="array",
-            )
-            await test_helper(
-                "getOrderGroups",
-                lambda: self.client.get_order_groups(page=1, per_page=10),
-                expected_type="array",
-            )
-            await test_helper(
-                "getPositionLots",
-                lambda: self.client.get_position_lots(page=1, per_page=10),
-                expected_type="array",
-            )
-
             # Test order/position detail methods (require IDs from earlier results)
-            if orders_result and len(orders_result) > 0:
-                sample_order_id = orders_result[0].get("id") or orders_result[0].get("order_id")
+            # Extract orders data from response if available (from getAllOrders call earlier)
+            orders_data = orders_result if orders_result else (orders_response.get('success', {}).get('data', []) if isinstance(orders_response, dict) else [])
+            if orders_data and len(orders_data) > 0:
+                sample_order_id = orders_data[0].get("id") or orders_data[0].get("order_id")
                 if sample_order_id:
-                    await test_helper(
-                        f'getOrderFills("{sample_order_id}")',
-                        lambda: self.client.get_order_fills(
-                            order_id=sample_order_id, page=1, per_page=10
-                        ),
-                        expected_type="array",
-                    )
-                    await test_helper(
-                        f'getOrderEvents("{sample_order_id}")',
-                        lambda: self.client.get_order_events(
-                            order_id=sample_order_id, page=1, per_page=10
-                        ),
-                        expected_type="array",
-                    )
+                    async def get_all_order_fills_data():
+                        response = await self.client.get_all_order_fills(order_id=sample_order_id)
+                        return extract_data(response)
+                    await test_helper(f'getAllOrderFills("{sample_order_id}")', get_all_order_fills_data)
+                    
+                    async def get_all_order_events_data():
+                        response = await self.client.get_all_order_events(order_id=sample_order_id)
+                        return extract_data(response)
+                    await test_helper(f'getAllOrderEvents("{sample_order_id}")', get_all_order_events_data)
 
-            # Get position lots to find a lot ID for getPositionLotFills
-            try:
-                position_lots_result = await self.client.get_position_lots(page=1, per_page=10)
-                if position_lots_result and len(position_lots_result) > 0:
-                    sample_lot_id = (
-                        position_lots_result[0].get("id")
-                        or position_lots_result[0].get("lot_id")
-                        or position_lots_result[0].get("position_lot_id")
-                    )
-                    if sample_lot_id:
-                        await test_helper(
-                            f'getPositionLotFills("{sample_lot_id}")',
-                            lambda: self.client.get_position_lot_fills(
-                                lot_id=sample_lot_id, page=1, per_page=10
-                            ),
-                            expected_type="array",
-                        )
-            except Exception:
-                # If getPositionLots fails, skip getPositionLotFills test
-                pass
+            # Test getAllPositionLotFills (use all_position_lots_result if available)
+            if all_position_lots_result and len(all_position_lots_result) > 0:
+                sample_lot_id = (
+                    all_position_lots_result[0].get("id")
+                    or all_position_lots_result[0].get("lot_id")
+                    or all_position_lots_result[0].get("position_lot_id")
+                )
+                if sample_lot_id:
+                    async def get_all_position_lot_fills_data():
+                        response = await self.client.get_all_position_lot_fills(lot_id=sample_lot_id)
+                        return extract_data(response)
+                    await test_helper(f'getAllPositionLotFills("{sample_lot_id}")', get_all_position_lot_fills_data)
 
             # Test disconnect (if enabled)
             if ENABLE_DISCONNECT and connections and len(connections) > 0:
@@ -584,7 +528,7 @@ class FinaticDemo:
                     if connection_id:
                         await test_helper(
                             "disconnectCompany",
-                            lambda: self.client.disconnect_company(connection_id),
+                            lambda: self.client.disconnect_company_from_broker(connection_id=connection_id),
                         )
                         console.print("[green]✅ Disconnect test completed[/green]")
                     else:
