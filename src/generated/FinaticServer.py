@@ -54,11 +54,14 @@ class FinaticServer:
         api_key: str,
         user_id: Optional[str] = None,
         sdk_config: Optional[SdkConfig] = None,
-    ):
+    ) -> 'FinaticServer':
         """Initialize and create a FinaticServer instance with session started.
         
         This is the recommended way to initialize the SDK. It creates an instance
         and automatically starts a session using the provided API key.
+        
+        @methodId init_server_sdk
+        @category session
         
         Args:
             api_key: Company API key (required)
@@ -68,14 +71,23 @@ class FinaticServer:
         Returns:
             FinaticServer instance with session already initialized
         
-        Example:
-            client = await FinaticServer.init(
-                api_key="fntc_live_your_key",
-                user_id="optional_user_id",
-                sdk_config={'base_url': 'https://api.finatic.dev', 'log_level': 'debug'}
-            )
-            # Session is already started, ready to use
-            orders = await client.get_all_orders()
+        @example
+        ```python
+        client = await FinaticServer.init(
+            api_key="fntc_live_your_key",
+            user_id="optional_user_id",
+            sdk_config={'base_url': 'https://api.finatic.dev', 'log_level': 'debug'}
+        )
+        # Session is already started, ready to use
+        orders = await client.get_all_orders()
+        ```
+        @example
+        ```typescript-server
+        const finatic = await FinaticServer.init('your-api-key', 'optional-user-id', {
+          baseUrl: 'https://api.finatic.dev',
+          logLevel: 'debug'
+        });
+        ```
         """
         # Create instance - extract base_url from sdk_config if provided
         base_url = sdk_config.get('base_url') if isinstance(sdk_config, dict) else (sdk_config.base_url if sdk_config and hasattr(sdk_config, 'base_url') else None)
@@ -217,11 +229,51 @@ class FinaticServer:
         return self.company_id
 
     def get_user_id(self) -> Optional[str]:
-        """Get current user ID (set after portal authentication)."""
+        """Get current user ID (set after portal authentication).
+        
+        @methodId get_user_id_helper
+        @category session
+        
+        Returns:
+            Current user ID or None if not authenticated
+        
+        @example
+        ```python
+        user_id = finatic.get_user_id()
+        ```
+        @example
+        ```typescript-server
+        const userId = finatic.getUserId();
+        ```
+        @example
+        ```typescript-client
+        const userId = finatic.getUserId();
+        ```
+        """
         return self.user_id
 
     def is_authed(self) -> bool:
-        """Check if user is authenticated (has userId)."""
+        """Check if user is authenticated (has userId).
+        
+        @methodId is_authed_helper
+        @category session
+        
+        Returns:
+            True if user is authenticated, False otherwise
+        
+        @example
+        ```python
+        is_authenticated = finatic.is_authed()
+        ```
+        @example
+        ```typescript-server
+        const isAuthenticated = finatic.isAuthed();
+        ```
+        @example
+        ```typescript-client
+        const isAuthenticated = finatic.isAuthed();
+        ```
+        """
         return bool(self.user_id)
 
     async def _init_session(self, x_api_key: str) -> str:
@@ -248,6 +300,9 @@ class FinaticServer:
         This method only retrieves the token and returns it - it does NOT start a session
         or set any session context. Useful for generating tokens to pass to clients.
         
+        @methodId init_session_api_v1_session_init_post
+        @category session
+        
         Args:
             api_key: Company API key (uses instance API key if not provided)
         
@@ -256,6 +311,19 @@ class FinaticServer:
         
         Raises:
             Exception: If API key is missing or token generation fails
+        
+        @example
+        ```python
+        token = await finatic.get_token()
+        ```
+        @example
+        ```typescript-server
+        const token = await finatic.getToken();
+        ```
+        @example
+        ```typescript-client
+        const token = await finatic.getToken();
+        ```
         """
         key_to_use = api_key or self.api_key
         if not key_to_use:
@@ -271,6 +339,9 @@ class FinaticServer:
         Gets a one-time token using the API key from constructor, then starts the session.
         This method is exposed for advanced use cases. For most use cases, use FinaticServer.init() instead.
         
+        @methodId start_session_api_v1_session_start_post
+        @category session
+        
         Args:
             user_id: Optional user ID for direct authentication
         
@@ -282,6 +353,19 @@ class FinaticServer:
         
         Raises:
             Exception: If API key is missing or session start fails
+        
+        @example
+        ```python
+        result = await finatic.start_session(user_id='optional_user_id')
+        ```
+        @example
+        ```typescript-server
+        const result = await finatic.startSession(oneTimeToken, userId);
+        ```
+        @example
+        ```typescript-client
+        const result = await finatic.startSession(oneTimeToken, userId);
+        ```
         """
         if not self.api_key:
             return {
@@ -339,6 +423,9 @@ class FinaticServer:
         This is where URL manipulation happens (not in session wrapper).
         Returns the URL - app can use it as needed.
         
+        @methodId get_portal_url_api_v1_session_portal_get
+        @category session
+        
         Args:
             theme: Optional theme configuration (preset string or custom dict)
             brokers: Optional list of broker names/IDs to filter
@@ -347,6 +434,19 @@ class FinaticServer:
         
         Returns:
             Portal URL with all parameters appended
+        
+        @example
+        ```python
+        url = await finatic.get_portal_url('dark', ['broker-1'], 'user@example.com', 'dark')
+        ```
+        @example
+        ```typescript-server
+        const url = await finatic.getPortalUrl('dark', ['broker-1'], 'user@example.com', 'dark');
+        ```
+        @example
+        ```typescript-client
+        const url = await finatic.getPortalUrl('dark', ['broker-1'], 'user@example.com', 'dark');
+        ```
         """
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
@@ -434,11 +534,27 @@ class FinaticServer:
     async def get_session_user(self) -> FinaticResponse[SessionUserResponse]:
         """Get session user information after portal authentication.
         
+        @methodId get_session_user_api_v1_session__session_id__user_get
+        @category session
+        
         Returns:
             Dict[str, Any]: FinaticResponse[SessionUserResponse] format
                 success: {data: SessionUserResponse, meta: dict | None}
                 error: dict | None
                 warning: list[dict] | None
+        
+        @example
+        ```python
+        user = await finatic.get_session_user()
+        ```
+        @example
+        ```typescript-server
+        const user = await finatic.getSessionUser();
+        ```
+        @example
+        ```typescript-client
+        const user = await finatic.getSessionUser();
+        ```
         """
         if not self.session_id or not self.company_id:
             raise ValueError('Session not initialized. Call start_session() first.')
@@ -465,12 +581,65 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_orders method with internal pagination handling.
+        
+        @methodId get_all_orders_api_v1_brokers_data_orders_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
                      Example: get_all_orders(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrders({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrders({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_orders(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_id='123456789'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -537,12 +706,65 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_positions method with internal pagination handling.
+        
+        @methodId get_all_positions_api_v1_brokers_data_positions_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_positions(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllPositions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllPositions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_positions(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_id='123456789'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -609,12 +831,65 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_balances method with internal pagination handling.
+        
+        @methodId get_all_balances_api_v1_brokers_data_balances_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_balances(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_balances(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_id='123456789'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -681,12 +956,65 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_accounts method with internal pagination handling.
+        
+        @methodId get_all_accounts_api_v1_brokers_data_accounts_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_accounts(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_accounts(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_type='margin'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -753,12 +1081,63 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_order_fills method with internal pagination handling.
+        
+        @methodId get_all_order_fills_api_v1_brokers_data_orders__order_id__fills_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_order_fills(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_order_fills(
+           *            connection_id='00000000-0000-0000-0000-000000000000'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -825,12 +1204,63 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_order_events method with internal pagination handling.
+        
+        @methodId get_all_order_events_api_v1_brokers_data_orders__order_id__events_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_order_events(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_order_events(
+           *            connection_id='00000000-0000-0000-0000-000000000000'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -897,12 +1327,65 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_order_groups method with internal pagination handling.
+        
+        @methodId get_all_order_groups_api_v1_brokers_data_orders_groups_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_order_groups(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrderGroups({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', createdAfter: '2024-01-01T00:00:00Z' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllOrderGroups({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', createdAfter: '2024-01-01T00:00:00Z' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_order_groups(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    created_after='2024-01-01T00:00:00Z'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -969,12 +1452,65 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_position_lots method with internal pagination handling.
+        
+        @methodId get_all_position_lots_api_v1_brokers_data_positions_lots_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_position_lots(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllPositionLots({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllPositionLots({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_position_lots(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_id='123456789'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -1041,12 +1577,63 @@ class FinaticServer:
         
         Auto-generated from paginated endpoint.
         
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_position_lot_fills method with internal pagination handling.
+        
+        @methodId get_all_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get
+        @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_orders(account_id="123", symbol="AAPL")
+                     Example: get_all_position_lot_fills(account_id="123", symbol="AAPL")
         
         Returns:
             FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllPositionLotFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllPositionLotFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_position_lot_fills(
+           *            connection_id='00000000-0000-0000-0000-000000000000'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
         """
         from dataclasses import replace, fields
         
@@ -1114,12 +1701,53 @@ class FinaticServer:
         
         Convenience method that delegates to company wrapper.
         
+                @methodId get_company_api_v1_company__company_id__get
+                @category company
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_company(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[CompanyResponse]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.get_company(
+            company_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.getCompany({ companyId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.getCompany({ companyId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1140,12 +1768,45 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_brokers_api_v1_brokers__get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_brokers(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[BrokerInfo]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_brokers()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getBrokers();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getBrokers();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1166,12 +1827,45 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId list_broker_connections_api_v1_brokers_connections_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_broker_connections(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[UserBrokerConnections]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_broker_connections()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getBrokerConnections();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getBrokerConnections();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1192,12 +1886,53 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId disconnect_company_from_broker_api_v1_brokers_disconnect_company__connection_id__delete
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: disconnect_company_from_broker(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[DisconnectActionResult]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.disconnect_company_from_broker(
+            connection_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.disconnectCompanyFromBroker({ connectionId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.disconnectCompanyFromBroker({ connectionId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1218,12 +1953,62 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_orders_api_v1_brokers_data_orders_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_orders(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[OrderResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_orders()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_orders(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getOrders();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getOrders();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1244,12 +2029,62 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_positions_api_v1_brokers_data_positions_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_positions(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[PositionResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_positions()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_positions(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getPositions();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getPositions();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1270,12 +2105,62 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_balances_api_v1_brokers_data_balances_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_balances(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[Balances]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_balances()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_balances(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getBalances();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getBalances();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1296,12 +2181,62 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_accounts_api_v1_brokers_data_accounts_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_accounts(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[Accounts]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_accounts()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_accounts(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_type='margin'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getAccounts();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getAccounts();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1322,12 +2257,71 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_order_fills_api_v1_brokers_data_orders__order_id__fills_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_order_fills(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[OrderFillResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.get_order_fills(
+            order_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_order_fills(
+            order_id='00000000-0000-0000-0000-000000000000',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            limit=100,
+            offset=0
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.getOrderFills({ orderId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.getOrderFills({ orderId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1348,12 +2342,71 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_order_events_api_v1_brokers_data_orders__order_id__events_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_order_events(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[OrderEventResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.get_order_events(
+            order_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_order_events(
+            order_id='00000000-0000-0000-0000-000000000000',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            limit=100,
+            offset=0
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.getOrderEvents({ orderId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.getOrderEvents({ orderId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1374,12 +2427,62 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_order_groups_api_v1_brokers_data_orders_groups_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_order_groups(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[OrderGroupResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_order_groups()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_order_groups(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            limit=100
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getOrderGroups();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getOrderGroups();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1400,12 +2503,62 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_position_lots_api_v1_brokers_data_positions_lots_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_position_lots(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[PositionLotResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_position_lots()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_position_lots(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getPositionLots();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getPositionLots();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
@@ -1426,12 +2579,71 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
+                @methodId get_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get
+                @category brokers
+        
         Args:
             **kwargs: Optional keyword arguments passed to wrapper method.
                      Only valid parameter fields are passed through (invalid keys are filtered out).
+                     Example: get_position_lot_fills(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
             FinaticResponse[list[PositionLotFillResponse]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.get_position_lot_fills(
+            lot_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_position_lot_fills(
+            lot_id='00000000-0000-0000-0000-000000000000',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            limit=100,
+            offset=0
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.getPositionLotFills({ lotId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.getPositionLotFills({ lotId: '00000000-0000-0000-0000-000000000000' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
         """
         from dataclasses import fields
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
