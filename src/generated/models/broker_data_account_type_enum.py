@@ -18,9 +18,9 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class PublicAccountTypeEnum(str, Enum):
+class BrokerDataAccountTypeEnum(str, Enum):
     """
-    PublicAccountTypeEnum
+    BrokerDataAccountTypeEnum
     """
 
     """
@@ -32,7 +32,7 @@ class PublicAccountTypeEnum(str, Enum):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PublicAccountTypeEnum from a JSON string"""
+        """Create an instance of BrokerDataAccountTypeEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

@@ -18,28 +18,24 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class PublicOrderStatusEnum(str, Enum):
+class BrokerDataConnectionStatusEnum(str, Enum):
     """
-    PublicOrderStatusEnum
+    BrokerDataConnectionStatusEnum
     """
 
     """
     allowed enum values
     """
-    SUBMITTED = 'submitted'
-    NEW = 'new'
-    PARTIALLY_FILLED = 'partially_filled'
-    FILLED = 'filled'
-    PENDING_CANCEL = 'pending_cancel'
-    CANCELLED = 'cancelled'
-    REJECTED = 'rejected'
-    EXPIRED = 'expired'
-    CREATED = 'created'
-    RECEIVED = 'received'
+    ACTIVE = 'active'
+    NEEDS_REAUTH = 'needs_reauth'
+    REVOKED = 'revoked'
+    PENDING_INITIAL_AUTH = 'pending_initial_auth'
+    FAILED = 'failed'
+    RATE_LIMITED = 'rate_limited'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PublicOrderStatusEnum from a JSON string"""
+        """Create an instance of BrokerDataConnectionStatusEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

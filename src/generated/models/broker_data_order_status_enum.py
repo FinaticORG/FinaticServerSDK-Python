@@ -18,24 +18,29 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class CompanyCompanySubscriptionStatusEnum(str, Enum):
+class BrokerDataOrderStatusEnum(str, Enum):
     """
-    CompanyCompanySubscriptionStatusEnum
+    BrokerDataOrderStatusEnum
     """
 
     """
     allowed enum values
     """
-    ACTIVE = 'active'
-    INACTIVE = 'inactive'
-    TRIAL = 'trial'
-    SUSPENDED = 'suspended'
-    DELETED = 'deleted'
-    GRACE_PERIOD = 'grace_period'
+    SUBMITTED = 'submitted'
+    NEW = 'new'
+    PARTIALLY_FILLED = 'partially_filled'
+    FILLED = 'filled'
+    PENDING_CANCEL = 'pending_cancel'
+    CANCELLED = 'cancelled'
+    REJECTED = 'rejected'
+    EXPIRED = 'expired'
+    CREATED = 'created'
+    RECEIVED = 'received'
+    QUEUED = 'queued'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of CompanyCompanySubscriptionStatusEnum from a JSON string"""
+        """Create an instance of BrokerDataOrderStatusEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

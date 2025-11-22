@@ -28,7 +28,7 @@ class SuccessPayloadListBrokerInfo(BaseModel):
     SuccessPayloadListBrokerInfo
     """ # noqa: E501
     id: Optional[StrictStr] = Field(default=None, alias="_id")
-    data: List[BrokerInfo] = Field(description="The response data")
+    data: Optional[List[BrokerInfo]] = None
     meta: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["_id", "data", "meta"]
@@ -85,6 +85,11 @@ class SuccessPayloadListBrokerInfo(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if data (nullable) is None
+        # and model_fields_set contains the field
+        if self.data is None and "data" in self.model_fields_set:
+            _dict['data'] = None
 
         # set to None if meta (nullable) is None
         # and model_fields_set contains the field

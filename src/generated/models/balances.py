@@ -38,7 +38,7 @@ class Balances(BaseModel):
     is_end_of_day_snapshot: Optional[StrictBool] = None
     maintenance_margin: Optional[Union[StrictFloat, StrictInt]] = None
     net_liquidation_value: Optional[Union[StrictFloat, StrictInt]] = None
-    raw_payload: Optional[Any] = None
+    raw_payload: Optional[Dict[str, Any]] = None
     total_cash_value: Optional[Union[StrictFloat, StrictInt]] = None
     total_realized_pnl: Optional[Union[StrictFloat, StrictInt]] = None
     updated_at: Optional[datetime]
@@ -86,9 +86,6 @@ class Balances(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of raw_payload
-        if self.raw_payload:
-            _dict['raw_payload'] = self.raw_payload.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -176,7 +173,7 @@ class Balances(BaseModel):
             "is_end_of_day_snapshot": obj.get("is_end_of_day_snapshot"),
             "maintenance_margin": obj.get("maintenance_margin"),
             "net_liquidation_value": obj.get("net_liquidation_value"),
-            "raw_payload": obj["raw_payload"] if obj.get("raw_payload") is not None else None,
+            "raw_payload": obj.get("raw_payload"),
             "total_cash_value": obj.get("total_cash_value"),
             "total_realized_pnl": obj.get("total_realized_pnl"),
             "updated_at": obj.get("updated_at")

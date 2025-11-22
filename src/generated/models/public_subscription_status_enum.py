@@ -18,24 +18,26 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class PublicConnectionStatusEnum(str, Enum):
+class PublicSubscriptionStatusEnum(str, Enum):
     """
-    PublicConnectionStatusEnum
+    PublicSubscriptionStatusEnum
     """
 
     """
     allowed enum values
     """
     ACTIVE = 'active'
-    NEEDS_REAUTH = 'needs_reauth'
-    REVOKED = 'revoked'
-    PENDING_INITIAL_AUTH = 'pending_initial_auth'
-    FAILED = 'failed'
-    RATE_LIMITED = 'rate_limited'
+    TRIALING = 'trialing'
+    PAST_DUE = 'past_due'
+    CANCELED = 'canceled'
+    UNPAID = 'unpaid'
+    INCOMPLETE = 'incomplete'
+    INCOMPLETE_EXPIRED = 'incomplete_expired'
+    PAUSED = 'paused'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PublicConnectionStatusEnum from a JSON string"""
+        """Create an instance of PublicSubscriptionStatusEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

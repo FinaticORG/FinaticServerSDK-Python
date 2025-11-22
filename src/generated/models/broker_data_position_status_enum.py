@@ -18,24 +18,21 @@ from enum import Enum
 from typing_extensions import Self
 
 
-class PublicAssetTypeEnum(str, Enum):
+class BrokerDataPositionStatusEnum(str, Enum):
     """
-    PublicAssetTypeEnum
+    BrokerDataPositionStatusEnum
     """
 
     """
     allowed enum values
     """
-    EQUITY = 'equity'
-    EQUITY_OPTION = 'equity_option'
-    CRYPTO = 'crypto'
-    FOREX = 'forex'
-    FUTURE = 'future'
-    FUTURE_OPTION = 'future_option'
+    ACTIVE = 'active'
+    INACTIVE = 'inactive'
+    CLOSED = 'closed'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of PublicAssetTypeEnum from a JSON string"""
+        """Create an instance of BrokerDataPositionStatusEnum from a JSON string"""
         return cls(json.loads(json_str))
 
 

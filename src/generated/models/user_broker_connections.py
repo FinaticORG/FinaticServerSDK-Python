@@ -21,7 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
-from .public_connection_status_enum import PublicConnectionStatusEnum
+from .broker_data_connection_status_enum import BrokerDataConnectionStatusEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,17 +33,16 @@ class UserBrokerConnections(BaseModel):
     broker_id: StrictStr
     circuit_open: Optional[StrictBool] = None
     circuit_open_until: Optional[datetime] = None
-    company_access: Optional[Any] = None
-    connection_metadata: Optional[Any] = None
+    connection_metadata: Optional[Dict[str, Any]] = None
     consecutive_failures: Optional[StrictInt] = None
     created_at: Optional[datetime]
     error_message: Optional[StrictStr] = None
     last_synced_at: Optional[datetime] = None
-    status: Optional[PublicConnectionStatusEnum] = None
+    status: Optional[BrokerDataConnectionStatusEnum] = None
     updated_at: Optional[datetime]
     user_id: UUID
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "broker_id", "circuit_open", "circuit_open_until", "company_access", "connection_metadata", "consecutive_failures", "created_at", "error_message", "last_synced_at", "status", "updated_at", "user_id"]
+    __properties: ClassVar[List[str]] = ["id", "broker_id", "circuit_open", "circuit_open_until", "connection_metadata", "consecutive_failures", "created_at", "error_message", "last_synced_at", "status", "updated_at", "user_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,12 +85,6 @@ class UserBrokerConnections(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of company_access
-        if self.company_access:
-            _dict['company_access'] = self.company_access.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of connection_metadata
-        if self.connection_metadata:
-            _dict['connection_metadata'] = self.connection_metadata.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -106,11 +99,6 @@ class UserBrokerConnections(BaseModel):
         # and model_fields_set contains the field
         if self.circuit_open_until is None and "circuit_open_until" in self.model_fields_set:
             _dict['circuit_open_until'] = None
-
-        # set to None if company_access (nullable) is None
-        # and model_fields_set contains the field
-        if self.company_access is None and "company_access" in self.model_fields_set:
-            _dict['company_access'] = None
 
         # set to None if connection_metadata (nullable) is None
         # and model_fields_set contains the field
@@ -163,8 +151,7 @@ class UserBrokerConnections(BaseModel):
             "broker_id": obj.get("broker_id"),
             "circuit_open": obj.get("circuit_open"),
             "circuit_open_until": obj.get("circuit_open_until"),
-            "company_access": obj["company_access"] if obj.get("company_access") is not None else None,
-            "connection_metadata": obj["connection_metadata"] if obj.get("connection_metadata") is not None else None,
+            "connection_metadata": obj.get("connection_metadata"),
             "consecutive_failures": obj.get("consecutive_failures"),
             "created_at": obj.get("created_at"),
             "error_message": obj.get("error_message"),

@@ -21,7 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
-from .company_company_subscription_status_enum import CompanyCompanySubscriptionStatusEnum
+from .public_subscription_status_enum import PublicSubscriptionStatusEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -33,14 +33,14 @@ class CompanyResponse(BaseModel):
     email: Optional[StrictStr] = None
     use_case_features: Optional[List[StrictStr]] = None
     referral_source: Optional[StrictStr] = None
-    is_active: Optional[StrictBool] = True
+    is_active: Optional[StrictBool] = None
     id: UUID
-    subscription_status: Optional[CompanyCompanySubscriptionStatusEnum] = None
+    subscription_status: Optional[PublicSubscriptionStatusEnum] = None
     total_connections: Optional[StrictInt] = None
     total_users: Optional[StrictInt] = None
     billing_status: Optional[StrictStr] = None
-    created_at: datetime
-    updated_at: datetime
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     trading_enabled: Optional[StrictBool] = None
     onboarding_step: Optional[StrictInt] = None
     onboarding_completed: Optional[StrictBool] = None
@@ -98,10 +98,20 @@ class CompanyResponse(BaseModel):
         if self.email is None and "email" in self.model_fields_set:
             _dict['email'] = None
 
+        # set to None if use_case_features (nullable) is None
+        # and model_fields_set contains the field
+        if self.use_case_features is None and "use_case_features" in self.model_fields_set:
+            _dict['use_case_features'] = None
+
         # set to None if referral_source (nullable) is None
         # and model_fields_set contains the field
         if self.referral_source is None and "referral_source" in self.model_fields_set:
             _dict['referral_source'] = None
+
+        # set to None if is_active (nullable) is None
+        # and model_fields_set contains the field
+        if self.is_active is None and "is_active" in self.model_fields_set:
+            _dict['is_active'] = None
 
         # set to None if subscription_status (nullable) is None
         # and model_fields_set contains the field
@@ -122,6 +132,16 @@ class CompanyResponse(BaseModel):
         # and model_fields_set contains the field
         if self.billing_status is None and "billing_status" in self.model_fields_set:
             _dict['billing_status'] = None
+
+        # set to None if created_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.created_at is None and "created_at" in self.model_fields_set:
+            _dict['created_at'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
 
         # set to None if trading_enabled (nullable) is None
         # and model_fields_set contains the field
@@ -154,7 +174,7 @@ class CompanyResponse(BaseModel):
             "email": obj.get("email"),
             "use_case_features": obj.get("use_case_features"),
             "referral_source": obj.get("referral_source"),
-            "is_active": obj.get("is_active") if obj.get("is_active") is not None else True,
+            "is_active": obj.get("is_active"),
             "id": obj.get("id"),
             "subscription_status": obj.get("subscription_status"),
             "total_connections": obj.get("total_connections"),

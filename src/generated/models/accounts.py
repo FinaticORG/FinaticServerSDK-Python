@@ -21,7 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
-from .public_account_type_enum import PublicAccountTypeEnum
+from .broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,11 +34,11 @@ class Accounts(BaseModel):
     account_first_trade_at: Optional[datetime] = None
     account_name: Optional[StrictStr] = None
     account_number: Optional[StrictStr] = None
-    account_type: Optional[PublicAccountTypeEnum] = None
+    account_type: Optional[BrokerDataAccountTypeEnum] = None
     account_updated_at: Optional[datetime] = None
     balances_synced_at: Optional[datetime] = None
     broker_provided_account_id: StrictStr
-    connection_metadata: Optional[Any] = None
+    connection_metadata: Optional[Dict[str, Any]] = None
     created_at: Optional[datetime]
     currency: Optional[StrictStr] = None
     is_simulation_account: Optional[StrictBool] = None
@@ -92,9 +92,6 @@ class Accounts(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of connection_metadata
-        if self.connection_metadata:
-            _dict['connection_metadata'] = self.connection_metadata.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -201,7 +198,7 @@ class Accounts(BaseModel):
             "account_updated_at": obj.get("account_updated_at"),
             "balances_synced_at": obj.get("balances_synced_at"),
             "broker_provided_account_id": obj.get("broker_provided_account_id"),
-            "connection_metadata": obj["connection_metadata"] if obj.get("connection_metadata") is not None else None,
+            "connection_metadata": obj.get("connection_metadata"),
             "created_at": obj.get("created_at"),
             "currency": obj.get("currency"),
             "is_simulation_account": obj.get("is_simulation_account"),

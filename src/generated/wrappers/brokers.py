@@ -16,6 +16,11 @@ from ..types import FinaticResponse
 from ..models.account_status import AccountStatus
 from ..models.accounts import Accounts
 from ..models.balances import Balances
+from ..models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
+from ..models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
+from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
+from ..models.broker_data_order_status_enum import BrokerDataOrderStatusEnum
+from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from ..models.broker_info import BrokerInfo
 from ..models.disconnect_action_result import DisconnectActionResult
 from ..models.order_event_response import OrderEventResponse
@@ -25,11 +30,6 @@ from ..models.order_response import OrderResponse
 from ..models.position_lot_fill_response import PositionLotFillResponse
 from ..models.position_lot_response import PositionLotResponse
 from ..models.position_response import PositionResponse
-from ..models.public_account_type_enum import PublicAccountTypeEnum
-from ..models.public_asset_type_enum import PublicAssetTypeEnum
-from ..models.public_order_side_enum import PublicOrderSideEnum
-from ..models.public_order_status_enum import PublicOrderStatusEnum
-from ..models.public_position_status_enum import PublicPositionStatusEnum
 from ..models.user_broker_connections import UserBrokerConnections
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
@@ -66,9 +66,9 @@ class GetOrdersParams:
     connection_id: str = None
     account_id: str = None
     symbol: str = None
-    order_status: PublicOrderStatusEnum = None
-    side: PublicOrderSideEnum = None
-    asset_type: PublicAssetTypeEnum = None
+    order_status: BrokerDataOrderStatusEnum = None
+    side: BrokerDataOrderSideEnum = None
+    asset_type: BrokerDataAssetTypeEnum = None
     limit: Optional[int] = None
     offset: Optional[int] = None
     created_after: str = None
@@ -82,9 +82,9 @@ class GetPositionsParams:
     connection_id: str = None
     account_id: str = None
     symbol: str = None
-    side: PublicOrderSideEnum = None
-    asset_type: PublicAssetTypeEnum = None
-    position_status: PublicPositionStatusEnum = None
+    side: BrokerDataOrderSideEnum = None
+    asset_type: BrokerDataAssetTypeEnum = None
+    position_status: BrokerDataPositionStatusEnum = None
     limit: Optional[int] = None
     offset: Optional[int] = None
     updated_after: str = None
@@ -109,7 +109,7 @@ class GetAccountsParams:
     """Input parameters for get_accounts_api_v1_brokers_data_accounts_get."""
     broker_id: str = None
     connection_id: str = None
-    account_type: PublicAccountTypeEnum = None
+    account_type: BrokerDataAccountTypeEnum = None
     status: AccountStatus = None
     currency: str = None
     limit: Optional[int] = None
@@ -933,9 +933,9 @@ class BrokersWrapper:
         connection_id = getattr(params, 'connection_id', None)
         account_id = getattr(params, 'account_id', None)
         symbol = getattr(params, 'symbol', None)
-        order_status = coerce_enum_value(getattr(params, 'order_status', None), PublicOrderStatusEnum, 'order_status') if getattr(params, 'order_status', None) is not None else None
-        side = coerce_enum_value(getattr(params, 'side', None), PublicOrderSideEnum, 'side') if getattr(params, 'side', None) is not None else None
-        asset_type = coerce_enum_value(getattr(params, 'asset_type', None), PublicAssetTypeEnum, 'asset_type') if getattr(params, 'asset_type', None) is not None else None
+        order_status = coerce_enum_value(getattr(params, 'order_status', None), BrokerDataOrderStatusEnum, 'order_status') if getattr(params, 'order_status', None) is not None else None
+        side = coerce_enum_value(getattr(params, 'side', None), BrokerDataOrderSideEnum, 'side') if getattr(params, 'side', None) is not None else None
+        asset_type = coerce_enum_value(getattr(params, 'asset_type', None), BrokerDataAssetTypeEnum, 'asset_type') if getattr(params, 'asset_type', None) is not None else None
         limit = getattr(params, 'limit', None)
         offset = getattr(params, 'offset', None)
         created_after = getattr(params, 'created_after', None)
@@ -1189,9 +1189,9 @@ class BrokersWrapper:
         connection_id = getattr(params, 'connection_id', None)
         account_id = getattr(params, 'account_id', None)
         symbol = getattr(params, 'symbol', None)
-        side = coerce_enum_value(getattr(params, 'side', None), PublicOrderSideEnum, 'side') if getattr(params, 'side', None) is not None else None
-        asset_type = coerce_enum_value(getattr(params, 'asset_type', None), PublicAssetTypeEnum, 'asset_type') if getattr(params, 'asset_type', None) is not None else None
-        position_status = coerce_enum_value(getattr(params, 'position_status', None), PublicPositionStatusEnum, 'position_status') if getattr(params, 'position_status', None) is not None else None
+        side = coerce_enum_value(getattr(params, 'side', None), BrokerDataOrderSideEnum, 'side') if getattr(params, 'side', None) is not None else None
+        asset_type = coerce_enum_value(getattr(params, 'asset_type', None), BrokerDataAssetTypeEnum, 'asset_type') if getattr(params, 'asset_type', None) is not None else None
+        position_status = coerce_enum_value(getattr(params, 'position_status', None), BrokerDataPositionStatusEnum, 'position_status') if getattr(params, 'position_status', None) is not None else None
         limit = getattr(params, 'limit', None)
         offset = getattr(params, 'offset', None)
         updated_after = getattr(params, 'updated_after', None)
@@ -1696,7 +1696,7 @@ class BrokersWrapper:
         # Phase 2C: Extract individual params from input params object
         broker_id = getattr(params, 'broker_id', None)
         connection_id = getattr(params, 'connection_id', None)
-        account_type = coerce_enum_value(getattr(params, 'account_type', None), PublicAccountTypeEnum, 'account_type') if getattr(params, 'account_type', None) is not None else None
+        account_type = coerce_enum_value(getattr(params, 'account_type', None), BrokerDataAccountTypeEnum, 'account_type') if getattr(params, 'account_type', None) is not None else None
         status = getattr(params, 'status', None)
         currency = getattr(params, 'currency', None)
         limit = getattr(params, 'limit', None)

@@ -33,8 +33,13 @@ __all__ = [
     "AccountStatus",
     "Accounts",
     "Balances",
+    "BrokerDataAccountTypeEnum",
+    "BrokerDataAssetTypeEnum",
+    "BrokerDataConnectionStatusEnum",
+    "BrokerDataOrderSideEnum",
+    "BrokerDataOrderStatusEnum",
+    "BrokerDataPositionStatusEnum",
     "BrokerInfo",
-    "CompanyCompanySubscriptionStatusEnum",
     "CompanyResponse",
     "DisconnectActionResult",
     "FinaticError",
@@ -66,12 +71,7 @@ __all__ = [
     "PositionLotFillResponse",
     "PositionLotResponse",
     "PositionResponse",
-    "PublicAccountTypeEnum",
-    "PublicAssetTypeEnum",
-    "PublicConnectionStatusEnum",
-    "PublicOrderSideEnum",
-    "PublicOrderStatusEnum",
-    "PublicPositionStatusEnum",
+    "PublicSubscriptionStatusEnum",
     "SessionResponseData",
     "SessionStartRequest",
     "SessionStatus",
@@ -119,8 +119,13 @@ from .exceptions import ApiException as ApiException
 from .models.account_status import AccountStatus as AccountStatus
 from .models.accounts import Accounts as Accounts
 from .models.balances import Balances as Balances
+from .models.broker_data_account_type_enum import BrokerDataAccountTypeEnum as BrokerDataAccountTypeEnum
+from .models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum as BrokerDataAssetTypeEnum
+from .models.broker_data_connection_status_enum import BrokerDataConnectionStatusEnum as BrokerDataConnectionStatusEnum
+from .models.broker_data_order_side_enum import BrokerDataOrderSideEnum as BrokerDataOrderSideEnum
+from .models.broker_data_order_status_enum import BrokerDataOrderStatusEnum as BrokerDataOrderStatusEnum
+from .models.broker_data_position_status_enum import BrokerDataPositionStatusEnum as BrokerDataPositionStatusEnum
 from .models.broker_info import BrokerInfo as BrokerInfo
-from .models.company_company_subscription_status_enum import CompanyCompanySubscriptionStatusEnum as CompanyCompanySubscriptionStatusEnum
 from .models.company_response import CompanyResponse as CompanyResponse
 from .models.disconnect_action_result import DisconnectActionResult as DisconnectActionResult
 from .models.finatic_error import FinaticError as FinaticError
@@ -152,12 +157,7 @@ from .models.portal_url_response import PortalUrlResponse as PortalUrlResponse
 from .models.position_lot_fill_response import PositionLotFillResponse as PositionLotFillResponse
 from .models.position_lot_response import PositionLotResponse as PositionLotResponse
 from .models.position_response import PositionResponse as PositionResponse
-from .models.public_account_type_enum import PublicAccountTypeEnum as PublicAccountTypeEnum
-from .models.public_asset_type_enum import PublicAssetTypeEnum as PublicAssetTypeEnum
-from .models.public_connection_status_enum import PublicConnectionStatusEnum as PublicConnectionStatusEnum
-from .models.public_order_side_enum import PublicOrderSideEnum as PublicOrderSideEnum
-from .models.public_order_status_enum import PublicOrderStatusEnum as PublicOrderStatusEnum
-from .models.public_position_status_enum import PublicPositionStatusEnum as PublicPositionStatusEnum
+from .models.public_subscription_status_enum import PublicSubscriptionStatusEnum as PublicSubscriptionStatusEnum
 from .models.session_response_data import SessionResponseData as SessionResponseData
 from .models.session_start_request import SessionStartRequest as SessionStartRequest
 from .models.session_status import SessionStatus as SessionStatus
