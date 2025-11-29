@@ -28,17 +28,17 @@ from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
 from ..models.broker_data_order_status_enum import BrokerDataOrderStatusEnum
 from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from ..models.finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult
-from ..models.finatic_response_list_accounts import FinaticResponseListAccounts
-from ..models.finatic_response_list_balances import FinaticResponseListBalances
 from ..models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo
-from ..models.finatic_response_list_order_event_response import FinaticResponseListOrderEventResponse
-from ..models.finatic_response_list_order_fill_response import FinaticResponseListOrderFillResponse
-from ..models.finatic_response_list_order_group_response import FinaticResponseListOrderGroupResponse
-from ..models.finatic_response_list_order_response import FinaticResponseListOrderResponse
-from ..models.finatic_response_list_position_lot_fill_response import FinaticResponseListPositionLotFillResponse
-from ..models.finatic_response_list_position_lot_response import FinaticResponseListPositionLotResponse
-from ..models.finatic_response_list_position_response import FinaticResponseListPositionResponse
-from ..models.finatic_response_list_user_broker_connections import FinaticResponseListUserBrokerConnections
+from ..models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
+from ..models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
+from ..models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder
+from ..models.finatic_response_list_fdx_broker_order_event import FinaticResponseListFDXBrokerOrderEvent
+from ..models.finatic_response_list_fdx_broker_order_fill import FinaticResponseListFDXBrokerOrderFill
+from ..models.finatic_response_list_fdx_broker_order_group import FinaticResponseListFDXBrokerOrderGroup
+from ..models.finatic_response_list_fdx_broker_position import FinaticResponseListFDXBrokerPosition
+from ..models.finatic_response_list_fdx_broker_position_lot import FinaticResponseListFDXBrokerPositionLot
+from ..models.finatic_response_list_fdx_broker_position_lot_fill import FinaticResponseListFDXBrokerPositionLotFill
+from ..models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions
 
 from ..api_client import ApiClient, RequestSerialized
 from ..api_response import ApiResponse
@@ -352,7 +352,7 @@ class BrokersApi:
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -365,7 +365,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListAccounts:
+    ) -> FinaticResponseListFDXBrokerAccount:
         """Get Accounts
 
         Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
@@ -384,8 +384,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of accounts to skip for pagination
         :type offset: int
-        :param with_metadata: Include connection metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include connection metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -416,7 +416,7 @@ class BrokersApi:
             currency=currency,
             limit=limit,
             offset=offset,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -424,7 +424,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListAccounts",
+            '200': "FinaticResponseListFDXBrokerAccount",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -455,7 +455,7 @@ class BrokersApi:
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -468,7 +468,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListAccounts]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerAccount]:
         """Get Accounts
 
         Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
@@ -487,8 +487,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of accounts to skip for pagination
         :type offset: int
-        :param with_metadata: Include connection metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include connection metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -519,7 +519,7 @@ class BrokersApi:
             currency=currency,
             limit=limit,
             offset=offset,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -527,7 +527,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListAccounts",
+            '200': "FinaticResponseListFDXBrokerAccount",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -558,7 +558,7 @@ class BrokersApi:
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -590,8 +590,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of accounts to skip for pagination
         :type offset: int
-        :param with_metadata: Include connection metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include connection metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -622,7 +622,7 @@ class BrokersApi:
             currency=currency,
             limit=limit,
             offset=offset,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -630,7 +630,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListAccounts",
+            '200': "FinaticResponseListFDXBrokerAccount",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -656,7 +656,7 @@ class BrokersApi:
         currency,
         limit,
         offset,
-        with_metadata,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -707,9 +707,9 @@ class BrokersApi:
             
             _query_params.append(('offset', offset))
             
-        if with_metadata is not None:
+        if include_metadata is not None:
             
-            _query_params.append(('with_metadata', with_metadata))
+            _query_params.append(('include_metadata', include_metadata))
             
         # process the header parameters
         # process the form parameters
@@ -758,7 +758,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
         balance_created_after: Annotated[Optional[datetime], Field(description="Filter balances created after this timestamp")] = None,
         balance_created_before: Annotated[Optional[datetime], Field(description="Filter balances created before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -771,7 +771,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListBalances:
+    ) -> FinaticResponseListFDXBrokerBalance:
         """Get Balances
 
         Get balances for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
@@ -792,8 +792,8 @@ class BrokersApi:
         :type balance_created_after: datetime
         :param balance_created_before: Filter balances created before this timestamp
         :type balance_created_before: datetime
-        :param with_metadata: Include balance metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -825,7 +825,7 @@ class BrokersApi:
             offset=offset,
             balance_created_after=balance_created_after,
             balance_created_before=balance_created_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -833,7 +833,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListBalances",
+            '200': "FinaticResponseListFDXBrokerBalance",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -865,7 +865,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
         balance_created_after: Annotated[Optional[datetime], Field(description="Filter balances created after this timestamp")] = None,
         balance_created_before: Annotated[Optional[datetime], Field(description="Filter balances created before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -878,7 +878,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListBalances]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerBalance]:
         """Get Balances
 
         Get balances for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
@@ -899,8 +899,8 @@ class BrokersApi:
         :type balance_created_after: datetime
         :param balance_created_before: Filter balances created before this timestamp
         :type balance_created_before: datetime
-        :param with_metadata: Include balance metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -932,7 +932,7 @@ class BrokersApi:
             offset=offset,
             balance_created_after=balance_created_after,
             balance_created_before=balance_created_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -940,7 +940,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListBalances",
+            '200': "FinaticResponseListFDXBrokerBalance",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -972,7 +972,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
         balance_created_after: Annotated[Optional[datetime], Field(description="Filter balances created after this timestamp")] = None,
         balance_created_before: Annotated[Optional[datetime], Field(description="Filter balances created before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1006,8 +1006,8 @@ class BrokersApi:
         :type balance_created_after: datetime
         :param balance_created_before: Filter balances created before this timestamp
         :type balance_created_before: datetime
-        :param with_metadata: Include balance metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1039,7 +1039,7 @@ class BrokersApi:
             offset=offset,
             balance_created_after=balance_created_after,
             balance_created_before=balance_created_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1047,7 +1047,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListBalances",
+            '200': "FinaticResponseListFDXBrokerBalance",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -1074,7 +1074,7 @@ class BrokersApi:
         offset,
         balance_created_after,
         balance_created_before,
-        with_metadata,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -1147,9 +1147,9 @@ class BrokersApi:
             else:
                 _query_params.append(('balance_created_before', balance_created_before))
             
-        if with_metadata is not None:
+        if include_metadata is not None:
             
-            _query_params.append(('with_metadata', with_metadata))
+            _query_params.append(('include_metadata', include_metadata))
             
         # process the header parameters
         # process the form parameters
@@ -1463,6 +1463,7 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of events to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of events to skip for pagination")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include event metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1475,7 +1476,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListOrderEventResponse:
+    ) -> FinaticResponseListFDXBrokerOrderEvent:
         """Get Order Events
 
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
@@ -1488,6 +1489,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of events to skip for pagination
         :type offset: int
+        :param include_metadata: Include event metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1515,6 +1518,7 @@ class BrokersApi:
             connection_id=connection_id,
             limit=limit,
             offset=offset,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1522,7 +1526,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderEventResponse",
+            '200': "FinaticResponseListFDXBrokerOrderEvent",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -1550,6 +1554,7 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of events to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of events to skip for pagination")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include event metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1562,7 +1567,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListOrderEventResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderEvent]:
         """Get Order Events
 
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
@@ -1575,6 +1580,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of events to skip for pagination
         :type offset: int
+        :param include_metadata: Include event metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1602,6 +1609,7 @@ class BrokersApi:
             connection_id=connection_id,
             limit=limit,
             offset=offset,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1609,7 +1617,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderEventResponse",
+            '200': "FinaticResponseListFDXBrokerOrderEvent",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -1637,6 +1645,7 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of events to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of events to skip for pagination")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include event metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1662,6 +1671,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of events to skip for pagination
         :type offset: int
+        :param include_metadata: Include event metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1689,6 +1700,7 @@ class BrokersApi:
             connection_id=connection_id,
             limit=limit,
             offset=offset,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1696,7 +1708,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderEventResponse",
+            '200': "FinaticResponseListFDXBrokerOrderEvent",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -1719,6 +1731,7 @@ class BrokersApi:
         connection_id,
         limit,
         offset,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -1754,6 +1767,10 @@ class BrokersApi:
         if offset is not None:
             
             _query_params.append(('offset', offset))
+            
+        if include_metadata is not None:
+            
+            _query_params.append(('include_metadata', include_metadata))
             
         # process the header parameters
         # process the form parameters
@@ -1798,6 +1815,7 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include fill metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1810,7 +1828,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListOrderFillResponse:
+    ) -> FinaticResponseListFDXBrokerOrderFill:
         """Get Order Fills
 
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
@@ -1823,6 +1841,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of fills to skip for pagination
         :type offset: int
+        :param include_metadata: Include fill metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1850,6 +1870,7 @@ class BrokersApi:
             connection_id=connection_id,
             limit=limit,
             offset=offset,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1857,7 +1878,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderFillResponse",
+            '200': "FinaticResponseListFDXBrokerOrderFill",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -1885,6 +1906,7 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include fill metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1897,7 +1919,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListOrderFillResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderFill]:
         """Get Order Fills
 
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
@@ -1910,6 +1932,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of fills to skip for pagination
         :type offset: int
+        :param include_metadata: Include fill metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1937,6 +1961,7 @@ class BrokersApi:
             connection_id=connection_id,
             limit=limit,
             offset=offset,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1944,7 +1969,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderFillResponse",
+            '200': "FinaticResponseListFDXBrokerOrderFill",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -1972,6 +1997,7 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include fill metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1997,6 +2023,8 @@ class BrokersApi:
         :type limit: int
         :param offset: Number of fills to skip for pagination
         :type offset: int
+        :param include_metadata: Include fill metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2024,6 +2052,7 @@ class BrokersApi:
             connection_id=connection_id,
             limit=limit,
             offset=offset,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2031,7 +2060,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderFillResponse",
+            '200': "FinaticResponseListFDXBrokerOrderFill",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2054,6 +2083,7 @@ class BrokersApi:
         connection_id,
         limit,
         offset,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -2089,6 +2119,10 @@ class BrokersApi:
         if offset is not None:
             
             _query_params.append(('offset', offset))
+            
+        if include_metadata is not None:
+            
+            _query_params.append(('include_metadata', include_metadata))
             
         # process the header parameters
         # process the form parameters
@@ -2135,6 +2169,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of order groups to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter order groups created after this timestamp")] = None,
         created_before: Annotated[Optional[datetime], Field(description="Filter order groups created before this timestamp")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include group metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2147,7 +2182,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListOrderGroupResponse:
+    ) -> FinaticResponseListFDXBrokerOrderGroup:
         """Get Order Groups
 
         Get order groups.  This endpoint returns order groups that contain multiple orders.
@@ -2164,6 +2199,8 @@ class BrokersApi:
         :type created_after: datetime
         :param created_before: Filter order groups created before this timestamp
         :type created_before: datetime
+        :param include_metadata: Include group metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2193,6 +2230,7 @@ class BrokersApi:
             offset=offset,
             created_after=created_after,
             created_before=created_before,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2200,7 +2238,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderGroupResponse",
+            '200': "FinaticResponseListFDXBrokerOrderGroup",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2230,6 +2268,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of order groups to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter order groups created after this timestamp")] = None,
         created_before: Annotated[Optional[datetime], Field(description="Filter order groups created before this timestamp")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include group metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2242,7 +2281,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListOrderGroupResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderGroup]:
         """Get Order Groups
 
         Get order groups.  This endpoint returns order groups that contain multiple orders.
@@ -2259,6 +2298,8 @@ class BrokersApi:
         :type created_after: datetime
         :param created_before: Filter order groups created before this timestamp
         :type created_before: datetime
+        :param include_metadata: Include group metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2288,6 +2329,7 @@ class BrokersApi:
             offset=offset,
             created_after=created_after,
             created_before=created_before,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2295,7 +2337,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderGroupResponse",
+            '200': "FinaticResponseListFDXBrokerOrderGroup",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2325,6 +2367,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of order groups to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter order groups created after this timestamp")] = None,
         created_before: Annotated[Optional[datetime], Field(description="Filter order groups created before this timestamp")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include group metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2354,6 +2397,8 @@ class BrokersApi:
         :type created_after: datetime
         :param created_before: Filter order groups created before this timestamp
         :type created_before: datetime
+        :param include_metadata: Include group metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2383,6 +2428,7 @@ class BrokersApi:
             offset=offset,
             created_after=created_after,
             created_before=created_before,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2390,7 +2436,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderGroupResponse",
+            '200': "FinaticResponseListFDXBrokerOrderGroup",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2415,6 +2461,7 @@ class BrokersApi:
         offset,
         created_after,
         created_before,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -2479,6 +2526,10 @@ class BrokersApi:
             else:
                 _query_params.append(('created_before', created_before))
             
+        if include_metadata is not None:
+            
+            _query_params.append(('include_metadata', include_metadata))
+            
         # process the header parameters
         # process the form parameters
         # process the body parameter
@@ -2529,7 +2580,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
         created_before: Annotated[Optional[datetime], Field(description="Filter orders created before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2542,7 +2593,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListOrderResponse:
+    ) -> FinaticResponseListFDXBrokerOrder:
         """Get Orders
 
         Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
@@ -2569,8 +2620,8 @@ class BrokersApi:
         :type created_after: datetime
         :param created_before: Filter orders created before this timestamp
         :type created_before: datetime
-        :param with_metadata: Include order metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include order metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2605,7 +2656,7 @@ class BrokersApi:
             offset=offset,
             created_after=created_after,
             created_before=created_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2613,7 +2664,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderResponse",
+            '200': "FinaticResponseListFDXBrokerOrder",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2648,7 +2699,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
         created_before: Annotated[Optional[datetime], Field(description="Filter orders created before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2661,7 +2712,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListOrderResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrder]:
         """Get Orders
 
         Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
@@ -2688,8 +2739,8 @@ class BrokersApi:
         :type created_after: datetime
         :param created_before: Filter orders created before this timestamp
         :type created_before: datetime
-        :param with_metadata: Include order metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include order metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2724,7 +2775,7 @@ class BrokersApi:
             offset=offset,
             created_after=created_after,
             created_before=created_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2732,7 +2783,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderResponse",
+            '200': "FinaticResponseListFDXBrokerOrder",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2767,7 +2818,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
         created_before: Annotated[Optional[datetime], Field(description="Filter orders created before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -2807,8 +2858,8 @@ class BrokersApi:
         :type created_after: datetime
         :param created_before: Filter orders created before this timestamp
         :type created_before: datetime
-        :param with_metadata: Include order metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include order metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -2843,7 +2894,7 @@ class BrokersApi:
             offset=offset,
             created_after=created_after,
             created_before=created_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -2851,7 +2902,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListOrderResponse",
+            '200': "FinaticResponseListFDXBrokerOrder",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -2881,7 +2932,7 @@ class BrokersApi:
         offset,
         created_after,
         created_before,
-        with_metadata,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -2966,9 +3017,9 @@ class BrokersApi:
             else:
                 _query_params.append(('created_before', created_before))
             
-        if with_metadata is not None:
+        if include_metadata is not None:
             
-            _query_params.append(('with_metadata', with_metadata))
+            _query_params.append(('include_metadata', include_metadata))
             
         # process the header parameters
         # process the form parameters
@@ -3025,7 +3076,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListPositionLotFillResponse:
+    ) -> FinaticResponseListFDXBrokerPositionLotFill:
         """Get Position Lot Fills
 
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
@@ -3072,7 +3123,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionLotFillResponse",
+            '200': "FinaticResponseListFDXBrokerPositionLotFill",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3112,7 +3163,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListPositionLotFillResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerPositionLotFill]:
         """Get Position Lot Fills
 
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
@@ -3159,7 +3210,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionLotFillResponse",
+            '200': "FinaticResponseListFDXBrokerPositionLotFill",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3246,7 +3297,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionLotFillResponse",
+            '200': "FinaticResponseListFDXBrokerPositionLotFill",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3363,7 +3414,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListPositionLotResponse:
+    ) -> FinaticResponseListFDXBrokerPositionLot:
         """Get Position Lots
 
         Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
@@ -3419,7 +3470,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionLotResponse",
+            '200': "FinaticResponseListFDXBrokerPositionLot",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3462,7 +3513,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListPositionLotResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerPositionLot]:
         """Get Position Lots
 
         Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
@@ -3518,7 +3569,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionLotResponse",
+            '200': "FinaticResponseListFDXBrokerPositionLot",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3617,7 +3668,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionLotResponse",
+            '200': "FinaticResponseListFDXBrokerPositionLot",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3743,7 +3794,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
         updated_before: Annotated[Optional[datetime], Field(description="Filter positions updated before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3756,7 +3807,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListPositionResponse:
+    ) -> FinaticResponseListFDXBrokerPosition:
         """Get Positions
 
         Get positions for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns positions from connections the company has read access to.
@@ -3783,8 +3834,8 @@ class BrokersApi:
         :type updated_after: datetime
         :param updated_before: Filter positions updated before this timestamp
         :type updated_before: datetime
-        :param with_metadata: Include position metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include position metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3819,7 +3870,7 @@ class BrokersApi:
             offset=offset,
             updated_after=updated_after,
             updated_before=updated_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3827,7 +3878,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionResponse",
+            '200': "FinaticResponseListFDXBrokerPosition",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3862,7 +3913,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
         updated_before: Annotated[Optional[datetime], Field(description="Filter positions updated before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3875,7 +3926,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListPositionResponse]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerPosition]:
         """Get Positions
 
         Get positions for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns positions from connections the company has read access to.
@@ -3902,8 +3953,8 @@ class BrokersApi:
         :type updated_after: datetime
         :param updated_before: Filter positions updated before this timestamp
         :type updated_before: datetime
-        :param with_metadata: Include position metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include position metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3938,7 +3989,7 @@ class BrokersApi:
             offset=offset,
             updated_after=updated_after,
             updated_before=updated_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3946,7 +3997,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionResponse",
+            '200': "FinaticResponseListFDXBrokerPosition",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -3981,7 +4032,7 @@ class BrokersApi:
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
         updated_before: Annotated[Optional[datetime], Field(description="Filter positions updated before this timestamp")] = None,
-        with_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response")] = None,
+        include_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -4021,8 +4072,8 @@ class BrokersApi:
         :type updated_after: datetime
         :param updated_before: Filter positions updated before this timestamp
         :type updated_before: datetime
-        :param with_metadata: Include position metadata in response
-        :type with_metadata: bool
+        :param include_metadata: Include position metadata in response (excluded by default for FDX compliance)
+        :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -4057,7 +4108,7 @@ class BrokersApi:
             offset=offset,
             updated_after=updated_after,
             updated_before=updated_before,
-            with_metadata=with_metadata,
+            include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -4065,7 +4116,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListPositionResponse",
+            '200': "FinaticResponseListFDXBrokerPosition",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -4095,7 +4146,7 @@ class BrokersApi:
         offset,
         updated_after,
         updated_before,
-        with_metadata,
+        include_metadata,
         _request_auth,
         _content_type,
         _headers,
@@ -4180,9 +4231,9 @@ class BrokersApi:
             else:
                 _query_params.append(('updated_before', updated_before))
             
-        if with_metadata is not None:
+        if include_metadata is not None:
             
-            _query_params.append(('with_metadata', with_metadata))
+            _query_params.append(('include_metadata', include_metadata))
             
         # process the header parameters
         # process the form parameters
@@ -4235,10 +4286,10 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListUserBrokerConnections:
+    ) -> FinaticResponseListUserBrokerConnectionWithPermissions:
         """List Broker Connections
 
-        List all broker connections for the current user.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for.
+        List all broker connections for the current user with permissions.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for, including the current company's permissions (read/write) for each connection.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4270,7 +4321,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListUserBrokerConnections",
+            '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -4306,10 +4357,10 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListUserBrokerConnections]:
+    ) -> ApiResponse[FinaticResponseListUserBrokerConnectionWithPermissions]:
         """List Broker Connections
 
-        List all broker connections for the current user.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for.
+        List all broker connections for the current user with permissions.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for, including the current company's permissions (read/write) for each connection.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4341,7 +4392,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListUserBrokerConnections",
+            '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",
@@ -4380,7 +4431,7 @@ class BrokersApi:
     ) -> RESTResponseType:
         """List Broker Connections
 
-        List all broker connections for the current user.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for.
+        List all broker connections for the current user with permissions.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for, including the current company's permissions (read/write) for each connection.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -4412,7 +4463,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListUserBrokerConnections",
+            '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
             '400': "FinaticError",
             '401': "FinaticError",
             '403': "FinaticError",

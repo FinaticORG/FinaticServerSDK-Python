@@ -18,34 +18,25 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
-from .public_subscription_status_enum import PublicSubscriptionStatusEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
 class CompanyResponse(BaseModel):
     """
-    Schema for company response data.
+    Schema for company response data - minimal public fields only.
     """ # noqa: E501
     name: StrictStr
     email: Optional[StrictStr] = None
     use_case_features: Optional[List[StrictStr]] = None
-    referral_source: Optional[StrictStr] = None
-    is_active: Optional[StrictBool] = None
-    id: UUID
-    subscription_status: Optional[PublicSubscriptionStatusEnum] = None
-    total_connections: Optional[StrictInt] = None
-    total_users: Optional[StrictInt] = None
-    billing_status: Optional[StrictStr] = None
+    is_active: Optional[StrictBool] = True
+    trading_enabled: Optional[StrictBool] = True
+    picture_url: Optional[StrictStr] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
-    trading_enabled: Optional[StrictBool] = None
-    onboarding_step: Optional[StrictInt] = None
-    onboarding_completed: Optional[StrictBool] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["name", "email", "use_case_features", "referral_source", "is_active", "id", "subscription_status", "total_connections", "total_users", "billing_status", "created_at", "updated_at", "trading_enabled", "onboarding_step", "onboarding_completed"]
+    __properties: ClassVar[List[str]] = ["name", "email", "use_case_features", "is_active", "trading_enabled", "picture_url", "created_at", "updated_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -103,35 +94,10 @@ class CompanyResponse(BaseModel):
         if self.use_case_features is None and "use_case_features" in self.model_fields_set:
             _dict['use_case_features'] = None
 
-        # set to None if referral_source (nullable) is None
+        # set to None if picture_url (nullable) is None
         # and model_fields_set contains the field
-        if self.referral_source is None and "referral_source" in self.model_fields_set:
-            _dict['referral_source'] = None
-
-        # set to None if is_active (nullable) is None
-        # and model_fields_set contains the field
-        if self.is_active is None and "is_active" in self.model_fields_set:
-            _dict['is_active'] = None
-
-        # set to None if subscription_status (nullable) is None
-        # and model_fields_set contains the field
-        if self.subscription_status is None and "subscription_status" in self.model_fields_set:
-            _dict['subscription_status'] = None
-
-        # set to None if total_connections (nullable) is None
-        # and model_fields_set contains the field
-        if self.total_connections is None and "total_connections" in self.model_fields_set:
-            _dict['total_connections'] = None
-
-        # set to None if total_users (nullable) is None
-        # and model_fields_set contains the field
-        if self.total_users is None and "total_users" in self.model_fields_set:
-            _dict['total_users'] = None
-
-        # set to None if billing_status (nullable) is None
-        # and model_fields_set contains the field
-        if self.billing_status is None and "billing_status" in self.model_fields_set:
-            _dict['billing_status'] = None
+        if self.picture_url is None and "picture_url" in self.model_fields_set:
+            _dict['picture_url'] = None
 
         # set to None if created_at (nullable) is None
         # and model_fields_set contains the field
@@ -142,21 +108,6 @@ class CompanyResponse(BaseModel):
         # and model_fields_set contains the field
         if self.updated_at is None and "updated_at" in self.model_fields_set:
             _dict['updated_at'] = None
-
-        # set to None if trading_enabled (nullable) is None
-        # and model_fields_set contains the field
-        if self.trading_enabled is None and "trading_enabled" in self.model_fields_set:
-            _dict['trading_enabled'] = None
-
-        # set to None if onboarding_step (nullable) is None
-        # and model_fields_set contains the field
-        if self.onboarding_step is None and "onboarding_step" in self.model_fields_set:
-            _dict['onboarding_step'] = None
-
-        # set to None if onboarding_completed (nullable) is None
-        # and model_fields_set contains the field
-        if self.onboarding_completed is None and "onboarding_completed" in self.model_fields_set:
-            _dict['onboarding_completed'] = None
 
         return _dict
 
@@ -173,18 +124,11 @@ class CompanyResponse(BaseModel):
             "name": obj.get("name"),
             "email": obj.get("email"),
             "use_case_features": obj.get("use_case_features"),
-            "referral_source": obj.get("referral_source"),
-            "is_active": obj.get("is_active"),
-            "id": obj.get("id"),
-            "subscription_status": obj.get("subscription_status"),
-            "total_connections": obj.get("total_connections"),
-            "total_users": obj.get("total_users"),
-            "billing_status": obj.get("billing_status"),
+            "is_active": obj.get("is_active") if obj.get("is_active") is not None else True,
+            "trading_enabled": obj.get("trading_enabled") if obj.get("trading_enabled") is not None else True,
+            "picture_url": obj.get("picture_url"),
             "created_at": obj.get("created_at"),
-            "updated_at": obj.get("updated_at"),
-            "trading_enabled": obj.get("trading_enabled"),
-            "onboarding_step": obj.get("onboarding_step"),
-            "onboarding_completed": obj.get("onboarding_completed")
+            "updated_at": obj.get("updated_at")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -26,23 +26,23 @@ from .wrappers.company import CompanyWrapper
 from .wrappers.session import SessionWrapper
 
 from .wrappers.brokers import GetOrdersParams
-from .models.order_response import OrderResponse
+from .models.fdx_broker_order import FDXBrokerOrder
 from .wrappers.brokers import GetPositionsParams
-from .models.position_response import PositionResponse
+from .models.fdx_broker_position import FDXBrokerPosition
 from .wrappers.brokers import GetBalancesParams
-from .models.balances import Balances
+from .models.fdx_broker_balance import FDXBrokerBalance
 from .wrappers.brokers import GetAccountsParams
-from .models.accounts import Accounts
+from .models.fdx_broker_account import FDXBrokerAccount
 from .wrappers.brokers import GetOrderFillsParams
-from .models.order_fill_response import OrderFillResponse
+from .models.fdx_broker_order_fill import FDXBrokerOrderFill
 from .wrappers.brokers import GetOrderEventsParams
-from .models.order_event_response import OrderEventResponse
+from .models.fdx_broker_order_event import FDXBrokerOrderEvent
 from .wrappers.brokers import GetOrderGroupsParams
-from .models.order_group_response import OrderGroupResponse
+from .models.fdx_broker_order_group import FDXBrokerOrderGroup
 from .wrappers.brokers import GetPositionLotsParams
-from .models.position_lot_response import PositionLotResponse
+from .models.fdx_broker_position_lot import FDXBrokerPositionLot
 from .wrappers.brokers import GetPositionLotFillsParams
-from .models.position_lot_fill_response import PositionLotFillResponse
+from .models.fdx_broker_position_lot_fill import FDXBrokerPositionLotFill
 
 
 class FinaticServer:
@@ -516,17 +516,8 @@ class FinaticServer:
             new_parsed = parsed._replace(query=new_query)
             portal_url = urlunparse(new_parsed)
 
-        # Add session ID and company ID to URL
-        from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
-        parsed = urlparse(portal_url)
-        query_params = parse_qs(parsed.query)
-        if self.session_id:
-            query_params['session_id'] = [self.session_id]
-        if self.company_id:
-            query_params['company_id'] = [self.company_id]
-        new_query = urlencode(query_params, doseq=True)
-        new_parsed = parsed._replace(query=new_query)
-        portal_url = urlunparse(new_parsed)
+        # Note: session_id and company_id should NOT be added to the portal URL
+        # The backend includes the token in the URL, and session context is handled via headers
 
         self.logger.debug('Portal URL generated', extra={'portal_url': portal_url})
         return portal_url
@@ -576,7 +567,7 @@ class FinaticServer:
         return response
 
 
-    async def get_all_orders(self, **kwargs) -> FinaticResponse[list[OrderResponse]]:
+    async def get_all_orders(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrder]]:
         """Get all orders across all pages.
         
         Auto-generated from paginated endpoint.
@@ -651,7 +642,7 @@ class FinaticServer:
         else:
             params = GetOrdersParams()
         
-        all_data: list[OrderResponse] = []
+        all_data: list[FDXBrokerOrder] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -701,7 +692,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_positions(self, **kwargs) -> FinaticResponse[list[PositionResponse]]:
+    async def get_all_positions(self, **kwargs) -> FinaticResponse[list[FDXBrokerPosition]]:
         """Get all positions across all pages.
         
         Auto-generated from paginated endpoint.
@@ -776,7 +767,7 @@ class FinaticServer:
         else:
             params = GetPositionsParams()
         
-        all_data: list[PositionResponse] = []
+        all_data: list[FDXBrokerPosition] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -826,7 +817,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_balances(self, **kwargs) -> FinaticResponse[list[Balances]]:
+    async def get_all_balances(self, **kwargs) -> FinaticResponse[list[FDXBrokerBalance]]:
         """Get all balances across all pages.
         
         Auto-generated from paginated endpoint.
@@ -901,7 +892,7 @@ class FinaticServer:
         else:
             params = GetBalancesParams()
         
-        all_data: list[Balances] = []
+        all_data: list[FDXBrokerBalance] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -951,7 +942,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_accounts(self, **kwargs) -> FinaticResponse[list[Accounts]]:
+    async def get_all_accounts(self, **kwargs) -> FinaticResponse[list[FDXBrokerAccount]]:
         """Get all accounts across all pages.
         
         Auto-generated from paginated endpoint.
@@ -1026,7 +1017,7 @@ class FinaticServer:
         else:
             params = GetAccountsParams()
         
-        all_data: list[Accounts] = []
+        all_data: list[FDXBrokerAccount] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -1076,7 +1067,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_order_fills(self, **kwargs) -> FinaticResponse[list[OrderFillResponse]]:
+    async def get_all_order_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderFill]]:
         """Get all order_fills across all pages.
         
         Auto-generated from paginated endpoint.
@@ -1096,7 +1087,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1111,7 +1102,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1127,7 +1118,8 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_order_fills(
-           *            connection_id='00000000-0000-0000-0000-000000000000'
+           *            connection_id='00000000-0000-0000-0000-000000000000',
+                    include_metadata=false
            * )
            * 
            * # Access the response data
@@ -1149,7 +1141,7 @@ class FinaticServer:
         else:
             params = GetOrderFillsParams()
         
-        all_data: list[OrderFillResponse] = []
+        all_data: list[FDXBrokerOrderFill] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -1199,7 +1191,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_order_events(self, **kwargs) -> FinaticResponse[list[OrderEventResponse]]:
+    async def get_all_order_events(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
         """Get all order_events across all pages.
         
         Auto-generated from paginated endpoint.
@@ -1219,7 +1211,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1234,7 +1226,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1250,7 +1242,8 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_order_events(
-           *            connection_id='00000000-0000-0000-0000-000000000000'
+           *            connection_id='00000000-0000-0000-0000-000000000000',
+                    include_metadata=false
            * )
            * 
            * # Access the response data
@@ -1272,7 +1265,7 @@ class FinaticServer:
         else:
             params = GetOrderEventsParams()
         
-        all_data: list[OrderEventResponse] = []
+        all_data: list[FDXBrokerOrderEvent] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -1322,7 +1315,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_order_groups(self, **kwargs) -> FinaticResponse[list[OrderGroupResponse]]:
+    async def get_all_order_groups(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderGroup]]:
         """Get all order_groups across all pages.
         
         Auto-generated from paginated endpoint.
@@ -1397,7 +1390,7 @@ class FinaticServer:
         else:
             params = GetOrderGroupsParams()
         
-        all_data: list[OrderGroupResponse] = []
+        all_data: list[FDXBrokerOrderGroup] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -1447,7 +1440,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_position_lots(self, **kwargs) -> FinaticResponse[list[PositionLotResponse]]:
+    async def get_all_position_lots(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLot]]:
         """Get all position_lots across all pages.
         
         Auto-generated from paginated endpoint.
@@ -1522,7 +1515,7 @@ class FinaticServer:
         else:
             params = GetPositionLotsParams()
         
-        all_data: list[PositionLotResponse] = []
+        all_data: list[FDXBrokerPositionLot] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -1572,7 +1565,7 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_position_lot_fills(self, **kwargs) -> FinaticResponse[list[PositionLotFillResponse]]:
+    async def get_all_position_lot_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLotFill]]:
         """Get all position_lot_fills across all pages.
         
         Auto-generated from paginated endpoint.
@@ -1645,7 +1638,7 @@ class FinaticServer:
         else:
             params = GetPositionLotFillsParams()
         
-        all_data: list[PositionLotFillResponse] = []
+        all_data: list[FDXBrokerPositionLotFill] = []
         offset = 0
         limit = 1000
         last_error = None
@@ -1822,7 +1815,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_brokers()
 
-    async def get_broker_connections(self, **kwargs) -> FinaticResponse[list[UserBrokerConnections]]:
+    async def get_broker_connections(self, **kwargs) -> FinaticResponse[list[UserBrokerConnectionWithPermissions]]:
         """List Broker Connections
         
         Convenience method that delegates to brokers wrapper.
@@ -1836,7 +1829,7 @@ class FinaticServer:
                      Example: get_broker_connections(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[UserBrokerConnections]]: Standard FinaticResponse format
+            FinaticResponse[list[UserBrokerConnectionWithPermissions]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -1948,7 +1941,7 @@ class FinaticServer:
         else:
             return await self._brokers.disconnect_company_from_broker()
 
-    async def get_orders(self, **kwargs) -> FinaticResponse[list[OrderResponse]]:
+    async def get_orders(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrder]]:
         """Get Orders
         
         Convenience method that delegates to brokers wrapper.
@@ -1962,7 +1955,7 @@ class FinaticServer:
                      Example: get_orders(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[OrderResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerOrder]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2024,7 +2017,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_orders()
 
-    async def get_positions(self, **kwargs) -> FinaticResponse[list[PositionResponse]]:
+    async def get_positions(self, **kwargs) -> FinaticResponse[list[FDXBrokerPosition]]:
         """Get Positions
         
         Convenience method that delegates to brokers wrapper.
@@ -2038,7 +2031,7 @@ class FinaticServer:
                      Example: get_positions(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[PositionResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerPosition]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2100,7 +2093,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_positions()
 
-    async def get_balances(self, **kwargs) -> FinaticResponse[list[Balances]]:
+    async def get_balances(self, **kwargs) -> FinaticResponse[list[FDXBrokerBalance]]:
         """Get Balances
         
         Convenience method that delegates to brokers wrapper.
@@ -2114,7 +2107,7 @@ class FinaticServer:
                      Example: get_balances(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[Balances]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerBalance]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2176,7 +2169,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_balances()
 
-    async def get_accounts(self, **kwargs) -> FinaticResponse[list[Accounts]]:
+    async def get_accounts(self, **kwargs) -> FinaticResponse[list[FDXBrokerAccount]]:
         """Get Accounts
         
         Convenience method that delegates to brokers wrapper.
@@ -2190,7 +2183,7 @@ class FinaticServer:
                      Example: get_accounts(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[Accounts]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerAccount]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2252,7 +2245,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_accounts()
 
-    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[OrderFillResponse]]:
+    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderFill]]:
         """Get Order Fills
         
         Convenience method that delegates to brokers wrapper.
@@ -2266,7 +2259,7 @@ class FinaticServer:
                      Example: get_order_fills(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[OrderFillResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerOrderFill]]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only
@@ -2337,7 +2330,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_order_fills()
 
-    async def get_order_events(self, **kwargs) -> FinaticResponse[list[OrderEventResponse]]:
+    async def get_order_events(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
         """Get Order Events
         
         Convenience method that delegates to brokers wrapper.
@@ -2351,7 +2344,7 @@ class FinaticServer:
                      Example: get_order_events(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[OrderEventResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerOrderEvent]]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only
@@ -2422,7 +2415,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_order_events()
 
-    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[OrderGroupResponse]]:
+    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderGroup]]:
         """Get Order Groups
         
         Convenience method that delegates to brokers wrapper.
@@ -2436,7 +2429,7 @@ class FinaticServer:
                      Example: get_order_groups(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[OrderGroupResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerOrderGroup]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2498,7 +2491,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_order_groups()
 
-    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[PositionLotResponse]]:
+    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLot]]:
         """Get Position Lots
         
         Convenience method that delegates to brokers wrapper.
@@ -2512,7 +2505,7 @@ class FinaticServer:
                      Example: get_position_lots(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[PositionLotResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerPositionLot]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2574,7 +2567,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_position_lots()
 
-    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[PositionLotFillResponse]]:
+    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLotFill]]:
         """Get Position Lot Fills
         
         Convenience method that delegates to brokers wrapper.
@@ -2588,7 +2581,7 @@ class FinaticServer:
                      Example: get_position_lot_fills(account_id="123", symbol="AAPL", limit=10, offset=0)
         
         Returns:
-            FinaticResponse[list[PositionLotFillResponse]]: Standard FinaticResponse format
+            FinaticResponse[list[FDXBrokerPositionLotFill]]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only

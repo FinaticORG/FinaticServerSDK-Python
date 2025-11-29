@@ -239,13 +239,38 @@ class FinaticDemo:
                     console.print(f"[red]  ❌ {name} ({error_msg})[/red]")
                     raise
 
+            # Helper to convert Pydantic models to dicts
+            def to_dict(obj):
+                """Convert Pydantic model or object to dict."""
+                if isinstance(obj, dict):
+                    return obj
+                if hasattr(obj, 'model_dump'):
+                    return obj.model_dump()
+                if hasattr(obj, '__dict__'):
+                    return {k: to_dict(v) for k, v in obj.__dict__.items() if not k.startswith('_')}
+                return obj
+            
+            # Helper to safely get value from dict or object
+            def safe_get(obj, key, default=None):
+                """Safely get value from dict or object attribute."""
+                if isinstance(obj, dict):
+                    return obj.get(key, default)
+                return getattr(obj, key, default)
+            
             # Helper to extract data from FinaticResponse
             def extract_data(response):
-                """Extract data from FinaticResponse dict."""
+                """Extract data from FinaticResponse dict or object."""
+                # Convert to dict if it's an object
+                if not isinstance(response, dict):
+                    response = to_dict(response)
+                
                 if isinstance(response, dict) and 'success' in response:
-                    return response.get('success', {}).get('data', []) if isinstance(response.get('success'), dict) else []
+                    data = response.get('success', {}).get('data', []) if isinstance(response.get('success'), dict) else []
+                    # Convert list items to dicts if they're objects
+                    return [to_dict(item) if not isinstance(item, dict) else item for item in data]
                 # Fallback for direct data (backward compatibility)
-                return response if isinstance(response, list) else []
+                data = response if isinstance(response, list) else []
+                return [to_dict(item) if not isinstance(item, dict) else item for item in data]
 
             # Step 5.1: Fetch orders for a specific Finatic account id
             console.print("\n[yellow]Step 5.1: Testing core methods...[/yellow]")
@@ -325,12 +350,28 @@ class FinaticDemo:
                 data = accounts_response.get('success', {}).get('data', []) if isinstance(accounts_response, dict) else []
                 console.print(f"[green]✅ Successfully retrieved {len(data)} accounts[/green]")
                 if len(data) > 0:
+                    # Show full response structure for first account
+                    import json
+                    first_account = data[0]
+                    console.print(f"[dim]First account structure (keys): {list(first_account.keys()) if isinstance(first_account, dict) else type(first_account)}[/dim]")
+                    console.print(f"[dim]First account (full JSON):[/dim]")
+                    console.print(Panel(json.dumps(first_account, indent=2, default=str), title="Account Response", border_style="dim"))
+                    
                     console.print("[dim]Account details:[/dim]")
                     for index, account in enumerate(data[:3], 1):
+                        # Ensure account is a dict
+                        account_dict = to_dict(account) if not isinstance(account, dict) else account
+                        
+                        # Python SDK converts camelCase to snake_case: accountId -> account_id
                         account_number = (
-                            account.get("account_number") or account.get("id") or "Unknown"
+                            account_dict.get("account_id")
+                            or account_dict.get("account_number")
+                            or account_dict.get("accountId")
+                            or account_dict.get("accountNumber")
+                            or account_dict.get("id")
+                            or "Unknown"
                         )
-                        broker_id = account.get("broker_id") or "Unknown"
+                        broker_id = account_dict.get("broker_id") or account_dict.get("brokerId") or "Unknown"
                         console.print(
                             f"[dim]  {index}. Account: {account_number} - Broker: {broker_id}[/dim]"
                         )
@@ -354,11 +395,47 @@ class FinaticDemo:
                 orders_result = data  # Store for later use
                 console.print(f"[green]✅ Successfully retrieved {len(data)} orders[/green]")
                 if len(data) > 0:
+                    # Show full response structure for first order
+                    import json
+                    first_order = data[0]
+                    console.print(f"[dim]First order structure (keys): {list(first_order.keys()) if isinstance(first_order, dict) else type(first_order)}[/dim]")
+                    console.print(f"[dim]First order (full JSON):[/dim]")
+                    console.print(Panel(json.dumps(first_order, indent=2, default=str), title="Order Response", border_style="dim"))
+                    
                     console.print("[dim]Order details:[/dim]")
                     for index, order in enumerate(data[:3], 1):
-                        symbol = order.get("symbol") or "Unknown"
-                        status = order.get("status") or order.get("order_status") or "Unknown"
-                        quantity = order.get("quantity") or order.get("order_qty") or "Unknown"
+                        # Ensure order is a dict (extract_data should handle this, but double-check)
+                        order_dict = to_dict(order) if not isinstance(order, dict) else order
+                        
+                        # Python SDK converts camelCase to snake_case: securityId -> security_id
+                        # FDX orders have symbol in legs[0].security_id
+                        symbol = "Unknown"
+                        legs = order_dict.get("legs") or []
+                        if len(legs) > 0:
+                            leg = to_dict(legs[0]) if not isinstance(legs[0], dict) else legs[0]
+                            symbol = leg.get("security_id") or leg.get("securityId") or "Unknown"
+                        else:
+                            symbol = order_dict.get("security_id") or order_dict.get("securityId") or "Unknown"
+                        
+                        # Status is at top level (snake_case in Python SDK)
+                        status = "Unknown"
+                        status_val = order_dict.get("status")
+                        # Handle anyOf union types (extract actual_instance if present)
+                        if isinstance(status_val, dict) and "actual_instance" in status_val:
+                            status = status_val["actual_instance"]
+                        elif status_val is not None:
+                            status = status_val
+                        
+                        # Quantity is in legs[0].quantity (snake_case)
+                        quantity = "Unknown"
+                        if len(legs) > 0:
+                            leg = to_dict(legs[0]) if not isinstance(legs[0], dict) else legs[0]
+                            qty_val = leg.get("quantity")
+                            if isinstance(qty_val, dict) and "actual_instance" in qty_val:
+                                quantity = qty_val["actual_instance"]
+                            elif qty_val is not None:
+                                quantity = qty_val
+                        
                         console.print(
                             f"[dim]  {index}. Symbol: {symbol} - Status: {status} - Quantity: {quantity}[/dim]"
                         )
@@ -379,16 +456,43 @@ class FinaticDemo:
                 data = balances_response.get('success', {}).get('data', []) if isinstance(balances_response, dict) else []
                 console.print(f"[green]✅ Successfully retrieved {len(data)} balances[/green]")
                 if len(data) > 0:
+                    # Show full response structure for first balance
+                    import json
+                    first_balance = data[0]
+                    console.print(f"[dim]First balance structure (keys): {list(first_balance.keys()) if isinstance(first_balance, dict) else type(first_balance)}[/dim]")
+                    console.print(f"[dim]First balance (full JSON):[/dim]")
+                    console.print(Panel(json.dumps(first_balance, indent=2, default=str), title="Balance Response", border_style="dim"))
+                    
                     console.print("[dim]Balance details:[/dim]")
                     for index, balance in enumerate(data[:3], 1):
-                        cash_balance = (
-                            balance.get("cash")
-                            or balance.get("buying_power")
-                            or balance.get("account_value")
-                            or "Unknown"
+                        # Ensure balance is a dict
+                        balance_dict = to_dict(balance) if not isinstance(balance, dict) else balance
+                        
+                        # Extract actual_instance from anyOf union types
+                        def extract_value(val):
+                            if isinstance(val, dict) and "actual_instance" in val:
+                                return val["actual_instance"]
+                            return val
+                        
+                        cash_balance_val = (
+                            balance_dict.get("current_balance")
+                            or balance_dict.get("available_balance")
+                            or balance_dict.get("cash_balance")
+                            or balance_dict.get("currentBalance")
+                            or balance_dict.get("availableBalance")
+                            or balance_dict.get("cashBalance")
+                            or balance_dict.get("buying_power")
+                            or balance_dict.get("buyingPower")
+                            or balance_dict.get("cash")
+                            or balance_dict.get("account_value")
                         )
+                        cash_balance = extract_value(cash_balance_val) if cash_balance_val is not None else "Unknown"
+                        
                         account_number = (
-                            balance.get("account_number") or balance.get("account_id") or "Unknown"
+                            balance_dict.get("account_id")
+                            or balance_dict.get("accountId")
+                            or balance_dict.get("account_number")
+                            or "Unknown"
                         )
                         console.print(
                             f"[dim]  {index}. Account: {account_number} - Balance: {cash_balance}[/dim]"
@@ -410,11 +514,38 @@ class FinaticDemo:
                 data = positions_response.get('success', {}).get('data', []) if isinstance(positions_response, dict) else []
                 console.print(f"[green]✅ Successfully retrieved {len(data)} positions[/green]")
                 if len(data) > 0:
+                    # Show full response structure for first position
+                    import json
+                    first_position = data[0]
+                    console.print(f"[dim]First position structure (keys): {list(first_position.keys()) if isinstance(first_position, dict) else type(first_position)}[/dim]")
+                    console.print(f"[dim]First position (full JSON):[/dim]")
+                    console.print(Panel(json.dumps(first_position, indent=2, default=str), title="Position Response", border_style="dim"))
+                    
                     console.print("[dim]Position details:[/dim]")
                     for index, position in enumerate(data[:3], 1):
-                        symbol = position.get("symbol") or "Unknown"
-                        quantity = position.get("quantity") or position.get("qty") or "Unknown"
-                        side = position.get("side") or "Unknown"
+                        # Ensure position is a dict
+                        position_dict = to_dict(position) if not isinstance(position, dict) else position
+                        
+                        # Extract actual_instance from anyOf union types
+                        def extract_value(val):
+                            if isinstance(val, dict) and "actual_instance" in val:
+                                return val["actual_instance"]
+                            return val
+                        
+                        # Python SDK converts camelCase to snake_case: securityId -> security_id
+                        symbol = (
+                            position_dict.get("security_id")
+                            or position_dict.get("securityId")
+                            or position_dict.get("symbol")
+                            or "Unknown"
+                        )
+                        
+                        qty_val = position_dict.get("quantity") or position_dict.get("qty")
+                        quantity = extract_value(qty_val) if qty_val is not None else "Unknown"
+                        
+                        side_val = position_dict.get("side")
+                        side = extract_value(side_val) if side_val is not None else "Unknown"
+                        
                         console.print(
                             f"[dim]  {index}. Symbol: {symbol} - Quantity: {quantity} - Side: {side}[/dim]"
                         )

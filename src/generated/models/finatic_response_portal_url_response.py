@@ -27,12 +27,12 @@ class FinaticResponsePortalUrlResponse(BaseModel):
     """
     FinaticResponsePortalUrlResponse
     """ # noqa: E501
-    id: Optional[StrictStr] = Field(default=None, alias="_id")
+    trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
     success: SuccessPayloadPortalUrlResponse = Field(description="Success payload containing data and optional meta")
     error: Optional[Dict[str, Any]] = None
     warning: Optional[List[Dict[str, Any]]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "success", "error", "warning"]
+    __properties: ClassVar[List[str]] = ["trace_id", "success", "error", "warning"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -105,7 +105,7 @@ class FinaticResponsePortalUrlResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_id": obj.get("_id"),
+            "trace_id": obj.get("trace_id") if obj.get("trace_id") is not None else '',
             "success": SuccessPayloadPortalUrlResponse.from_dict(obj["success"]) if obj.get("success") is not None else None,
             "error": obj.get("error"),
             "warning": obj.get("warning")

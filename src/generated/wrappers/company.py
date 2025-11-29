@@ -25,6 +25,7 @@ from ..utils.interceptors import (
     apply_error_interceptors,
 )
 from ..utils.enum_coercion import coerce_enum_value
+from ..utils.plain_object import convert_to_plain_object
 
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
@@ -155,26 +156,11 @@ class CompanyWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"

@@ -8,9 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release
 
-## [0.1.0] - YYYY-MM-DD
+- Features and improvements in development
+
+## [0.9.0] - 2025-11-28
 
 ### Added
+
 - Initial SDK release
+- Python SDK for Finatic Server API
+- Support for async/await patterns
+- Full API coverage with type hints
+- Comprehensive error handling

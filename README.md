@@ -24,56 +24,19 @@ Full documentation is available at [docs.finatic.com](/server/typescript).
 
 ```bash
 # Install dependencies
-uv sync --dev
+npm install
 
 # Build
-uv build
+npm run build
 
 # Run tests
-pytest
-
-# Format code
-black src tests
-isort src tests
+npm test
 
 # Lint
-flake8 src tests
-```
+npm run lint
 
-## Quality Checks
-
-Run all quality checks to ensure code quality:
-
-```bash
-# Run all quality checks (format, lint, type check, import check)
-python quality_check.py
-# or
-uv run python quality_check.py
-
-# Fix all auto-fixable issues (format, import sort)
-python quality_check.py --fix
-# or
-uv run python quality_check.py --fix
-```
-
-Individual quality checks:
-
-```bash
-# Format check (black)
-black --check src tests
-# Format fix (modifies files)
-black src tests
-
-# Import sort check
-isort --check-only src tests
-# Import sort fix (modifies files)
-isort src tests
-
-# Lint & import check (flake8)
-flake8 src tests
-
-# Type check (mypy)
-mypy src
+# Format
+npm run format
 ```
 
 ## License

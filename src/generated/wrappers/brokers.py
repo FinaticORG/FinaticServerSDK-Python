@@ -14,8 +14,6 @@ from ..configuration import Configuration
 from ..config import SdkConfig
 from ..types import FinaticResponse
 from ..models.account_status import AccountStatus
-from ..models.accounts import Accounts
-from ..models.balances import Balances
 from ..models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from ..models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
 from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
@@ -23,14 +21,16 @@ from ..models.broker_data_order_status_enum import BrokerDataOrderStatusEnum
 from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from ..models.broker_info import BrokerInfo
 from ..models.disconnect_action_result import DisconnectActionResult
-from ..models.order_event_response import OrderEventResponse
-from ..models.order_fill_response import OrderFillResponse
-from ..models.order_group_response import OrderGroupResponse
-from ..models.order_response import OrderResponse
-from ..models.position_lot_fill_response import PositionLotFillResponse
-from ..models.position_lot_response import PositionLotResponse
-from ..models.position_response import PositionResponse
-from ..models.user_broker_connections import UserBrokerConnections
+from ..models.fdx_broker_account import FDXBrokerAccount
+from ..models.fdx_broker_balance import FDXBrokerBalance
+from ..models.fdx_broker_order import FDXBrokerOrder
+from ..models.fdx_broker_order_event import FDXBrokerOrderEvent
+from ..models.fdx_broker_order_fill import FDXBrokerOrderFill
+from ..models.fdx_broker_order_group import FDXBrokerOrderGroup
+from ..models.fdx_broker_position import FDXBrokerPosition
+from ..models.fdx_broker_position_lot import FDXBrokerPositionLot
+from ..models.fdx_broker_position_lot_fill import FDXBrokerPositionLotFill
+from ..models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
 from ..utils.logger import get_logger
@@ -42,6 +42,7 @@ from ..utils.interceptors import (
     apply_error_interceptors,
 )
 from ..utils.enum_coercion import coerce_enum_value
+from ..utils.plain_object import convert_to_plain_object
 
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
@@ -73,7 +74,7 @@ class GetOrdersParams:
     offset: Optional[int] = None
     created_after: str = None
     created_before: str = None
-    with_metadata: Optional[bool] = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetPositionsParams:
@@ -89,7 +90,7 @@ class GetPositionsParams:
     offset: Optional[int] = None
     updated_after: str = None
     updated_before: str = None
-    with_metadata: Optional[bool] = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetBalancesParams:
@@ -102,7 +103,7 @@ class GetBalancesParams:
     offset: Optional[int] = None
     balance_created_after: str = None
     balance_created_before: str = None
-    with_metadata: Optional[bool] = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetAccountsParams:
@@ -114,7 +115,7 @@ class GetAccountsParams:
     currency: str = None
     limit: Optional[int] = None
     offset: Optional[int] = None
-    with_metadata: Optional[bool] = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetOrderFillsParams:
@@ -123,6 +124,7 @@ class GetOrderFillsParams:
     connection_id: str = None
     limit: Optional[int] = None
     offset: Optional[int] = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetOrderEventsParams:
@@ -131,6 +133,7 @@ class GetOrderEventsParams:
     connection_id: str = None
     limit: Optional[int] = None
     offset: Optional[int] = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetOrderGroupsParams:
@@ -141,6 +144,7 @@ class GetOrderGroupsParams:
     offset: Optional[int] = None
     created_after: str = None
     created_before: str = None
+    include_metadata: Optional[bool] = None
 
 @dataclass
 class GetPositionLotsParams:
@@ -287,26 +291,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -416,19 +405,20 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_broker_connections(self, **kwargs) -> FinaticResponse[list[UserBrokerConnections]]:
+    async def get_broker_connections(self, **kwargs) -> FinaticResponse[list[UserBrokerConnectionWithPermissions]]:
         """List Broker Connections
         
-        List all broker connections for the current user.
+        List all broker connections for the current user with permissions.
         
         This endpoint is accessible from the portal and uses session-only authentication.
-        Returns connections that the user has any permissions for.
+        Returns connections that the user has any permissions for, including the current
+        company's permissions (read/write) for each connection.
 
         Args:
         - **kwargs: No parameters required for this method
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[UserBrokerConnections]] format
-                     success: {data: list[UserBrokerConnections], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[UserBrokerConnectionWithPermissions]] format
+                     success: {data: list[UserBrokerConnectionWithPermissions], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -514,26 +504,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -626,7 +601,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[UserBrokerConnections]](
+            error_response = FinaticResponse[list[UserBrokerConnectionWithPermissions]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -746,26 +721,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -875,7 +835,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_orders(self, **kwargs) -> FinaticResponse[list[OrderResponse]]:
+    async def get_orders(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrder]]:
         """Get Orders
         
         Get orders for all authorized broker connections.
@@ -887,8 +847,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetOrdersParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[OrderResponse]] format
-                     success: {data: list[OrderResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrder]] format
+                     success: {data: list[FDXBrokerOrder], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -940,7 +900,7 @@ class BrokersWrapper:
         offset = getattr(params, 'offset', None)
         created_after = getattr(params, 'created_after', None)
         created_before = getattr(params, 'created_before', None)
-        with_metadata = getattr(params, 'with_metadata', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -986,7 +946,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_orders_api_v1_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, with_metadata=with_metadata, _headers=headers)
+                response = await self.api.get_orders_api_v1_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1002,26 +962,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -1114,7 +1059,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[OrderResponse]](
+            error_response = FinaticResponse[list[FDXBrokerOrder]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -1131,7 +1076,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_positions(self, **kwargs) -> FinaticResponse[list[PositionResponse]]:
+    async def get_positions(self, **kwargs) -> FinaticResponse[list[FDXBrokerPosition]]:
         """Get Positions
         
         Get positions for all authorized broker connections.
@@ -1143,8 +1088,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetPositionsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[PositionResponse]] format
-                     success: {data: list[PositionResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerPosition]] format
+                     success: {data: list[FDXBrokerPosition], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1196,7 +1141,7 @@ class BrokersWrapper:
         offset = getattr(params, 'offset', None)
         updated_after = getattr(params, 'updated_after', None)
         updated_before = getattr(params, 'updated_before', None)
-        with_metadata = getattr(params, 'with_metadata', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -1242,7 +1187,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_positions_api_v1_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, with_metadata=with_metadata, _headers=headers)
+                response = await self.api.get_positions_api_v1_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1258,26 +1203,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -1370,7 +1300,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[PositionResponse]](
+            error_response = FinaticResponse[list[FDXBrokerPosition]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -1387,7 +1317,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_balances(self, **kwargs) -> FinaticResponse[list[Balances]]:
+    async def get_balances(self, **kwargs) -> FinaticResponse[list[FDXBrokerBalance]]:
         """Get Balances
         
         Get balances for all authorized broker connections.
@@ -1399,8 +1329,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetBalancesParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[Balances]] format
-                     success: {data: list[Balances], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerBalance]] format
+                     success: {data: list[FDXBrokerBalance], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1449,7 +1379,7 @@ class BrokersWrapper:
         offset = getattr(params, 'offset', None)
         balance_created_after = getattr(params, 'balance_created_after', None)
         balance_created_before = getattr(params, 'balance_created_before', None)
-        with_metadata = getattr(params, 'with_metadata', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -1495,7 +1425,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_balances_api_v1_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, is_end_of_day_snapshot=is_end_of_day_snapshot, limit=limit, offset=offset, balance_created_after=balance_created_after, balance_created_before=balance_created_before, with_metadata=with_metadata, _headers=headers)
+                response = await self.api.get_balances_api_v1_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, is_end_of_day_snapshot=is_end_of_day_snapshot, limit=limit, offset=offset, balance_created_after=balance_created_after, balance_created_before=balance_created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1511,26 +1441,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -1623,7 +1538,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[Balances]](
+            error_response = FinaticResponse[list[FDXBrokerBalance]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -1640,7 +1555,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_accounts(self, **kwargs) -> FinaticResponse[list[Accounts]]:
+    async def get_accounts(self, **kwargs) -> FinaticResponse[list[FDXBrokerAccount]]:
         """Get Accounts
         
         Get accounts for all authorized broker connections.
@@ -1652,8 +1567,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetAccountsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[Accounts]] format
-                     success: {data: list[Accounts], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerAccount]] format
+                     success: {data: list[FDXBrokerAccount], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1701,7 +1616,7 @@ class BrokersWrapper:
         currency = getattr(params, 'currency', None)
         limit = getattr(params, 'limit', None)
         offset = getattr(params, 'offset', None)
-        with_metadata = getattr(params, 'with_metadata', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -1747,7 +1662,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, status=status, currency=currency, limit=limit, offset=offset, with_metadata=with_metadata, _headers=headers)
+                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, status=status, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1763,26 +1678,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -1875,7 +1775,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[Accounts]](
+            error_response = FinaticResponse[list[FDXBrokerAccount]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -1892,7 +1792,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[OrderFillResponse]]:
+    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderFill]]:
         """Get Order Fills
         
         Get order fills for a specific order.
@@ -1903,8 +1803,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetOrderFillsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[OrderFillResponse]] format
-                     success: {data: list[OrderFillResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrderFill]] format
+                     success: {data: list[FDXBrokerOrderFill], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1954,6 +1854,7 @@ class BrokersWrapper:
         connection_id = getattr(params, 'connection_id', None)
         limit = getattr(params, 'limit', None)
         offset = getattr(params, 'offset', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -1999,7 +1900,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_order_fills_api_v1_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
+                response = await self.api.get_order_fills_api_v1_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -2015,26 +1916,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -2127,7 +2013,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[OrderFillResponse]](
+            error_response = FinaticResponse[list[FDXBrokerOrderFill]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -2144,7 +2030,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_order_events(self, **kwargs) -> FinaticResponse[list[OrderEventResponse]]:
+    async def get_order_events(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
         """Get Order Events
         
         Get order events for a specific order.
@@ -2155,8 +2041,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetOrderEventsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[OrderEventResponse]] format
-                     success: {data: list[OrderEventResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrderEvent]] format
+                     success: {data: list[FDXBrokerOrderEvent], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2206,6 +2092,7 @@ class BrokersWrapper:
         connection_id = getattr(params, 'connection_id', None)
         limit = getattr(params, 'limit', None)
         offset = getattr(params, 'offset', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -2251,7 +2138,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_order_events_api_v1_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
+                response = await self.api.get_order_events_api_v1_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -2267,26 +2154,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -2379,7 +2251,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[OrderEventResponse]](
+            error_response = FinaticResponse[list[FDXBrokerOrderEvent]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -2396,7 +2268,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[OrderGroupResponse]]:
+    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderGroup]]:
         """Get Order Groups
         
         Get order groups.
@@ -2407,8 +2279,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetOrderGroupsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[OrderGroupResponse]] format
-                     success: {data: list[OrderGroupResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrderGroup]] format
+                     success: {data: list[FDXBrokerOrderGroup], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2455,6 +2327,7 @@ class BrokersWrapper:
         offset = getattr(params, 'offset', None)
         created_after = getattr(params, 'created_after', None)
         created_before = getattr(params, 'created_before', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -2500,7 +2373,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_order_groups_api_v1_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before, _headers=headers)
+                response = await self.api.get_order_groups_api_v1_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -2516,26 +2389,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -2628,7 +2486,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[OrderGroupResponse]](
+            error_response = FinaticResponse[list[FDXBrokerOrderGroup]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -2645,7 +2503,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[PositionLotResponse]]:
+    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLot]]:
         """Get Position Lots
         
         Get position lots (tax lots for positions).
@@ -2657,8 +2515,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetPositionLotsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[PositionLotResponse]] format
-                     success: {data: list[PositionLotResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerPositionLot]] format
+                     success: {data: list[FDXBrokerPositionLot], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2767,26 +2625,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -2879,7 +2722,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[PositionLotResponse]](
+            error_response = FinaticResponse[list[FDXBrokerPositionLot]](
                 success={'data': None},
                 error={
                     'message': error_message,
@@ -2896,7 +2739,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[PositionLotFillResponse]]:
+    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLotFill]]:
         """Get Position Lot Fills
         
         Get position lot fills for a specific lot.
@@ -2907,8 +2750,8 @@ class BrokersWrapper:
         - **kwargs: Optional keyword arguments that will be converted to GetPositionLotFillsParams object.
                      Example: get_orders(account_id="123", symbol="AAPL")
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[PositionLotFillResponse]] format
-                     success: {data: list[PositionLotFillResponse], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[list[FDXBrokerPositionLotFill]] format
+                     success: {data: list[FDXBrokerPositionLotFill], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -3019,26 +2862,11 @@ class BrokersWrapper:
                 response_data = response.data
                 if not response_data:
                     raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict
-                if hasattr(response_data, 'model_dump'):
-                    standard_response = response_data.model_dump(mode='json')
-                elif isinstance(response_data, dict):
-                    standard_response = response_data
-                else:
-                    raise ValueError(f'Unexpected response shape: response.data is not a Pydantic model or dict, got {type(response_data).__name__}')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
             elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it
-                if hasattr(response, 'model_dump'):
-                    standard_response = response.model_dump(mode='json')
-                elif isinstance(response, dict):
-                    standard_response = response
-                else:
-                    # Fallback: try to access attributes directly
-                    standard_response = {
-                        'success': getattr(response, 'success', None),
-                        'error': getattr(response, 'error', None),
-                        'warning': getattr(response, 'warning', None),
-                    }
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
             else:
                 # Unknown response structure
                 error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
@@ -3131,7 +2959,7 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[PositionLotFillResponse]](
+            error_response = FinaticResponse[list[FDXBrokerPositionLotFill]](
                 success={'data': None},
                 error={
                     'message': error_message,
