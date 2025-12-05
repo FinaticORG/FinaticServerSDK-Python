@@ -89,9 +89,8 @@ class FinaticServer:
         });
         ```
         """
-        # Create instance - extract base_url from sdk_config if provided
-        base_url = sdk_config.get('base_url') if isinstance(sdk_config, dict) else (sdk_config.base_url if sdk_config and hasattr(sdk_config, 'base_url') else None)
-        instance = cls(api_key, base_url, sdk_config)
+        # Create instance (base_url is extracted from sdk_config in __init__)
+        instance = cls(api_key, sdk_config)
         
         # Initialize session automatically
         try:
@@ -146,7 +145,6 @@ class FinaticServer:
     def __init__(
         self,
         api_key: str,
-        base_url: Optional[str] = None,
         sdk_config: Optional[SdkConfig] = None,
     ):
         """Initialize the client.
@@ -156,10 +154,17 @@ class FinaticServer:
         
         Args:
             api_key: Company API key
-            base_url: Base URL for API (defaults to https://api.finatic.dev)
-            sdk_config: Optional SDK configuration overrides
+            sdk_config: Optional SDK configuration overrides (includes base_url)
         """
         self.api_key = api_key
+        # Extract base_url from sdk_config if provided
+        base_url = None
+        if sdk_config:
+            if isinstance(sdk_config, dict):
+                base_url = sdk_config.get('base_url')
+            elif hasattr(sdk_config, 'base_url'):
+                base_url = sdk_config.base_url
+        
         self.config = Configuration(
             host=base_url or 'https://api.finatic.dev',
             api_key={'X-API-Key': api_key},
@@ -194,10 +199,6 @@ class FinaticServer:
         self._brokers = BrokersWrapper(BrokersApi(self.api_client), self.config, self.sdk_config)
         self._company = CompanyWrapper(CompanyApi(self.api_client), self.config, self.sdk_config)
         self._session = SessionWrapper(SessionApi(self.api_client), self.config, self.sdk_config)
-
-    async def initialize(self) -> None:
-        """Initialize the client (no-op for now, can be extended)."""
-        pass
 
     async def close(self) -> None:
         """Close the client and cleanup resources."""
