@@ -25,6 +25,9 @@ from .wrappers.brokers import BrokersWrapper
 from .wrappers.company import CompanyWrapper
 from .wrappers.session import SessionWrapper
 
+from .wrappers.company import GetCompanyParams
+from .wrappers.brokers import DisconnectCompanyFromBrokerParams, GetAccountsParams, GetBalancesParams, GetBrokerConnectionsParams, GetBrokersParams, GetOrderEventsParams, GetOrderFillsParams, GetOrderGroupsParams, GetOrdersParams, GetPositionLotFillsParams, GetPositionLotsParams, GetPositionsParams
+
 from .wrappers.brokers import GetOrdersParams
 from .models.fdx_broker_order import FDXBrokerOrder
 from .wrappers.brokers import GetPositionsParams
@@ -333,7 +336,7 @@ class FinaticServer:
 
     async def start_session(
         self,
-        user_id: Optional[str] = None
+        **kwargs
     ) -> FinaticResponse[SessionResponseData]:
         """Start a session using the API key from constructor.
         
@@ -344,6 +347,7 @@ class FinaticServer:
         @category session
         
         Args:
+            one_time_token: Optional one-time token. If not provided, will get one using API key.
             user_id: Optional user ID for direct authentication
         
         Returns:
@@ -357,17 +361,46 @@ class FinaticServer:
         
         @example
         ```python
-        result = await finatic.start_session(user_id='optional_user_id')
+        result = await finatic.start_session(one_time_token='token', user_id='optional_user_id')
         ```
         @example
         ```typescript-server
-        const result = await finatic.startSession(oneTimeToken, userId);
+        const result = await finatic.startSession({ oneTimeToken, userId });
         ```
         @example
         ```typescript-client
-        const result = await finatic.startSession(oneTimeToken, userId);
+        const result = await finatic.startSession({ oneTimeToken, userId });
         ```
         """
+        one_time_token = kwargs.get('one_time_token')
+        user_id = kwargs.get('user_id')
+        
+        # If token provided, use it directly
+        if one_time_token:
+            session_start_request = {"user_id": user_id} if user_id else {}
+            response = await self._session.start_session(
+                one_time_token=one_time_token,
+                session_start_request=session_start_request
+            )
+            
+            # Extract session data and set context if successful
+            if response.get('success') and not response.get('error'):
+                session_data = response['success'].get('data', {}) if isinstance(response.get('success'), dict) else {}
+                session_id = session_data.get('session_id', '') if isinstance(session_data, dict) else ''
+                company_id = session_data.get('company_id', '') if isinstance(session_data, dict) else ''
+                user_id = session_data.get('user_id', '') if isinstance(session_data, dict) else ''
+                csrf_token = ''
+                
+                if session_id and company_id:
+                    self.set_session_context(session_id, company_id, csrf_token)
+                
+                # Store user_id if present in response (for get_user_id() and is_authed())
+                if user_id:
+                    self.user_id = user_id
+            
+            return response
+        
+        # No token provided - get one using API key
         if not self.api_key:
             return {
                 'success': {'data': None, 'meta': None},
@@ -398,10 +431,15 @@ class FinaticServer:
                 session_data = response['success'].get('data', {}) if isinstance(response.get('success'), dict) else {}
                 session_id = session_data.get('session_id', '') if isinstance(session_data, dict) else ''
                 company_id = session_data.get('company_id', '') if isinstance(session_data, dict) else ''
+                user_id = session_data.get('user_id', '') if isinstance(session_data, dict) else ''
                 csrf_token = ''
                 
                 if session_id and company_id:
                     self.set_session_context(session_id, company_id, csrf_token)
+                
+                # Store user_id if present in response (for get_user_id() and is_authed())
+                if user_id:
+                    self.user_id = user_id
             
             # Return the standard response format (already FinaticResponse[SessionResponseData])
             return response
@@ -414,10 +452,7 @@ class FinaticServer:
 
     async def get_portal_url(
         self,
-        theme: Optional[str | Dict[str, Any]] = None,
-        brokers: Optional[List[str]] = None,
-        email: Optional[str] = None,
-        mode: Optional[str] = None
+        **kwargs
     ) -> str:
         """Get portal URL with optional theme, broker filters, email, and mode.
         
@@ -438,17 +473,22 @@ class FinaticServer:
         
         @example
         ```python
-        url = await finatic.get_portal_url('dark', ['broker-1'], 'user@example.com', 'dark')
+        url = await finatic.get_portal_url(theme='default', brokers=['broker-1'], email='user@example.com', mode='dark')
         ```
         @example
         ```typescript-server
-        const url = await finatic.getPortalUrl('dark', ['broker-1'], 'user@example.com', 'dark');
+        const url = await finatic.getPortalUrl({ theme: 'default', brokers: ['broker-1'], email: 'user@example.com', mode: 'dark' });
         ```
         @example
         ```typescript-client
-        const url = await finatic.getPortalUrl('dark', ['broker-1'], 'user@example.com', 'dark');
+        const url = await finatic.getPortalUrl({ theme: 'default', brokers: ['broker-1'], email: 'user@example.com', mode: 'dark' });
         ```
         """
+        theme = kwargs.get('theme')
+        brokers = kwargs.get('brokers')
+        email = kwargs.get('email')
+        mode = kwargs.get('mode')
+        
         if not self.session_id:
             raise ValueError('Session not initialized. Call start_session() first.')
 
@@ -634,6 +674,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -670,10 +711,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -759,6 +806,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -795,10 +843,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -884,6 +938,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -920,10 +975,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1009,6 +1070,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -1045,10 +1107,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1133,6 +1201,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -1169,10 +1238,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1257,6 +1332,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -1293,10 +1369,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1382,6 +1464,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -1418,10 +1501,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1507,6 +1596,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -1543,10 +1633,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1630,6 +1726,7 @@ class FinaticServer:
            * ```
         """
         from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
         
         # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
         if kwargs:
@@ -1666,10 +1763,16 @@ class FinaticServer:
             
             success_data = response.get('success', {})
             result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            if not result or len(result) == 0:
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
                 break
-            all_data.extend(result if isinstance(result, list) else [result])
-            if len(result) < limit:
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
                 break
             offset += limit
         
@@ -1693,15 +1796,15 @@ class FinaticServer:
     async def get_company(self, **kwargs) -> FinaticResponse[CompanyResponse]:
         """Get Company
         
+        Get public company details by ID (no user check, no sensitive data).
+        
         Convenience method that delegates to company wrapper.
         
                 @methodId get_company_api_v1_company__company_id__get
                 @category company
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_company(account_id="123", symbol="AAPL", limit=10, offset=0)
+            company_id (str): Company ID
         
         Returns:
             FinaticResponse[CompanyResponse]: Standard FinaticResponse format
@@ -1760,15 +1863,23 @@ class FinaticServer:
     async def get_brokers(self, **kwargs) -> FinaticResponse[list[BrokerInfo]]:
         """Get Brokers
         
+        Get all available brokers.
+        
+        This is a fast operation that returns a cached list of available brokers.
+        The list is loaded once at startup and never changes during runtime.
+        
+        Returns
+        -------
+        FinaticResponse[list[BrokerInfo]]
+            list of available brokers with their metadata.
+        
         Convenience method that delegates to brokers wrapper.
         
                 @methodId get_brokers_api_v1_brokers__get
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_brokers(account_id="123", symbol="AAPL", limit=10, offset=0)
+            **kwargs: No parameters required for this method
         
         Returns:
             FinaticResponse[list[BrokerInfo]]: Standard FinaticResponse format
@@ -1819,15 +1930,19 @@ class FinaticServer:
     async def get_broker_connections(self, **kwargs) -> FinaticResponse[list[UserBrokerConnectionWithPermissions]]:
         """List Broker Connections
         
+        List all broker connections for the current user with permissions.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns connections that the user has any permissions for, including the current
+        company's permissions (read/write) for each connection.
+        
         Convenience method that delegates to brokers wrapper.
         
                 @methodId list_broker_connections_api_v1_brokers_connections_get
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_broker_connections(account_id="123", symbol="AAPL", limit=10, offset=0)
+            **kwargs: No parameters required for this method
         
         Returns:
             FinaticResponse[list[UserBrokerConnectionWithPermissions]]: Standard FinaticResponse format
@@ -1878,15 +1993,18 @@ class FinaticServer:
     async def disconnect_company_from_broker(self, **kwargs) -> FinaticResponse[DisconnectActionResult]:
         """Disconnect Company From Broker
         
+        Remove a company's access to a broker connection.
+        
+        If the company is the only one with access, the entire connection is deleted.
+        If other companies have access, only the company's access is removed.
+        
         Convenience method that delegates to brokers wrapper.
         
                 @methodId disconnect_company_from_broker_api_v1_brokers_disconnect_company__connection_id__delete
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: disconnect_company_from_broker(account_id="123", symbol="AAPL", limit=10, offset=0)
+            connection_id (str): Connection ID
         
         Returns:
             FinaticResponse[DisconnectActionResult]: Standard FinaticResponse format
@@ -1942,8 +2060,13 @@ class FinaticServer:
         else:
             return await self._brokers.disconnect_company_from_broker()
 
-    async def get_orders(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrder]]:
+    async def get_orders(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrder]]:
         """Get Orders
+        
+        Get orders for all authorized broker connections.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns orders from connections the company has read access to.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -1951,12 +2074,21 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_orders(account_id="123", symbol="AAPL", limit=10, offset=0)
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            symbol (str, optional): Filter by symbol
+            order_status (BrokerDataOrderStatusEnum, optional): Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
+            side (BrokerDataOrderSideEnum, optional): Filter by order side (e.g., 'buy', 'sell')
+            asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
+            limit (int, optional): Maximum number of orders to return
+            offset (int, optional): Number of orders to skip for pagination
+            created_after (str, optional): Filter orders created after this timestamp
+            created_before (str, optional): Filter orders created before this timestamp
+            include_metadata (bool, optional): Include order metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerOrder]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerOrder]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2018,8 +2150,13 @@ class FinaticServer:
         else:
             return await self._brokers.get_orders()
 
-    async def get_positions(self, **kwargs) -> FinaticResponse[list[FDXBrokerPosition]]:
+    async def get_positions(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerPosition]]:
         """Get Positions
+        
+        Get positions for all authorized broker connections.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns positions from connections the company has read access to.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2027,12 +2164,21 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_positions(account_id="123", symbol="AAPL", limit=10, offset=0)
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            symbol (str, optional): Filter by symbol
+            side (BrokerDataOrderSideEnum, optional): Filter by position side (e.g., 'long', 'short')
+            asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
+            position_status (BrokerDataPositionStatusEnum, optional): Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+            limit (int, optional): Maximum number of positions to return
+            offset (int, optional): Number of positions to skip for pagination
+            updated_after (str, optional): Filter positions updated after this timestamp
+            updated_before (str, optional): Filter positions updated before this timestamp
+            include_metadata (bool, optional): Include position metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerPosition]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerPosition]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2094,8 +2240,13 @@ class FinaticServer:
         else:
             return await self._brokers.get_positions()
 
-    async def get_balances(self, **kwargs) -> FinaticResponse[list[FDXBrokerBalance]]:
+    async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerBalance]]:
         """Get Balances
+        
+        Get balances for all authorized broker connections.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns balances from connections the company has read access to.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2103,12 +2254,18 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_balances(account_id="123", symbol="AAPL", limit=10, offset=0)
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            is_end_of_day_snapshot (bool, optional): Filter by end-of-day snapshot status (true/false)
+            limit (int, optional): Maximum number of balances to return
+            offset (int, optional): Number of balances to skip for pagination
+            balance_created_after (str, optional): Filter balances created after this timestamp
+            balance_created_before (str, optional): Filter balances created before this timestamp
+            include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerBalance]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerBalance]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2170,8 +2327,13 @@ class FinaticServer:
         else:
             return await self._brokers.get_balances()
 
-    async def get_accounts(self, **kwargs) -> FinaticResponse[list[FDXBrokerAccount]]:
+    async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerAccount]]:
         """Get Accounts
+        
+        Get accounts for all authorized broker connections.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns accounts from connections the company has read access to.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2179,12 +2341,17 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_accounts(account_id="123", symbol="AAPL", limit=10, offset=0)
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
+            status (AccountStatus, optional): Filter by account status (e.g., 'active', 'inactive')
+            currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
+            limit (int, optional): Maximum number of accounts to return
+            offset (int, optional): Number of accounts to skip for pagination
+            include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerAccount]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerAccount]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2246,8 +2413,12 @@ class FinaticServer:
         else:
             return await self._brokers.get_accounts()
 
-    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderFill]]:
+    async def get_order_fills(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderFill]]:
         """Get Order Fills
+        
+        Get order fills for a specific order.
+        
+        This endpoint returns all execution fills for the specified order.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2255,12 +2426,14 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_order_fills(account_id="123", symbol="AAPL", limit=10, offset=0)
+            order_id (str): Order ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of fills to return
+            offset (int, optional): Number of fills to skip for pagination
+            include_metadata (bool, optional): Include fill metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerOrderFill]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerOrderFill]]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only
@@ -2331,8 +2504,12 @@ class FinaticServer:
         else:
             return await self._brokers.get_order_fills()
 
-    async def get_order_events(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
+    async def get_order_events(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderEvent]]:
         """Get Order Events
+        
+        Get order events for a specific order.
+        
+        This endpoint returns all lifecycle events for the specified order.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2340,12 +2517,14 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_order_events(account_id="123", symbol="AAPL", limit=10, offset=0)
+            order_id (str): Order ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of events to return
+            offset (int, optional): Number of events to skip for pagination
+            include_metadata (bool, optional): Include event metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerOrderEvent]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerOrderEvent]]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only
@@ -2416,8 +2595,12 @@ class FinaticServer:
         else:
             return await self._brokers.get_order_events()
 
-    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderGroup]]:
+    async def get_order_groups(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderGroup]]:
         """Get Order Groups
+        
+        Get order groups.
+        
+        This endpoint returns order groups that contain multiple orders.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2425,12 +2608,16 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_order_groups(account_id="123", symbol="AAPL", limit=10, offset=0)
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of order groups to return
+            offset (int, optional): Number of order groups to skip for pagination
+            created_after (str, optional): Filter order groups created after this timestamp
+            created_before (str, optional): Filter order groups created before this timestamp
+            include_metadata (bool, optional): Include group metadata in response (excluded by default for FDX compliance)
         
         Returns:
-            FinaticResponse[list[FDXBrokerOrderGroup]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerOrderGroup]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2492,8 +2679,13 @@ class FinaticServer:
         else:
             return await self._brokers.get_order_groups()
 
-    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLot]]:
+    async def get_position_lots(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerPositionLot]]:
         """Get Position Lots
+        
+        Get position lots (tax lots for positions).
+        
+        This endpoint returns tax lots for positions, which are used for tax reporting.
+        Each lot tracks when a position was opened/closed and at what prices.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2501,12 +2693,16 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_position_lots(account_id="123", symbol="AAPL", limit=10, offset=0)
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            symbol (str, optional): Filter by symbol
+            position_id (str, optional): Filter by position ID
+            limit (int, optional): Maximum number of position lots to return
+            offset (int, optional): Number of position lots to skip for pagination
         
         Returns:
-            FinaticResponse[list[FDXBrokerPositionLot]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerPositionLot]]: Standard FinaticResponse format
         @example
         ```python
         # Example with no parameters
@@ -2568,8 +2764,12 @@ class FinaticServer:
         else:
             return await self._brokers.get_position_lots()
 
-    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLotFill]]:
+    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerPositionLotFill]]:
         """Get Position Lot Fills
+        
+        Get position lot fills for a specific lot.
+        
+        This endpoint returns all fills associated with a specific position lot.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -2577,12 +2777,13 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            **kwargs: Optional keyword arguments passed to wrapper method.
-                     Only valid parameter fields are passed through (invalid keys are filtered out).
-                     Example: get_position_lot_fills(account_id="123", symbol="AAPL", limit=10, offset=0)
+            lot_id (str): Position lot ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of fills to return
+            offset (int, optional): Number of fills to skip for pagination
         
         Returns:
-            FinaticResponse[list[FDXBrokerPositionLotFill]]: Standard FinaticResponse format
+            FinaticResponse[PaginatedData[FDXBrokerPositionLotFill]]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only

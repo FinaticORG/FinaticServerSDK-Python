@@ -44,8 +44,7 @@ class FDXBrokerPosition(BaseModel):
     """
     FDX-style broker position schema.  Based on FDX Holdings, significantly extended for trading: - Short positions - Realized/unrealized P&L - Position lifecycle - Commission tracking
     """ # noqa: E501
-    id: Optional[StrictStr] = Field(default=None, alias="_id")
-    position_id: StrictStr = Field(description="Position identifier", alias="positionId")
+    id: Optional[StrictStr] = None
     account_id: StrictStr = Field(description="Broker account identifier", alias="accountId")
     connection_id: StrictStr = Field(description="User-broker connection identifier", alias="connectionId")
     security_id: StrictStr = Field(description="Symbol or instrument", alias="securityId")
@@ -74,7 +73,7 @@ class FDXBrokerPosition(BaseModel):
     instrument_key: Optional[StrictStr] = Field(default=None, alias="instrumentKey")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "positionId", "accountId", "connectionId", "securityId", "securityIdType", "assetType", "quantity", "side", "status", "costBasis", "marketValue", "units", "averageBuyPrice", "averageSellPrice", "costBasisWithCommission", "currentPrice", "realizedProfitLoss", "realizedProfitLossWithCommission", "realizedProfitLossPercent", "unrealizedProfitLoss", "unrealizedProfitLossPercent", "positionCreatedAt", "positionUpdatedAt", "positionClosedAt", "positionGroupId", "snapshotDate", "instrumentKey", "metadata"]
+    __properties: ClassVar[List[str]] = ["id", "accountId", "connectionId", "securityId", "securityIdType", "assetType", "quantity", "side", "status", "costBasis", "marketValue", "units", "averageBuyPrice", "averageSellPrice", "costBasisWithCommission", "currentPrice", "realizedProfitLoss", "realizedProfitLossWithCommission", "realizedProfitLossPercent", "unrealizedProfitLoss", "unrealizedProfitLossPercent", "positionCreatedAt", "positionUpdatedAt", "positionClosedAt", "positionGroupId", "snapshotDate", "instrumentKey", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -172,6 +171,11 @@ class FDXBrokerPosition(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if id (nullable) is None
+        # and model_fields_set contains the field
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
 
         # set to None if side (nullable) is None
         # and model_fields_set contains the field
@@ -290,8 +294,7 @@ class FDXBrokerPosition(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_id": obj.get("_id"),
-            "positionId": obj.get("positionId"),
+            "id": obj.get("id"),
             "accountId": obj.get("accountId"),
             "connectionId": obj.get("connectionId"),
             "securityId": obj.get("securityId"),

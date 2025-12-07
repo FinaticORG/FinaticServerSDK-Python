@@ -27,10 +27,12 @@ from ..utils.interceptors import (
 from ..utils.enum_coercion import coerce_enum_value
 from ..utils.plain_object import convert_to_plain_object
 
+
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
 class GetCompanyParams:
     """Input parameters for get_company_api_v1_company__company_id__get."""
+  # Company ID
     company_id: str
 
 
@@ -75,8 +77,7 @@ class CompanyWrapper:
         Get public company details by ID (no user check, no sensitive data).
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetCompanyParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            company_id (str): Company ID
         Returns:
         - Dict[str, Any]: FinaticResponse[CompanyResponse] format
                      success: {data: CompanyResponse, meta: dict | None}
@@ -181,6 +182,30 @@ class CompanyWrapper:
                 action='get_company'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_company,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -253,16 +278,17 @@ class CompanyWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[CompanyResponse](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 

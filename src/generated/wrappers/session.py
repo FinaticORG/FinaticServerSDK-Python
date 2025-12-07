@@ -31,16 +31,20 @@ from ..utils.interceptors import (
 from ..utils.enum_coercion import coerce_enum_value
 from ..utils.plain_object import convert_to_plain_object
 
+
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
 class InitSessionParams:
     """Input parameters for init_session_api_v1_session_init_post."""
+  # Company API key
     x_api_key: str
 
 @dataclass
 class StartSessionParams:
     """Input parameters for start_session_api_v1_session_start_post."""
+  # One-time use token obtained from init_session endpoint to authenticate and start the session
     one_time_token: str
+  # Session start request containing optional user ID to associate with the session
     session_start_request: SessionStartRequest
 
 @dataclass
@@ -51,6 +55,7 @@ class GetPortalUrlParams:
 @dataclass
 class GetSessionUserParams:
     """Input parameters for get_session_user_api_v1_session__session_id__user_get."""
+  # Session ID
     session_id: str
 
 
@@ -95,8 +100,7 @@ class SessionWrapper:
         Initialize a new session with company API key.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to InitSessionParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            x_api_key (str): Company API key
         Returns:
         - Dict[str, Any]: FinaticResponse[TokenResponseData] format
                      success: {data: TokenResponseData, meta: dict | None}
@@ -197,6 +201,30 @@ class SessionWrapper:
                 action='init_session'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.init_session,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -269,16 +297,17 @@ class SessionWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[TokenResponseData](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -292,8 +321,8 @@ class SessionWrapper:
         Start a session with a one-time token.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to StartSessionParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            one_time_token (str): One-time use token obtained from init_session endpoint to authenticate and start the session
+            session_start_request (SessionStartRequest): Session start request containing optional user ID to associate with the session
         Returns:
         - Dict[str, Any]: FinaticResponse[SessionResponseData] format
                      success: {data: SessionResponseData, meta: dict | None}
@@ -395,6 +424,30 @@ class SessionWrapper:
                 action='start_session'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.start_session,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -467,16 +520,17 @@ class SessionWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[SessionResponseData](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -607,6 +661,30 @@ class SessionWrapper:
                 action='get_portal_url'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_portal_url,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -679,16 +757,17 @@ class SessionWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[PortalUrlResponse](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -713,8 +792,7 @@ class SessionWrapper:
         - Validates that header session_id matches path session_id
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetSessionUserParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            session_id (str): Session ID
         Returns:
         - Dict[str, Any]: FinaticResponse[SessionUserResponse] format
                      success: {data: SessionUserResponse, meta: dict | None}
@@ -832,6 +910,30 @@ class SessionWrapper:
                 action='get_session_user'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_session_user,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -904,16 +1006,17 @@ class SessionWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[SessionUserResponse](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 

@@ -29,7 +29,7 @@ class FDXBrokerAccount(BaseModel):
     """
     FDX-style broker account schema following FDX Account patterns.  Extends FDX Account schema with broker-specific fields.
     """ # noqa: E501
-    id: Optional[StrictStr] = Field(default=None, alias="_id")
+    id: Optional[StrictStr] = None
     account_id: StrictStr = Field(description="Broker-provided account identifier", alias="accountId")
     account_number: Optional[StrictStr] = Field(default=None, alias="accountNumber")
     account_name: Optional[StrictStr] = Field(default=None, alias="accountName")
@@ -39,7 +39,8 @@ class FDXBrokerAccount(BaseModel):
     institution_id: Optional[StrictStr] = Field(default=None, alias="institutionId")
     currency_code: Optional[StrictStr] = Field(default=None, alias="currencyCode")
     account_status: Optional[Accountstatus] = Field(default=None, alias="accountStatus")
-    account_sub_type: Optional[StrictStr] = Field(default=None, alias="accountSubType")
+    sub_account_type: Optional[StrictStr] = Field(default=None, alias="subAccountType")
+    account_classification: Optional[StrictStr] = Field(default=None, alias="accountClassification")
     connection_id: StrictStr = Field(description="User-broker connection UUID", alias="connectionId")
     user_id: Optional[StrictStr] = Field(default=None, alias="userId")
     created_at: Optional[datetime] = Field(default=None, alias="createdAt")
@@ -53,7 +54,7 @@ class FDXBrokerAccount(BaseModel):
     positions_synced_at: Optional[datetime] = Field(default=None, alias="positionsSyncedAt")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "accountId", "accountNumber", "accountName", "accountType", "brokerId", "brokerName", "institutionId", "currencyCode", "accountStatus", "accountSubType", "connectionId", "userId", "createdAt", "updatedAt", "accountCreatedAt", "accountUpdatedAt", "accountFirstTradeAt", "lastSyncedAt", "balancesSyncedAt", "ordersSyncedAt", "positionsSyncedAt", "metadata"]
+    __properties: ClassVar[List[str]] = ["id", "accountId", "accountNumber", "accountName", "accountType", "brokerId", "brokerName", "institutionId", "currencyCode", "accountStatus", "subAccountType", "accountClassification", "connectionId", "userId", "createdAt", "updatedAt", "accountCreatedAt", "accountUpdatedAt", "accountFirstTradeAt", "lastSyncedAt", "balancesSyncedAt", "ordersSyncedAt", "positionsSyncedAt", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -107,6 +108,11 @@ class FDXBrokerAccount(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if id (nullable) is None
+        # and model_fields_set contains the field
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
+
         # set to None if account_number (nullable) is None
         # and model_fields_set contains the field
         if self.account_number is None and "account_number" in self.model_fields_set:
@@ -137,10 +143,15 @@ class FDXBrokerAccount(BaseModel):
         if self.account_status is None and "account_status" in self.model_fields_set:
             _dict['accountStatus'] = None
 
-        # set to None if account_sub_type (nullable) is None
+        # set to None if sub_account_type (nullable) is None
         # and model_fields_set contains the field
-        if self.account_sub_type is None and "account_sub_type" in self.model_fields_set:
-            _dict['accountSubType'] = None
+        if self.sub_account_type is None and "sub_account_type" in self.model_fields_set:
+            _dict['subAccountType'] = None
+
+        # set to None if account_classification (nullable) is None
+        # and model_fields_set contains the field
+        if self.account_classification is None and "account_classification" in self.model_fields_set:
+            _dict['accountClassification'] = None
 
         # set to None if user_id (nullable) is None
         # and model_fields_set contains the field
@@ -209,7 +220,7 @@ class FDXBrokerAccount(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_id": obj.get("_id"),
+            "id": obj.get("id"),
             "accountId": obj.get("accountId"),
             "accountNumber": obj.get("accountNumber"),
             "accountName": obj.get("accountName"),
@@ -219,7 +230,8 @@ class FDXBrokerAccount(BaseModel):
             "institutionId": obj.get("institutionId"),
             "currencyCode": obj.get("currencyCode"),
             "accountStatus": Accountstatus.from_dict(obj["accountStatus"]) if obj.get("accountStatus") is not None else None,
-            "accountSubType": obj.get("accountSubType"),
+            "subAccountType": obj.get("subAccountType"),
+            "accountClassification": obj.get("accountClassification"),
             "connectionId": obj.get("connectionId"),
             "userId": obj.get("userId"),
             "createdAt": obj.get("createdAt"),

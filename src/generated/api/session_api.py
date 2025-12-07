@@ -912,8 +912,8 @@ class SessionApi:
     @validate_call
     async def start_session_api_v1_session_start_post(
         self,
-        one_time_token: StrictStr,
-        session_start_request: SessionStartRequest,
+        one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
+        session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -931,9 +931,9 @@ class SessionApi:
 
         Start a session with a one-time token.
 
-        :param one_time_token: (required)
+        :param one_time_token: One-time use token obtained from init_session endpoint to authenticate and start the session (required)
         :type one_time_token: str
-        :param session_start_request: (required)
+        :param session_start_request: Session start request containing optional user ID to associate with the session (required)
         :type session_start_request: SessionStartRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -991,8 +991,8 @@ class SessionApi:
     @validate_call
     async def start_session_api_v1_session_start_post_with_http_info(
         self,
-        one_time_token: StrictStr,
-        session_start_request: SessionStartRequest,
+        one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
+        session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1010,9 +1010,9 @@ class SessionApi:
 
         Start a session with a one-time token.
 
-        :param one_time_token: (required)
+        :param one_time_token: One-time use token obtained from init_session endpoint to authenticate and start the session (required)
         :type one_time_token: str
-        :param session_start_request: (required)
+        :param session_start_request: Session start request containing optional user ID to associate with the session (required)
         :type session_start_request: SessionStartRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1070,8 +1070,8 @@ class SessionApi:
     @validate_call
     async def start_session_api_v1_session_start_post_without_preload_content(
         self,
-        one_time_token: StrictStr,
-        session_start_request: SessionStartRequest,
+        one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
+        session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1089,9 +1089,9 @@ class SessionApi:
 
         Start a session with a one-time token.
 
-        :param one_time_token: (required)
+        :param one_time_token: One-time use token obtained from init_session endpoint to authenticate and start the session (required)
         :type one_time_token: str
-        :param session_start_request: (required)
+        :param session_start_request: Session start request containing optional user ID to associate with the session (required)
         :type session_start_request: SessionStartRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request

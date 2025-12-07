@@ -66,11 +66,9 @@ async def main():
     )
 
     # Session methods
-    token = await finatic.get_token()  # Optional: get_token(api_key="custom-key")
-    session_result = await finatic.start_session()  # Optional: start_session(user_id="user-id")
-    portal_url = (
-        await finatic.get_portal_url()
-    )  # Optional: get_portal_url(theme="dark", brokers=["broker1"], email="email", mode="dark")
+    token = await finatic.get_token()
+    session_result = await finatic.start_session()
+    portal_url = await finatic.get_portal_url()
 
     if not (await wait_for_portal_authentication(portal_url)):
         return
@@ -78,70 +76,53 @@ async def main():
     session_user = await finatic.get_session_user()
 
     # Company methods
-    company = await finatic.get_company(company_id="company-id")  # Required: company_id
+    # company = await finatic.get_company(company_id="company-id")  # Required: company_id (as kwarg)
 
     # Broker methods
-    brokers = await finatic.get_brokers()  # Optional: get_brokers()
-    broker_connections = (
-        await finatic.get_broker_connections()
-    )  # Optional: get_broker_connections()
-    disconnect_result = await finatic.disconnect_company_from_broker(
-        connection_id="connection-id"
-    )  # Required: connection_id
-
-    # Data methods - get_all_* (paginated, fetches all pages)
-    all_accounts = (
-        await finatic.get_all_accounts()
-    )  # Optional: get_all_accounts(account_id="id", broker_id="id")
-    all_orders = (
-        await finatic.get_all_orders()
-    )  # Optional: get_all_orders(account_id="id", broker_id="id", status="status")
-    all_positions = (
-        await finatic.get_all_positions()
-    )  # Optional: get_all_positions(account_id="id", broker_id="id")
-    all_balances = (
-        await finatic.get_all_balances()
-    )  # Optional: get_all_balances(account_id="id", broker_id="id")
-    all_order_fills = await finatic.get_all_order_fills(order_id="order-id")  # Required: order_id
-    all_order_events = await finatic.get_all_order_events(order_id="order-id")  # Required: order_id
-    all_order_groups = (
-        await finatic.get_all_order_groups()
-    )  # Optional: get_all_order_groups(account_id="id", broker_id="id")
-    all_position_lots = (
-        await finatic.get_all_position_lots()
-    )  # Optional: get_all_position_lots(account_id="id", broker_id="id")
-    all_position_lot_fills = await finatic.get_all_position_lot_fills(
-        lot_id="lot-id"
-    )  # Required: lot_id
+    brokers = await finatic.get_brokers()
+    broker_connections = await finatic.get_broker_connections()
+    # disconnect_result = await finatic.disconnect_company_from_broker(
+    #     connection_id="connection-id"
+    # )  # Required: connection_id (as kwarg)
 
     # Data methods - get_* (single page)
-    accounts = (
-        await finatic.get_accounts()
-    )  # Optional: get_accounts(account_id="id", broker_id="id", limit=10, offset=0)
-    orders = (
-        await finatic.get_orders()
-    )  # Optional: get_orders(account_id="id", broker_id="id", status="status", limit=10, offset=0)
-    positions = (
-        await finatic.get_positions()
-    )  # Optional: get_positions(account_id="id", broker_id="id", limit=10, offset=0)
-    balances = (
-        await finatic.get_balances()
-    )  # Optional: get_balances(account_id="id", broker_id="id", limit=10, offset=0)
-    order_fills = await finatic.get_order_fills(
-        order_id="order-id"
-    )  # Required: order_id, Optional: limit=10, offset=0
-    order_events = await finatic.get_order_events(
-        order_id="order-id"
-    )  # Required: order_id, Optional: limit=10, offset=0
-    order_groups = (
-        await finatic.get_order_groups()
-    )  # Optional: get_order_groups(account_id="id", broker_id="id", limit=10, offset=0)
-    position_lots = (
-        await finatic.get_position_lots()
-    )  # Optional: get_position_lots(account_id="id", broker_id="id", limit=10, offset=0)
-    position_lot_fills = await finatic.get_position_lot_fills(
-        lot_id="lot-id"
-    )  # Required: lot_id, Optional: limit=10, offset=0
+    accounts = await finatic.get_accounts()
+    orders = await finatic.get_orders()
+    positions = await finatic.get_positions()
+    balances = await finatic.get_balances()
+    if orders.get("success"):
+        print("We are in orders")
+        paginated_data = orders["success"]["data"]
+        print(paginated_data)
+        if paginated_data.has_more:
+            print("orders has more")
+            next_order = await paginated_data.next_page()
+            last_order = await paginated_data.last_page()
+            first_order = await paginated_data.first_page()
+    # order_fills = await finatic.get_order_fills(
+    #     order_id="order-id"
+    # )  # Required: order_id, Optional: limit=10, offset=0
+    # order_events = await finatic.get_order_events(
+    #     order_id="order-id"
+    # )  # Required: order_id, Optional: limit=10, offset=0
+    order_groups = await finatic.get_order_groups()
+    position_lots = await finatic.get_position_lots()
+    # position_lot_fills = await finatic.get_position_lot_fills(
+    #     lot_id="lot-id"
+    # )  # Required: lot_id, Optional: limit=10, offset=0
+
+    # Data methods - get_all_* (paginated, fetches all pages)
+    all_accounts = await finatic.get_all_accounts()
+    all_orders = await finatic.get_all_orders()
+    all_positions = await finatic.get_all_positions()
+    all_balances = await finatic.get_all_balances()
+    # all_order_fills = await finatic.get_all_order_fills(order_id="order-id")  # Required: order_id
+    # all_order_events = await finatic.get_all_order_events(order_id="order-id")  # Required: order_id
+    all_order_groups = await finatic.get_all_order_groups()
+    all_position_lots = await finatic.get_all_position_lots()
+    # all_position_lot_fills = await finatic.get_all_position_lot_fills(
+    #     lot_id="lot-id"
+    # )  # Required: lot_id
 
 
 if __name__ == "__main__":

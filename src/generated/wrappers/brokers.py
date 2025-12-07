@@ -43,6 +43,8 @@ from ..utils.interceptors import (
 )
 from ..utils.enum_coercion import coerce_enum_value
 from ..utils.plain_object import convert_to_plain_object
+from ..utils.pagination import PaginatedData, PaginationMeta
+
 
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
@@ -58,111 +60,181 @@ class GetBrokerConnectionsParams:
 @dataclass
 class DisconnectCompanyFromBrokerParams:
     """Input parameters for disconnect_company_from_broker_api_v1_brokers_disconnect_company__connection_id__delete."""
+  # Connection ID
     connection_id: str
 
 @dataclass
 class GetOrdersParams:
     """Input parameters for get_orders_api_v1_brokers_data_orders_get."""
+  # Filter by broker ID
     broker_id: str = None
+  # Filter by connection ID
     connection_id: str = None
+  # Filter by broker provided account ID
     account_id: str = None
+  # Filter by symbol
     symbol: str = None
+  # Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
     order_status: BrokerDataOrderStatusEnum = None
+  # Filter by order side (e.g., 'buy', 'sell')
     side: BrokerDataOrderSideEnum = None
+  # Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
     asset_type: BrokerDataAssetTypeEnum = None
+  # Maximum number of orders to return
     limit: Optional[int] = None
+  # Number of orders to skip for pagination
     offset: Optional[int] = None
+  # Filter orders created after this timestamp
     created_after: str = None
+  # Filter orders created before this timestamp
     created_before: str = None
+  # Include order metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetPositionsParams:
     """Input parameters for get_positions_api_v1_brokers_data_positions_get."""
+  # Filter by broker ID
     broker_id: str = None
+  # Filter by connection ID
     connection_id: str = None
+  # Filter by broker provided account ID
     account_id: str = None
+  # Filter by symbol
     symbol: str = None
+  # Filter by position side (e.g., 'long', 'short')
     side: BrokerDataOrderSideEnum = None
+  # Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
     asset_type: BrokerDataAssetTypeEnum = None
+  # Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
     position_status: BrokerDataPositionStatusEnum = None
+  # Maximum number of positions to return
     limit: Optional[int] = None
+  # Number of positions to skip for pagination
     offset: Optional[int] = None
+  # Filter positions updated after this timestamp
     updated_after: str = None
+  # Filter positions updated before this timestamp
     updated_before: str = None
+  # Include position metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetBalancesParams:
     """Input parameters for get_balances_api_v1_brokers_data_balances_get."""
+  # Filter by broker ID
     broker_id: str = None
+  # Filter by connection ID
     connection_id: str = None
+  # Filter by broker provided account ID
     account_id: str = None
+  # Filter by end-of-day snapshot status (true/false)
     is_end_of_day_snapshot: Optional[bool] = None
+  # Maximum number of balances to return
     limit: Optional[int] = None
+  # Number of balances to skip for pagination
     offset: Optional[int] = None
+  # Filter balances created after this timestamp
     balance_created_after: str = None
+  # Filter balances created before this timestamp
     balance_created_before: str = None
+  # Include balance metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetAccountsParams:
     """Input parameters for get_accounts_api_v1_brokers_data_accounts_get."""
+  # Filter by broker ID
     broker_id: str = None
+  # Filter by connection ID
     connection_id: str = None
+  # Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
     account_type: BrokerDataAccountTypeEnum = None
+  # Filter by account status (e.g., 'active', 'inactive')
     status: AccountStatus = None
+  # Filter by currency (e.g., 'USD', 'EUR')
     currency: str = None
+  # Maximum number of accounts to return
     limit: Optional[int] = None
+  # Number of accounts to skip for pagination
     offset: Optional[int] = None
+  # Include connection metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetOrderFillsParams:
     """Input parameters for get_order_fills_api_v1_brokers_data_orders__order_id__fills_get."""
+  # Order ID
     order_id: str
+  # Filter by connection ID
     connection_id: str = None
+  # Maximum number of fills to return
     limit: Optional[int] = None
+  # Number of fills to skip for pagination
     offset: Optional[int] = None
+  # Include fill metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetOrderEventsParams:
     """Input parameters for get_order_events_api_v1_brokers_data_orders__order_id__events_get."""
+  # Order ID
     order_id: str
+  # Filter by connection ID
     connection_id: str = None
+  # Maximum number of events to return
     limit: Optional[int] = None
+  # Number of events to skip for pagination
     offset: Optional[int] = None
+  # Include event metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetOrderGroupsParams:
     """Input parameters for get_order_groups_api_v1_brokers_data_orders_groups_get."""
+  # Filter by broker ID
     broker_id: str = None
+  # Filter by connection ID
     connection_id: str = None
+  # Maximum number of order groups to return
     limit: Optional[int] = None
+  # Number of order groups to skip for pagination
     offset: Optional[int] = None
+  # Filter order groups created after this timestamp
     created_after: str = None
+  # Filter order groups created before this timestamp
     created_before: str = None
+  # Include group metadata in response (excluded by default for FDX compliance)
     include_metadata: Optional[bool] = None
 
 @dataclass
 class GetPositionLotsParams:
     """Input parameters for get_position_lots_api_v1_brokers_data_positions_lots_get."""
+  # Filter by broker ID
     broker_id: str = None
+  # Filter by connection ID
     connection_id: str = None
+  # Filter by broker provided account ID
     account_id: str = None
+  # Filter by symbol
     symbol: str = None
+  # Filter by position ID
     position_id: str = None
+  # Maximum number of position lots to return
     limit: Optional[int] = None
+  # Number of position lots to skip for pagination
     offset: Optional[int] = None
 
 @dataclass
 class GetPositionLotFillsParams:
     """Input parameters for get_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get."""
+  # Position lot ID
     lot_id: str
+  # Filter by connection ID
     connection_id: str = None
+  # Maximum number of fills to return
     limit: Optional[int] = None
+  # Number of fills to skip for pagination
     offset: Optional[int] = None
 
 
@@ -316,6 +388,30 @@ class BrokersWrapper:
                 action='get_brokers'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_brokers,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -388,16 +484,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[BrokerInfo]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -529,6 +626,30 @@ class BrokersWrapper:
                 action='get_broker_connections'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_broker_connections,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -601,16 +722,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[UserBrokerConnectionWithPermissions]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -627,8 +749,7 @@ class BrokersWrapper:
         If other companies have access, only the company's access is removed.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to DisconnectCompanyFromBrokerParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            connection_id (str): Connection ID
         Returns:
         - Dict[str, Any]: FinaticResponse[DisconnectActionResult] format
                      success: {data: DisconnectActionResult, meta: dict | None}
@@ -746,6 +867,30 @@ class BrokersWrapper:
                 action='disconnect_company_from_broker'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = False
+            has_offset = False
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.disconnect_company_from_broker,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -818,16 +963,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[DisconnectActionResult](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -835,7 +981,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_orders(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrder]]:
+    async def get_orders(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrder]]:
         """Get Orders
         
         Get orders for all authorized broker connections.
@@ -844,11 +990,21 @@ class BrokersWrapper:
         Returns orders from connections the company has read access to.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetOrdersParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            symbol (str, optional): Filter by symbol
+            order_status (BrokerDataOrderStatusEnum, optional): Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
+            side (BrokerDataOrderSideEnum, optional): Filter by order side (e.g., 'buy', 'sell')
+            asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
+            limit (int, optional): Maximum number of orders to return
+            offset (int, optional): Number of orders to skip for pagination
+            created_after (str, optional): Filter orders created after this timestamp
+            created_before (str, optional): Filter orders created before this timestamp
+            include_metadata (bool, optional): Include order metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrder]] format
-                     success: {data: list[FDXBrokerOrder], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrder]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -987,6 +1143,30 @@ class BrokersWrapper:
                 action='get_orders'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_orders,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -1059,16 +1239,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerOrder]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -1076,7 +1257,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_positions(self, **kwargs) -> FinaticResponse[list[FDXBrokerPosition]]:
+    async def get_positions(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerPosition]]:
         """Get Positions
         
         Get positions for all authorized broker connections.
@@ -1085,11 +1266,21 @@ class BrokersWrapper:
         Returns positions from connections the company has read access to.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetPositionsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            symbol (str, optional): Filter by symbol
+            side (BrokerDataOrderSideEnum, optional): Filter by position side (e.g., 'long', 'short')
+            asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
+            position_status (BrokerDataPositionStatusEnum, optional): Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+            limit (int, optional): Maximum number of positions to return
+            offset (int, optional): Number of positions to skip for pagination
+            updated_after (str, optional): Filter positions updated after this timestamp
+            updated_before (str, optional): Filter positions updated before this timestamp
+            include_metadata (bool, optional): Include position metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerPosition]] format
-                     success: {data: list[FDXBrokerPosition], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerPosition]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1228,6 +1419,30 @@ class BrokersWrapper:
                 action='get_positions'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_positions,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -1300,16 +1515,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerPosition]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -1317,7 +1533,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_balances(self, **kwargs) -> FinaticResponse[list[FDXBrokerBalance]]:
+    async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerBalance]]:
         """Get Balances
         
         Get balances for all authorized broker connections.
@@ -1326,11 +1542,18 @@ class BrokersWrapper:
         Returns balances from connections the company has read access to.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetBalancesParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            is_end_of_day_snapshot (bool, optional): Filter by end-of-day snapshot status (true/false)
+            limit (int, optional): Maximum number of balances to return
+            offset (int, optional): Number of balances to skip for pagination
+            balance_created_after (str, optional): Filter balances created after this timestamp
+            balance_created_before (str, optional): Filter balances created before this timestamp
+            include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerBalance]] format
-                     success: {data: list[FDXBrokerBalance], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerBalance]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1466,6 +1689,30 @@ class BrokersWrapper:
                 action='get_balances'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_balances,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -1538,16 +1785,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerBalance]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -1555,7 +1803,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_accounts(self, **kwargs) -> FinaticResponse[list[FDXBrokerAccount]]:
+    async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerAccount]]:
         """Get Accounts
         
         Get accounts for all authorized broker connections.
@@ -1564,11 +1812,17 @@ class BrokersWrapper:
         Returns accounts from connections the company has read access to.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetAccountsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
+            status (AccountStatus, optional): Filter by account status (e.g., 'active', 'inactive')
+            currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
+            limit (int, optional): Maximum number of accounts to return
+            offset (int, optional): Number of accounts to skip for pagination
+            include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerAccount]] format
-                     success: {data: list[FDXBrokerAccount], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerAccount]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1703,6 +1957,30 @@ class BrokersWrapper:
                 action='get_accounts'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_accounts,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -1775,16 +2053,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerAccount]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -1792,7 +2071,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_order_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderFill]]:
+    async def get_order_fills(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderFill]]:
         """Get Order Fills
         
         Get order fills for a specific order.
@@ -1800,11 +2079,14 @@ class BrokersWrapper:
         This endpoint returns all execution fills for the specified order.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetOrderFillsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            order_id (str): Order ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of fills to return
+            offset (int, optional): Number of fills to skip for pagination
+            include_metadata (bool, optional): Include fill metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrderFill]] format
-                     success: {data: list[FDXBrokerOrderFill], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrderFill]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1941,6 +2223,30 @@ class BrokersWrapper:
                 action='get_order_fills'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_order_fills,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -2013,16 +2319,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerOrderFill]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -2030,7 +2337,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_order_events(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
+    async def get_order_events(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderEvent]]:
         """Get Order Events
         
         Get order events for a specific order.
@@ -2038,11 +2345,14 @@ class BrokersWrapper:
         This endpoint returns all lifecycle events for the specified order.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetOrderEventsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            order_id (str): Order ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of events to return
+            offset (int, optional): Number of events to skip for pagination
+            include_metadata (bool, optional): Include event metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrderEvent]] format
-                     success: {data: list[FDXBrokerOrderEvent], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrderEvent]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2179,6 +2489,30 @@ class BrokersWrapper:
                 action='get_order_events'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_order_events,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -2251,16 +2585,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerOrderEvent]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -2268,7 +2603,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_order_groups(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderGroup]]:
+    async def get_order_groups(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderGroup]]:
         """Get Order Groups
         
         Get order groups.
@@ -2276,11 +2611,16 @@ class BrokersWrapper:
         This endpoint returns order groups that contain multiple orders.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetOrderGroupsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of order groups to return
+            offset (int, optional): Number of order groups to skip for pagination
+            created_after (str, optional): Filter order groups created after this timestamp
+            created_before (str, optional): Filter order groups created before this timestamp
+            include_metadata (bool, optional): Include group metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerOrderGroup]] format
-                     success: {data: list[FDXBrokerOrderGroup], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrderGroup]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2414,6 +2754,30 @@ class BrokersWrapper:
                 action='get_order_groups'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_order_groups,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -2486,16 +2850,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerOrderGroup]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -2503,7 +2868,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_position_lots(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLot]]:
+    async def get_position_lots(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerPositionLot]]:
         """Get Position Lots
         
         Get position lots (tax lots for positions).
@@ -2512,11 +2877,16 @@ class BrokersWrapper:
         Each lot tracks when a position was opened/closed and at what prices.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetPositionLotsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID
+            symbol (str, optional): Filter by symbol
+            position_id (str, optional): Filter by position ID
+            limit (int, optional): Maximum number of position lots to return
+            offset (int, optional): Number of position lots to skip for pagination
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerPositionLot]] format
-                     success: {data: list[FDXBrokerPositionLot], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerPositionLot]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2650,6 +3020,30 @@ class BrokersWrapper:
                 action='get_position_lots'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_position_lots,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -2722,16 +3116,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerPositionLot]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
@@ -2739,7 +3134,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerPositionLotFill]]:
+    async def get_position_lot_fills(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerPositionLotFill]]:
         """Get Position Lot Fills
         
         Get position lot fills for a specific lot.
@@ -2747,11 +3142,13 @@ class BrokersWrapper:
         This endpoint returns all fills associated with a specific position lot.
 
         Args:
-        - **kwargs: Optional keyword arguments that will be converted to GetPositionLotFillsParams object.
-                     Example: get_orders(account_id="123", symbol="AAPL")
+            lot_id (str): Position lot ID
+            connection_id (str, optional): Filter by connection ID
+            limit (int, optional): Maximum number of fills to return
+            offset (int, optional): Number of fills to skip for pagination
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[FDXBrokerPositionLotFill]] format
-                     success: {data: list[FDXBrokerPositionLotFill], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerPositionLotFill]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -2887,6 +3284,30 @@ class BrokersWrapper:
                 action='get_position_lot_fills'
             )
             
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_position_lot_fills,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
             
@@ -2959,16 +3380,17 @@ class BrokersWrapper:
                 error_details['traceback'] = traceback.format_exc()
             
             # Phase 2C: Return standard error response structure
-            error_response = FinaticResponse[list[FDXBrokerPositionLotFill]](
-                success={'data': None},
-                error={
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
                     'message': error_message,
                     'code': error_code,
                     'status': error_status,
                     'details': error_details,
                 },
-                warning=None,
-            )
+                'warning': None,
+            }
             
             return error_response
 
