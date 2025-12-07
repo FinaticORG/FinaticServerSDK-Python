@@ -46,6 +46,7 @@ class FDXBrokerPosition(BaseModel):
     """ # noqa: E501
     id: Optional[StrictStr] = None
     account_id: StrictStr = Field(description="Broker account identifier", alias="accountId")
+    internal_account_id: Optional[StrictStr] = Field(default=None, alias="internalAccountId")
     connection_id: StrictStr = Field(description="User-broker connection identifier", alias="connectionId")
     security_id: StrictStr = Field(description="Symbol or instrument", alias="securityId")
     security_id_type: Securityidtype = Field(alias="securityIdType")
@@ -73,7 +74,7 @@ class FDXBrokerPosition(BaseModel):
     instrument_key: Optional[StrictStr] = Field(default=None, alias="instrumentKey")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "accountId", "connectionId", "securityId", "securityIdType", "assetType", "quantity", "side", "status", "costBasis", "marketValue", "units", "averageBuyPrice", "averageSellPrice", "costBasisWithCommission", "currentPrice", "realizedProfitLoss", "realizedProfitLossWithCommission", "realizedProfitLossPercent", "unrealizedProfitLoss", "unrealizedProfitLossPercent", "positionCreatedAt", "positionUpdatedAt", "positionClosedAt", "positionGroupId", "snapshotDate", "instrumentKey", "metadata"]
+    __properties: ClassVar[List[str]] = ["id", "accountId", "internalAccountId", "connectionId", "securityId", "securityIdType", "assetType", "quantity", "side", "status", "costBasis", "marketValue", "units", "averageBuyPrice", "averageSellPrice", "costBasisWithCommission", "currentPrice", "realizedProfitLoss", "realizedProfitLossWithCommission", "realizedProfitLossPercent", "unrealizedProfitLoss", "unrealizedProfitLossPercent", "positionCreatedAt", "positionUpdatedAt", "positionClosedAt", "positionGroupId", "snapshotDate", "instrumentKey", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -176,6 +177,11 @@ class FDXBrokerPosition(BaseModel):
         # and model_fields_set contains the field
         if self.id is None and "id" in self.model_fields_set:
             _dict['id'] = None
+
+        # set to None if internal_account_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.internal_account_id is None and "internal_account_id" in self.model_fields_set:
+            _dict['internalAccountId'] = None
 
         # set to None if side (nullable) is None
         # and model_fields_set contains the field
@@ -296,6 +302,7 @@ class FDXBrokerPosition(BaseModel):
         _obj = cls.model_validate({
             "id": obj.get("id"),
             "accountId": obj.get("accountId"),
+            "internalAccountId": obj.get("internalAccountId"),
             "connectionId": obj.get("connectionId"),
             "securityId": obj.get("securityId"),
             "securityIdType": Securityidtype.from_dict(obj["securityIdType"]) if obj.get("securityIdType") is not None else None,

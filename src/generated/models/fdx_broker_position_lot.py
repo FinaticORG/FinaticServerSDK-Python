@@ -43,6 +43,8 @@ class FDXBrokerPositionLot(BaseModel):
     lot_id: StrictStr = Field(description="Lot identifier", alias="lotId")
     position_id: Optional[StrictStr] = Field(default=None, alias="positionId")
     account_id: StrictStr = Field(description="Broker account identifier", alias="accountId")
+    internal_account_id: Optional[StrictStr] = Field(default=None, alias="internalAccountId")
+    connection_id: Optional[StrictStr] = Field(default=None, alias="connectionId")
     security_id: StrictStr = Field(description="Security identifier", alias="securityId")
     asset_type: Assettype = Field(alias="assetType")
     side: Optional[Side3] = None
@@ -60,7 +62,7 @@ class FDXBrokerPositionLot(BaseModel):
     position_lot_fills: Optional[List[FDXBrokerPositionLotFill]] = Field(default=None, description="Fills associated with this lot", alias="positionLotFills")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "lotId", "positionId", "accountId", "securityId", "assetType", "side", "openedAt", "closedAt", "openQuantity", "remainingQuantity", "closedQuantity", "openPrice", "closePriceAvg", "costBasis", "costBasisWithCommission", "realizedProfitLoss", "realizedProfitLossWithCommission", "positionLotFills", "metadata"]
+    __properties: ClassVar[List[str]] = ["_id", "lotId", "positionId", "accountId", "internalAccountId", "connectionId", "securityId", "assetType", "side", "openedAt", "closedAt", "openQuantity", "remainingQuantity", "closedQuantity", "openPrice", "closePriceAvg", "costBasis", "costBasisWithCommission", "realizedProfitLoss", "realizedProfitLossWithCommission", "positionLotFills", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -153,6 +155,16 @@ class FDXBrokerPositionLot(BaseModel):
         if self.position_id is None and "position_id" in self.model_fields_set:
             _dict['positionId'] = None
 
+        # set to None if internal_account_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.internal_account_id is None and "internal_account_id" in self.model_fields_set:
+            _dict['internalAccountId'] = None
+
+        # set to None if connection_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.connection_id is None and "connection_id" in self.model_fields_set:
+            _dict['connectionId'] = None
+
         # set to None if side (nullable) is None
         # and model_fields_set contains the field
         if self.side is None and "side" in self.model_fields_set:
@@ -189,6 +201,8 @@ class FDXBrokerPositionLot(BaseModel):
             "lotId": obj.get("lotId"),
             "positionId": obj.get("positionId"),
             "accountId": obj.get("accountId"),
+            "internalAccountId": obj.get("internalAccountId"),
+            "connectionId": obj.get("connectionId"),
             "securityId": obj.get("securityId"),
             "assetType": Assettype.from_dict(obj["assetType"]) if obj.get("assetType") is not None else None,
             "side": Side3.from_dict(obj["side"]) if obj.get("side") is not None else None,

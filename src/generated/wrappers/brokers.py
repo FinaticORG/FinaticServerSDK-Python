@@ -17,7 +17,6 @@ from ..models.account_status import AccountStatus
 from ..models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from ..models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
 from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
-from ..models.broker_data_order_status_enum import BrokerDataOrderStatusEnum
 from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from ..models.broker_info import BrokerInfo
 from ..models.disconnect_action_result import DisconnectActionResult
@@ -70,12 +69,12 @@ class GetOrdersParams:
     broker_id: str = None
   # Filter by connection ID
     connection_id: str = None
-  # Filter by broker provided account ID
+  # Filter by broker provided account ID or internal account UUID
     account_id: str = None
   # Filter by symbol
     symbol: str = None
   # Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-    order_status: BrokerDataOrderStatusEnum = None
+    order_status: str = None
   # Filter by order side (e.g., 'buy', 'sell')
     side: BrokerDataOrderSideEnum = None
   # Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
@@ -98,7 +97,7 @@ class GetPositionsParams:
     broker_id: str = None
   # Filter by connection ID
     connection_id: str = None
-  # Filter by broker provided account ID
+  # Filter by broker provided account ID or internal account UUID
     account_id: str = None
   # Filter by symbol
     symbol: str = None
@@ -126,7 +125,7 @@ class GetBalancesParams:
     broker_id: str = None
   # Filter by connection ID
     connection_id: str = None
-  # Filter by broker provided account ID
+  # Filter by broker provided account ID or internal account UUID
     account_id: str = None
   # Filter by end-of-day snapshot status (true/false)
     is_end_of_day_snapshot: Optional[bool] = None
@@ -992,9 +991,9 @@ class BrokersWrapper:
         Args:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
             symbol (str, optional): Filter by symbol
-            order_status (BrokerDataOrderStatusEnum, optional): Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
+            order_status (str, optional): Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
             side (BrokerDataOrderSideEnum, optional): Filter by order side (e.g., 'buy', 'sell')
             asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
             limit (int, optional): Maximum number of orders to return
@@ -1049,7 +1048,7 @@ class BrokersWrapper:
         connection_id = getattr(params, 'connection_id', None)
         account_id = getattr(params, 'account_id', None)
         symbol = getattr(params, 'symbol', None)
-        order_status = coerce_enum_value(getattr(params, 'order_status', None), BrokerDataOrderStatusEnum, 'order_status') if getattr(params, 'order_status', None) is not None else None
+        order_status = getattr(params, 'order_status', None)
         side = coerce_enum_value(getattr(params, 'side', None), BrokerDataOrderSideEnum, 'side') if getattr(params, 'side', None) is not None else None
         asset_type = coerce_enum_value(getattr(params, 'asset_type', None), BrokerDataAssetTypeEnum, 'asset_type') if getattr(params, 'asset_type', None) is not None else None
         limit = getattr(params, 'limit', None)
@@ -1268,7 +1267,7 @@ class BrokersWrapper:
         Args:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
             symbol (str, optional): Filter by symbol
             side (BrokerDataOrderSideEnum, optional): Filter by position side (e.g., 'long', 'short')
             asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
@@ -1544,7 +1543,7 @@ class BrokersWrapper:
         Args:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
             is_end_of_day_snapshot (bool, optional): Filter by end-of-day snapshot status (true/false)
             limit (int, optional): Maximum number of balances to return
             offset (int, optional): Number of balances to skip for pagination

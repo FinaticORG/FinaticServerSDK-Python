@@ -37,6 +37,7 @@ class FDXBrokerOrder(BaseModel):
     broker_order_id: Optional[StrictStr] = Field(default=None, alias="brokerOrderId")
     client_order_id: Optional[StrictStr] = Field(default=None, alias="clientOrderId")
     account_id: StrictStr = Field(description="Broker account identifier", alias="accountId")
+    internal_account_id: Optional[StrictStr] = Field(default=None, alias="internalAccountId")
     connection_id: Optional[StrictStr] = Field(default=None, alias="connectionId")
     order_type: Optional[Ordertype] = Field(default=None, alias="orderType")
     order_class: Optional[Orderclass] = Field(default=None, alias="orderClass")
@@ -51,7 +52,7 @@ class FDXBrokerOrder(BaseModel):
     order_terminal_at: Optional[datetime] = Field(default=None, alias="orderTerminalAt")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "orderId", "brokerOrderId", "clientOrderId", "accountId", "connectionId", "orderType", "orderClass", "timeInForce", "status", "state", "legs", "orderGroupId", "orderCreatedAt", "orderLiveAt", "orderUpdatedAt", "orderTerminalAt", "metadata"]
+    __properties: ClassVar[List[str]] = ["_id", "orderId", "brokerOrderId", "clientOrderId", "accountId", "internalAccountId", "connectionId", "orderType", "orderClass", "timeInForce", "status", "state", "legs", "orderGroupId", "orderCreatedAt", "orderLiveAt", "orderUpdatedAt", "orderTerminalAt", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -128,6 +129,11 @@ class FDXBrokerOrder(BaseModel):
         if self.client_order_id is None and "client_order_id" in self.model_fields_set:
             _dict['clientOrderId'] = None
 
+        # set to None if internal_account_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.internal_account_id is None and "internal_account_id" in self.model_fields_set:
+            _dict['internalAccountId'] = None
+
         # set to None if connection_id (nullable) is None
         # and model_fields_set contains the field
         if self.connection_id is None and "connection_id" in self.model_fields_set:
@@ -200,6 +206,7 @@ class FDXBrokerOrder(BaseModel):
             "brokerOrderId": obj.get("brokerOrderId"),
             "clientOrderId": obj.get("clientOrderId"),
             "accountId": obj.get("accountId"),
+            "internalAccountId": obj.get("internalAccountId"),
             "connectionId": obj.get("connectionId"),
             "orderType": Ordertype.from_dict(obj["orderType"]) if obj.get("orderType") is not None else None,
             "orderClass": Orderclass.from_dict(obj["orderClass"]) if obj.get("orderClass") is not None else None,

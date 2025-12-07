@@ -42,6 +42,8 @@ class FDXBrokerBalance(BaseModel):
     id: Optional[StrictStr] = Field(default=None, alias="_id")
     balance_id: StrictStr = Field(description="Unique balance identifier", alias="balanceId")
     account_id: StrictStr = Field(description="Associated account identifier", alias="accountId")
+    internal_account_id: Optional[StrictStr] = Field(default=None, alias="internalAccountId")
+    connection_id: Optional[StrictStr] = Field(default=None, alias="connectionId")
     balance_type: Balancetype = Field(alias="balanceType")
     balance_name: Optional[StrictStr] = Field(default=None, alias="balanceName")
     available_balance: Optional[Availablebalance] = Field(default=None, alias="availableBalance")
@@ -60,7 +62,7 @@ class FDXBrokerBalance(BaseModel):
     last_updated: Optional[datetime] = Field(default=None, alias="lastUpdated")
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "balanceId", "accountId", "balanceType", "balanceName", "availableBalance", "currentBalance", "pendingBalance", "buyingPower", "cashBalance", "netLiquidationValue", "initialMargin", "maintenanceMargin", "totalCashValue", "availableToWithdraw", "totalRealizedPnl", "currencyCode", "balanceDate", "lastUpdated", "metadata"]
+    __properties: ClassVar[List[str]] = ["_id", "balanceId", "accountId", "internalAccountId", "connectionId", "balanceType", "balanceName", "availableBalance", "currentBalance", "pendingBalance", "buyingPower", "cashBalance", "netLiquidationValue", "initialMargin", "maintenanceMargin", "totalCashValue", "availableToWithdraw", "totalRealizedPnl", "currencyCode", "balanceDate", "lastUpdated", "metadata"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -143,6 +145,16 @@ class FDXBrokerBalance(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if internal_account_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.internal_account_id is None and "internal_account_id" in self.model_fields_set:
+            _dict['internalAccountId'] = None
+
+        # set to None if connection_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.connection_id is None and "connection_id" in self.model_fields_set:
+            _dict['connectionId'] = None
 
         # set to None if balance_name (nullable) is None
         # and model_fields_set contains the field
@@ -239,6 +251,8 @@ class FDXBrokerBalance(BaseModel):
             "_id": obj.get("_id"),
             "balanceId": obj.get("balanceId"),
             "accountId": obj.get("accountId"),
+            "internalAccountId": obj.get("internalAccountId"),
+            "connectionId": obj.get("connectionId"),
             "balanceType": Balancetype.from_dict(obj["balanceType"]) if obj.get("balanceType") is not None else None,
             "balanceName": obj.get("balanceName"),
             "availableBalance": Availablebalance.from_dict(obj["availableBalance"]) if obj.get("availableBalance") is not None else None,

@@ -43,7 +43,6 @@ __all__ = [
     "BrokerDataAccountTypeEnum",
     "BrokerDataAssetTypeEnum",
     "BrokerDataOrderSideEnum",
-    "BrokerDataOrderStatusEnum",
     "BrokerDataPositionStatusEnum",
     "BrokerInfo",
     "Buyingpower",
@@ -206,7 +205,6 @@ from .models.balancetype import Balancetype as Balancetype
 from .models.broker_data_account_type_enum import BrokerDataAccountTypeEnum as BrokerDataAccountTypeEnum
 from .models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum as BrokerDataAssetTypeEnum
 from .models.broker_data_order_side_enum import BrokerDataOrderSideEnum as BrokerDataOrderSideEnum
-from .models.broker_data_order_status_enum import BrokerDataOrderStatusEnum as BrokerDataOrderStatusEnum
 from .models.broker_data_position_status_enum import BrokerDataPositionStatusEnum as BrokerDataPositionStatusEnum
 from .models.broker_info import BrokerInfo as BrokerInfo
 from .models.buyingpower import Buyingpower as Buyingpower

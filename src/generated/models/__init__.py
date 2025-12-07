@@ -26,7 +26,6 @@ from .balancetype import Balancetype
 from .broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from .broker_data_asset_type_enum import BrokerDataAssetTypeEnum
 from .broker_data_order_side_enum import BrokerDataOrderSideEnum
-from .broker_data_order_status_enum import BrokerDataOrderStatusEnum
 from .broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from .broker_info import BrokerInfo
 from .buyingpower import Buyingpower

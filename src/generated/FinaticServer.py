@@ -2076,9 +2076,9 @@ class FinaticServer:
         Args:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
             symbol (str, optional): Filter by symbol
-            order_status (BrokerDataOrderStatusEnum, optional): Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
+            order_status (str, optional): Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
             side (BrokerDataOrderSideEnum, optional): Filter by order side (e.g., 'buy', 'sell')
             asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
             limit (int, optional): Maximum number of orders to return
@@ -2166,7 +2166,7 @@ class FinaticServer:
         Args:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
             symbol (str, optional): Filter by symbol
             side (BrokerDataOrderSideEnum, optional): Filter by position side (e.g., 'long', 'short')
             asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
@@ -2256,7 +2256,7 @@ class FinaticServer:
         Args:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
             is_end_of_day_snapshot (bool, optional): Filter by end-of-day snapshot status (true/false)
             limit (int, optional): Maximum number of balances to return
             offset (int, optional): Number of balances to skip for pagination
