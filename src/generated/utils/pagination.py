@@ -190,6 +190,25 @@ class PaginatedData(Generic[T]):
         except ValueError:
             return -1
 
+    def to_dict(self) -> list[T]:
+        """
+        Return the items array as a list (for JSON serialization).
+
+        This allows clean serialization without exposing internal methods.
+        Use with json.dumps() default parameter for automatic serialization.
+
+        Returns:
+            The items array
+
+        Example:
+            >>> import json
+            >>> orders = await sdk.get_orders()
+            >>> print(orders)  # Shows full PaginatedData with methods
+            >>> print(orders.to_dict())  # Shows just the items array
+            >>> json.dumps(orders, default=lambda o: o.to_dict() if hasattr(o, 'to_dict') else o.__dict__)
+        """
+        return self.items
+
     async def next_page(self) -> "PaginatedData[T]":
         """
         Get the next page of data.

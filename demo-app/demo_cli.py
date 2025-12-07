@@ -93,7 +93,8 @@ async def main():
     if orders.get("success"):
         print("We are in orders")
         paginated_data = orders["success"]["data"]
-        print(paginated_data)
+        print("orders length", len(paginated_data))
+        print("orders toJSON", paginated_data.to_dict())
         if paginated_data.has_more:
             print("orders has more")
             next_order = await paginated_data.next_page()
