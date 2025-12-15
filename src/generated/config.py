@@ -25,7 +25,7 @@ class SdkConfig:
     # API Configuration
     # ═══════════════════════════════════════════════════════════════════════
     
-    base_url: str = field(default_factory=lambda: os.getenv('FINATIC_API_URL', 'https://api.finatic.com'))
+    base_url: str = field(default_factory=lambda: os.getenv('FINATIC_API_URL', 'https://api.finatic.dev'))
     api_key: Optional[str] = field(default_factory=lambda: os.getenv('FINATIC_API_KEY'))
     timeout: int = field(default_factory=lambda: int(os.getenv('FINATIC_TIMEOUT', '30')))
     headers: Dict[str, str] = field(default_factory=dict)
