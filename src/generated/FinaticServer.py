@@ -1793,7 +1793,7 @@ class FinaticServer:
         }
 
 
-    async def get_company(self, **kwargs) -> FinaticResponse[CompanyResponse]:
+    async def get_company(self, **kwargs) -> FinaticResponse[Accounts]:
         """Get Company
         
         Get public company details by ID (no user check, no sensitive data).
@@ -1807,7 +1807,7 @@ class FinaticServer:
             company_id (str): Company ID
         
         Returns:
-            FinaticResponse[CompanyResponse]: Standard FinaticResponse format
+            FinaticResponse[Accounts]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only
@@ -1990,7 +1990,7 @@ class FinaticServer:
         else:
             return await self._brokers.get_broker_connections()
 
-    async def disconnect_company_from_broker(self, **kwargs) -> FinaticResponse[DisconnectActionResult]:
+    async def disconnect_company_from_broker(self, **kwargs) -> FinaticResponse[DisconnectCompanyFromBrokerConnectionResult]:
         """Disconnect Company From Broker
         
         Remove a company's access to a broker connection.
@@ -2007,7 +2007,7 @@ class FinaticServer:
             connection_id (str): Connection ID
         
         Returns:
-            FinaticResponse[DisconnectActionResult]: Standard FinaticResponse format
+            FinaticResponse[DisconnectCompanyFromBrokerConnectionResult]: Standard FinaticResponse format
         @example
         ```python
         # Minimal example with required parameters only
@@ -2170,7 +2170,7 @@ class FinaticServer:
             symbol (str, optional): Filter by symbol
             side (BrokerDataOrderSideEnum, optional): Filter by position side (e.g., 'long', 'short')
             asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-            position_status (BrokerDataPositionStatusEnum, optional): Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+            position_status (BrokerDataPositionStatusEnum, optional): Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
             limit (int, optional): Maximum number of positions to return
             offset (int, optional): Number of positions to skip for pagination
             updated_after (str, optional): Filter positions updated after this timestamp
@@ -2344,7 +2344,6 @@ class FinaticServer:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
             account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-            status (AccountStatus, optional): Filter by account status (e.g., 'active', 'inactive')
             currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
             limit (int, optional): Maximum number of accounts to return
             offset (int, optional): Number of accounts to skip for pagination

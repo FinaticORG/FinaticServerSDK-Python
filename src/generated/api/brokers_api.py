@@ -18,15 +18,10 @@ from typing_extensions import Annotated
 
 from datetime import datetime
 from pydantic import Field, StrictBool, StrictStr
-from typing import Optional
+from typing import Any, Optional
 from typing_extensions import Annotated
 from uuid import UUID
-from ..models.account_status import AccountStatus
-from ..models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
-from ..models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
-from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
-from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
-from ..models.finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult
+from ..models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from ..models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo
 from ..models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
 from ..models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
@@ -73,13 +68,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDisconnectActionResult:
+    ) -> FinaticResponseDisconnectCompanyFromBrokerConnectionResult:
         """Disconnect Company From Broker
 
         Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
 
         :param connection_id: Connection ID (required)
-        :type connection_id: str
+        :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -111,15 +106,16 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDisconnectActionResult",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '200': "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -148,13 +144,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDisconnectActionResult]:
+    ) -> ApiResponse[FinaticResponseDisconnectCompanyFromBrokerConnectionResult]:
         """Disconnect Company From Broker
 
         Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
 
         :param connection_id: Connection ID (required)
-        :type connection_id: str
+        :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -186,15 +182,16 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDisconnectActionResult",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '200': "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -229,7 +226,7 @@ class BrokersApi:
         Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
 
         :param connection_id: Connection ID (required)
-        :type connection_id: str
+        :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -261,15 +258,16 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDisconnectActionResult",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '200': "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -346,8 +344,7 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
+        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -372,11 +369,9 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
-        :param status: Filter by account status (e.g., 'active', 'inactive')
-        :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
         :type currency: str
         :param limit: Maximum number of accounts to return
@@ -411,7 +406,6 @@ class BrokersApi:
             broker_id=broker_id,
             connection_id=connection_id,
             account_type=account_type,
-            status=status,
             currency=currency,
             limit=limit,
             offset=offset,
@@ -424,14 +418,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerAccount",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -449,8 +444,7 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
+        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -475,11 +469,9 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
-        :param status: Filter by account status (e.g., 'active', 'inactive')
-        :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
         :type currency: str
         :param limit: Maximum number of accounts to return
@@ -514,7 +506,6 @@ class BrokersApi:
             broker_id=broker_id,
             connection_id=connection_id,
             account_type=account_type,
-            status=status,
             currency=currency,
             limit=limit,
             offset=offset,
@@ -527,14 +518,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerAccount",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -552,8 +544,7 @@ class BrokersApi:
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        status: Annotated[Optional[AccountStatus], Field(description="Filter by account status (e.g., 'active', 'inactive')")] = None,
+        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -578,11 +569,9 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
-        :param status: Filter by account status (e.g., 'active', 'inactive')
-        :type status: AccountStatus
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
         :type currency: str
         :param limit: Maximum number of accounts to return
@@ -617,7 +606,6 @@ class BrokersApi:
             broker_id=broker_id,
             connection_id=connection_id,
             account_type=account_type,
-            status=status,
             currency=currency,
             limit=limit,
             offset=offset,
@@ -630,14 +618,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerAccount",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -651,7 +640,6 @@ class BrokersApi:
         broker_id,
         connection_id,
         account_type,
-        status,
         currency,
         limit,
         offset,
@@ -689,10 +677,6 @@ class BrokersApi:
         if account_type is not None:
             
             _query_params.append(('account_type', account_type.value))
-            
-        if status is not None:
-            
-            _query_params.append(('status', status.value))
             
         if currency is not None:
             
@@ -778,7 +762,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param is_end_of_day_snapshot: Filter by end-of-day snapshot status (true/false)
@@ -833,14 +817,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerBalance",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -885,7 +870,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param is_end_of_day_snapshot: Filter by end-of-day snapshot status (true/false)
@@ -940,14 +925,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerBalance",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -992,7 +978,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param is_end_of_day_snapshot: Filter by end-of-day snapshot status (true/false)
@@ -1047,14 +1033,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerBalance",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1237,14 +1224,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBrokerInfo",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1308,14 +1296,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBrokerInfo",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1379,14 +1368,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListBrokerInfo",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1481,9 +1471,9 @@ class BrokersApi:
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
 
         :param order_id: Order ID (required)
-        :type order_id: str
+        :type order_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of events to return
         :type limit: int
         :param offset: Number of events to skip for pagination
@@ -1526,14 +1516,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderEvent",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1572,9 +1563,9 @@ class BrokersApi:
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
 
         :param order_id: Order ID (required)
-        :type order_id: str
+        :type order_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of events to return
         :type limit: int
         :param offset: Number of events to skip for pagination
@@ -1617,14 +1608,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderEvent",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1663,9 +1655,9 @@ class BrokersApi:
         Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
 
         :param order_id: Order ID (required)
-        :type order_id: str
+        :type order_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of events to return
         :type limit: int
         :param offset: Number of events to skip for pagination
@@ -1708,14 +1700,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderEvent",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1833,9 +1826,9 @@ class BrokersApi:
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
 
         :param order_id: Order ID (required)
-        :type order_id: str
+        :type order_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of fills to return
         :type limit: int
         :param offset: Number of fills to skip for pagination
@@ -1878,14 +1871,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderFill",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1924,9 +1918,9 @@ class BrokersApi:
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
 
         :param order_id: Order ID (required)
-        :type order_id: str
+        :type order_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of fills to return
         :type limit: int
         :param offset: Number of fills to skip for pagination
@@ -1969,14 +1963,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderFill",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2015,9 +2010,9 @@ class BrokersApi:
         Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
 
         :param order_id: Order ID (required)
-        :type order_id: str
+        :type order_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of fills to return
         :type limit: int
         :param offset: Number of fills to skip for pagination
@@ -2060,14 +2055,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderFill",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2189,7 +2185,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of order groups to return
         :type limit: int
         :param offset: Number of order groups to skip for pagination
@@ -2238,14 +2234,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderGroup",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2288,7 +2285,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of order groups to return
         :type limit: int
         :param offset: Number of order groups to skip for pagination
@@ -2337,14 +2334,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderGroup",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2387,7 +2385,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of order groups to return
         :type limit: int
         :param offset: Number of order groups to skip for pagination
@@ -2436,14 +2434,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrderGroup",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2573,8 +2572,8 @@ class BrokersApi:
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
         order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[BrokerDataOrderSideEnum], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[BrokerDataAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        side: Annotated[Optional[Any], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -2600,7 +2599,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param symbol: Filter by symbol
@@ -2664,14 +2663,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrder",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2692,8 +2692,8 @@ class BrokersApi:
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
         order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[BrokerDataOrderSideEnum], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[BrokerDataAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        side: Annotated[Optional[Any], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -2719,7 +2719,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param symbol: Filter by symbol
@@ -2783,14 +2783,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrder",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -2811,8 +2812,8 @@ class BrokersApi:
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
         order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[BrokerDataOrderSideEnum], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[BrokerDataAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        side: Annotated[Optional[Any], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
+        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
         created_after: Annotated[Optional[datetime], Field(description="Filter orders created after this timestamp")] = None,
@@ -2838,7 +2839,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param symbol: Filter by symbol
@@ -2902,14 +2903,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerOrder",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3081,9 +3083,9 @@ class BrokersApi:
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
 
         :param lot_id: Position lot ID (required)
-        :type lot_id: str
+        :type lot_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of fills to return
         :type limit: int
         :param offset: Number of fills to skip for pagination
@@ -3123,14 +3125,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPositionLotFill",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3168,9 +3171,9 @@ class BrokersApi:
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
 
         :param lot_id: Position lot ID (required)
-        :type lot_id: str
+        :type lot_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of fills to return
         :type limit: int
         :param offset: Number of fills to skip for pagination
@@ -3210,14 +3213,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPositionLotFill",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3255,9 +3259,9 @@ class BrokersApi:
         Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
 
         :param lot_id: Position lot ID (required)
-        :type lot_id: str
+        :type lot_id: UUID
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param limit: Maximum number of fills to return
         :type limit: int
         :param offset: Number of fills to skip for pagination
@@ -3297,14 +3301,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPositionLotFill",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3421,13 +3426,13 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID
         :type account_id: str
         :param symbol: Filter by symbol
         :type symbol: str
         :param position_id: Filter by position ID
-        :type position_id: str
+        :type position_id: UUID
         :param limit: Maximum number of position lots to return
         :type limit: int
         :param offset: Number of position lots to skip for pagination
@@ -3470,14 +3475,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPositionLot",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3520,13 +3526,13 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID
         :type account_id: str
         :param symbol: Filter by symbol
         :type symbol: str
         :param position_id: Filter by position ID
-        :type position_id: str
+        :type position_id: UUID
         :param limit: Maximum number of position lots to return
         :type limit: int
         :param offset: Number of position lots to skip for pagination
@@ -3569,14 +3575,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPositionLot",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3619,13 +3626,13 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID
         :type account_id: str
         :param symbol: Filter by symbol
         :type symbol: str
         :param position_id: Filter by position ID
-        :type position_id: str
+        :type position_id: UUID
         :param limit: Maximum number of position lots to return
         :type limit: int
         :param offset: Number of position lots to skip for pagination
@@ -3668,14 +3675,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPositionLot",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3786,9 +3794,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[BrokerDataOrderSideEnum], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[BrokerDataAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[BrokerDataPositionStatusEnum], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[Any], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[Any], Field(description="Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -3814,7 +3822,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param symbol: Filter by symbol
@@ -3823,7 +3831,7 @@ class BrokersApi:
         :type side: BrokerDataOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
         :type asset_type: BrokerDataAssetTypeEnum
-        :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+        :param position_status: Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
         :type position_status: BrokerDataPositionStatusEnum
         :param limit: Maximum number of positions to return
         :type limit: int
@@ -3878,14 +3886,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPosition",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -3905,9 +3914,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[BrokerDataOrderSideEnum], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[BrokerDataAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[BrokerDataPositionStatusEnum], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[Any], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[Any], Field(description="Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -3933,7 +3942,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param symbol: Filter by symbol
@@ -3942,7 +3951,7 @@ class BrokersApi:
         :type side: BrokerDataOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
         :type asset_type: BrokerDataAssetTypeEnum
-        :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+        :param position_status: Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
         :type position_status: BrokerDataPositionStatusEnum
         :param limit: Maximum number of positions to return
         :type limit: int
@@ -3997,14 +4006,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPosition",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4024,9 +4034,9 @@ class BrokersApi:
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[BrokerDataOrderSideEnum], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[BrokerDataAssetTypeEnum], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[BrokerDataPositionStatusEnum], Field(description="Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)")] = None,
+        side: Annotated[Optional[Any], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
+        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
+        position_status: Annotated[Optional[Any], Field(description="Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
         updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
@@ -4052,7 +4062,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param symbol: Filter by symbol
@@ -4061,7 +4071,7 @@ class BrokersApi:
         :type side: BrokerDataOrderSideEnum
         :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
         :type asset_type: BrokerDataAssetTypeEnum
-        :param position_status: Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+        :param position_status: Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
         :type position_status: BrokerDataPositionStatusEnum
         :param limit: Maximum number of positions to return
         :type limit: int
@@ -4116,14 +4126,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListFDXBrokerPosition",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4321,14 +4332,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4392,14 +4404,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -4463,14 +4476,15 @@ class BrokersApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,

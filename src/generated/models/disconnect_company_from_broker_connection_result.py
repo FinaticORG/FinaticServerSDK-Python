@@ -17,21 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from .disconnect_action_result import DisconnectActionResult
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class SuccessPayloadDisconnectActionResult(BaseModel):
+class DisconnectCompanyFromBrokerConnectionResult(BaseModel):
     """
-    SuccessPayloadDisconnectActionResult
+    Result model for disconnect company from broker connection endpoint.  This model represents the outcome of disconnecting a company account from a broker connection. Used by the DELETE /disconnect-company/{connection_id} endpoint to return success or failure status along with a descriptive message.  Disconnecting a company removes the company's access to the broker connection but does not delete the connection itself, which may still be accessible to other companies or the original user.  Attributes ---------- success : bool     Whether the disconnection operation completed successfully. True if the     company was disconnected from the connection, False if an error occurred. message : str     Human-readable message describing the result of the disconnection operation.     Contains success confirmation or error details.  Notes ----- 1. **Partial Removal**: Disconnecting a company only removes the company's    access permissions. The underlying broker connection remains intact.  2. **CompanyAccess Table**: This operation removes or updates records in the    CompanyAccess table that link the company to the broker connection.  3. **Multi-Company Support**: A single broker connection can be shared across    multiple companies. Disconnecting one company does not affect others.  Examples -------- >>> # Successful disconnection >>> result = DisconnectCompanyFromBrokerConnectionResult( ...     success=True, ...     message=\"Successfully disconnected company from broker connection\", ... ) >>> # Failed disconnection >>> result = DisconnectCompanyFromBrokerConnectionResult( ...     success=False, ...     message=\"Error: Company not associated with this connection\", ... )  See Also -------- finaticapi.api.v1.routers.brokers.brokers_router.disconnect_company_from_connection     : Endpoint that returns this model finaticapi.core.services.broker_service.BrokerService.disconnect_company_from_connection     : Service method that performs disconnection
     """ # noqa: E501
-    id: Optional[StrictStr] = Field(default=None, alias="_id")
-    data: Optional[DisconnectActionResult] = None
-    meta: Optional[Dict[str, Any]] = None
+    success: StrictBool
+    message: StrictStr
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "data", "meta"]
+    __properties: ClassVar[List[str]] = ["success", "message"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -51,7 +49,7 @@ class SuccessPayloadDisconnectActionResult(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of SuccessPayloadDisconnectActionResult from a JSON string"""
+        """Create an instance of DisconnectCompanyFromBrokerConnectionResult from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -74,29 +72,16 @@ class SuccessPayloadDisconnectActionResult(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of data
-        if self.data:
-            _dict['data'] = self.data.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if data (nullable) is None
-        # and model_fields_set contains the field
-        if self.data is None and "data" in self.model_fields_set:
-            _dict['data'] = None
-
-        # set to None if meta (nullable) is None
-        # and model_fields_set contains the field
-        if self.meta is None and "meta" in self.model_fields_set:
-            _dict['meta'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of SuccessPayloadDisconnectActionResult from a dict"""
+        """Create an instance of DisconnectCompanyFromBrokerConnectionResult from a dict"""
         if obj is None:
             return None
 
@@ -104,9 +89,8 @@ class SuccessPayloadDisconnectActionResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_id": obj.get("_id"),
-            "data": DisconnectActionResult.from_dict(obj["data"]) if obj.get("data") is not None else None,
-            "meta": obj.get("meta")
+            "success": obj.get("success"),
+            "message": obj.get("message")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -20,7 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from .accountstatus0 import Accountstatus
+from .accountstatus import Accountstatus
 from .accounttype import Accounttype
 from typing import Optional, Set
 from typing_extensions import Self

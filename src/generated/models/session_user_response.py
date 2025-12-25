@@ -17,24 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
 class SessionUserResponse(BaseModel):
     """
-    Response model for session user information and tokens.
+    Response model for session user information.
     """ # noqa: E501
     user_id: StrictStr = Field(description="User ID")
-    access_token: StrictStr = Field(description="Freshly generated access token")
-    refresh_token: StrictStr = Field(description="Freshly generated refresh token")
-    expires_in: StrictInt = Field(description="Token expiration time in seconds")
-    token_type: Optional[StrictStr] = Field(default='Bearer', description="Token type")
-    scope: Optional[StrictStr] = Field(default='api:access', description="Token scope")
-    company_id: StrictStr = Field(description="Company ID")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["user_id", "access_token", "refresh_token", "expires_in", "token_type", "scope", "company_id"]
+    __properties: ClassVar[List[str]] = ["user_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,13 +88,7 @@ class SessionUserResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "user_id": obj.get("user_id"),
-            "access_token": obj.get("access_token"),
-            "refresh_token": obj.get("refresh_token"),
-            "expires_in": obj.get("expires_in"),
-            "token_type": obj.get("token_type") if obj.get("token_type") is not None else 'Bearer',
-            "scope": obj.get("scope") if obj.get("scope") is not None else 'api:access',
-            "company_id": obj.get("company_id")
+            "user_id": obj.get("user_id")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

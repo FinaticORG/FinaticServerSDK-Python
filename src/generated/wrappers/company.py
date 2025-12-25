@@ -13,7 +13,7 @@ from ..api.company_api import CompanyApi
 from ..configuration import Configuration
 from ..config import SdkConfig
 from ..types import FinaticResponse
-from ..models.company_response import CompanyResponse
+from ..models.accounts import Accounts
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
 from ..utils.logger import get_logger
@@ -71,7 +71,7 @@ class CompanyWrapper:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
-    async def get_company(self, **kwargs) -> FinaticResponse[CompanyResponse]:
+    async def get_company(self, **kwargs) -> FinaticResponse[Accounts]:
         """Get Company
         
         Get public company details by ID (no user check, no sensitive data).
@@ -79,8 +79,8 @@ class CompanyWrapper:
         Args:
             company_id (str): Company ID
         Returns:
-        - Dict[str, Any]: FinaticResponse[CompanyResponse] format
-                     success: {data: CompanyResponse, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[Accounts] format
+                     success: {data: Accounts, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         

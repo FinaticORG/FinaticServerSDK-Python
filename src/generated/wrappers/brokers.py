@@ -13,13 +13,12 @@ from ..api.brokers_api import BrokersApi
 from ..configuration import Configuration
 from ..config import SdkConfig
 from ..types import FinaticResponse
-from ..models.account_status import AccountStatus
 from ..models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from ..models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
 from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
 from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from ..models.broker_info import BrokerInfo
-from ..models.disconnect_action_result import DisconnectActionResult
+from ..models.disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult
 from ..models.fdx_broker_account import FDXBrokerAccount
 from ..models.fdx_broker_balance import FDXBrokerBalance
 from ..models.fdx_broker_order import FDXBrokerOrder
@@ -105,7 +104,7 @@ class GetPositionsParams:
     side: BrokerDataOrderSideEnum = None
   # Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
     asset_type: BrokerDataAssetTypeEnum = None
-  # Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+  # Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
     position_status: BrokerDataPositionStatusEnum = None
   # Maximum number of positions to return
     limit: Optional[int] = None
@@ -149,8 +148,6 @@ class GetAccountsParams:
     connection_id: str = None
   # Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
     account_type: BrokerDataAccountTypeEnum = None
-  # Filter by account status (e.g., 'active', 'inactive')
-    status: AccountStatus = None
   # Filter by currency (e.g., 'USD', 'EUR')
     currency: str = None
   # Maximum number of accounts to return
@@ -739,7 +736,7 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def disconnect_company_from_broker(self, **kwargs) -> FinaticResponse[DisconnectActionResult]:
+    async def disconnect_company_from_broker(self, **kwargs) -> FinaticResponse[DisconnectCompanyFromBrokerConnectionResult]:
         """Disconnect Company From Broker
         
         Remove a company's access to a broker connection.
@@ -750,8 +747,8 @@ class BrokersWrapper:
         Args:
             connection_id (str): Connection ID
         Returns:
-        - Dict[str, Any]: FinaticResponse[DisconnectActionResult] format
-                     success: {data: DisconnectActionResult, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[DisconnectCompanyFromBrokerConnectionResult] format
+                     success: {data: DisconnectCompanyFromBrokerConnectionResult, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -1271,7 +1268,7 @@ class BrokersWrapper:
             symbol (str, optional): Filter by symbol
             side (BrokerDataOrderSideEnum, optional): Filter by position side (e.g., 'long', 'short')
             asset_type (BrokerDataAssetTypeEnum, optional): Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-            position_status (BrokerDataPositionStatusEnum, optional): Filter by position status: 'open' (quantity > 0) or 'closed' (quantity = 0)
+            position_status (BrokerDataPositionStatusEnum, optional): Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
             limit (int, optional): Maximum number of positions to return
             offset (int, optional): Number of positions to skip for pagination
             updated_after (str, optional): Filter positions updated after this timestamp
@@ -1814,7 +1811,6 @@ class BrokersWrapper:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
             account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-            status (AccountStatus, optional): Filter by account status (e.g., 'active', 'inactive')
             currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
             limit (int, optional): Maximum number of accounts to return
             offset (int, optional): Number of accounts to skip for pagination
@@ -1865,7 +1861,6 @@ class BrokersWrapper:
         broker_id = getattr(params, 'broker_id', None)
         connection_id = getattr(params, 'connection_id', None)
         account_type = coerce_enum_value(getattr(params, 'account_type', None), BrokerDataAccountTypeEnum, 'account_type') if getattr(params, 'account_type', None) is not None else None
-        status = getattr(params, 'status', None)
         currency = getattr(params, 'currency', None)
         limit = getattr(params, 'limit', None)
         offset = getattr(params, 'offset', None)
@@ -1915,7 +1910,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, status=status, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
+                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             

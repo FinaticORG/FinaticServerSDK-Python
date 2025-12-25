@@ -97,14 +97,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponsePortalUrlResponse",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -172,14 +173,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponsePortalUrlResponse",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -247,14 +249,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponsePortalUrlResponse",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -346,7 +349,7 @@ class SessionApi:
     ) -> FinaticResponseSessionUserResponse:
         """Get Session User
 
-        Get user information and fresh tokens for a completed session.  This endpoint is designed for server SDKs to retrieve user information and authentication tokens after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Generates fresh tokens (not returning stored ones) - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
+        Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
 
         :param session_id: Session ID (required)
         :type session_id: str
@@ -385,14 +388,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseSessionUserResponse",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -425,7 +429,7 @@ class SessionApi:
     ) -> ApiResponse[FinaticResponseSessionUserResponse]:
         """Get Session User
 
-        Get user information and fresh tokens for a completed session.  This endpoint is designed for server SDKs to retrieve user information and authentication tokens after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Generates fresh tokens (not returning stored ones) - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
+        Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
 
         :param session_id: Session ID (required)
         :type session_id: str
@@ -464,14 +468,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseSessionUserResponse",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -504,7 +509,7 @@ class SessionApi:
     ) -> RESTResponseType:
         """Get Session User
 
-        Get user information and fresh tokens for a completed session.  This endpoint is designed for server SDKs to retrieve user information and authentication tokens after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Generates fresh tokens (not returning stored ones) - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
+        Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
 
         :param session_id: Session ID (required)
         :type session_id: str
@@ -543,14 +548,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseSessionUserResponse",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -680,14 +686,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseTokenResponseData",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -755,14 +762,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseTokenResponseData",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -830,14 +838,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseTokenResponseData",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -968,14 +977,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseSessionResponseData",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1047,14 +1057,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseSessionResponseData",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,
@@ -1126,14 +1137,15 @@ class SessionApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseSessionResponseData",
-            '400': "FinaticError",
-            '401': "FinaticError",
-            '403': "FinaticError",
-            '404': "FinaticError",
-            '409': "FinaticError",
-            '422': "FinaticError",
-            '429': "FinaticError",
-            '500': "FinaticError",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
         }
         response_data = await self.api_client.call_api(
             *_param,

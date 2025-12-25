@@ -13,8 +13,8 @@
 """  # noqa: E501
 
 # import models into model package
-from .account_status import AccountStatus
-# from .accountstatus import Accountstatus  # Removed - OpenAPI generator created accountstatus0.py instead due to naming conflict
+from .accounts import Accounts
+from .accountstatus import Accountstatus
 from .accounttype import Accounttype
 from .assettype import Assettype
 from .availablebalance import Availablebalance
@@ -34,14 +34,13 @@ from .closedquantity import Closedquantity
 from .closepriceavg import Closepriceavg
 from .commission import Commission
 from .commissionshare import Commissionshare
-from .company_response import CompanyResponse
 from .costbasis import Costbasis
 from .costbasis1 import Costbasis1
 from .costbasiswithcommission import Costbasiswithcommission
 from .costbasiswithcommission1 import Costbasiswithcommission1
 from .currentbalance import Currentbalance
 from .currentprice import Currentprice
-from .disconnect_action_result import DisconnectActionResult
+from .disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult
 from .eventtype import Eventtype
 from .fdx_account_status import FDXAccountStatus
 from .fdx_account_type import FDXAccountType
@@ -71,9 +70,9 @@ from .fdx_time_in_force import FDXTimeInForce
 from .filledquantity import Filledquantity
 from .fillprice import Fillprice
 from .fillquantity import Fillquantity
-from .finatic_error import FinaticError
-from .finatic_response_company_response import FinaticResponseCompanyResponse
-from .finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult
+from .finatic_api_error_response import FinaticAPIErrorResponse
+from .finatic_response_accounts import FinaticResponseAccounts
+from .finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from .finatic_response_list_broker_info import FinaticResponseListBrokerInfo
 from .finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
 from .finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
@@ -129,8 +128,8 @@ from .status import Status
 from .status1 import Status1
 from .stopprice import Stopprice
 from .strikeprice import Strikeprice
-from .success_payload_company_response import SuccessPayloadCompanyResponse
-from .success_payload_disconnect_action_result import SuccessPayloadDisconnectActionResult
+from .success_payload_accounts import SuccessPayloadAccounts
+from .success_payload_disconnect_company_from_broker_connection_result import SuccessPayloadDisconnectCompanyFromBrokerConnectionResult
 from .success_payload_list_broker_info import SuccessPayloadListBrokerInfo
 from .success_payload_list_fdx_broker_account import SuccessPayloadListFDXBrokerAccount
 from .success_payload_list_fdx_broker_balance import SuccessPayloadListFDXBrokerBalance

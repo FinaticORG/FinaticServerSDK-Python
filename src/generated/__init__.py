@@ -30,7 +30,7 @@ __all__ = [
     "ApiKeyError",
     "ApiAttributeError",
     "ApiException",
-    "AccountStatus",
+    "Accounts",
     "Accountstatus",
     "Accounttype",
     "Assettype",
@@ -51,14 +51,13 @@ __all__ = [
     "Closepriceavg",
     "Commission",
     "Commissionshare",
-    "CompanyResponse",
     "Costbasis",
     "Costbasis1",
     "Costbasiswithcommission",
     "Costbasiswithcommission1",
     "Currentbalance",
     "Currentprice",
-    "DisconnectActionResult",
+    "DisconnectCompanyFromBrokerConnectionResult",
     "Eventtype",
     "FDXAccountStatus",
     "FDXAccountType",
@@ -88,9 +87,9 @@ __all__ = [
     "Filledquantity",
     "Fillprice",
     "Fillquantity",
-    "FinaticError",
-    "FinaticResponseCompanyResponse",
-    "FinaticResponseDisconnectActionResult",
+    "FinaticAPIErrorResponse",
+    "FinaticResponseAccounts",
+    "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
     "FinaticResponseListBrokerInfo",
     "FinaticResponseListFDXBrokerAccount",
     "FinaticResponseListFDXBrokerBalance",
@@ -146,8 +145,8 @@ __all__ = [
     "Status1",
     "Stopprice",
     "Strikeprice",
-    "SuccessPayloadCompanyResponse",
-    "SuccessPayloadDisconnectActionResult",
+    "SuccessPayloadAccounts",
+    "SuccessPayloadDisconnectCompanyFromBrokerConnectionResult",
     "SuccessPayloadListBrokerInfo",
     "SuccessPayloadListFDXBrokerAccount",
     "SuccessPayloadListFDXBrokerBalance",
@@ -192,8 +191,8 @@ from .exceptions import ApiAttributeError as ApiAttributeError
 from .exceptions import ApiException as ApiException
 
 # import models into sdk package
-from .models.account_status import AccountStatus as AccountStatus
-from .models.accountstatus0 import Accountstatus as Accountstatus
+from .models.accounts import Accounts as Accounts
+from .models.accountstatus import Accountstatus as Accountstatus
 from .models.accounttype import Accounttype as Accounttype
 from .models.assettype import Assettype as Assettype
 from .models.availablebalance import Availablebalance as Availablebalance
@@ -213,14 +212,13 @@ from .models.closedquantity import Closedquantity as Closedquantity
 from .models.closepriceavg import Closepriceavg as Closepriceavg
 from .models.commission import Commission as Commission
 from .models.commissionshare import Commissionshare as Commissionshare
-from .models.company_response import CompanyResponse as CompanyResponse
 from .models.costbasis import Costbasis as Costbasis
 from .models.costbasis1 import Costbasis1 as Costbasis1
 from .models.costbasiswithcommission import Costbasiswithcommission as Costbasiswithcommission
 from .models.costbasiswithcommission1 import Costbasiswithcommission1 as Costbasiswithcommission1
 from .models.currentbalance import Currentbalance as Currentbalance
 from .models.currentprice import Currentprice as Currentprice
-from .models.disconnect_action_result import DisconnectActionResult as DisconnectActionResult
+from .models.disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult as DisconnectCompanyFromBrokerConnectionResult
 from .models.eventtype import Eventtype as Eventtype
 from .models.fdx_account_status import FDXAccountStatus as FDXAccountStatus
 from .models.fdx_account_type import FDXAccountType as FDXAccountType
@@ -250,9 +248,9 @@ from .models.fdx_time_in_force import FDXTimeInForce as FDXTimeInForce
 from .models.filledquantity import Filledquantity as Filledquantity
 from .models.fillprice import Fillprice as Fillprice
 from .models.fillquantity import Fillquantity as Fillquantity
-from .models.finatic_error import FinaticError as FinaticError
-from .models.finatic_response_company_response import FinaticResponseCompanyResponse as FinaticResponseCompanyResponse
-from .models.finatic_response_disconnect_action_result import FinaticResponseDisconnectActionResult as FinaticResponseDisconnectActionResult
+from .models.finatic_api_error_response import FinaticAPIErrorResponse as FinaticAPIErrorResponse
+from .models.finatic_response_accounts import FinaticResponseAccounts as FinaticResponseAccounts
+from .models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult as FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from .models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo as FinaticResponseListBrokerInfo
 from .models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount as FinaticResponseListFDXBrokerAccount
 from .models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance as FinaticResponseListFDXBrokerBalance
@@ -308,8 +306,8 @@ from .models.status import Status as Status
 from .models.status1 import Status1 as Status1
 from .models.stopprice import Stopprice as Stopprice
 from .models.strikeprice import Strikeprice as Strikeprice
-from .models.success_payload_company_response import SuccessPayloadCompanyResponse as SuccessPayloadCompanyResponse
-from .models.success_payload_disconnect_action_result import SuccessPayloadDisconnectActionResult as SuccessPayloadDisconnectActionResult
+from .models.success_payload_accounts import SuccessPayloadAccounts as SuccessPayloadAccounts
+from .models.success_payload_disconnect_company_from_broker_connection_result import SuccessPayloadDisconnectCompanyFromBrokerConnectionResult as SuccessPayloadDisconnectCompanyFromBrokerConnectionResult
 from .models.success_payload_list_broker_info import SuccessPayloadListBrokerInfo as SuccessPayloadListBrokerInfo
 from .models.success_payload_list_fdx_broker_account import SuccessPayloadListFDXBrokerAccount as SuccessPayloadListFDXBrokerAccount
 from .models.success_payload_list_fdx_broker_balance import SuccessPayloadListFDXBrokerBalance as SuccessPayloadListFDXBrokerBalance
