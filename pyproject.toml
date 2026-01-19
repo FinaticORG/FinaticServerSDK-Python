@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "finatic-server-python"
-version = "0.9.4"
+version = "0.9.5"
 description = "Python SDK for Finatic Server API"
 authors = [{ name = "Finatic", email = "support@finatic.dev" }]
 license = { text = "PROPRIETARY" }
@@ -57,11 +57,11 @@ Repository = "https://github.com/FinaticORG/FinaticServerSDK-Python"
 Issues = "https://github.com/FinaticORG/FinaticServerSDK-Python/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/generated", "src/custom"]
+packages = ["finatic_server_python", "src"]
 include = ["/LICENSE", "/CHANGELOG.md"]
 
 [tool.hatch.build.targets.editable]
-packages = ["src/generated", "src/custom"]
+packages = ["finatic_server_python", "src"]
 
 [tool.black]
 line-length = 88
