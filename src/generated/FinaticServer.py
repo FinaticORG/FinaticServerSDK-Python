@@ -26,7 +26,7 @@ from .wrappers.company import CompanyWrapper
 from .wrappers.session import SessionWrapper
 
 from .wrappers.company import GetCompanyParams
-from .wrappers.brokers import DisconnectCompanyFromBrokerParams, GetAccountsParams, GetBalancesParams, GetBrokerConnectionsParams, GetBrokersParams, GetOrderEventsParams, GetOrderFillsParams, GetOrderGroupsParams, GetOrdersParams, GetPositionLotFillsParams, GetPositionLotsParams, GetPositionsParams
+from .wrappers.brokers import CancelOrderParams, DisconnectCompanyFromBrokerParams, GetAccountsParams, GetBalancesParams, GetBrokerConnectionsParams, GetBrokersParams, GetOrderEventsParams, GetOrderFillsParams, GetOrderGroupsParams, GetOrdersParams, GetPositionLotFillsParams, GetPositionLotsParams, GetPositionsParams, GetTransactionsParams, ModifyOrderParams, PlaceOrderParams
 
 from .wrappers.brokers import GetOrdersParams
 from .models.fdx_broker_order import FDXBrokerOrder
@@ -34,6 +34,8 @@ from .wrappers.brokers import GetPositionsParams
 from .models.fdx_broker_position import FDXBrokerPosition
 from .wrappers.brokers import GetBalancesParams
 from .models.fdx_broker_balance import FDXBrokerBalance
+from .wrappers.brokers import GetTransactionsParams
+from .models.fdx_broker_transaction import FDXBrokerTransaction
 from .wrappers.brokers import GetAccountsParams
 from .models.fdx_broker_account import FDXBrokerAccount
 from .wrappers.brokers import GetOrderFillsParams
@@ -964,6 +966,138 @@ class FinaticServer:
             # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
             # Use private wrapper (self._brokers, self._company) since wrappers are private
             response = await self._brokers.get_balances(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
+                break
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
+
+    async def get_all_transactions(self, **kwargs) -> FinaticResponse[list[FDXBrokerTransaction]]:
+        """Get all transactions across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_transactions method with internal pagination handling.
+        
+        @methodId get_all_transactions_api_v1_brokers_data_transactions_get
+        @category brokers
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_transactions(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllTransactions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllTransactions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_transactions(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_id='123456789'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
+        """
+        from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetTransactionsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetTransactionsParams(**filtered_kwargs) if filtered_kwargs else GetTransactionsParams()
+        else:
+            params = GetTransactionsParams()
+        
+        all_data: list[FDXBrokerTransaction] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_transactions(**params_dict)
             
             # Collect warnings from each page
             if response.get('warning') and isinstance(response.get('warning'), list):
@@ -2243,8 +2377,9 @@ class FinaticServer:
     async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerBalance]]:
         """Get Balances
         
-        Get balances for all authorized broker connections.
+        Get current unit-based balances for all authorized broker connections.
         
+        Returns array of current balances (one per unit_code per account).
         This endpoint is accessible from the portal and uses session-only authentication.
         Returns balances from connections the company has read access to.
         
@@ -2257,11 +2392,10 @@ class FinaticServer:
             broker_id (str, optional): Filter by broker ID
             connection_id (str, optional): Filter by connection ID
             account_id (str, optional): Filter by broker provided account ID or internal account UUID
-            is_end_of_day_snapshot (bool, optional): Filter by end-of-day snapshot status (true/false)
+            unit_code (str, optional): Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+            currency (str, optional): Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
             limit (int, optional): Maximum number of balances to return
             offset (int, optional): Number of balances to skip for pagination
-            balance_created_after (str, optional): Filter balances created after this timestamp
-            balance_created_before (str, optional): Filter balances created before this timestamp
             include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
         
         Returns:
@@ -2326,6 +2460,94 @@ class FinaticServer:
                 return await self._brokers.get_balances(**kwargs)
         else:
             return await self._brokers.get_balances()
+
+    async def get_transactions(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerTransaction]]:
+        """Get Transactions
+        
+        Get transactions for all authorized broker connections.
+        
+        Returns transactions from connections the company has read access to.
+        This endpoint is accessible from the portal and uses session-only authentication.
+        
+        Convenience method that delegates to brokers wrapper.
+        
+                @methodId get_transactions_api_v1_brokers_data_transactions_get
+                @category brokers
+        
+        Args:
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
+            unit_code (str, optional): Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+            currency (str, optional): Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+            transaction_type (str, optional): Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
+            start_date (str, optional): Filter transactions from this date (ISO 8601)
+            end_date (str, optional): Filter transactions until this date (ISO 8601)
+            limit (int, optional): Maximum number of transactions to return
+            offset (int, optional): Number of transactions to skip for pagination
+        
+        Returns:
+            FinaticResponse[PaginatedData[FDXBrokerTransaction]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_transactions()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_transactions(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getTransactions();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getTransactions();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetTransactionsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_transactions(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_transactions(**kwargs)
+        else:
+            return await self._brokers.get_transactions()
 
     async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerAccount]]:
         """Get Accounts
@@ -2852,3 +3074,294 @@ class FinaticServer:
                 return await self._brokers.get_position_lot_fills(**kwargs)
         else:
             return await self._brokers.get_position_lot_fills()
+
+    async def place_order(self, **kwargs) -> FinaticResponse[OrderActionResult]:
+        """Place Order
+        
+        Create a new order via the specified broker connection.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Requires trading permissions for the company.
+        
+        Standard parameters
+        -------------------
+        The following fields constitute the unified Finatic *common order schema* and
+        therefore appear individually as query parameters in the autogenerated
+        OpenAPI documentation:
+        
+        - ``broker``
+        - ``account_number``
+        - ``order_type``
+        - ``asset_type``
+        - ``action``
+        - ``time_in_force``
+        - ``symbol``
+        - ``order_qty``
+        
+        They are surfaced as *query* parameters **only to make the accepted fields
+        obvious in the interactive docs**. In production usage you should send these
+        fields inside the JSON body (see ``order_request``) so that the entire order
+        specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)
+        
+        Body payload & broker-specific extras
+        -------------------------------------
+        
+        Put the standard parameters plus any broker-specific extensions under the
+        ``order`` key of the body. Refer to the bundled OpenAPI examples below to
+        see complete payloads for common order types (market, limit, spreads, etc.)
+        across supported brokers.
+        
+        For a formal reference of broker-specific extensions inspect the
+        ``BrokerOrderPlaceExtras`` schema.
+        
+        The endpoint resolves the active ``user_broker_connection`` by calling the
+        ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active
+        connection exists it returns a list of *available* brokers so your client
+        can guide the user accordingly.
+        
+        Broker Notes
+        ------------
+        - The responses that you get back from the broker are not always the same.
+        The response models are validated for each broker, but we do not standardize the repsonses.
+        
+        - Tasty Trade: If you want to trade options for a particular stock, first fetch the full
+        option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint.
+        This endpoint returns all available expirations that tastytrade offers for that equity symbol.
+        Each expiration contains a list of strikes, where each strike has a call and put field representing
+        the call symbol and put symbol respectively.
+        
+        We are planning to add a new endpoint to fetch the option chain for a particular stock and
+        handle this logic for you, but for now you need to fetch the option chain manually.
+        
+        Convenience method that delegates to brokers wrapper.
+        
+                @methodId place_order_api_v1_brokers_orders_post
+                @category brokers
+        
+        Args:
+            order_request (OrderRequest, optional): Broker-specific extra parameters object. This is used to pass in broker-specific fields if you want to send a reqeust to a broker API with the parameters that EXTEND our standardized query parameters.
+            connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
+        
+        Returns:
+            FinaticResponse[OrderActionResult]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.place_order()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.place_order(
+            connection_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.placeOrder();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.placeOrder();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(PlaceOrderParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.place_order(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.place_order(**kwargs)
+        else:
+            return await self._brokers.place_order()
+
+    async def cancel_order(self, **kwargs) -> FinaticResponse[OrderActionResult]:
+        """Cancel Order
+        
+        Cancel an existing order.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Requires trading permissions for the company.
+        
+        The order_id is used to identify the order and automatically resolve the
+        broker connection from the orders table.
+        
+        Convenience method that delegates to brokers wrapper.
+        
+                @methodId cancel_order_api_v1_brokers_orders__order_id__delete
+                @category brokers
+        
+        Args:
+            order_id (str): Order ID
+        
+        Returns:
+            FinaticResponse[OrderActionResult]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.cancel_order(
+            order_id='order_1234567890abcdef'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.cancelOrder({ orderId: 'order_1234567890abcdef' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.cancelOrder({ orderId: 'order_1234567890abcdef' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(CancelOrderParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.cancel_order(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.cancel_order(**kwargs)
+        else:
+            return await self._brokers.cancel_order()
+
+    async def modify_order(self, **kwargs) -> FinaticResponse[OrderActionResult]:
+        """Modify Order
+        
+        Modify an existing order.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Requires trading permissions for the company.
+        
+        Convenience method that delegates to brokers wrapper.
+        
+                @methodId modify_order_api_v1_brokers_orders__order_id__patch
+                @category brokers
+        
+        Args:
+            order_id (str): Order ID
+            order_request (OrderRequest, optional): Broker-specific *modify order* payload. Pass **all** standard parameters plus any broker-specific extensions under the `order` key. See the schema for a formal reference.
+            account_number (str, optional): Account number owning the order
+            connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
+        
+        Returns:
+            FinaticResponse[OrderActionResult]: Standard FinaticResponse format
+        @example
+        ```python
+        # Minimal example with required parameters only
+        result = await finatic.modify_order(
+            order_id='order_1234567890abcdef'
+        )
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        elif result.error:
+            print('Error:', result.error['message'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.modify_order(
+            order_id='order_1234567890abcdef',
+            account_number='123456789',
+            connection_id='00000000-0000-0000-0000-000000000000'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Minimal example with required parameters only
+        const result = await finatic.modifyOrder({ orderId: 'order_1234567890abcdef' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Minimal example with required parameters only
+        const result = await finatic.modifyOrder({ orderId: 'order_1234567890abcdef' });
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        } else if (result.error) {
+          console.error('Error:', result.error.message);
+        }
+        ```
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(ModifyOrderParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.modify_order(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.modify_order(**kwargs)
+        else:
+            return await self._brokers.modify_order()

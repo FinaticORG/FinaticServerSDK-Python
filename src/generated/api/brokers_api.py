@@ -32,7 +32,11 @@ from ..models.finatic_response_list_fdx_broker_order_group import FinaticRespons
 from ..models.finatic_response_list_fdx_broker_position import FinaticResponseListFDXBrokerPosition
 from ..models.finatic_response_list_fdx_broker_position_lot import FinaticResponseListFDXBrokerPositionLot
 from ..models.finatic_response_list_fdx_broker_position_lot_fill import FinaticResponseListFDXBrokerPositionLotFill
+from ..models.finatic_response_list_fdx_broker_transaction import FinaticResponseListFDXBrokerTransaction
 from ..models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions
+from ..models.finatic_response_order_action_result import FinaticResponseOrderActionResult
+from ..models.modify_order_api_v1_brokers_orders_order_id_patch_request import ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+from ..models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest
 
 from ..api_client import ApiClient, RequestSerialized
 from ..api_response import ApiResponse
@@ -50,6 +54,293 @@ class BrokersApi:
         if api_client is None:
             api_client = ApiClient.get_default()
         self.api_client = api_client
+
+
+    @validate_call
+    async def cancel_order_api_v1_brokers_orders_order_id_delete(
+        self,
+        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseOrderActionResult:
+        """Cancel Order
+
+        Cancel an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  The order_id is used to identify the order and automatically resolve the broker connection from the orders table.
+
+        :param order_id: Order ID (required)
+        :type order_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+            order_id=order_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def cancel_order_api_v1_brokers_orders_order_id_delete_with_http_info(
+        self,
+        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseOrderActionResult]:
+        """Cancel Order
+
+        Cancel an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  The order_id is used to identify the order and automatically resolve the broker connection from the orders table.
+
+        :param order_id: Order ID (required)
+        :type order_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+            order_id=order_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def cancel_order_api_v1_brokers_orders_order_id_delete_without_preload_content(
+        self,
+        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Cancel Order
+
+        Cancel an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  The order_id is used to identify the order and automatically resolve the broker connection from the orders table.
+
+        :param order_id: Order ID (required)
+        :type order_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+            order_id=order_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+        self,
+        order_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if order_id is not None:
+            _path_params['order_id'] = order_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/api/v1/brokers/orders/{order_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
 
 
     @validate_call
@@ -736,11 +1027,10 @@ class BrokersApi:
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        is_end_of_day_snapshot: Annotated[Optional[StrictBool], Field(description="Filter by end-of-day snapshot status (true/false)")] = None,
+        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
+        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of balances to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
-        balance_created_after: Annotated[Optional[datetime], Field(description="Filter balances created after this timestamp")] = None,
-        balance_created_before: Annotated[Optional[datetime], Field(description="Filter balances created before this timestamp")] = None,
         include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
@@ -757,7 +1047,7 @@ class BrokersApi:
     ) -> FinaticResponseListFDXBrokerBalance:
         """Get Balances
 
-        Get balances for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
+        Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
 
         :param broker_id: Filter by broker ID
         :type broker_id: str
@@ -765,16 +1055,14 @@ class BrokersApi:
         :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
-        :param is_end_of_day_snapshot: Filter by end-of-day snapshot status (true/false)
-        :type is_end_of_day_snapshot: bool
+        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+        :type unit_code: str
+        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+        :type currency: str
         :param limit: Maximum number of balances to return
         :type limit: int
         :param offset: Number of balances to skip for pagination
         :type offset: int
-        :param balance_created_after: Filter balances created after this timestamp
-        :type balance_created_after: datetime
-        :param balance_created_before: Filter balances created before this timestamp
-        :type balance_created_before: datetime
         :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
         :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
@@ -803,11 +1091,10 @@ class BrokersApi:
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
-            is_end_of_day_snapshot=is_end_of_day_snapshot,
+            unit_code=unit_code,
+            currency=currency,
             limit=limit,
             offset=offset,
-            balance_created_after=balance_created_after,
-            balance_created_before=balance_created_before,
             include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -844,11 +1131,10 @@ class BrokersApi:
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        is_end_of_day_snapshot: Annotated[Optional[StrictBool], Field(description="Filter by end-of-day snapshot status (true/false)")] = None,
+        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
+        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of balances to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
-        balance_created_after: Annotated[Optional[datetime], Field(description="Filter balances created after this timestamp")] = None,
-        balance_created_before: Annotated[Optional[datetime], Field(description="Filter balances created before this timestamp")] = None,
         include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
@@ -865,7 +1151,7 @@ class BrokersApi:
     ) -> ApiResponse[FinaticResponseListFDXBrokerBalance]:
         """Get Balances
 
-        Get balances for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
+        Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
 
         :param broker_id: Filter by broker ID
         :type broker_id: str
@@ -873,16 +1159,14 @@ class BrokersApi:
         :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
-        :param is_end_of_day_snapshot: Filter by end-of-day snapshot status (true/false)
-        :type is_end_of_day_snapshot: bool
+        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+        :type unit_code: str
+        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+        :type currency: str
         :param limit: Maximum number of balances to return
         :type limit: int
         :param offset: Number of balances to skip for pagination
         :type offset: int
-        :param balance_created_after: Filter balances created after this timestamp
-        :type balance_created_after: datetime
-        :param balance_created_before: Filter balances created before this timestamp
-        :type balance_created_before: datetime
         :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
         :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
@@ -911,11 +1195,10 @@ class BrokersApi:
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
-            is_end_of_day_snapshot=is_end_of_day_snapshot,
+            unit_code=unit_code,
+            currency=currency,
             limit=limit,
             offset=offset,
-            balance_created_after=balance_created_after,
-            balance_created_before=balance_created_before,
             include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -952,11 +1235,10 @@ class BrokersApi:
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        is_end_of_day_snapshot: Annotated[Optional[StrictBool], Field(description="Filter by end-of-day snapshot status (true/false)")] = None,
+        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
+        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of balances to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
-        balance_created_after: Annotated[Optional[datetime], Field(description="Filter balances created after this timestamp")] = None,
-        balance_created_before: Annotated[Optional[datetime], Field(description="Filter balances created before this timestamp")] = None,
         include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
         _request_timeout: Union[
             None,
@@ -973,7 +1255,7 @@ class BrokersApi:
     ) -> RESTResponseType:
         """Get Balances
 
-        Get balances for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
+        Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
 
         :param broker_id: Filter by broker ID
         :type broker_id: str
@@ -981,16 +1263,14 @@ class BrokersApi:
         :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
-        :param is_end_of_day_snapshot: Filter by end-of-day snapshot status (true/false)
-        :type is_end_of_day_snapshot: bool
+        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+        :type unit_code: str
+        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+        :type currency: str
         :param limit: Maximum number of balances to return
         :type limit: int
         :param offset: Number of balances to skip for pagination
         :type offset: int
-        :param balance_created_after: Filter balances created after this timestamp
-        :type balance_created_after: datetime
-        :param balance_created_before: Filter balances created before this timestamp
-        :type balance_created_before: datetime
         :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
         :type include_metadata: bool
         :param _request_timeout: timeout setting for this request. If one
@@ -1019,11 +1299,10 @@ class BrokersApi:
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
-            is_end_of_day_snapshot=is_end_of_day_snapshot,
+            unit_code=unit_code,
+            currency=currency,
             limit=limit,
             offset=offset,
-            balance_created_after=balance_created_after,
-            balance_created_before=balance_created_before,
             include_metadata=include_metadata,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1055,11 +1334,10 @@ class BrokersApi:
         broker_id,
         connection_id,
         account_id,
-        is_end_of_day_snapshot,
+        unit_code,
+        currency,
         limit,
         offset,
-        balance_created_after,
-        balance_created_before,
         include_metadata,
         _request_auth,
         _content_type,
@@ -1095,9 +1373,13 @@ class BrokersApi:
             
             _query_params.append(('account_id', account_id))
             
-        if is_end_of_day_snapshot is not None:
+        if unit_code is not None:
             
-            _query_params.append(('is_end_of_day_snapshot', is_end_of_day_snapshot))
+            _query_params.append(('unit_code', unit_code))
+            
+        if currency is not None:
+            
+            _query_params.append(('currency', currency))
             
         if limit is not None:
             
@@ -1106,32 +1388,6 @@ class BrokersApi:
         if offset is not None:
             
             _query_params.append(('offset', offset))
-            
-        if balance_created_after is not None:
-            if isinstance(balance_created_after, datetime):
-                _query_params.append(
-                    (
-                        'balance_created_after',
-                        balance_created_after.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('balance_created_after', balance_created_after))
-            
-        if balance_created_before is not None:
-            if isinstance(balance_created_before, datetime):
-                _query_params.append(
-                    (
-                        'balance_created_before',
-                        balance_created_before.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('balance_created_before', balance_created_before))
             
         if include_metadata is not None:
             
@@ -4282,6 +4538,466 @@ class BrokersApi:
 
 
     @validate_call
+    async def get_transactions_api_v1_brokers_data_transactions_get(
+        self,
+        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
+        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
+        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
+        transaction_type: Annotated[Optional[StrictStr], Field(description="Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')")] = None,
+        start_date: Annotated[Optional[datetime], Field(description="Filter transactions from this date (ISO 8601)")] = None,
+        end_date: Annotated[Optional[datetime], Field(description="Filter transactions until this date (ISO 8601)")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of transactions to return")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of transactions to skip for pagination")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseListFDXBrokerTransaction:
+        """Get Transactions
+
+        Get transactions for all authorized broker connections.  Returns transactions from connections the company has read access to. This endpoint is accessible from the portal and uses session-only authentication.
+
+        :param broker_id: Filter by broker ID
+        :type broker_id: str
+        :param connection_id: Filter by connection ID
+        :type connection_id: UUID
+        :param account_id: Filter by broker provided account ID or internal account UUID
+        :type account_id: str
+        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+        :type unit_code: str
+        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+        :type currency: str
+        :param transaction_type: Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
+        :type transaction_type: str
+        :param start_date: Filter transactions from this date (ISO 8601)
+        :type start_date: datetime
+        :param end_date: Filter transactions until this date (ISO 8601)
+        :type end_date: datetime
+        :param limit: Maximum number of transactions to return
+        :type limit: int
+        :param offset: Number of transactions to skip for pagination
+        :type offset: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_transactions_api_v1_brokers_data_transactions_get_serialize(
+            broker_id=broker_id,
+            connection_id=connection_id,
+            account_id=account_id,
+            unit_code=unit_code,
+            currency=currency,
+            transaction_type=transaction_type,
+            start_date=start_date,
+            end_date=end_date,
+            limit=limit,
+            offset=offset,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseListFDXBrokerTransaction",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def get_transactions_api_v1_brokers_data_transactions_get_with_http_info(
+        self,
+        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
+        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
+        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
+        transaction_type: Annotated[Optional[StrictStr], Field(description="Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')")] = None,
+        start_date: Annotated[Optional[datetime], Field(description="Filter transactions from this date (ISO 8601)")] = None,
+        end_date: Annotated[Optional[datetime], Field(description="Filter transactions until this date (ISO 8601)")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of transactions to return")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of transactions to skip for pagination")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseListFDXBrokerTransaction]:
+        """Get Transactions
+
+        Get transactions for all authorized broker connections.  Returns transactions from connections the company has read access to. This endpoint is accessible from the portal and uses session-only authentication.
+
+        :param broker_id: Filter by broker ID
+        :type broker_id: str
+        :param connection_id: Filter by connection ID
+        :type connection_id: UUID
+        :param account_id: Filter by broker provided account ID or internal account UUID
+        :type account_id: str
+        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+        :type unit_code: str
+        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+        :type currency: str
+        :param transaction_type: Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
+        :type transaction_type: str
+        :param start_date: Filter transactions from this date (ISO 8601)
+        :type start_date: datetime
+        :param end_date: Filter transactions until this date (ISO 8601)
+        :type end_date: datetime
+        :param limit: Maximum number of transactions to return
+        :type limit: int
+        :param offset: Number of transactions to skip for pagination
+        :type offset: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_transactions_api_v1_brokers_data_transactions_get_serialize(
+            broker_id=broker_id,
+            connection_id=connection_id,
+            account_id=account_id,
+            unit_code=unit_code,
+            currency=currency,
+            transaction_type=transaction_type,
+            start_date=start_date,
+            end_date=end_date,
+            limit=limit,
+            offset=offset,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseListFDXBrokerTransaction",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def get_transactions_api_v1_brokers_data_transactions_get_without_preload_content(
+        self,
+        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
+        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
+        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
+        transaction_type: Annotated[Optional[StrictStr], Field(description="Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')")] = None,
+        start_date: Annotated[Optional[datetime], Field(description="Filter transactions from this date (ISO 8601)")] = None,
+        end_date: Annotated[Optional[datetime], Field(description="Filter transactions until this date (ISO 8601)")] = None,
+        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of transactions to return")] = None,
+        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of transactions to skip for pagination")] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Get Transactions
+
+        Get transactions for all authorized broker connections.  Returns transactions from connections the company has read access to. This endpoint is accessible from the portal and uses session-only authentication.
+
+        :param broker_id: Filter by broker ID
+        :type broker_id: str
+        :param connection_id: Filter by connection ID
+        :type connection_id: UUID
+        :param account_id: Filter by broker provided account ID or internal account UUID
+        :type account_id: str
+        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+        :type unit_code: str
+        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+        :type currency: str
+        :param transaction_type: Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
+        :type transaction_type: str
+        :param start_date: Filter transactions from this date (ISO 8601)
+        :type start_date: datetime
+        :param end_date: Filter transactions until this date (ISO 8601)
+        :type end_date: datetime
+        :param limit: Maximum number of transactions to return
+        :type limit: int
+        :param offset: Number of transactions to skip for pagination
+        :type offset: int
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._get_transactions_api_v1_brokers_data_transactions_get_serialize(
+            broker_id=broker_id,
+            connection_id=connection_id,
+            account_id=account_id,
+            unit_code=unit_code,
+            currency=currency,
+            transaction_type=transaction_type,
+            start_date=start_date,
+            end_date=end_date,
+            limit=limit,
+            offset=offset,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseListFDXBrokerTransaction",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _get_transactions_api_v1_brokers_data_transactions_get_serialize(
+        self,
+        broker_id,
+        connection_id,
+        account_id,
+        unit_code,
+        currency,
+        transaction_type,
+        start_date,
+        end_date,
+        limit,
+        offset,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if broker_id is not None:
+            
+            _query_params.append(('broker_id', broker_id))
+            
+        if connection_id is not None:
+            
+            _query_params.append(('connection_id', connection_id))
+            
+        if account_id is not None:
+            
+            _query_params.append(('account_id', account_id))
+            
+        if unit_code is not None:
+            
+            _query_params.append(('unit_code', unit_code))
+            
+        if currency is not None:
+            
+            _query_params.append(('currency', currency))
+            
+        if transaction_type is not None:
+            
+            _query_params.append(('transaction_type', transaction_type))
+            
+        if start_date is not None:
+            if isinstance(start_date, datetime):
+                _query_params.append(
+                    (
+                        'start_date',
+                        start_date.strftime(
+                            self.api_client.configuration.datetime_format
+                        )
+                    )
+                )
+            else:
+                _query_params.append(('start_date', start_date))
+            
+        if end_date is not None:
+            if isinstance(end_date, datetime):
+                _query_params.append(
+                    (
+                        'end_date',
+                        end_date.strftime(
+                            self.api_client.configuration.datetime_format
+                        )
+                    )
+                )
+            else:
+                _query_params.append(('end_date', end_date))
+            
+        if limit is not None:
+            
+            _query_params.append(('limit', limit))
+            
+        if offset is not None:
+            
+            _query_params.append(('offset', offset))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/v1/brokers/data/transactions',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     async def list_broker_connections_api_v1_brokers_connections_get(
         self,
         _request_timeout: Union[
@@ -4538,6 +5254,672 @@ class BrokersApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/api/v1/brokers/connections',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    async def modify_order_api_v1_brokers_orders_order_id_patch(
+        self,
+        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        modify_order_api_v1_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseOrderActionResult:
+        """Modify Order
+
+        Modify an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
+
+        :param order_id: Order ID (required)
+        :type order_id: str
+        :param account_number: Account number owning the order
+        :type account_number: str
+        :param connection_id: Temporary bypass for testing: specify connection ID directly
+        :type connection_id: UUID
+        :param modify_order_api_v1_brokers_orders_order_id_patch_request:
+        :type modify_order_api_v1_brokers_orders_order_id_patch_request: ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+            order_id=order_id,
+            account_number=account_number,
+            connection_id=connection_id,
+            modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def modify_order_api_v1_brokers_orders_order_id_patch_with_http_info(
+        self,
+        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        modify_order_api_v1_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseOrderActionResult]:
+        """Modify Order
+
+        Modify an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
+
+        :param order_id: Order ID (required)
+        :type order_id: str
+        :param account_number: Account number owning the order
+        :type account_number: str
+        :param connection_id: Temporary bypass for testing: specify connection ID directly
+        :type connection_id: UUID
+        :param modify_order_api_v1_brokers_orders_order_id_patch_request:
+        :type modify_order_api_v1_brokers_orders_order_id_patch_request: ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+            order_id=order_id,
+            account_number=account_number,
+            connection_id=connection_id,
+            modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def modify_order_api_v1_brokers_orders_order_id_patch_without_preload_content(
+        self,
+        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        modify_order_api_v1_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Modify Order
+
+        Modify an existing order.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.
+
+        :param order_id: Order ID (required)
+        :type order_id: str
+        :param account_number: Account number owning the order
+        :type account_number: str
+        :param connection_id: Temporary bypass for testing: specify connection ID directly
+        :type connection_id: UUID
+        :param modify_order_api_v1_brokers_orders_order_id_patch_request:
+        :type modify_order_api_v1_brokers_orders_order_id_patch_request: ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+            order_id=order_id,
+            account_number=account_number,
+            connection_id=connection_id,
+            modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+        self,
+        order_id,
+        account_number,
+        connection_id,
+        modify_order_api_v1_brokers_orders_order_id_patch_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if order_id is not None:
+            _path_params['order_id'] = order_id
+        # process the query parameters
+        if account_number is not None:
+            
+            _query_params.append(('account_number', account_number))
+            
+        if connection_id is not None:
+            
+            _query_params.append(('connection_id', connection_id))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if modify_order_api_v1_brokers_orders_order_id_patch_request is not None:
+            _body_params = modify_order_api_v1_brokers_orders_order_id_patch_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='PATCH',
+            resource_path='/api/v1/brokers/orders/{order_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    async def place_order_api_v1_brokers_orders_post(
+        self,
+        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        place_order_api_v1_brokers_orders_post_request: Optional[PlaceOrderApiV1BrokersOrdersPostRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseOrderActionResult:
+        """Place Order
+
+        Create a new order via the specified broker connection.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  Standard parameters ------------------- The following fields constitute the unified Finatic *common order schema* and therefore appear individually as query parameters in the autogenerated OpenAPI documentation:  - ``broker`` - ``account_number`` - ``order_type`` - ``asset_type`` - ``action`` - ``time_in_force`` - ``symbol`` - ``order_qty``  They are surfaced as *query* parameters **only to make the accepted fields obvious in the interactive docs**. In production usage you should send these fields inside the JSON body (see ``order_request``) so that the entire order specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)  Body payload & broker-specific extras -------------------------------------  Put the standard parameters plus any broker-specific extensions under the ``order`` key of the body. Refer to the bundled OpenAPI examples below to see complete payloads for common order types (market, limit, spreads, etc.) across supported brokers.  For a formal reference of broker-specific extensions inspect the ``BrokerOrderPlaceExtras`` schema.  The endpoint resolves the active ``user_broker_connection`` by calling the ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active connection exists it returns a list of *available* brokers so your client can guide the user accordingly.  Broker Notes ------------ - The responses that you get back from the broker are not always the same. The response models are validated for each broker, but we do not standardize the repsonses.  - Tasty Trade: If you want to trade options for a particular stock, first fetch the full option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint. This endpoint returns all available expirations that tastytrade offers for that equity symbol. Each expiration contains a list of strikes, where each strike has a call and put field representing the call symbol and put symbol respectively.  We are planning to add a new endpoint to fetch the option chain for a particular stock and handle this logic for you, but for now you need to fetch the option chain manually.
+
+        :param connection_id: Temporary bypass for testing: specify connection ID directly
+        :type connection_id: UUID
+        :param place_order_api_v1_brokers_orders_post_request:
+        :type place_order_api_v1_brokers_orders_post_request: PlaceOrderApiV1BrokersOrdersPostRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._place_order_api_v1_brokers_orders_post_serialize(
+            connection_id=connection_id,
+            place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    async def place_order_api_v1_brokers_orders_post_with_http_info(
+        self,
+        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        place_order_api_v1_brokers_orders_post_request: Optional[PlaceOrderApiV1BrokersOrdersPostRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseOrderActionResult]:
+        """Place Order
+
+        Create a new order via the specified broker connection.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  Standard parameters ------------------- The following fields constitute the unified Finatic *common order schema* and therefore appear individually as query parameters in the autogenerated OpenAPI documentation:  - ``broker`` - ``account_number`` - ``order_type`` - ``asset_type`` - ``action`` - ``time_in_force`` - ``symbol`` - ``order_qty``  They are surfaced as *query* parameters **only to make the accepted fields obvious in the interactive docs**. In production usage you should send these fields inside the JSON body (see ``order_request``) so that the entire order specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)  Body payload & broker-specific extras -------------------------------------  Put the standard parameters plus any broker-specific extensions under the ``order`` key of the body. Refer to the bundled OpenAPI examples below to see complete payloads for common order types (market, limit, spreads, etc.) across supported brokers.  For a formal reference of broker-specific extensions inspect the ``BrokerOrderPlaceExtras`` schema.  The endpoint resolves the active ``user_broker_connection`` by calling the ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active connection exists it returns a list of *available* brokers so your client can guide the user accordingly.  Broker Notes ------------ - The responses that you get back from the broker are not always the same. The response models are validated for each broker, but we do not standardize the repsonses.  - Tasty Trade: If you want to trade options for a particular stock, first fetch the full option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint. This endpoint returns all available expirations that tastytrade offers for that equity symbol. Each expiration contains a list of strikes, where each strike has a call and put field representing the call symbol and put symbol respectively.  We are planning to add a new endpoint to fetch the option chain for a particular stock and handle this logic for you, but for now you need to fetch the option chain manually.
+
+        :param connection_id: Temporary bypass for testing: specify connection ID directly
+        :type connection_id: UUID
+        :param place_order_api_v1_brokers_orders_post_request:
+        :type place_order_api_v1_brokers_orders_post_request: PlaceOrderApiV1BrokersOrdersPostRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._place_order_api_v1_brokers_orders_post_serialize(
+            connection_id=connection_id,
+            place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        await response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    async def place_order_api_v1_brokers_orders_post_without_preload_content(
+        self,
+        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        place_order_api_v1_brokers_orders_post_request: Optional[PlaceOrderApiV1BrokersOrdersPostRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Place Order
+
+        Create a new order via the specified broker connection.  This endpoint is accessible from the portal and uses session-only authentication. Requires trading permissions for the company.  Standard parameters ------------------- The following fields constitute the unified Finatic *common order schema* and therefore appear individually as query parameters in the autogenerated OpenAPI documentation:  - ``broker`` - ``account_number`` - ``order_type`` - ``asset_type`` - ``action`` - ``time_in_force`` - ``symbol`` - ``order_qty``  They are surfaced as *query* parameters **only to make the accepted fields obvious in the interactive docs**. In production usage you should send these fields inside the JSON body (see ``order_request``) so that the entire order specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)  Body payload & broker-specific extras -------------------------------------  Put the standard parameters plus any broker-specific extensions under the ``order`` key of the body. Refer to the bundled OpenAPI examples below to see complete payloads for common order types (market, limit, spreads, etc.) across supported brokers.  For a formal reference of broker-specific extensions inspect the ``BrokerOrderPlaceExtras`` schema.  The endpoint resolves the active ``user_broker_connection`` by calling the ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active connection exists it returns a list of *available* brokers so your client can guide the user accordingly.  Broker Notes ------------ - The responses that you get back from the broker are not always the same. The response models are validated for each broker, but we do not standardize the repsonses.  - Tasty Trade: If you want to trade options for a particular stock, first fetch the full option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint. This endpoint returns all available expirations that tastytrade offers for that equity symbol. Each expiration contains a list of strikes, where each strike has a call and put field representing the call symbol and put symbol respectively.  We are planning to add a new endpoint to fetch the option chain for a particular stock and handle this logic for you, but for now you need to fetch the option chain manually.
+
+        :param connection_id: Temporary bypass for testing: specify connection ID directly
+        :type connection_id: UUID
+        :param place_order_api_v1_brokers_orders_post_request:
+        :type place_order_api_v1_brokers_orders_post_request: PlaceOrderApiV1BrokersOrdersPostRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._place_order_api_v1_brokers_orders_post_serialize(
+            connection_id=connection_id,
+            place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseOrderActionResult",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = await self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _place_order_api_v1_brokers_orders_post_serialize(
+        self,
+        connection_id,
+        place_order_api_v1_brokers_orders_post_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        if connection_id is not None:
+            
+            _query_params.append(('connection_id', connection_id))
+            
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if place_order_api_v1_brokers_orders_post_request is not None:
+            _body_params = place_order_api_v1_brokers_orders_post_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='POST',
+            resource_path='/api/v1/brokers/orders',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

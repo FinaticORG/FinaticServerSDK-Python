@@ -90,6 +90,7 @@ async def main():
     orders = await finatic.get_orders()
     positions = await finatic.get_positions()
     balances = await finatic.get_balances()
+    # transactions = await finatic.get_transactions()
     if orders.get("success"):
         print("We are in orders")
         paginated_data = orders["success"]["data"]
@@ -117,6 +118,7 @@ async def main():
     all_orders = await finatic.get_all_orders()
     all_positions = await finatic.get_all_positions()
     all_balances = await finatic.get_all_balances()
+    all_transactions = await finatic.get_all_transactions()
     # all_order_fills = await finatic.get_all_order_fills(order_id="order-id")  # Required: order_id
     # all_order_events = await finatic.get_all_order_events(order_id="order-id")  # Required: order_id
     all_order_groups = await finatic.get_all_order_groups()
@@ -124,6 +126,28 @@ async def main():
     # all_position_lot_fills = await finatic.get_all_position_lot_fills(
     #     lot_id="lot-id"
     # )  # Required: lot_id
+
+    # Trading methods
+    # place_order_result = await finatic.place_order(
+    #     connection_id=all_accounts["success"]["data"][0]["connection_id"],
+    #     order_type="market",
+    #     asset_type="equity",
+    #     action="buy",
+    #     symbol="AAPL",
+    #     order_qty=1,
+    # )
+    # print("place_order_result", place_order_result)
+
+    # modify_order_result = await finatic.modify_order(
+    #     order_id=all_orders["success"]["data"][0]["order_id"],
+    #     order_qty=2,
+    # )
+    # print("modify_order_result", modify_order_result)
+
+    # cancel_order_result = await finatic.cancel_order(
+    #     order_id=all_orders["success"]["data"][0]["order_id"],
+    # )
+    # print("cancel_order_result", cancel_order_result)
 
 
 if __name__ == "__main__":
