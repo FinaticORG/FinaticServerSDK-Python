@@ -27,7 +27,7 @@ BUYINGPOWER_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Buyingpower(BaseModel):
     """
-    Margin buying power
+    Buying power
     """
 
     # data type: str

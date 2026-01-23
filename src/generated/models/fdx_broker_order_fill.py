@@ -21,7 +21,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .assettype import Assettype
-from .commission import Commission
+from .commission1 import Commission1
 from .price import Price
 from .quantity2 import Quantity2
 from .securityidtype import Securityidtype
@@ -47,7 +47,7 @@ class FDXBrokerOrderFill(BaseModel):
     price: Price
     executed_at: datetime = Field(description="Broker execution timestamp", alias="executedAt")
     venue: Optional[StrictStr] = None
-    commission: Optional[Commission] = None
+    commission: Optional[Commission1] = None
     metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["_id", "fillId", "orderId", "legId", "executionId", "tradeId", "securityId", "securityIdType", "assetType", "side", "quantity", "price", "executedAt", "venue", "commission", "metadata"]
@@ -172,7 +172,7 @@ class FDXBrokerOrderFill(BaseModel):
             "price": Price.from_dict(obj["price"]) if obj.get("price") is not None else None,
             "executedAt": obj.get("executedAt"),
             "venue": obj.get("venue"),
-            "commission": Commission.from_dict(obj["commission"]) if obj.get("commission") is not None else None,
+            "commission": Commission1.from_dict(obj["commission"]) if obj.get("commission") is not None else None,
             "metadata": obj.get("metadata")
         })
         # store additional fields in additional_properties

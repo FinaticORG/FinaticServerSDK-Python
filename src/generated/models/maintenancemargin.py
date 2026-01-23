@@ -27,7 +27,7 @@ MAINTENANCEMARGIN_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Maintenancemargin(BaseModel):
     """
-    Maintenance margin requirement
+    Maintenance margin
     """
 
     # data type: str

@@ -31,7 +31,7 @@ from ..utils.plain_object import convert_to_plain_object
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
 class GetCompanyParams:
-    """Input parameters for get_company_api_v1_company__company_id__get."""
+    """Input parameters for get_company_api_beta_company__company_id__get."""
   # Company ID
     company_id: str
 
@@ -84,8 +84,8 @@ class CompanyWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/company/{company_id}
-        @methodId get_company_api_v1_company__company_id__get
+        Generated from: GET /api/beta/company/{company_id}
+        @methodId get_company_api_beta_company__company_id__get
         @category company
         @example
         ```python
@@ -122,7 +122,7 @@ class CompanyWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/company/{company_id}', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/company/{company_id}', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -134,14 +134,14 @@ class CompanyWrapper:
         self.logger.debug('Get Company',
             request_id=request_id,
             method='GET',
-            path='/api/v1/company/{company_id}',
+            path='/api/beta/company/{company_id}',
             params=params_dict,
             action='get_company'
         )
 
         try:
             async def api_call():
-                response = await self.api.get_company_api_v1_company_company_id_get(company_id=company_id)
+                response = await self.api.get_company_api_beta_company_company_id_get(company_id=company_id)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -174,7 +174,7 @@ class CompanyWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/company/{company_id}', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/company/{company_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Company completed',

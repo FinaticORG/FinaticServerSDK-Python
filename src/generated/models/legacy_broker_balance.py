@@ -22,7 +22,6 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from .availablebalance import Availablebalance
 from .availabletowithdraw import Availabletowithdraw
-from .balancetype import Balancetype
 from .buyingpower import Buyingpower
 from .cashbalance import Cashbalance
 from .currentbalance import Currentbalance
@@ -35,16 +34,15 @@ from .totalrealizedpnl import Totalrealizedpnl
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FDXBrokerBalance(BaseModel):
+class LegacyBrokerBalance(BaseModel):
     """
-    FDX-style broker balance schema following FDX Balance patterns.  Extends FDX Balance schema with broker-specific balance types.
+    Legacy broker balance schema matching pre-refactor JSON format.  This model uses camelCase field names to match the legacy API response format.
     """ # noqa: E501
-    id: Optional[StrictStr] = Field(default=None, alias="_id")
-    balance_id: StrictStr = Field(description="Unique balance identifier", alias="balanceId")
-    account_id: StrictStr = Field(description="Associated account identifier", alias="accountId")
+    balance_id: StrictStr = Field(description="Balance UUID", alias="balanceId")
+    account_id: StrictStr = Field(description="Broker-provided account ID", alias="accountId")
     internal_account_id: Optional[StrictStr] = Field(default=None, alias="internalAccountId")
     connection_id: Optional[StrictStr] = Field(default=None, alias="connectionId")
-    balance_type: Balancetype = Field(alias="balanceType")
+    balance_type: Optional[StrictStr] = Field(default=None, alias="balanceType")
     balance_name: Optional[StrictStr] = Field(default=None, alias="balanceName")
     available_balance: Optional[Availablebalance] = Field(default=None, alias="availableBalance")
     current_balance: Optional[Currentbalance] = Field(default=None, alias="currentBalance")
@@ -60,9 +58,8 @@ class FDXBrokerBalance(BaseModel):
     currency_code: Optional[StrictStr] = Field(default=None, alias="currencyCode")
     balance_date: Optional[datetime] = Field(default=None, alias="balanceDate")
     last_updated: Optional[datetime] = Field(default=None, alias="lastUpdated")
-    metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "balanceId", "accountId", "internalAccountId", "connectionId", "balanceType", "balanceName", "availableBalance", "currentBalance", "pendingBalance", "buyingPower", "cashBalance", "netLiquidationValue", "initialMargin", "maintenanceMargin", "totalCashValue", "availableToWithdraw", "totalRealizedPnl", "currencyCode", "balanceDate", "lastUpdated", "metadata"]
+    __properties: ClassVar[List[str]] = ["balanceId", "accountId", "internalAccountId", "connectionId", "balanceType", "balanceName", "availableBalance", "currentBalance", "pendingBalance", "buyingPower", "cashBalance", "netLiquidationValue", "initialMargin", "maintenanceMargin", "totalCashValue", "availableToWithdraw", "totalRealizedPnl", "currencyCode", "balanceDate", "lastUpdated"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,7 +79,7 @@ class FDXBrokerBalance(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FDXBrokerBalance from a JSON string"""
+        """Create an instance of LegacyBrokerBalance from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -105,9 +102,6 @@ class FDXBrokerBalance(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of balance_type
-        if self.balance_type:
-            _dict['balanceType'] = self.balance_type.to_dict()
         # override the default output from pydantic by calling `to_dict()` of available_balance
         if self.available_balance:
             _dict['availableBalance'] = self.available_balance.to_dict()
@@ -155,6 +149,11 @@ class FDXBrokerBalance(BaseModel):
         # and model_fields_set contains the field
         if self.connection_id is None and "connection_id" in self.model_fields_set:
             _dict['connectionId'] = None
+
+        # set to None if balance_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.balance_type is None and "balance_type" in self.model_fields_set:
+            _dict['balanceType'] = None
 
         # set to None if balance_name (nullable) is None
         # and model_fields_set contains the field
@@ -231,16 +230,11 @@ class FDXBrokerBalance(BaseModel):
         if self.last_updated is None and "last_updated" in self.model_fields_set:
             _dict['lastUpdated'] = None
 
-        # set to None if metadata (nullable) is None
-        # and model_fields_set contains the field
-        if self.metadata is None and "metadata" in self.model_fields_set:
-            _dict['metadata'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FDXBrokerBalance from a dict"""
+        """Create an instance of LegacyBrokerBalance from a dict"""
         if obj is None:
             return None
 
@@ -248,12 +242,11 @@ class FDXBrokerBalance(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "_id": obj.get("_id"),
             "balanceId": obj.get("balanceId"),
             "accountId": obj.get("accountId"),
             "internalAccountId": obj.get("internalAccountId"),
             "connectionId": obj.get("connectionId"),
-            "balanceType": Balancetype.from_dict(obj["balanceType"]) if obj.get("balanceType") is not None else None,
+            "balanceType": obj.get("balanceType"),
             "balanceName": obj.get("balanceName"),
             "availableBalance": Availablebalance.from_dict(obj["availableBalance"]) if obj.get("availableBalance") is not None else None,
             "currentBalance": Currentbalance.from_dict(obj["currentBalance"]) if obj.get("currentBalance") is not None else None,
@@ -268,8 +261,7 @@ class FDXBrokerBalance(BaseModel):
             "totalRealizedPnl": Totalrealizedpnl.from_dict(obj["totalRealizedPnl"]) if obj.get("totalRealizedPnl") is not None else None,
             "currencyCode": obj.get("currencyCode"),
             "balanceDate": obj.get("balanceDate"),
-            "lastUpdated": obj.get("lastUpdated"),
-            "metadata": obj.get("metadata")
+            "lastUpdated": obj.get("lastUpdated")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

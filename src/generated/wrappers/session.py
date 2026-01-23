@@ -13,11 +13,7 @@ from ..api.session_api import SessionApi
 from ..configuration import Configuration
 from ..config import SdkConfig
 from ..types import FinaticResponse
-from ..models.portal_url_response import PortalUrlResponse
-from ..models.session_response_data import SessionResponseData
 from ..models.session_start_request import SessionStartRequest
-from ..models.session_user_response import SessionUserResponse
-from ..models.token_response_data import TokenResponseData
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
 from ..utils.logger import get_logger
@@ -35,13 +31,13 @@ from ..utils.plain_object import convert_to_plain_object
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
 class InitSessionParams:
-    """Input parameters for init_session_api_v1_session_init_post."""
+    """Input parameters for init_session_api_beta_session_init_post."""
   # Company API key
     x_api_key: str
 
 @dataclass
 class StartSessionParams:
-    """Input parameters for start_session_api_v1_session_start_post."""
+    """Input parameters for start_session_api_beta_session_start_post."""
   # One-time use token obtained from init_session endpoint to authenticate and start the session
     one_time_token: str
   # Session start request containing optional user ID to associate with the session
@@ -49,12 +45,12 @@ class StartSessionParams:
 
 @dataclass
 class GetPortalUrlParams:
-    """Input parameters for get_portal_url_api_v1_session_portal_get."""
+    """Input parameters for get_portal_url_api_beta_session_portal_get."""
     pass
 
 @dataclass
 class GetSessionUserParams:
-    """Input parameters for get_session_user_api_v1_session__session_id__user_get."""
+    """Input parameters for get_session_user_api_beta_session__session_id__user_get."""
   # Session ID
     session_id: str
 
@@ -94,7 +90,7 @@ class SessionWrapper:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
-    async def init_session(self, **kwargs) -> FinaticResponse[TokenResponseData]:
+    async def init_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseTokenresponsedata2]:
         """Init Session
         
         Initialize a new session with company API key.
@@ -102,13 +98,13 @@ class SessionWrapper:
         Args:
             x_api_key (str): Company API key
         Returns:
-        - Dict[str, Any]: FinaticResponse[TokenResponseData] format
-                     success: {data: TokenResponseData, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseTokenresponsedata2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseTokenresponsedata2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: POST /api/v1/session/init
-        @methodId init_session_api_v1_session_init_post
+        Generated from: POST /api/beta/session/init
+        @methodId init_session_api_beta_session_init_post
         @category session
         @example
         ```python
@@ -141,7 +137,7 @@ class SessionWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('POST', '/api/v1/session/init', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('POST', '/api/beta/session/init', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -153,14 +149,14 @@ class SessionWrapper:
         self.logger.debug('Init Session',
             request_id=request_id,
             method='POST',
-            path='/api/v1/session/init',
+            path='/api/beta/session/init',
             params=params_dict,
             action='init_session'
         )
 
         try:
             async def api_call():
-                response = await self.api.init_session_api_v1_session_init_post(x_api_key=x_api_key)
+                response = await self.api.init_session_api_beta_session_init_post(x_api_key=x_api_key)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -193,7 +189,7 @@ class SessionWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('POST', '/api/v1/session/init', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('POST', '/api/beta/session/init', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Init Session completed',
@@ -315,7 +311,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def start_session(self, **kwargs) -> FinaticResponse[SessionResponseData]:
+    async def start_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionresponsedata2]:
         """Start Session
         
         Start a session with a one-time token.
@@ -324,13 +320,13 @@ class SessionWrapper:
             one_time_token (str): One-time use token obtained from init_session endpoint to authenticate and start the session
             session_start_request (SessionStartRequest): Session start request containing optional user ID to associate with the session
         Returns:
-        - Dict[str, Any]: FinaticResponse[SessionResponseData] format
-                     success: {data: SessionResponseData, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionresponsedata2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionresponsedata2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: POST /api/v1/session/start
-        @methodId start_session_api_v1_session_start_post
+        Generated from: POST /api/beta/session/start
+        @methodId start_session_api_beta_session_start_post
         @category session
         @example
         ```python
@@ -364,7 +360,7 @@ class SessionWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('POST', '/api/v1/session/start', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('POST', '/api/beta/session/start', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -376,14 +372,14 @@ class SessionWrapper:
         self.logger.debug('Start Session',
             request_id=request_id,
             method='POST',
-            path='/api/v1/session/start',
+            path='/api/beta/session/start',
             params=params_dict,
             action='start_session'
         )
 
         try:
             async def api_call():
-                response = await self.api.start_session_api_v1_session_start_post(session_start_request=session_start_request, one_time_token=one_time_token)
+                response = await self.api.start_session_api_beta_session_start_post(session_start_request=session_start_request, one_time_token=one_time_token)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -416,7 +412,7 @@ class SessionWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('POST', '/api/v1/session/start', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('POST', '/api/beta/session/start', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Start Session completed',
@@ -538,7 +534,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_portal_url(self, **kwargs) -> FinaticResponse[PortalUrlResponse]:
+    async def get_portal_url(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponsePortalurlresponse2]:
         """Get Portal Url
         
         Get a portal URL with token for a session.
@@ -549,13 +545,13 @@ class SessionWrapper:
         Args:
         - **kwargs: No parameters required for this method
         Returns:
-        - Dict[str, Any]: FinaticResponse[PortalUrlResponse] format
-                     success: {data: PortalUrlResponse, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponsePortalurlresponse2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponsePortalurlresponse2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/session/portal
-        @methodId get_portal_url_api_v1_session_portal_get
+        Generated from: GET /api/beta/session/portal
+        @methodId get_portal_url_api_beta_session_portal_get
         @category session
         @example
         ```python
@@ -592,7 +588,7 @@ class SessionWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/session/portal', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/session/portal', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -604,7 +600,7 @@ class SessionWrapper:
         self.logger.debug('Get Portal Url',
             request_id=request_id,
             method='GET',
-            path='/api/v1/session/portal',
+            path='/api/beta/session/portal',
             params=params_dict,
             action='get_portal_url'
         )
@@ -620,7 +616,7 @@ class SessionWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_portal_url_api_v1_session_portal_get(session_id=self.session_id, _headers=headers)
+                response = await self.api.get_portal_url_api_beta_session_portal_get(session_id=self.session_id, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -653,7 +649,7 @@ class SessionWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/session/portal', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/session/portal', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Portal Url completed',
@@ -775,7 +771,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_session_user(self, **kwargs) -> FinaticResponse[SessionUserResponse]:
+    async def get_session_user(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionuserresponse2]:
         """Get Session User
         
         Get user information for a completed session.
@@ -793,13 +789,13 @@ class SessionWrapper:
         Args:
             session_id (str): Session ID
         Returns:
-        - Dict[str, Any]: FinaticResponse[SessionUserResponse] format
-                     success: {data: SessionUserResponse, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionuserresponse2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionuserresponse2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/session/{session_id}/user
-        @methodId get_session_user_api_v1_session__session_id__user_get
+        Generated from: GET /api/beta/session/{session_id}/user
+        @methodId get_session_user_api_beta_session__session_id__user_get
         @category session
         @example
         ```python
@@ -840,7 +836,7 @@ class SessionWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/session/{session_id}/user', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/session/{session_id}/user', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -852,7 +848,7 @@ class SessionWrapper:
         self.logger.debug('Get Session User',
             request_id=request_id,
             method='GET',
-            path='/api/v1/session/{session_id}/user',
+            path='/api/beta/session/{session_id}/user',
             params=params_dict,
             action='get_session_user'
         )
@@ -868,7 +864,7 @@ class SessionWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_session_user_api_v1_session_session_id_user_get(session_id=session_id, x_session_id=self.session_id, _headers=headers)
+                response = await self.api.get_session_user_api_beta_session_session_id_user_get(session_id=session_id, x_session_id=self.session_id, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -901,7 +897,7 @@ class SessionWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/session/{session_id}/user', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/session/{session_id}/user', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Session User completed',

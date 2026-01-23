@@ -18,10 +18,10 @@ from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from ..models.finatic_response_portal_url_response import FinaticResponsePortalUrlResponse
-from ..models.finatic_response_session_response_data import FinaticResponseSessionResponseData
-from ..models.finatic_response_session_user_response import FinaticResponseSessionUserResponse
-from ..models.finatic_response_token_response_data import FinaticResponseTokenResponseData
+from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
+from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
+from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
+from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
 from ..models.session_start_request import SessionStartRequest
 
 from ..api_client import ApiClient, RequestSerialized
@@ -43,7 +43,7 @@ class SessionApi:
 
 
     @validate_call
-    async def get_portal_url_api_v1_session_portal_get(
+    async def get_portal_url_api_beta_session_portal_get(
         self,
         session_id: Annotated[StrictStr, Field(description="Session ID")],
         _request_timeout: Union[
@@ -58,7 +58,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponsePortalUrlResponse:
+    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2:
         """Get Portal Url
 
         Get a portal URL with token for a session.  The session must be in ACTIVE or AUTHENTICATING state and the request must come from the same device that initiated the session. Device info is automatically validated from the request.
@@ -87,7 +87,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_portal_url_api_v1_session_portal_get_serialize(
+        _param = self._get_portal_url_api_beta_session_portal_get_serialize(
             session_id=session_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -96,7 +96,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponsePortalUrlResponse",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -119,7 +119,7 @@ class SessionApi:
 
 
     @validate_call
-    async def get_portal_url_api_v1_session_portal_get_with_http_info(
+    async def get_portal_url_api_beta_session_portal_get_with_http_info(
         self,
         session_id: Annotated[StrictStr, Field(description="Session ID")],
         _request_timeout: Union[
@@ -134,7 +134,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponsePortalUrlResponse]:
+    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2]:
         """Get Portal Url
 
         Get a portal URL with token for a session.  The session must be in ACTIVE or AUTHENTICATING state and the request must come from the same device that initiated the session. Device info is automatically validated from the request.
@@ -163,7 +163,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_portal_url_api_v1_session_portal_get_serialize(
+        _param = self._get_portal_url_api_beta_session_portal_get_serialize(
             session_id=session_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -172,7 +172,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponsePortalUrlResponse",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -195,7 +195,7 @@ class SessionApi:
 
 
     @validate_call
-    async def get_portal_url_api_v1_session_portal_get_without_preload_content(
+    async def get_portal_url_api_beta_session_portal_get_without_preload_content(
         self,
         session_id: Annotated[StrictStr, Field(description="Session ID")],
         _request_timeout: Union[
@@ -239,7 +239,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_portal_url_api_v1_session_portal_get_serialize(
+        _param = self._get_portal_url_api_beta_session_portal_get_serialize(
             session_id=session_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -248,7 +248,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponsePortalUrlResponse",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -266,7 +266,7 @@ class SessionApi:
         return response_data.response
 
 
-    def _get_portal_url_api_v1_session_portal_get_serialize(
+    def _get_portal_url_api_beta_session_portal_get_serialize(
         self,
         session_id,
         _request_auth,
@@ -313,7 +313,7 @@ class SessionApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/session/portal',
+            resource_path='/api/beta/session/portal',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -330,7 +330,7 @@ class SessionApi:
 
 
     @validate_call
-    async def get_session_user_api_v1_session_session_id_user_get(
+    async def get_session_user_api_beta_session_session_id_user_get(
         self,
         session_id: Annotated[StrictStr, Field(description="Session ID")],
         x_session_id: Annotated[StrictStr, Field(description="Session ID from header (must match path parameter)")],
@@ -346,7 +346,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseSessionUserResponse:
+    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2:
         """Get Session User
 
         Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
@@ -377,7 +377,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_session_user_api_v1_session_session_id_user_get_serialize(
+        _param = self._get_session_user_api_beta_session_session_id_user_get_serialize(
             session_id=session_id,
             x_session_id=x_session_id,
             _request_auth=_request_auth,
@@ -387,7 +387,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionUserResponse",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -410,7 +410,7 @@ class SessionApi:
 
 
     @validate_call
-    async def get_session_user_api_v1_session_session_id_user_get_with_http_info(
+    async def get_session_user_api_beta_session_session_id_user_get_with_http_info(
         self,
         session_id: Annotated[StrictStr, Field(description="Session ID")],
         x_session_id: Annotated[StrictStr, Field(description="Session ID from header (must match path parameter)")],
@@ -426,7 +426,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseSessionUserResponse]:
+    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2]:
         """Get Session User
 
         Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
@@ -457,7 +457,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_session_user_api_v1_session_session_id_user_get_serialize(
+        _param = self._get_session_user_api_beta_session_session_id_user_get_serialize(
             session_id=session_id,
             x_session_id=x_session_id,
             _request_auth=_request_auth,
@@ -467,7 +467,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionUserResponse",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -490,7 +490,7 @@ class SessionApi:
 
 
     @validate_call
-    async def get_session_user_api_v1_session_session_id_user_get_without_preload_content(
+    async def get_session_user_api_beta_session_session_id_user_get_without_preload_content(
         self,
         session_id: Annotated[StrictStr, Field(description="Session ID")],
         x_session_id: Annotated[StrictStr, Field(description="Session ID from header (must match path parameter)")],
@@ -537,7 +537,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_session_user_api_v1_session_session_id_user_get_serialize(
+        _param = self._get_session_user_api_beta_session_session_id_user_get_serialize(
             session_id=session_id,
             x_session_id=x_session_id,
             _request_auth=_request_auth,
@@ -547,7 +547,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionUserResponse",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -565,7 +565,7 @@ class SessionApi:
         return response_data.response
 
 
-    def _get_session_user_api_v1_session_session_id_user_get_serialize(
+    def _get_session_user_api_beta_session_session_id_user_get_serialize(
         self,
         session_id,
         x_session_id,
@@ -615,7 +615,7 @@ class SessionApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/session/{session_id}/user',
+            resource_path='/api/beta/session/{session_id}/user',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -632,7 +632,7 @@ class SessionApi:
 
 
     @validate_call
-    async def init_session_api_v1_session_init_post(
+    async def init_session_api_beta_session_init_post(
         self,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
         _request_timeout: Union[
@@ -647,7 +647,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseTokenResponseData:
+    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2:
         """Init Session
 
         Initialize a new session with company API key.
@@ -676,7 +676,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._init_session_api_v1_session_init_post_serialize(
+        _param = self._init_session_api_beta_session_init_post_serialize(
             x_api_key=x_api_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -685,7 +685,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -708,7 +708,7 @@ class SessionApi:
 
 
     @validate_call
-    async def init_session_api_v1_session_init_post_with_http_info(
+    async def init_session_api_beta_session_init_post_with_http_info(
         self,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
         _request_timeout: Union[
@@ -723,7 +723,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseTokenResponseData]:
+    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2]:
         """Init Session
 
         Initialize a new session with company API key.
@@ -752,7 +752,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._init_session_api_v1_session_init_post_serialize(
+        _param = self._init_session_api_beta_session_init_post_serialize(
             x_api_key=x_api_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -761,7 +761,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -784,7 +784,7 @@ class SessionApi:
 
 
     @validate_call
-    async def init_session_api_v1_session_init_post_without_preload_content(
+    async def init_session_api_beta_session_init_post_without_preload_content(
         self,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
         _request_timeout: Union[
@@ -828,7 +828,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._init_session_api_v1_session_init_post_serialize(
+        _param = self._init_session_api_beta_session_init_post_serialize(
             x_api_key=x_api_key,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -837,7 +837,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -855,7 +855,7 @@ class SessionApi:
         return response_data.response
 
 
-    def _init_session_api_v1_session_init_post_serialize(
+    def _init_session_api_beta_session_init_post_serialize(
         self,
         x_api_key,
         _request_auth,
@@ -902,7 +902,7 @@ class SessionApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/api/v1/session/init',
+            resource_path='/api/beta/session/init',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -919,7 +919,7 @@ class SessionApi:
 
 
     @validate_call
-    async def start_session_api_v1_session_start_post(
+    async def start_session_api_beta_session_start_post(
         self,
         one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
         session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
@@ -935,7 +935,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseSessionResponseData:
+    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2:
         """Start Session
 
         Start a session with a one-time token.
@@ -966,7 +966,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._start_session_api_v1_session_start_post_serialize(
+        _param = self._start_session_api_beta_session_start_post_serialize(
             one_time_token=one_time_token,
             session_start_request=session_start_request,
             _request_auth=_request_auth,
@@ -976,7 +976,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -999,7 +999,7 @@ class SessionApi:
 
 
     @validate_call
-    async def start_session_api_v1_session_start_post_with_http_info(
+    async def start_session_api_beta_session_start_post_with_http_info(
         self,
         one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
         session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
@@ -1015,7 +1015,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseSessionResponseData]:
+    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2]:
         """Start Session
 
         Start a session with a one-time token.
@@ -1046,7 +1046,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._start_session_api_v1_session_start_post_serialize(
+        _param = self._start_session_api_beta_session_start_post_serialize(
             one_time_token=one_time_token,
             session_start_request=session_start_request,
             _request_auth=_request_auth,
@@ -1056,7 +1056,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1079,7 +1079,7 @@ class SessionApi:
 
 
     @validate_call
-    async def start_session_api_v1_session_start_post_without_preload_content(
+    async def start_session_api_beta_session_start_post_without_preload_content(
         self,
         one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
         session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
@@ -1126,7 +1126,7 @@ class SessionApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._start_session_api_v1_session_start_post_serialize(
+        _param = self._start_session_api_beta_session_start_post_serialize(
             one_time_token=one_time_token,
             session_start_request=session_start_request,
             _request_auth=_request_auth,
@@ -1136,7 +1136,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1154,7 +1154,7 @@ class SessionApi:
         return response_data.response
 
 
-    def _start_session_api_v1_session_start_post_serialize(
+    def _start_session_api_beta_session_start_post_serialize(
         self,
         one_time_token,
         session_start_request,
@@ -1217,7 +1217,7 @@ class SessionApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/api/v1/session/start',
+            resource_path='/api/beta/session/start',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

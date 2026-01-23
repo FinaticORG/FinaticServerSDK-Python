@@ -23,9 +23,9 @@ from .success_payload_token_response_data import SuccessPayloadTokenResponseData
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FinaticResponseTokenResponseData(BaseModel):
+class FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2(BaseModel):
     """
-    FinaticResponseTokenResponseData
+    FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
     """ # noqa: E501
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
     success: SuccessPayloadTokenResponseData = Field(description="Success payload containing data and optional meta")
@@ -52,7 +52,7 @@ class FinaticResponseTokenResponseData(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FinaticResponseTokenResponseData from a JSON string"""
+        """Create an instance of FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2 from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -97,7 +97,7 @@ class FinaticResponseTokenResponseData(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FinaticResponseTokenResponseData from a dict"""
+        """Create an instance of FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2 from a dict"""
         if obj is None:
             return None
 

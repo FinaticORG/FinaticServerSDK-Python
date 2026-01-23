@@ -25,6 +25,7 @@ from .averagefillprice import Averagefillprice
 from .filledquantity import Filledquantity
 from .futureunderlyingassettype import Futureunderlyingassettype
 from .limitprice import Limitprice
+from .notional import Notional
 from .quantity import Quantity
 from .remainingquantity import Remainingquantity
 from .securityidtype import Securityidtype
@@ -58,8 +59,9 @@ class FDXOrderLeg(BaseModel):
     crypto_base_symbol: Optional[StrictStr] = Field(default=None, alias="cryptoBaseSymbol")
     crypto_quote_symbol: Optional[StrictStr] = Field(default=None, alias="cryptoQuoteSymbol")
     broker_provided_symbol: Optional[StrictStr] = Field(default=None, alias="brokerProvidedSymbol")
+    notional: Optional[Notional] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["legIndex", "securityId", "securityIdType", "assetType", "side", "quantity", "remainingQuantity", "limitPrice", "stopPrice", "filledQuantity", "averageFillPrice", "optionType", "strikePrice", "expirationDate", "underlyingSymbol", "contractCode", "futureUnderlyingAssetType", "cryptoBaseSymbol", "cryptoQuoteSymbol", "brokerProvidedSymbol"]
+    __properties: ClassVar[List[str]] = ["legIndex", "securityId", "securityIdType", "assetType", "side", "quantity", "remainingQuantity", "limitPrice", "stopPrice", "filledQuantity", "averageFillPrice", "optionType", "strikePrice", "expirationDate", "underlyingSymbol", "contractCode", "futureUnderlyingAssetType", "cryptoBaseSymbol", "cryptoQuoteSymbol", "brokerProvidedSymbol", "notional"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -135,6 +137,9 @@ class FDXOrderLeg(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of future_underlying_asset_type
         if self.future_underlying_asset_type:
             _dict['futureUnderlyingAssetType'] = self.future_underlying_asset_type.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of notional
+        if self.notional:
+            _dict['notional'] = self.notional.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -210,6 +215,11 @@ class FDXOrderLeg(BaseModel):
         if self.broker_provided_symbol is None and "broker_provided_symbol" in self.model_fields_set:
             _dict['brokerProvidedSymbol'] = None
 
+        # set to None if notional (nullable) is None
+        # and model_fields_set contains the field
+        if self.notional is None and "notional" in self.model_fields_set:
+            _dict['notional'] = None
+
         return _dict
 
     @classmethod
@@ -241,7 +251,8 @@ class FDXOrderLeg(BaseModel):
             "futureUnderlyingAssetType": Futureunderlyingassettype.from_dict(obj["futureUnderlyingAssetType"]) if obj.get("futureUnderlyingAssetType") is not None else None,
             "cryptoBaseSymbol": obj.get("cryptoBaseSymbol"),
             "cryptoQuoteSymbol": obj.get("cryptoQuoteSymbol"),
-            "brokerProvidedSymbol": obj.get("brokerProvidedSymbol")
+            "brokerProvidedSymbol": obj.get("brokerProvidedSymbol"),
+            "notional": Notional.from_dict(obj["notional"]) if obj.get("notional") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

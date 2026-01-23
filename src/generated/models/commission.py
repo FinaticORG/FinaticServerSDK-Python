@@ -27,7 +27,7 @@ COMMISSION_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Commission(BaseModel):
     """
-    Commission fee (can be negative for rebates)
+    Total commission for this order (aggregated from fills)
     """
 
     # data type: str

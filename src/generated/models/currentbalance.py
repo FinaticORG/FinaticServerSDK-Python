@@ -27,7 +27,7 @@ CURRENTBALANCE_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Currentbalance(BaseModel):
     """
-    Current account balance
+    Current balance
     """
 
     # data type: str

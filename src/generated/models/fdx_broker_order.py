@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from .commission import Commission
 from .fdx_order_leg import FDXOrderLeg
 from .orderclass import Orderclass
 from .ordertype import Ordertype
@@ -51,8 +52,9 @@ class FDXBrokerOrder(BaseModel):
     order_updated_at: Optional[datetime] = Field(default=None, alias="orderUpdatedAt")
     order_terminal_at: Optional[datetime] = Field(default=None, alias="orderTerminalAt")
     metadata: Optional[Dict[str, Any]] = None
+    commission: Optional[Commission] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["_id", "orderId", "brokerOrderId", "clientOrderId", "accountId", "internalAccountId", "connectionId", "orderType", "orderClass", "timeInForce", "status", "state", "legs", "orderGroupId", "orderCreatedAt", "orderLiveAt", "orderUpdatedAt", "orderTerminalAt", "metadata"]
+    __properties: ClassVar[List[str]] = ["_id", "orderId", "brokerOrderId", "clientOrderId", "accountId", "internalAccountId", "connectionId", "orderType", "orderClass", "timeInForce", "status", "state", "legs", "orderGroupId", "orderCreatedAt", "orderLiveAt", "orderUpdatedAt", "orderTerminalAt", "metadata", "commission"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -114,6 +116,9 @@ class FDXBrokerOrder(BaseModel):
                 if _item_legs:
                     _items.append(_item_legs.to_dict())
             _dict['legs'] = _items
+        # override the default output from pydantic by calling `to_dict()` of commission
+        if self.commission:
+            _dict['commission'] = self.commission.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -189,6 +194,11 @@ class FDXBrokerOrder(BaseModel):
         if self.metadata is None and "metadata" in self.model_fields_set:
             _dict['metadata'] = None
 
+        # set to None if commission (nullable) is None
+        # and model_fields_set contains the field
+        if self.commission is None and "commission" in self.model_fields_set:
+            _dict['commission'] = None
+
         return _dict
 
     @classmethod
@@ -219,7 +229,8 @@ class FDXBrokerOrder(BaseModel):
             "orderLiveAt": obj.get("orderLiveAt"),
             "orderUpdatedAt": obj.get("orderUpdatedAt"),
             "orderTerminalAt": obj.get("orderTerminalAt"),
-            "metadata": obj.get("metadata")
+            "metadata": obj.get("metadata"),
+            "commission": Commission.from_dict(obj["commission"]) if obj.get("commission") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

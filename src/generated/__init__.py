@@ -32,15 +32,12 @@ __all__ = [
     "ApiException",
     "Accountnumber",
     "Accounts",
-    "Accountstatus",
-    "Accounttype",
     "Assettype",
     "Availablebalance",
     "Availabletowithdraw",
     "Averagebuyprice",
     "Averagefillprice",
     "Averagesellprice",
-    "Balancetype",
     "BrokerDataAccountTypeEnum",
     "BrokerDataAssetTypeEnum",
     "BrokerDataOptionTypeEnum",
@@ -52,6 +49,7 @@ __all__ = [
     "Closedquantity",
     "Closepriceavg",
     "Commission",
+    "Commission1",
     "Commissionshare",
     "Costbasis",
     "Costbasis1",
@@ -62,12 +60,7 @@ __all__ = [
     "DayTIF",
     "DisconnectCompanyFromBrokerConnectionResult",
     "Eventtype",
-    "FDXAccountStatus",
-    "FDXAccountType",
     "FDXAssetType",
-    "FDXBalanceType",
-    "FDXBrokerAccount",
-    "FDXBrokerBalance",
     "FDXBrokerOrder",
     "FDXBrokerOrderEvent",
     "FDXBrokerOrderFill",
@@ -98,8 +91,6 @@ __all__ = [
     "FinaticResponseAccounts",
     "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
     "FinaticResponseListBrokerInfo",
-    "FinaticResponseListFDXBrokerAccount",
-    "FinaticResponseListFDXBrokerBalance",
     "FinaticResponseListFDXBrokerOrder",
     "FinaticResponseListFDXBrokerOrderEvent",
     "FinaticResponseListFDXBrokerOrderFill",
@@ -108,12 +99,14 @@ __all__ = [
     "FinaticResponseListFDXBrokerPositionLot",
     "FinaticResponseListFDXBrokerPositionLotFill",
     "FinaticResponseListFDXBrokerTransaction",
+    "FinaticResponseListLegacyBrokerAccount",
+    "FinaticResponseListLegacyBrokerBalance",
     "FinaticResponseListUserBrokerConnectionWithPermissions",
     "FinaticResponseOrderActionResult",
-    "FinaticResponsePortalUrlResponse",
-    "FinaticResponseSessionResponseData",
-    "FinaticResponseSessionUserResponse",
-    "FinaticResponseTokenResponseData",
+    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
+    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
+    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
+    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
     "Futureunderlyingassettype",
     "GTCTIF",
     "GTDTIF",
@@ -121,10 +114,13 @@ __all__ = [
     "HTTPValidationError",
     "IOCTIF",
     "Initialmargin",
+    "LegacyBrokerAccount",
+    "LegacyBrokerBalance",
     "Limitprice",
+    "LocationInner",
     "Maintenancemargin",
     "Marketvalue",
-    "ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest",
+    "ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest",
     "Netliquidationvalue",
     "NinjaTraderLimitOrderModifyQueryParams",
     "NinjaTraderLimitOrderPlaceQueryParams",
@@ -136,6 +132,7 @@ __all__ = [
     "NinjaTraderStopOrderPlaceQueryParams",
     "NinjaTraderTrailingStopOrderModifyQueryParams",
     "NinjaTraderTrailingStopOrderPlaceQueryParams",
+    "Notional",
     "Openprice",
     "Openquantity",
     "Order",
@@ -152,7 +149,7 @@ __all__ = [
     "Orderstatus",
     "Ordertype",
     "Pendingbalance",
-    "PlaceOrderApiV1BrokersOrdersPostRequest",
+    "PlaceOrderApiBetaBrokersOrdersPostRequest",
     "PortalUrlResponse",
     "Previousstatus",
     "Price",
@@ -203,8 +200,6 @@ __all__ = [
     "SuccessPayloadAccounts",
     "SuccessPayloadDisconnectCompanyFromBrokerConnectionResult",
     "SuccessPayloadListBrokerInfo",
-    "SuccessPayloadListFDXBrokerAccount",
-    "SuccessPayloadListFDXBrokerBalance",
     "SuccessPayloadListFDXBrokerOrder",
     "SuccessPayloadListFDXBrokerOrderEvent",
     "SuccessPayloadListFDXBrokerOrderFill",
@@ -213,6 +208,8 @@ __all__ = [
     "SuccessPayloadListFDXBrokerPositionLot",
     "SuccessPayloadListFDXBrokerPositionLotFill",
     "SuccessPayloadListFDXBrokerTransaction",
+    "SuccessPayloadListLegacyBrokerAccount",
+    "SuccessPayloadListLegacyBrokerBalance",
     "SuccessPayloadListUserBrokerConnectionWithPermissions",
     "SuccessPayloadOrderActionResult",
     "SuccessPayloadPortalUrlResponse",
@@ -240,7 +237,6 @@ __all__ = [
     "Unrealizedprofitlosspercent",
     "UserBrokerConnectionWithPermissions",
     "ValidationError",
-    "ValidationErrorLocInner",
 ]
 
 # import apis into sdk package
@@ -262,15 +258,12 @@ from .exceptions import ApiException as ApiException
 # import models into sdk package
 from .models.accountnumber import Accountnumber as Accountnumber
 from .models.accounts import Accounts as Accounts
-from .models.accountstatus import Accountstatus as Accountstatus
-from .models.accounttype import Accounttype as Accounttype
 from .models.assettype import Assettype as Assettype
 from .models.availablebalance import Availablebalance as Availablebalance
 from .models.availabletowithdraw import Availabletowithdraw as Availabletowithdraw
 from .models.averagebuyprice import Averagebuyprice as Averagebuyprice
 from .models.averagefillprice import Averagefillprice as Averagefillprice
 from .models.averagesellprice import Averagesellprice as Averagesellprice
-from .models.balancetype import Balancetype as Balancetype
 from .models.broker_data_account_type_enum import BrokerDataAccountTypeEnum as BrokerDataAccountTypeEnum
 from .models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum as BrokerDataAssetTypeEnum
 from .models.broker_data_option_type_enum import BrokerDataOptionTypeEnum as BrokerDataOptionTypeEnum
@@ -282,6 +275,7 @@ from .models.cashbalance import Cashbalance as Cashbalance
 from .models.closedquantity import Closedquantity as Closedquantity
 from .models.closepriceavg import Closepriceavg as Closepriceavg
 from .models.commission import Commission as Commission
+from .models.commission1 import Commission1 as Commission1
 from .models.commissionshare import Commissionshare as Commissionshare
 from .models.costbasis import Costbasis as Costbasis
 from .models.costbasis1 import Costbasis1 as Costbasis1
@@ -292,12 +286,7 @@ from .models.currentprice import Currentprice as Currentprice
 from .models.day_tif import DayTIF as DayTIF
 from .models.disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult as DisconnectCompanyFromBrokerConnectionResult
 from .models.eventtype import Eventtype as Eventtype
-from .models.fdx_account_status import FDXAccountStatus as FDXAccountStatus
-from .models.fdx_account_type import FDXAccountType as FDXAccountType
 from .models.fdx_asset_type import FDXAssetType as FDXAssetType
-from .models.fdx_balance_type import FDXBalanceType as FDXBalanceType
-from .models.fdx_broker_account import FDXBrokerAccount as FDXBrokerAccount
-from .models.fdx_broker_balance import FDXBrokerBalance as FDXBrokerBalance
 from .models.fdx_broker_order import FDXBrokerOrder as FDXBrokerOrder
 from .models.fdx_broker_order_event import FDXBrokerOrderEvent as FDXBrokerOrderEvent
 from .models.fdx_broker_order_fill import FDXBrokerOrderFill as FDXBrokerOrderFill
@@ -328,8 +317,6 @@ from .models.finatic_broker_factory_brokers_robinhood_executors_consumer_robinho
 from .models.finatic_response_accounts import FinaticResponseAccounts as FinaticResponseAccounts
 from .models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult as FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from .models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo as FinaticResponseListBrokerInfo
-from .models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount as FinaticResponseListFDXBrokerAccount
-from .models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance as FinaticResponseListFDXBrokerBalance
 from .models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder as FinaticResponseListFDXBrokerOrder
 from .models.finatic_response_list_fdx_broker_order_event import FinaticResponseListFDXBrokerOrderEvent as FinaticResponseListFDXBrokerOrderEvent
 from .models.finatic_response_list_fdx_broker_order_fill import FinaticResponseListFDXBrokerOrderFill as FinaticResponseListFDXBrokerOrderFill
@@ -338,12 +325,14 @@ from .models.finatic_response_list_fdx_broker_position import FinaticResponseLis
 from .models.finatic_response_list_fdx_broker_position_lot import FinaticResponseListFDXBrokerPositionLot as FinaticResponseListFDXBrokerPositionLot
 from .models.finatic_response_list_fdx_broker_position_lot_fill import FinaticResponseListFDXBrokerPositionLotFill as FinaticResponseListFDXBrokerPositionLotFill
 from .models.finatic_response_list_fdx_broker_transaction import FinaticResponseListFDXBrokerTransaction as FinaticResponseListFDXBrokerTransaction
+from .models.finatic_response_list_legacy_broker_account import FinaticResponseListLegacyBrokerAccount as FinaticResponseListLegacyBrokerAccount
+from .models.finatic_response_list_legacy_broker_balance import FinaticResponseListLegacyBrokerBalance as FinaticResponseListLegacyBrokerBalance
 from .models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions as FinaticResponseListUserBrokerConnectionWithPermissions
 from .models.finatic_response_order_action_result import FinaticResponseOrderActionResult as FinaticResponseOrderActionResult
-from .models.finatic_response_portal_url_response import FinaticResponsePortalUrlResponse as FinaticResponsePortalUrlResponse
-from .models.finatic_response_session_response_data import FinaticResponseSessionResponseData as FinaticResponseSessionResponseData
-from .models.finatic_response_session_user_response import FinaticResponseSessionUserResponse as FinaticResponseSessionUserResponse
-from .models.finatic_response_token_response_data import FinaticResponseTokenResponseData as FinaticResponseTokenResponseData
+from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
+from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
+from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
+from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
 from .models.futureunderlyingassettype import Futureunderlyingassettype as Futureunderlyingassettype
 from .models.gtctif import GTCTIF as GTCTIF
 from .models.gtdtif import GTDTIF as GTDTIF
@@ -351,10 +340,13 @@ from .models.grouptype import Grouptype as Grouptype
 from .models.http_validation_error import HTTPValidationError as HTTPValidationError
 from .models.ioctif import IOCTIF as IOCTIF
 from .models.initialmargin import Initialmargin as Initialmargin
+from .models.legacy_broker_account import LegacyBrokerAccount as LegacyBrokerAccount
+from .models.legacy_broker_balance import LegacyBrokerBalance as LegacyBrokerBalance
 from .models.limitprice import Limitprice as Limitprice
+from .models.location_inner import LocationInner as LocationInner
 from .models.maintenancemargin import Maintenancemargin as Maintenancemargin
 from .models.marketvalue import Marketvalue as Marketvalue
-from .models.modify_order_api_v1_brokers_orders_order_id_patch_request import ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest as ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+from .models.modify_order_api_beta_brokers_orders_order_id_patch_request import ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest as ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
 from .models.netliquidationvalue import Netliquidationvalue as Netliquidationvalue
 from .models.ninja_trader_limit_order_modify_query_params import NinjaTraderLimitOrderModifyQueryParams as NinjaTraderLimitOrderModifyQueryParams
 from .models.ninja_trader_limit_order_place_query_params import NinjaTraderLimitOrderPlaceQueryParams as NinjaTraderLimitOrderPlaceQueryParams
@@ -366,6 +358,7 @@ from .models.ninja_trader_stop_order_modify_query_params import NinjaTraderStopO
 from .models.ninja_trader_stop_order_place_query_params import NinjaTraderStopOrderPlaceQueryParams as NinjaTraderStopOrderPlaceQueryParams
 from .models.ninja_trader_trailing_stop_order_modify_query_params import NinjaTraderTrailingStopOrderModifyQueryParams as NinjaTraderTrailingStopOrderModifyQueryParams
 from .models.ninja_trader_trailing_stop_order_place_query_params import NinjaTraderTrailingStopOrderPlaceQueryParams as NinjaTraderTrailingStopOrderPlaceQueryParams
+from .models.notional import Notional as Notional
 from .models.openprice import Openprice as Openprice
 from .models.openquantity import Openquantity as Openquantity
 from .models.order import Order as Order
@@ -382,7 +375,7 @@ from .models.orderclass import Orderclass as Orderclass
 from .models.orderstatus import Orderstatus as Orderstatus
 from .models.ordertype import Ordertype as Ordertype
 from .models.pendingbalance import Pendingbalance as Pendingbalance
-from .models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest as PlaceOrderApiV1BrokersOrdersPostRequest
+from .models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest as PlaceOrderApiBetaBrokersOrdersPostRequest
 from .models.portal_url_response import PortalUrlResponse as PortalUrlResponse
 from .models.previousstatus import Previousstatus as Previousstatus
 from .models.price import Price as Price
@@ -433,8 +426,6 @@ from .models.strikeprice import Strikeprice as Strikeprice
 from .models.success_payload_accounts import SuccessPayloadAccounts as SuccessPayloadAccounts
 from .models.success_payload_disconnect_company_from_broker_connection_result import SuccessPayloadDisconnectCompanyFromBrokerConnectionResult as SuccessPayloadDisconnectCompanyFromBrokerConnectionResult
 from .models.success_payload_list_broker_info import SuccessPayloadListBrokerInfo as SuccessPayloadListBrokerInfo
-from .models.success_payload_list_fdx_broker_account import SuccessPayloadListFDXBrokerAccount as SuccessPayloadListFDXBrokerAccount
-from .models.success_payload_list_fdx_broker_balance import SuccessPayloadListFDXBrokerBalance as SuccessPayloadListFDXBrokerBalance
 from .models.success_payload_list_fdx_broker_order import SuccessPayloadListFDXBrokerOrder as SuccessPayloadListFDXBrokerOrder
 from .models.success_payload_list_fdx_broker_order_event import SuccessPayloadListFDXBrokerOrderEvent as SuccessPayloadListFDXBrokerOrderEvent
 from .models.success_payload_list_fdx_broker_order_fill import SuccessPayloadListFDXBrokerOrderFill as SuccessPayloadListFDXBrokerOrderFill
@@ -443,6 +434,8 @@ from .models.success_payload_list_fdx_broker_position import SuccessPayloadListF
 from .models.success_payload_list_fdx_broker_position_lot import SuccessPayloadListFDXBrokerPositionLot as SuccessPayloadListFDXBrokerPositionLot
 from .models.success_payload_list_fdx_broker_position_lot_fill import SuccessPayloadListFDXBrokerPositionLotFill as SuccessPayloadListFDXBrokerPositionLotFill
 from .models.success_payload_list_fdx_broker_transaction import SuccessPayloadListFDXBrokerTransaction as SuccessPayloadListFDXBrokerTransaction
+from .models.success_payload_list_legacy_broker_account import SuccessPayloadListLegacyBrokerAccount as SuccessPayloadListLegacyBrokerAccount
+from .models.success_payload_list_legacy_broker_balance import SuccessPayloadListLegacyBrokerBalance as SuccessPayloadListLegacyBrokerBalance
 from .models.success_payload_list_user_broker_connection_with_permissions import SuccessPayloadListUserBrokerConnectionWithPermissions as SuccessPayloadListUserBrokerConnectionWithPermissions
 from .models.success_payload_order_action_result import SuccessPayloadOrderActionResult as SuccessPayloadOrderActionResult
 from .models.success_payload_portal_url_response import SuccessPayloadPortalUrlResponse as SuccessPayloadPortalUrlResponse
@@ -470,5 +463,4 @@ from .models.unrealizedprofitloss import Unrealizedprofitloss as Unrealizedprofi
 from .models.unrealizedprofitlosspercent import Unrealizedprofitlosspercent as Unrealizedprofitlosspercent
 from .models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions as UserBrokerConnectionWithPermissions
 from .models.validation_error import ValidationError as ValidationError
-from .models.validation_error_loc_inner import ValidationErrorLocInner as ValidationErrorLocInner
 

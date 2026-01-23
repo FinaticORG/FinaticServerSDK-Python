@@ -19,20 +19,19 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from .success_payload_list_fdx_broker_account import SuccessPayloadListFDXBrokerAccount
+from .legacy_broker_account import LegacyBrokerAccount
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FinaticResponseListFDXBrokerAccount(BaseModel):
+class SuccessPayloadListLegacyBrokerAccount(BaseModel):
     """
-    FinaticResponseListFDXBrokerAccount
+    SuccessPayloadListLegacyBrokerAccount
     """ # noqa: E501
-    trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
-    success: SuccessPayloadListFDXBrokerAccount = Field(description="Success payload containing data and optional meta")
-    error: Optional[Dict[str, Any]] = None
-    warning: Optional[List[Dict[str, Any]]] = None
+    id: Optional[StrictStr] = Field(default=None, alias="_id")
+    data: Optional[List[LegacyBrokerAccount]] = None
+    meta: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["trace_id", "success", "error", "warning"]
+    __properties: ClassVar[List[str]] = ["_id", "data", "meta"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +51,7 @@ class FinaticResponseListFDXBrokerAccount(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FinaticResponseListFDXBrokerAccount from a JSON string"""
+        """Create an instance of SuccessPayloadListLegacyBrokerAccount from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,29 +74,33 @@ class FinaticResponseListFDXBrokerAccount(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of success
-        if self.success:
-            _dict['success'] = self.success.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of each item in data (list)
+        _items = []
+        if self.data:
+            for _item_data in self.data:
+                if _item_data:
+                    _items.append(_item_data.to_dict())
+            _dict['data'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if error (nullable) is None
+        # set to None if data (nullable) is None
         # and model_fields_set contains the field
-        if self.error is None and "error" in self.model_fields_set:
-            _dict['error'] = None
+        if self.data is None and "data" in self.model_fields_set:
+            _dict['data'] = None
 
-        # set to None if warning (nullable) is None
+        # set to None if meta (nullable) is None
         # and model_fields_set contains the field
-        if self.warning is None and "warning" in self.model_fields_set:
-            _dict['warning'] = None
+        if self.meta is None and "meta" in self.model_fields_set:
+            _dict['meta'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FinaticResponseListFDXBrokerAccount from a dict"""
+        """Create an instance of SuccessPayloadListLegacyBrokerAccount from a dict"""
         if obj is None:
             return None
 
@@ -105,10 +108,9 @@ class FinaticResponseListFDXBrokerAccount(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "trace_id": obj.get("trace_id") if obj.get("trace_id") is not None else '',
-            "success": SuccessPayloadListFDXBrokerAccount.from_dict(obj["success"]) if obj.get("success") is not None else None,
-            "error": obj.get("error"),
-            "warning": obj.get("warning")
+            "_id": obj.get("_id"),
+            "data": [LegacyBrokerAccount.from_dict(_item) for _item in obj["data"]] if obj.get("data") is not None else None,
+            "meta": obj.get("meta")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

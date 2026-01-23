@@ -27,7 +27,7 @@ INITIALMARGIN_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Initialmargin(BaseModel):
     """
-    Initial margin requirement
+    Initial margin
     """
 
     # data type: str

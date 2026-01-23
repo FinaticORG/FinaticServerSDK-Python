@@ -19,8 +19,6 @@ from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
 from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
 from ..models.broker_info import BrokerInfo
 from ..models.disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult
-from ..models.fdx_broker_account import FDXBrokerAccount
-from ..models.fdx_broker_balance import FDXBrokerBalance
 from ..models.fdx_broker_order import FDXBrokerOrder
 from ..models.fdx_broker_order_event import FDXBrokerOrderEvent
 from ..models.fdx_broker_order_fill import FDXBrokerOrderFill
@@ -29,8 +27,10 @@ from ..models.fdx_broker_position import FDXBrokerPosition
 from ..models.fdx_broker_position_lot import FDXBrokerPositionLot
 from ..models.fdx_broker_position_lot_fill import FDXBrokerPositionLotFill
 from ..models.fdx_broker_transaction import FDXBrokerTransaction
+from ..models.legacy_broker_account import LegacyBrokerAccount
+from ..models.legacy_broker_balance import LegacyBrokerBalance
 from ..models.order_action_result import OrderActionResult
-from ..models.order_request import OrderRequest
+from ..models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest as OrderRequest
 from ..models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
@@ -49,24 +49,62 @@ from ..utils.pagination import PaginatedData, PaginationMeta
 
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
+class GetBalancesParams:
+    """Input parameters for get_balances_api_beta_brokers_data_balances_get."""
+  # Filter by broker ID
+    broker_id: str = None
+  # Filter by connection ID
+    connection_id: str = None
+  # Filter by broker provided account ID or internal account UUID
+    account_id: str = None
+  # Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+    unit_code: str = None
+  # Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+    currency: str = None
+  # Maximum number of balances to return
+    limit: Optional[int] = None
+  # Number of balances to skip for pagination
+    offset: Optional[int] = None
+  # Include balance metadata in response (excluded by default for FDX compliance)
+    include_metadata: Optional[bool] = None
+
+@dataclass
+class GetAccountsParams:
+    """Input parameters for get_accounts_api_beta_brokers_data_accounts_get."""
+  # Filter by broker ID
+    broker_id: str = None
+  # Filter by connection ID
+    connection_id: str = None
+  # Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
+    account_type: BrokerDataAccountTypeEnum = None
+  # Filter by currency (e.g., 'USD', 'EUR')
+    currency: str = None
+  # Maximum number of accounts to return
+    limit: Optional[int] = None
+  # Number of accounts to skip for pagination
+    offset: Optional[int] = None
+  # Include connection metadata in response (excluded by default for FDX compliance)
+    include_metadata: Optional[bool] = None
+
+@dataclass
 class GetBrokersParams:
-    """Input parameters for get_brokers_api_v1_brokers__get."""
+    """Input parameters for get_brokers_api_beta_brokers__get."""
     pass
 
 @dataclass
 class GetBrokerConnectionsParams:
-    """Input parameters for list_broker_connections_api_v1_brokers_connections_get."""
+    """Input parameters for list_broker_connections_api_beta_brokers_connections_get."""
     pass
 
 @dataclass
 class DisconnectCompanyFromBrokerParams:
-    """Input parameters for disconnect_company_from_broker_api_v1_brokers_disconnect_company__connection_id__delete."""
+    """Input parameters for disconnect_company_from_broker_api_beta_brokers_disconnect_company__connection_id__delete."""
   # Connection ID
     connection_id: str
 
 @dataclass
 class GetOrdersParams:
-    """Input parameters for get_orders_api_v1_brokers_data_orders_get."""
+    """Input parameters for get_orders_api_beta_brokers_data_orders_get."""
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -94,7 +132,7 @@ class GetOrdersParams:
 
 @dataclass
 class GetPositionsParams:
-    """Input parameters for get_positions_api_v1_brokers_data_positions_get."""
+    """Input parameters for get_positions_api_beta_brokers_data_positions_get."""
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -121,28 +159,8 @@ class GetPositionsParams:
     include_metadata: Optional[bool] = None
 
 @dataclass
-class GetBalancesParams:
-    """Input parameters for get_balances_api_v1_brokers_data_balances_get."""
-  # Filter by broker ID
-    broker_id: str = None
-  # Filter by connection ID
-    connection_id: str = None
-  # Filter by broker provided account ID or internal account UUID
-    account_id: str = None
-  # Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-    unit_code: str = None
-  # Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-    currency: str = None
-  # Maximum number of balances to return
-    limit: Optional[int] = None
-  # Number of balances to skip for pagination
-    offset: Optional[int] = None
-  # Include balance metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
-
-@dataclass
 class GetTransactionsParams:
-    """Input parameters for get_transactions_api_v1_brokers_data_transactions_get."""
+    """Input parameters for get_transactions_api_beta_brokers_data_transactions_get."""
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -165,26 +183,8 @@ class GetTransactionsParams:
     offset: Optional[int] = None
 
 @dataclass
-class GetAccountsParams:
-    """Input parameters for get_accounts_api_v1_brokers_data_accounts_get."""
-  # Filter by broker ID
-    broker_id: str = None
-  # Filter by connection ID
-    connection_id: str = None
-  # Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-    account_type: BrokerDataAccountTypeEnum = None
-  # Filter by currency (e.g., 'USD', 'EUR')
-    currency: str = None
-  # Maximum number of accounts to return
-    limit: Optional[int] = None
-  # Number of accounts to skip for pagination
-    offset: Optional[int] = None
-  # Include connection metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
-
-@dataclass
 class GetOrderFillsParams:
-    """Input parameters for get_order_fills_api_v1_brokers_data_orders__order_id__fills_get."""
+    """Input parameters for get_order_fills_api_beta_brokers_data_orders__order_id__fills_get."""
   # Order ID
     order_id: str
   # Filter by connection ID
@@ -198,7 +198,7 @@ class GetOrderFillsParams:
 
 @dataclass
 class GetOrderEventsParams:
-    """Input parameters for get_order_events_api_v1_brokers_data_orders__order_id__events_get."""
+    """Input parameters for get_order_events_api_beta_brokers_data_orders__order_id__events_get."""
   # Order ID
     order_id: str
   # Filter by connection ID
@@ -212,7 +212,7 @@ class GetOrderEventsParams:
 
 @dataclass
 class GetOrderGroupsParams:
-    """Input parameters for get_order_groups_api_v1_brokers_data_orders_groups_get."""
+    """Input parameters for get_order_groups_api_beta_brokers_data_orders_groups_get."""
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -230,7 +230,7 @@ class GetOrderGroupsParams:
 
 @dataclass
 class GetPositionLotsParams:
-    """Input parameters for get_position_lots_api_v1_brokers_data_positions_lots_get."""
+    """Input parameters for get_position_lots_api_beta_brokers_data_positions_lots_get."""
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -248,7 +248,7 @@ class GetPositionLotsParams:
 
 @dataclass
 class GetPositionLotFillsParams:
-    """Input parameters for get_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get."""
+    """Input parameters for get_position_lot_fills_api_beta_brokers_data_positions_lots__lot_id__fills_get."""
   # Position lot ID
     lot_id: str
   # Filter by connection ID
@@ -260,7 +260,7 @@ class GetPositionLotFillsParams:
 
 @dataclass
 class PlaceOrderParams:
-    """Input parameters for place_order_api_v1_brokers_orders_post."""
+    """Input parameters for place_order_api_beta_brokers_orders_post."""
   # Broker-specific extra parameters object. This is used to pass in broker-specific fields if you want to send a reqeust to a broker API with the parameters that EXTEND our standardized query parameters.
     order_request: OrderRequest = None
   # Temporary bypass for testing: specify connection ID directly
@@ -268,13 +268,13 @@ class PlaceOrderParams:
 
 @dataclass
 class CancelOrderParams:
-    """Input parameters for cancel_order_api_v1_brokers_orders__order_id__delete."""
+    """Input parameters for cancel_order_api_beta_brokers_orders__order_id__delete."""
   # Order ID
     order_id: str
 
 @dataclass
 class ModifyOrderParams:
-    """Input parameters for modify_order_api_v1_brokers_orders__order_id__patch."""
+    """Input parameters for modify_order_api_beta_brokers_orders__order_id__patch."""
   # Order ID
     order_id: str
   # Broker-specific *modify order* payload. Pass **all** standard parameters plus any broker-specific extensions under the `order` key. See the schema for a formal reference.
@@ -320,44 +320,75 @@ class BrokersWrapper:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
-    async def get_brokers(self, **kwargs) -> FinaticResponse[list[BrokerInfo]]:
-        """Get Brokers
+    async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[LegacyBrokerBalance]]:
+        """Get Balances
         
-        Get all available brokers.
+        Get current unit-based balances for all authorized broker connections.
         
-        This is a fast operation that returns a cached list of available brokers.
-        The list is loaded once at startup and never changes during runtime.
-        
-        Returns
-        -------
-        FinaticResponse[list[BrokerInfo]]
-            list of available brokers with their metadata.
+        Returns array of current balances (one per unit_code per account).
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns balances from connections the company has read access to.
 
         Args:
-        - **kwargs: No parameters required for this method
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
+            unit_code (str, optional): Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+            currency (str, optional): Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+            limit (int, optional): Maximum number of balances to return
+            offset (int, optional): Number of balances to skip for pagination
+            include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
         Returns:
-        - Dict[str, Any]: FinaticResponse[list[BrokerInfo]] format
-                     success: {data: list[BrokerInfo], meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[PaginatedData[LegacyBrokerBalance]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/
-        @methodId get_brokers_api_v1_brokers__get
+        Generated from: GET /api/beta/brokers/data/balances
+        @methodId get_balances_api_beta_brokers_data_balances_get
         @category brokers
         @example
         ```python
         # Example with no parameters
-        result = await finatic.get_brokers()
+        result = await finatic.get_balances()
         
         # Access the response data
         if result.success:
             print('Data:', result.success['data'])
         ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_balances(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
         """
         # Convert kwargs to params object
-        params = GetBrokersParams(**kwargs) if kwargs else GetBrokersParams()
+        params = GetBalancesParams(**kwargs) if kwargs else GetBalancesParams()
+        # Authentication check
+        if not self.session_id:
+            raise ValueError('Session not initialized. Call start_session() first.')
+
         # Phase 2C: Extract individual params from input params object
-        # No parameters to extract
+        broker_id = getattr(params, 'broker_id', None)
+        connection_id = getattr(params, 'connection_id', None)
+        account_id = getattr(params, 'account_id', None)
+        unit_code = getattr(params, 'unit_code', None)
+        currency = getattr(params, 'currency', None)
+        limit = getattr(params, 'limit', None)
+        offset = getattr(params, 'offset', None)
+        include_metadata = getattr(params, 'include_metadata', None)
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -375,7 +406,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/balances', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -384,17 +415,26 @@ class BrokersWrapper:
         # Structured logging (Phase 2B: structlog)
         # Get params dict safely (dataclass or dict)
         params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-        self.logger.debug('Get Brokers',
+        self.logger.debug('Get Balances',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/',
+            path='/api/beta/brokers/data/balances',
             params=params_dict,
-            action='get_brokers'
+            action='get_balances'
         )
 
         try:
             async def api_call():
-                response = await self.api.get_brokers_api_v1_brokers_get()
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_balances_api_beta_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, unit_code=unit_code, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -427,7 +467,502 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/balances', params_dict, self.sdk_config)
+                cache[cache_key] = standard_response
+            
+            self.logger.debug('Get Balances completed',
+                request_id=request_id,
+                action='get_balances'
+            )
+            
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_balances,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
+            # Phase 2C: Return standard response structure (already plain objects)
+            return standard_response
+            
+        except Exception as e:
+            try:
+                await apply_error_interceptors(e, self.sdk_config)
+            except Exception:
+                pass
+            
+            self.logger.error('Get Balances failed',
+                error=str(e),
+                request_id=request_id,
+                action='get_balances',
+                exc_info=True
+            )
+            
+            # Phase 2C: Extract error details from HTTP errors or generic errors
+            error_message = str(e)
+            error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
+            error_status = None
+            error_details = {'error': str(e), 'type': type(e).__name__}
+            
+            # Handle HTTP errors (from OpenAPI generator - httpx/requests)
+            if hasattr(e, 'status_code'):
+                error_status = e.status_code
+                error_code = getattr(e, 'code', f'HTTP_{error_status}')
+                # Try to extract error from FinaticResponse Error field
+                error_response_data = getattr(e, 'body', None) or getattr(e, 'response', None)
+                if error_response_data and isinstance(error_response_data, dict) and 'error' in error_response_data:
+                    error_obj = error_response_data.get('error', {})
+                    error_message = error_obj.get('message') or getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
+                    error_code = error_obj.get('code') or error_code
+                    error_status = error_obj.get('status') or error_status
+                else:
+                    error_message = getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
+                error_details = {
+                    'status': error_status,
+                    'statusText': getattr(e, 'reason', None),
+                    'responseData': getattr(e, 'body', None) or getattr(e, 'response', None),
+                    'requestUrl': getattr(e, 'request', {}).get('url', None) if hasattr(e, 'request') else None,
+                    'requestMethod': getattr(e, 'request', {}).get('method', None) if hasattr(e, 'request') else None,
+                }
+            elif hasattr(e, 'response') and hasattr(e.response, 'status_code'):
+                # Handle httpx/requests response errors
+                error_status = e.response.status_code
+                error_code = f'HTTP_{error_status}'
+                # Try to extract error from FinaticResponse Error field
+                try:
+                    response_data = e.response.json() if hasattr(e.response, 'json') else None
+                    if response_data and isinstance(response_data, dict) and 'error' in response_data:
+                        error_obj = response_data.get('error', {})
+                        error_message = error_obj.get('message') or getattr(e.response, 'text', None) or str(e)
+                        error_code = error_obj.get('code') or error_code
+                        error_status = error_obj.get('status') or error_status
+                    else:
+                        error_message = getattr(e.response, 'text', None) or str(e)
+                except Exception:
+                    response_data = getattr(e.response, 'text', None)
+                    error_message = response_data or str(e)
+                error_details = {
+                    'status': error_status,
+                    'statusText': getattr(e.response, 'reason', None),
+                    'responseData': response_data,
+                    'requestUrl': getattr(e.request, 'url', None) if hasattr(e, 'request') else None,
+                    'requestMethod': getattr(e.request, 'method', None) if hasattr(e, 'request') else None,
+                }
+            else:
+                # Generic error - include stack trace if available
+                import traceback
+                error_details['traceback'] = traceback.format_exc()
+            
+            # Phase 2C: Return standard error response structure
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
+                    'message': error_message,
+                    'code': error_code,
+                    'status': error_status,
+                    'details': error_details,
+                },
+                'warning': None,
+            }
+            
+            return error_response
+
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
+
+    async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[LegacyBrokerAccount]]:
+        """Get Accounts
+        
+        Get accounts for all authorized broker connections.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns accounts from connections the company has read access to.
+
+        Args:
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
+            currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
+            limit (int, optional): Maximum number of accounts to return
+            offset (int, optional): Number of accounts to skip for pagination
+            include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
+        Returns:
+        - Dict[str, Any]: FinaticResponse[PaginatedData[LegacyBrokerAccount]] format
+                     success: {data: PaginatedData[T], meta: dict | None}
+                     error: dict | None
+                     warning: list[dict] | None
+        
+        Generated from: GET /api/beta/brokers/data/accounts
+        @methodId get_accounts_api_beta_brokers_data_accounts_get
+        @category brokers
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_accounts()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_accounts(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_type='margin'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        """
+        # Convert kwargs to params object
+        params = GetAccountsParams(**kwargs) if kwargs else GetAccountsParams()
+        # Authentication check
+        if not self.session_id:
+            raise ValueError('Session not initialized. Call start_session() first.')
+
+        # Phase 2C: Extract individual params from input params object
+        broker_id = getattr(params, 'broker_id', None)
+        connection_id = getattr(params, 'connection_id', None)
+        account_type = coerce_enum_value(getattr(params, 'account_type', None), BrokerDataAccountTypeEnum, 'account_type') if getattr(params, 'account_type', None) is not None else None
+        currency = getattr(params, 'currency', None)
+        limit = getattr(params, 'limit', None)
+        offset = getattr(params, 'offset', None)
+        include_metadata = getattr(params, 'include_metadata', None)
+
+        # Generate request ID
+        request_id = self._generate_request_id()
+
+        # Input validation (Phase 2B: pydantic)
+        if self.sdk_config and self.sdk_config.validation_enabled:
+            # TODO: Generate validation model from endpoint parameters
+            # validation_model = create_validation_model(...)
+            # validate_params(validation_model, params, self.sdk_config)
+            pass  # Placeholder until validation is implemented
+
+        # Check cache (Phase 2B: optional caching)
+        should_cache = True
+        cache = get_cache(self.sdk_config)
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
+            # Get params dict safely (dataclass or dict)
+            params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/accounts', params_dict, self.sdk_config)
+            cached = cache.get(cache_key)
+            if cached:
+                self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
+                return cached
+
+        # Structured logging (Phase 2B: structlog)
+        # Get params dict safely (dataclass or dict)
+        params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+        self.logger.debug('Get Accounts',
+            request_id=request_id,
+            method='GET',
+            path='/api/beta/brokers/data/accounts',
+            params=params_dict,
+            action='get_accounts'
+        )
+
+        try:
+            async def api_call():
+                if not self.session_id or not self.company_id:
+                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
+                headers = {
+                    "x-session-id": self.session_id,
+                    "x-company-id": self.company_id,
+                    "x-request-id": request_id,
+                }
+                if self.csrf_token:
+                    headers["x-csrf-token"] = self.csrf_token
+                response = await self.api.get_accounts_api_beta_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
+
+                return await apply_response_interceptors(response, self.sdk_config)
+            
+            response = await retry_api_call(api_call, config=self.sdk_config)
+            
+            # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
+            if not response:
+                raise ValueError('Unexpected response shape: response is None')
+            
+            # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
+            if hasattr(response, 'data'):
+                # Response is wrapped - extract .data which contains the FinaticResponse
+                response_data = response.data
+                if not response_data:
+                    raise ValueError('Unexpected response shape: response.data is None')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
+            elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
+            else:
+                # Unknown response structure
+                error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
+                if hasattr(response, 'status_code'):
+                    error_info += f", status_code: {response.status_code}"
+                if hasattr(response, 'text'):
+                    error_info += f", text: {response.text}"
+                raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
+            
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
+                # Get params dict safely (dataclass or dict)
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/accounts', params_dict, self.sdk_config)
+                cache[cache_key] = standard_response
+            
+            self.logger.debug('Get Accounts completed',
+                request_id=request_id,
+                action='get_accounts'
+            )
+            
+            # Phase 2: Wrap paginated responses with PaginatedData
+            has_limit = True
+            has_offset = True
+            has_pagination = has_limit and has_offset
+            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
+                # PaginatedData is already imported at top of file
+                pagination_meta_dict = standard_response['success']['meta']['pagination']
+                pagination_meta = PaginationMeta(
+                    has_more=pagination_meta_dict.get('has_more', False),
+                    next_offset=pagination_meta_dict.get('next_offset'),
+                    current_offset=pagination_meta_dict.get('current_offset', 0),
+                    limit=pagination_meta_dict.get('limit', 100)
+                )
+                # Get params dict for current_params
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                paginated_data = PaginatedData(
+                    standard_response['success']['data'],
+                    pagination_meta,
+                    self.get_accounts,
+                    params_dict,
+                    self
+                )
+                standard_response['success']['data'] = paginated_data
+            
+            # Phase 2C: Return standard response structure (already plain objects)
+            return standard_response
+            
+        except Exception as e:
+            try:
+                await apply_error_interceptors(e, self.sdk_config)
+            except Exception:
+                pass
+            
+            self.logger.error('Get Accounts failed',
+                error=str(e),
+                request_id=request_id,
+                action='get_accounts',
+                exc_info=True
+            )
+            
+            # Phase 2C: Extract error details from HTTP errors or generic errors
+            error_message = str(e)
+            error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
+            error_status = None
+            error_details = {'error': str(e), 'type': type(e).__name__}
+            
+            # Handle HTTP errors (from OpenAPI generator - httpx/requests)
+            if hasattr(e, 'status_code'):
+                error_status = e.status_code
+                error_code = getattr(e, 'code', f'HTTP_{error_status}')
+                # Try to extract error from FinaticResponse Error field
+                error_response_data = getattr(e, 'body', None) or getattr(e, 'response', None)
+                if error_response_data and isinstance(error_response_data, dict) and 'error' in error_response_data:
+                    error_obj = error_response_data.get('error', {})
+                    error_message = error_obj.get('message') or getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
+                    error_code = error_obj.get('code') or error_code
+                    error_status = error_obj.get('status') or error_status
+                else:
+                    error_message = getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
+                error_details = {
+                    'status': error_status,
+                    'statusText': getattr(e, 'reason', None),
+                    'responseData': getattr(e, 'body', None) or getattr(e, 'response', None),
+                    'requestUrl': getattr(e, 'request', {}).get('url', None) if hasattr(e, 'request') else None,
+                    'requestMethod': getattr(e, 'request', {}).get('method', None) if hasattr(e, 'request') else None,
+                }
+            elif hasattr(e, 'response') and hasattr(e.response, 'status_code'):
+                # Handle httpx/requests response errors
+                error_status = e.response.status_code
+                error_code = f'HTTP_{error_status}'
+                # Try to extract error from FinaticResponse Error field
+                try:
+                    response_data = e.response.json() if hasattr(e.response, 'json') else None
+                    if response_data and isinstance(response_data, dict) and 'error' in response_data:
+                        error_obj = response_data.get('error', {})
+                        error_message = error_obj.get('message') or getattr(e.response, 'text', None) or str(e)
+                        error_code = error_obj.get('code') or error_code
+                        error_status = error_obj.get('status') or error_status
+                    else:
+                        error_message = getattr(e.response, 'text', None) or str(e)
+                except Exception:
+                    response_data = getattr(e.response, 'text', None)
+                    error_message = response_data or str(e)
+                error_details = {
+                    'status': error_status,
+                    'statusText': getattr(e.response, 'reason', None),
+                    'responseData': response_data,
+                    'requestUrl': getattr(e.request, 'url', None) if hasattr(e, 'request') else None,
+                    'requestMethod': getattr(e.request, 'method', None) if hasattr(e, 'request') else None,
+                }
+            else:
+                # Generic error - include stack trace if available
+                import traceback
+                error_details['traceback'] = traceback.format_exc()
+            
+            # Phase 2C: Return standard error response structure
+            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
+            error_response = {
+                'success': {'data': None},
+                'error': {
+                    'message': error_message,
+                    'code': error_code,
+                    'status': error_status,
+                    'details': error_details,
+                },
+                'warning': None,
+            }
+            
+            return error_response
+
+        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
+        # TODO Phase 2D: Add orphaned method detection
+        # TODO Phase 2D: Add advanced convenience methods
+
+    async def get_brokers(self, **kwargs) -> FinaticResponse[list[BrokerInfo]]:
+        """Get Brokers
+        
+        Get all available brokers.
+        
+        This is a fast operation that returns a cached list of available brokers.
+        The list is loaded once at startup and never changes during runtime.
+        
+        Returns
+        -------
+        FinaticResponse[list[BrokerInfo]]
+            list of available brokers with their metadata.
+
+        Args:
+        - **kwargs: No parameters required for this method
+        Returns:
+        - Dict[str, Any]: FinaticResponse[list[BrokerInfo]] format
+                     success: {data: list[BrokerInfo], meta: dict | None}
+                     error: dict | None
+                     warning: list[dict] | None
+        
+        Generated from: GET /api/beta/brokers/
+        @methodId get_brokers_api_beta_brokers__get
+        @category brokers
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_brokers()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        """
+        # Convert kwargs to params object
+        params = GetBrokersParams(**kwargs) if kwargs else GetBrokersParams()
+        # Phase 2C: Extract individual params from input params object
+        # No parameters to extract
+
+        # Generate request ID
+        request_id = self._generate_request_id()
+
+        # Input validation (Phase 2B: pydantic)
+        if self.sdk_config and self.sdk_config.validation_enabled:
+            # TODO: Generate validation model from endpoint parameters
+            # validation_model = create_validation_model(...)
+            # validate_params(validation_model, params, self.sdk_config)
+            pass  # Placeholder until validation is implemented
+
+        # Check cache (Phase 2B: optional caching)
+        should_cache = True
+        cache = get_cache(self.sdk_config)
+        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
+            # Get params dict safely (dataclass or dict)
+            params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/', params_dict, self.sdk_config)
+            cached = cache.get(cache_key)
+            if cached:
+                self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
+                return cached
+
+        # Structured logging (Phase 2B: structlog)
+        # Get params dict safely (dataclass or dict)
+        params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+        self.logger.debug('Get Brokers',
+            request_id=request_id,
+            method='GET',
+            path='/api/beta/brokers/',
+            params=params_dict,
+            action='get_brokers'
+        )
+
+        try:
+            async def api_call():
+                response = await self.api.get_brokers_api_beta_brokers_get()
+
+                return await apply_response_interceptors(response, self.sdk_config)
+            
+            response = await retry_api_call(api_call, config=self.sdk_config)
+            
+            # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
+            if not response:
+                raise ValueError('Unexpected response shape: response is None')
+            
+            # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
+            if hasattr(response, 'data'):
+                # Response is wrapped - extract .data which contains the FinaticResponse
+                response_data = response.data
+                if not response_data:
+                    raise ValueError('Unexpected response shape: response.data is None')
+                # Serialize Pydantic model to dict (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response_data)
+            elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
+                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
+                standard_response = convert_to_plain_object(response)
+            else:
+                # Unknown response structure
+                error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
+                if hasattr(response, 'status_code'):
+                    error_info += f", status_code: {response.status_code}"
+                if hasattr(response, 'text'):
+                    error_info += f", text: {response.text}"
+                raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
+            
+            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
+                # Get params dict safely (dataclass or dict)
+                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Brokers completed',
@@ -566,8 +1101,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/connections
-        @methodId list_broker_connections_api_v1_brokers_connections_get
+        Generated from: GET /api/beta/brokers/connections
+        @methodId list_broker_connections_api_beta_brokers_connections_get
         @category brokers
         @example
         ```python
@@ -604,7 +1139,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/connections', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/connections', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -616,7 +1151,7 @@ class BrokersWrapper:
         self.logger.debug('List Broker Connections',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/connections',
+            path='/api/beta/brokers/connections',
             params=params_dict,
             action='get_broker_connections'
         )
@@ -632,7 +1167,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.list_broker_connections_api_v1_brokers_connections_get(_headers=headers)
+                response = await self.api.list_broker_connections_api_beta_brokers_connections_get(_headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -665,7 +1200,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/connections', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/connections', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('List Broker Connections completed',
@@ -803,8 +1338,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: DELETE /api/v1/brokers/disconnect-company/{connection_id}
-        @methodId disconnect_company_from_broker_api_v1_brokers_disconnect_company__connection_id__delete
+        Generated from: DELETE /api/beta/brokers/disconnect-company/{connection_id}
+        @methodId disconnect_company_from_broker_api_beta_brokers_disconnect_company__connection_id__delete
         @category brokers
         @example
         ```python
@@ -845,7 +1380,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect-company/{connection_id}', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('DELETE', '/api/beta/brokers/disconnect-company/{connection_id}', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -857,7 +1392,7 @@ class BrokersWrapper:
         self.logger.debug('Disconnect Company From Broker',
             request_id=request_id,
             method='DELETE',
-            path='/api/v1/brokers/disconnect-company/{connection_id}',
+            path='/api/beta/brokers/disconnect-company/{connection_id}',
             params=params_dict,
             action='disconnect_company_from_broker'
         )
@@ -873,7 +1408,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete(connection_id=connection_id, _headers=headers)
+                response = await self.api.disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete(connection_id=connection_id, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -906,7 +1441,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('DELETE', '/api/v1/brokers/disconnect-company/{connection_id}', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('DELETE', '/api/beta/brokers/disconnect-company/{connection_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Disconnect Company From Broker completed',
@@ -1055,8 +1590,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/orders
-        @methodId get_orders_api_v1_brokers_data_orders_get
+        Generated from: GET /api/beta/brokers/data/orders
+        @methodId get_orders_api_beta_brokers_data_orders_get
         @category brokers
         @example
         ```python
@@ -1121,7 +1656,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -1133,7 +1668,7 @@ class BrokersWrapper:
         self.logger.debug('Get Orders',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/orders',
+            path='/api/beta/brokers/data/orders',
             params=params_dict,
             action='get_orders'
         )
@@ -1149,7 +1684,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_orders_api_v1_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
+                response = await self.api.get_orders_api_beta_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1182,7 +1717,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Orders completed',
@@ -1331,8 +1866,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/positions
-        @methodId get_positions_api_v1_brokers_data_positions_get
+        Generated from: GET /api/beta/brokers/data/positions
+        @methodId get_positions_api_beta_brokers_data_positions_get
         @category brokers
         @example
         ```python
@@ -1397,7 +1932,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -1409,7 +1944,7 @@ class BrokersWrapper:
         self.logger.debug('Get Positions',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/positions',
+            path='/api/beta/brokers/data/positions',
             params=params_dict,
             action='get_positions'
         )
@@ -1425,7 +1960,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_positions_api_v1_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, include_metadata=include_metadata, _headers=headers)
+                response = await self.api.get_positions_api_beta_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1458,7 +1993,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Positions completed',
@@ -1580,275 +2115,6 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerBalance]]:
-        """Get Balances
-        
-        Get current unit-based balances for all authorized broker connections.
-        
-        Returns array of current balances (one per unit_code per account).
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Returns balances from connections the company has read access to.
-
-        Args:
-            broker_id (str, optional): Filter by broker ID
-            connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID or internal account UUID
-            unit_code (str, optional): Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-            currency (str, optional): Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-            limit (int, optional): Maximum number of balances to return
-            offset (int, optional): Number of balances to skip for pagination
-            include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
-        Returns:
-        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerBalance]] format
-                     success: {data: PaginatedData[T], meta: dict | None}
-                     error: dict | None
-                     warning: list[dict] | None
-        
-        Generated from: GET /api/v1/brokers/data/balances
-        @methodId get_balances_api_v1_brokers_data_balances_get
-        @category brokers
-        @example
-        ```python
-        # Example with no parameters
-        result = await finatic.get_balances()
-        
-        # Access the response data
-        if result.success:
-            print('Data:', result.success['data'])
-        ```
-        @example
-        ```python
-        # Full example with optional parameters
-        result = await finatic.get_balances(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
-        )
-        
-        # Handle response with warnings
-        if result.success:
-            print('Data:', result.success['data'])
-            if result.warning:
-                print('Warnings:', result.warning)
-        elif result.error:
-            print('Error:', result.error['message'], result.error['code'])
-        ```
-        """
-        # Convert kwargs to params object
-        params = GetBalancesParams(**kwargs) if kwargs else GetBalancesParams()
-        # Authentication check
-        if not self.session_id:
-            raise ValueError('Session not initialized. Call start_session() first.')
-
-        # Phase 2C: Extract individual params from input params object
-        broker_id = getattr(params, 'broker_id', None)
-        connection_id = getattr(params, 'connection_id', None)
-        account_id = getattr(params, 'account_id', None)
-        unit_code = getattr(params, 'unit_code', None)
-        currency = getattr(params, 'currency', None)
-        limit = getattr(params, 'limit', None)
-        offset = getattr(params, 'offset', None)
-        include_metadata = getattr(params, 'include_metadata', None)
-
-        # Generate request ID
-        request_id = self._generate_request_id()
-
-        # Input validation (Phase 2B: pydantic)
-        if self.sdk_config and self.sdk_config.validation_enabled:
-            # TODO: Generate validation model from endpoint parameters
-            # validation_model = create_validation_model(...)
-            # validate_params(validation_model, params, self.sdk_config)
-            pass  # Placeholder until validation is implemented
-
-        # Check cache (Phase 2B: optional caching)
-        should_cache = True
-        cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
-            # Get params dict safely (dataclass or dict)
-            params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/balances', params_dict, self.sdk_config)
-            cached = cache.get(cache_key)
-            if cached:
-                self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
-                return cached
-
-        # Structured logging (Phase 2B: structlog)
-        # Get params dict safely (dataclass or dict)
-        params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-        self.logger.debug('Get Balances',
-            request_id=request_id,
-            method='GET',
-            path='/api/v1/brokers/data/balances',
-            params=params_dict,
-            action='get_balances'
-        )
-
-        try:
-            async def api_call():
-                if not self.session_id or not self.company_id:
-                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
-                headers = {
-                    "x-session-id": self.session_id,
-                    "x-company-id": self.company_id,
-                    "x-request-id": request_id,
-                }
-                if self.csrf_token:
-                    headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_balances_api_v1_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, unit_code=unit_code, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
-
-                return await apply_response_interceptors(response, self.sdk_config)
-            
-            response = await retry_api_call(api_call, config=self.sdk_config)
-            
-            # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
-            if not response:
-                raise ValueError('Unexpected response shape: response is None')
-            
-            # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
-            if hasattr(response, 'data'):
-                # Response is wrapped - extract .data which contains the FinaticResponse
-                response_data = response.data
-                if not response_data:
-                    raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict (recursively convert all nested models)
-                standard_response = convert_to_plain_object(response_data)
-            elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
-                standard_response = convert_to_plain_object(response)
-            else:
-                # Unknown response structure
-                error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
-                if hasattr(response, 'status_code'):
-                    error_info += f", status_code: {response.status_code}"
-                if hasattr(response, 'text'):
-                    error_info += f", text: {response.text}"
-                raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
-            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
-                # Get params dict safely (dataclass or dict)
-                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/balances', params_dict, self.sdk_config)
-                cache[cache_key] = standard_response
-            
-            self.logger.debug('Get Balances completed',
-                request_id=request_id,
-                action='get_balances'
-            )
-            
-            # Phase 2: Wrap paginated responses with PaginatedData
-            has_limit = True
-            has_offset = True
-            has_pagination = has_limit and has_offset
-            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
-                # PaginatedData is already imported at top of file
-                pagination_meta_dict = standard_response['success']['meta']['pagination']
-                pagination_meta = PaginationMeta(
-                    has_more=pagination_meta_dict.get('has_more', False),
-                    next_offset=pagination_meta_dict.get('next_offset'),
-                    current_offset=pagination_meta_dict.get('current_offset', 0),
-                    limit=pagination_meta_dict.get('limit', 100)
-                )
-                # Get params dict for current_params
-                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                paginated_data = PaginatedData(
-                    standard_response['success']['data'],
-                    pagination_meta,
-                    self.get_balances,
-                    params_dict,
-                    self
-                )
-                standard_response['success']['data'] = paginated_data
-            
-            # Phase 2C: Return standard response structure (already plain objects)
-            return standard_response
-            
-        except Exception as e:
-            try:
-                await apply_error_interceptors(e, self.sdk_config)
-            except Exception:
-                pass
-            
-            self.logger.error('Get Balances failed',
-                error=str(e),
-                request_id=request_id,
-                action='get_balances',
-                exc_info=True
-            )
-            
-            # Phase 2C: Extract error details from HTTP errors or generic errors
-            error_message = str(e)
-            error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
-            error_status = None
-            error_details = {'error': str(e), 'type': type(e).__name__}
-            
-            # Handle HTTP errors (from OpenAPI generator - httpx/requests)
-            if hasattr(e, 'status_code'):
-                error_status = e.status_code
-                error_code = getattr(e, 'code', f'HTTP_{error_status}')
-                # Try to extract error from FinaticResponse Error field
-                error_response_data = getattr(e, 'body', None) or getattr(e, 'response', None)
-                if error_response_data and isinstance(error_response_data, dict) and 'error' in error_response_data:
-                    error_obj = error_response_data.get('error', {})
-                    error_message = error_obj.get('message') or getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
-                    error_code = error_obj.get('code') or error_code
-                    error_status = error_obj.get('status') or error_status
-                else:
-                    error_message = getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
-                error_details = {
-                    'status': error_status,
-                    'statusText': getattr(e, 'reason', None),
-                    'responseData': getattr(e, 'body', None) or getattr(e, 'response', None),
-                    'requestUrl': getattr(e, 'request', {}).get('url', None) if hasattr(e, 'request') else None,
-                    'requestMethod': getattr(e, 'request', {}).get('method', None) if hasattr(e, 'request') else None,
-                }
-            elif hasattr(e, 'response') and hasattr(e.response, 'status_code'):
-                # Handle httpx/requests response errors
-                error_status = e.response.status_code
-                error_code = f'HTTP_{error_status}'
-                # Try to extract error from FinaticResponse Error field
-                try:
-                    response_data = e.response.json() if hasattr(e.response, 'json') else None
-                    if response_data and isinstance(response_data, dict) and 'error' in response_data:
-                        error_obj = response_data.get('error', {})
-                        error_message = error_obj.get('message') or getattr(e.response, 'text', None) or str(e)
-                        error_code = error_obj.get('code') or error_code
-                        error_status = error_obj.get('status') or error_status
-                    else:
-                        error_message = getattr(e.response, 'text', None) or str(e)
-                except Exception:
-                    response_data = getattr(e.response, 'text', None)
-                    error_message = response_data or str(e)
-                error_details = {
-                    'status': error_status,
-                    'statusText': getattr(e.response, 'reason', None),
-                    'responseData': response_data,
-                    'requestUrl': getattr(e.request, 'url', None) if hasattr(e, 'request') else None,
-                    'requestMethod': getattr(e.request, 'method', None) if hasattr(e, 'request') else None,
-                }
-            else:
-                # Generic error - include stack trace if available
-                import traceback
-                error_details['traceback'] = traceback.format_exc()
-            
-            # Phase 2C: Return standard error response structure
-            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
-            error_response = {
-                'success': {'data': None},
-                'error': {
-                    'message': error_message,
-                    'code': error_code,
-                    'status': error_status,
-                    'details': error_details,
-                },
-                'warning': None,
-            }
-            
-            return error_response
-
-        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2D: Add orphaned method detection
-        # TODO Phase 2D: Add advanced convenience methods
-
     async def get_transactions(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerTransaction]]:
         """Get Transactions
         
@@ -1874,8 +2140,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/transactions
-        @methodId get_transactions_api_v1_brokers_data_transactions_get
+        Generated from: GET /api/beta/brokers/data/transactions
+        @methodId get_transactions_api_beta_brokers_data_transactions_get
         @category brokers
         @example
         ```python
@@ -1938,7 +2204,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/transactions', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/transactions', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -1950,7 +2216,7 @@ class BrokersWrapper:
         self.logger.debug('Get Transactions',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/transactions',
+            path='/api/beta/brokers/data/transactions',
             params=params_dict,
             action='get_transactions'
         )
@@ -1966,7 +2232,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_transactions_api_v1_brokers_data_transactions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, unit_code=unit_code, currency=currency, transaction_type=transaction_type, start_date=start_date, end_date=end_date, limit=limit, offset=offset, _headers=headers)
+                response = await self.api.get_transactions_api_beta_brokers_data_transactions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, unit_code=unit_code, currency=currency, transaction_type=transaction_type, start_date=start_date, end_date=end_date, limit=limit, offset=offset, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -1999,7 +2265,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/transactions', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/transactions', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Transactions completed',
@@ -2121,272 +2387,6 @@ class BrokersWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerAccount]]:
-        """Get Accounts
-        
-        Get accounts for all authorized broker connections.
-        
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Returns accounts from connections the company has read access to.
-
-        Args:
-            broker_id (str, optional): Filter by broker ID
-            connection_id (str, optional): Filter by connection ID
-            account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-            currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
-            limit (int, optional): Maximum number of accounts to return
-            offset (int, optional): Number of accounts to skip for pagination
-            include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
-        Returns:
-        - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerAccount]] format
-                     success: {data: PaginatedData[T], meta: dict | None}
-                     error: dict | None
-                     warning: list[dict] | None
-        
-        Generated from: GET /api/v1/brokers/data/accounts
-        @methodId get_accounts_api_v1_brokers_data_accounts_get
-        @category brokers
-        @example
-        ```python
-        # Example with no parameters
-        result = await finatic.get_accounts()
-        
-        # Access the response data
-        if result.success:
-            print('Data:', result.success['data'])
-        ```
-        @example
-        ```python
-        # Full example with optional parameters
-        result = await finatic.get_accounts(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_type='margin'
-        )
-        
-        # Handle response with warnings
-        if result.success:
-            print('Data:', result.success['data'])
-            if result.warning:
-                print('Warnings:', result.warning)
-        elif result.error:
-            print('Error:', result.error['message'], result.error['code'])
-        ```
-        """
-        # Convert kwargs to params object
-        params = GetAccountsParams(**kwargs) if kwargs else GetAccountsParams()
-        # Authentication check
-        if not self.session_id:
-            raise ValueError('Session not initialized. Call start_session() first.')
-
-        # Phase 2C: Extract individual params from input params object
-        broker_id = getattr(params, 'broker_id', None)
-        connection_id = getattr(params, 'connection_id', None)
-        account_type = coerce_enum_value(getattr(params, 'account_type', None), BrokerDataAccountTypeEnum, 'account_type') if getattr(params, 'account_type', None) is not None else None
-        currency = getattr(params, 'currency', None)
-        limit = getattr(params, 'limit', None)
-        offset = getattr(params, 'offset', None)
-        include_metadata = getattr(params, 'include_metadata', None)
-
-        # Generate request ID
-        request_id = self._generate_request_id()
-
-        # Input validation (Phase 2B: pydantic)
-        if self.sdk_config and self.sdk_config.validation_enabled:
-            # TODO: Generate validation model from endpoint parameters
-            # validation_model = create_validation_model(...)
-            # validate_params(validation_model, params, self.sdk_config)
-            pass  # Placeholder until validation is implemented
-
-        # Check cache (Phase 2B: optional caching)
-        should_cache = True
-        cache = get_cache(self.sdk_config)
-        if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
-            # Get params dict safely (dataclass or dict)
-            params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/accounts', params_dict, self.sdk_config)
-            cached = cache.get(cache_key)
-            if cached:
-                self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
-                return cached
-
-        # Structured logging (Phase 2B: structlog)
-        # Get params dict safely (dataclass or dict)
-        params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-        self.logger.debug('Get Accounts',
-            request_id=request_id,
-            method='GET',
-            path='/api/v1/brokers/data/accounts',
-            params=params_dict,
-            action='get_accounts'
-        )
-
-        try:
-            async def api_call():
-                if not self.session_id or not self.company_id:
-                    raise ValueError("Session context incomplete. Missing sessionId or companyId.")
-                headers = {
-                    "x-session-id": self.session_id,
-                    "x-company-id": self.company_id,
-                    "x-request-id": request_id,
-                }
-                if self.csrf_token:
-                    headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_accounts_api_v1_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
-
-                return await apply_response_interceptors(response, self.sdk_config)
-            
-            response = await retry_api_call(api_call, config=self.sdk_config)
-            
-            # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
-            if not response:
-                raise ValueError('Unexpected response shape: response is None')
-            
-            # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
-            if hasattr(response, 'data'):
-                # Response is wrapped - extract .data which contains the FinaticResponse
-                response_data = response.data
-                if not response_data:
-                    raise ValueError('Unexpected response shape: response.data is None')
-                # Serialize Pydantic model to dict (recursively convert all nested models)
-                standard_response = convert_to_plain_object(response_data)
-            elif hasattr(response, 'success') and hasattr(response, 'error') and hasattr(response, 'warning'):
-                # Response IS the FinaticResponse directly - serialize it (recursively convert all nested models)
-                standard_response = convert_to_plain_object(response)
-            else:
-                # Unknown response structure
-                error_info = f"Response type: {type(response).__name__}, attributes: {dir(response)}"
-                if hasattr(response, 'status_code'):
-                    error_info += f", status_code: {response.status_code}"
-                if hasattr(response, 'text'):
-                    error_info += f", text: {response.text}"
-                raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
-            if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
-                # Get params dict safely (dataclass or dict)
-                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/accounts', params_dict, self.sdk_config)
-                cache[cache_key] = standard_response
-            
-            self.logger.debug('Get Accounts completed',
-                request_id=request_id,
-                action='get_accounts'
-            )
-            
-            # Phase 2: Wrap paginated responses with PaginatedData
-            has_limit = True
-            has_offset = True
-            has_pagination = has_limit and has_offset
-            if has_pagination and standard_response.get('success') and isinstance(standard_response['success'].get('data'), list) and standard_response['success'].get('meta', {}).get('pagination'):
-                # PaginatedData is already imported at top of file
-                pagination_meta_dict = standard_response['success']['meta']['pagination']
-                pagination_meta = PaginationMeta(
-                    has_more=pagination_meta_dict.get('has_more', False),
-                    next_offset=pagination_meta_dict.get('next_offset'),
-                    current_offset=pagination_meta_dict.get('current_offset', 0),
-                    limit=pagination_meta_dict.get('limit', 100)
-                )
-                # Get params dict for current_params
-                params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                paginated_data = PaginatedData(
-                    standard_response['success']['data'],
-                    pagination_meta,
-                    self.get_accounts,
-                    params_dict,
-                    self
-                )
-                standard_response['success']['data'] = paginated_data
-            
-            # Phase 2C: Return standard response structure (already plain objects)
-            return standard_response
-            
-        except Exception as e:
-            try:
-                await apply_error_interceptors(e, self.sdk_config)
-            except Exception:
-                pass
-            
-            self.logger.error('Get Accounts failed',
-                error=str(e),
-                request_id=request_id,
-                action='get_accounts',
-                exc_info=True
-            )
-            
-            # Phase 2C: Extract error details from HTTP errors or generic errors
-            error_message = str(e)
-            error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
-            error_status = None
-            error_details = {'error': str(e), 'type': type(e).__name__}
-            
-            # Handle HTTP errors (from OpenAPI generator - httpx/requests)
-            if hasattr(e, 'status_code'):
-                error_status = e.status_code
-                error_code = getattr(e, 'code', f'HTTP_{error_status}')
-                # Try to extract error from FinaticResponse Error field
-                error_response_data = getattr(e, 'body', None) or getattr(e, 'response', None)
-                if error_response_data and isinstance(error_response_data, dict) and 'error' in error_response_data:
-                    error_obj = error_response_data.get('error', {})
-                    error_message = error_obj.get('message') or getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
-                    error_code = error_obj.get('code') or error_code
-                    error_status = error_obj.get('status') or error_status
-                else:
-                    error_message = getattr(e, 'message', None) or getattr(e, 'detail', None) or str(e)
-                error_details = {
-                    'status': error_status,
-                    'statusText': getattr(e, 'reason', None),
-                    'responseData': getattr(e, 'body', None) or getattr(e, 'response', None),
-                    'requestUrl': getattr(e, 'request', {}).get('url', None) if hasattr(e, 'request') else None,
-                    'requestMethod': getattr(e, 'request', {}).get('method', None) if hasattr(e, 'request') else None,
-                }
-            elif hasattr(e, 'response') and hasattr(e.response, 'status_code'):
-                # Handle httpx/requests response errors
-                error_status = e.response.status_code
-                error_code = f'HTTP_{error_status}'
-                # Try to extract error from FinaticResponse Error field
-                try:
-                    response_data = e.response.json() if hasattr(e.response, 'json') else None
-                    if response_data and isinstance(response_data, dict) and 'error' in response_data:
-                        error_obj = response_data.get('error', {})
-                        error_message = error_obj.get('message') or getattr(e.response, 'text', None) or str(e)
-                        error_code = error_obj.get('code') or error_code
-                        error_status = error_obj.get('status') or error_status
-                    else:
-                        error_message = getattr(e.response, 'text', None) or str(e)
-                except Exception:
-                    response_data = getattr(e.response, 'text', None)
-                    error_message = response_data or str(e)
-                error_details = {
-                    'status': error_status,
-                    'statusText': getattr(e.response, 'reason', None),
-                    'responseData': response_data,
-                    'requestUrl': getattr(e.request, 'url', None) if hasattr(e, 'request') else None,
-                    'requestMethod': getattr(e.request, 'method', None) if hasattr(e, 'request') else None,
-                }
-            else:
-                # Generic error - include stack trace if available
-                import traceback
-                error_details['traceback'] = traceback.format_exc()
-            
-            # Phase 2C: Return standard error response structure
-            # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
-            error_response = {
-                'success': {'data': None},
-                'error': {
-                    'message': error_message,
-                    'code': error_code,
-                    'status': error_status,
-                    'details': error_details,
-                },
-                'warning': None,
-            }
-            
-            return error_response
-
-        # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
-        # TODO Phase 2D: Add orphaned method detection
-        # TODO Phase 2D: Add advanced convenience methods
-
     async def get_order_fills(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderFill]]:
         """Get Order Fills
         
@@ -2406,8 +2406,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/orders/{order_id}/fills
-        @methodId get_order_fills_api_v1_brokers_data_orders__order_id__fills_get
+        Generated from: GET /api/beta/brokers/data/orders/{order_id}/fills
+        @methodId get_order_fills_api_beta_brokers_data_orders__order_id__fills_get
         @category brokers
         @example
         ```python
@@ -2470,7 +2470,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/fills', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/{order_id}/fills', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -2482,7 +2482,7 @@ class BrokersWrapper:
         self.logger.debug('Get Order Fills',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/orders/{order_id}/fills',
+            path='/api/beta/brokers/data/orders/{order_id}/fills',
             params=params_dict,
             action='get_order_fills'
         )
@@ -2498,7 +2498,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_order_fills_api_v1_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
+                response = await self.api.get_order_fills_api_beta_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -2531,7 +2531,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/fills', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/{order_id}/fills', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Order Fills completed',
@@ -2672,8 +2672,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/orders/{order_id}/events
-        @methodId get_order_events_api_v1_brokers_data_orders__order_id__events_get
+        Generated from: GET /api/beta/brokers/data/orders/{order_id}/events
+        @methodId get_order_events_api_beta_brokers_data_orders__order_id__events_get
         @category brokers
         @example
         ```python
@@ -2736,7 +2736,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/events', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/{order_id}/events', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -2748,7 +2748,7 @@ class BrokersWrapper:
         self.logger.debug('Get Order Events',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/orders/{order_id}/events',
+            path='/api/beta/brokers/data/orders/{order_id}/events',
             params=params_dict,
             action='get_order_events'
         )
@@ -2764,7 +2764,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_order_events_api_v1_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
+                response = await self.api.get_order_events_api_beta_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -2797,7 +2797,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/{order_id}/events', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/{order_id}/events', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Order Events completed',
@@ -2940,8 +2940,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/orders/groups
-        @methodId get_order_groups_api_v1_brokers_data_orders_groups_get
+        Generated from: GET /api/beta/brokers/data/orders/groups
+        @methodId get_order_groups_api_beta_brokers_data_orders_groups_get
         @category brokers
         @example
         ```python
@@ -3001,7 +3001,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/groups', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/groups', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -3013,7 +3013,7 @@ class BrokersWrapper:
         self.logger.debug('Get Order Groups',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/orders/groups',
+            path='/api/beta/brokers/data/orders/groups',
             params=params_dict,
             action='get_order_groups'
         )
@@ -3029,7 +3029,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_order_groups_api_v1_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
+                response = await self.api.get_order_groups_api_beta_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -3062,7 +3062,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/orders/groups', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/groups', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Order Groups completed',
@@ -3206,8 +3206,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/positions/lots
-        @methodId get_position_lots_api_v1_brokers_data_positions_lots_get
+        Generated from: GET /api/beta/brokers/data/positions/lots
+        @methodId get_position_lots_api_beta_brokers_data_positions_lots_get
         @category brokers
         @example
         ```python
@@ -3267,7 +3267,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions/lots', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -3279,7 +3279,7 @@ class BrokersWrapper:
         self.logger.debug('Get Position Lots',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/positions/lots',
+            path='/api/beta/brokers/data/positions/lots',
             params=params_dict,
             action='get_position_lots'
         )
@@ -3295,7 +3295,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_position_lots_api_v1_brokers_data_positions_lots_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, position_id=position_id, limit=limit, offset=offset, _headers=headers)
+                response = await self.api.get_position_lots_api_beta_brokers_data_positions_lots_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, position_id=position_id, limit=limit, offset=offset, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -3328,7 +3328,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions/lots', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Position Lots completed',
@@ -3468,8 +3468,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: GET /api/v1/brokers/data/positions/lots/{lot_id}/fills
-        @methodId get_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get
+        Generated from: GET /api/beta/brokers/data/positions/lots/{lot_id}/fills
+        @methodId get_position_lot_fills_api_beta_brokers_data_positions_lots__lot_id__fills_get
         @category brokers
         @example
         ```python
@@ -3531,7 +3531,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots/{lot_id}/fills', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions/lots/{lot_id}/fills', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -3543,7 +3543,7 @@ class BrokersWrapper:
         self.logger.debug('Get Position Lot Fills',
             request_id=request_id,
             method='GET',
-            path='/api/v1/brokers/data/positions/lots/{lot_id}/fills',
+            path='/api/beta/brokers/data/positions/lots/{lot_id}/fills',
             params=params_dict,
             action='get_position_lot_fills'
         )
@@ -3559,7 +3559,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get(lot_id=lot_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
+                response = await self.api.get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(lot_id=lot_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -3592,7 +3592,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('GET', '/api/v1/brokers/data/positions/lots/{lot_id}/fills', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions/lots/{lot_id}/fills', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Get Position Lot Fills completed',
@@ -3781,8 +3781,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: POST /api/v1/brokers/orders
-        @methodId place_order_api_v1_brokers_orders_post
+        Generated from: POST /api/beta/brokers/orders
+        @methodId place_order_api_beta_brokers_orders_post
         @category brokers
         @example
         ```python
@@ -3835,7 +3835,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('POST', '/api/v1/brokers/orders', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('POST', '/api/beta/brokers/orders', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -3847,7 +3847,7 @@ class BrokersWrapper:
         self.logger.debug('Place Order',
             request_id=request_id,
             method='POST',
-            path='/api/v1/brokers/orders',
+            path='/api/beta/brokers/orders',
             params=params_dict,
             action='place_order'
         )
@@ -3863,7 +3863,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.place_order_api_v1_brokers_orders_post(connection_id=connection_id, order_request=order_request, _headers=headers)
+                response = await self.api.place_order_api_beta_brokers_orders_post(connection_id=connection_id, order_request=order_request, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -3896,7 +3896,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('POST', '/api/v1/brokers/orders', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('POST', '/api/beta/brokers/orders', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Place Order completed',
@@ -4037,8 +4037,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: DELETE /api/v1/brokers/orders/{order_id}
-        @methodId cancel_order_api_v1_brokers_orders__order_id__delete
+        Generated from: DELETE /api/beta/brokers/orders/{order_id}
+        @methodId cancel_order_api_beta_brokers_orders__order_id__delete
         @category brokers
         @example
         ```python
@@ -4079,7 +4079,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('DELETE', '/api/v1/brokers/orders/{order_id}', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('DELETE', '/api/beta/brokers/orders/{order_id}', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -4091,7 +4091,7 @@ class BrokersWrapper:
         self.logger.debug('Cancel Order',
             request_id=request_id,
             method='DELETE',
-            path='/api/v1/brokers/orders/{order_id}',
+            path='/api/beta/brokers/orders/{order_id}',
             params=params_dict,
             action='cancel_order'
         )
@@ -4107,7 +4107,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.cancel_order_api_v1_brokers_orders_order_id_delete(order_id=order_id, _headers=headers)
+                response = await self.api.cancel_order_api_beta_brokers_orders_order_id_delete(order_id=order_id, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -4140,7 +4140,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('DELETE', '/api/v1/brokers/orders/{order_id}', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('DELETE', '/api/beta/brokers/orders/{order_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Cancel Order completed',
@@ -4281,8 +4281,8 @@ class BrokersWrapper:
                      error: dict | None
                      warning: list[dict] | None
         
-        Generated from: PATCH /api/v1/brokers/orders/{order_id}
-        @methodId modify_order_api_v1_brokers_orders__order_id__patch
+        Generated from: PATCH /api/beta/brokers/orders/{order_id}
+        @methodId modify_order_api_beta_brokers_orders__order_id__patch
         @category brokers
         @example
         ```python
@@ -4343,7 +4343,7 @@ class BrokersWrapper:
         if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
             # Get params dict safely (dataclass or dict)
             params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-            cache_key = generate_cache_key('PATCH', '/api/v1/brokers/orders/{order_id}', params_dict, self.sdk_config)
+            cache_key = generate_cache_key('PATCH', '/api/beta/brokers/orders/{order_id}', params_dict, self.sdk_config)
             cached = cache.get(cache_key)
             if cached:
                 self.logger.debug('Cache hit', request_id=request_id, cache_key=cache_key)
@@ -4355,7 +4355,7 @@ class BrokersWrapper:
         self.logger.debug('Modify Order',
             request_id=request_id,
             method='PATCH',
-            path='/api/v1/brokers/orders/{order_id}',
+            path='/api/beta/brokers/orders/{order_id}',
             params=params_dict,
             action='modify_order'
         )
@@ -4371,7 +4371,7 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.modify_order_api_v1_brokers_orders_order_id_patch(order_id=order_id, account_number=account_number, connection_id=connection_id, order_request=order_request, _headers=headers)
+                response = await self.api.modify_order_api_beta_brokers_orders_order_id_patch(order_id=order_id, account_number=account_number, connection_id=connection_id, order_request=order_request, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -4404,7 +4404,7 @@ class BrokersWrapper:
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
-                cache_key = generate_cache_key('PATCH', '/api/v1/brokers/orders/{order_id}', params_dict, self.sdk_config)
+                cache_key = generate_cache_key('PATCH', '/api/beta/brokers/orders/{order_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
             
             self.logger.debug('Modify Order completed',

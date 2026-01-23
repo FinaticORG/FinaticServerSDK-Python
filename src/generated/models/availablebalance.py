@@ -27,7 +27,7 @@ AVAILABLEBALANCE_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Availablebalance(BaseModel):
     """
-    Available for trading
+    Available balance
     """
 
     # data type: str

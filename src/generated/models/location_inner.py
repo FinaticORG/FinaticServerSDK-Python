@@ -17,29 +17,28 @@ from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, ValidationError, field_validator
 from typing import Optional
-from .fdx_account_status import FDXAccountStatus
 from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-ACCOUNTSTATUS_ANY_OF_SCHEMAS = ["FDXAccountStatus", "str"]
+LOCATIONINNER_ANY_OF_SCHEMAS = ["int", "str"]
 
-class Accountstatus(BaseModel):
+class LocationInner(BaseModel):
     """
-    Account status (ACTIVE, INACTIVE, CLOSED, etc.)
+    LocationInner
     """
 
-    # data type: FDXAccountStatus
-    anyof_schema_1_validator: Optional[FDXAccountStatus] = None
     # data type: str
-    anyof_schema_2_validator: Optional[StrictStr] = None
+    anyof_schema_1_validator: Optional[StrictStr] = None
+    # data type: int
+    anyof_schema_2_validator: Optional[StrictInt] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[FDXAccountStatus, str]] = None
+        actual_instance: Optional[Union[int, str]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: Set[str] = { "FDXAccountStatus", "str" }
+    any_of_schemas: Set[str] = { "int", "str" }
 
     model_config = {
         "validate_assignment": True,
@@ -58,18 +57,15 @@ class Accountstatus(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_anyof(cls, v):
-        if v is None:
-            return v
-
-        instance = Accountstatus.model_construct()
+        instance = LocationInner.model_construct()
         error_messages = []
-        # validate data type: FDXAccountStatus
-        if not isinstance(v, FDXAccountStatus):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `FDXAccountStatus`")
-        else:
-            return v
-
         # validate data type: str
+        try:
+            instance.anyof_schema_1_validator = v
+            return v
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # validate data type: int
         try:
             instance.anyof_schema_2_validator = v
             return v
@@ -77,7 +73,7 @@ class Accountstatus(BaseModel):
             error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Accountstatus with anyOf schemas: FDXAccountStatus, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in LocationInner with anyOf schemas: int, str. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -89,17 +85,17 @@ class Accountstatus(BaseModel):
     def from_json(cls, json_str: str) -> Self:
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
-        if json_str is None:
-            return instance
-
         error_messages = []
-        # anyof_schema_1_validator: Optional[FDXAccountStatus] = None
+        # deserialize data into str
         try:
-            instance.actual_instance = FDXAccountStatus.from_json(json_str)
+            # validation
+            instance.anyof_schema_1_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_1_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # deserialize data into str
+            error_messages.append(str(e))
+        # deserialize data into int
         try:
             # validation
             instance.anyof_schema_2_validator = json.loads(json_str)
@@ -111,7 +107,7 @@ class Accountstatus(BaseModel):
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Accountstatus with anyOf schemas: FDXAccountStatus, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into LocationInner with anyOf schemas: int, str. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -125,7 +121,7 @@ class Accountstatus(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FDXAccountStatus, str]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], int, str]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

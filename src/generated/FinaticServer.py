@@ -28,16 +28,16 @@ from .wrappers.session import SessionWrapper
 from .wrappers.company import GetCompanyParams
 from .wrappers.brokers import CancelOrderParams, DisconnectCompanyFromBrokerParams, GetAccountsParams, GetBalancesParams, GetBrokerConnectionsParams, GetBrokersParams, GetOrderEventsParams, GetOrderFillsParams, GetOrderGroupsParams, GetOrdersParams, GetPositionLotFillsParams, GetPositionLotsParams, GetPositionsParams, GetTransactionsParams, ModifyOrderParams, PlaceOrderParams
 
+from .wrappers.brokers import GetBalancesParams
+from .models.legacy_broker_balance import LegacyBrokerBalance
+from .wrappers.brokers import GetAccountsParams
+from .models.legacy_broker_account import LegacyBrokerAccount
 from .wrappers.brokers import GetOrdersParams
 from .models.fdx_broker_order import FDXBrokerOrder
 from .wrappers.brokers import GetPositionsParams
 from .models.fdx_broker_position import FDXBrokerPosition
-from .wrappers.brokers import GetBalancesParams
-from .models.fdx_broker_balance import FDXBrokerBalance
 from .wrappers.brokers import GetTransactionsParams
 from .models.fdx_broker_transaction import FDXBrokerTransaction
-from .wrappers.brokers import GetAccountsParams
-from .models.fdx_broker_account import FDXBrokerAccount
 from .wrappers.brokers import GetOrderFillsParams
 from .models.fdx_broker_order_fill import FDXBrokerOrderFill
 from .wrappers.brokers import GetOrderEventsParams
@@ -610,6 +610,270 @@ class FinaticServer:
         return response
 
 
+    async def get_all_balances(self, **kwargs) -> FinaticResponse[list[LegacyBrokerBalance]]:
+        """Get all balances across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_balances method with internal pagination handling.
+        
+        @methodId get_all_balances_api_beta_brokers_data_balances_get
+        @category brokers
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_balances(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_balances(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_id='123456789'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
+        """
+        from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetBalancesParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetBalancesParams(**filtered_kwargs) if filtered_kwargs else GetBalancesParams()
+        else:
+            params = GetBalancesParams()
+        
+        all_data: list[LegacyBrokerBalance] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_balances(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
+                break
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
+
+    async def get_all_accounts(self, **kwargs) -> FinaticResponse[list[LegacyBrokerAccount]]:
+        """Get all accounts across all pages.
+        
+        Auto-generated from paginated endpoint.
+        
+        This method automatically paginates through all pages and returns all items in a single response.
+        It uses the underlying get_accounts method with internal pagination handling.
+        
+        @methodId get_all_accounts_api_beta_brokers_data_accounts_get
+        @category brokers
+        
+        Args:
+            **kwargs: Optional keyword arguments that will be converted to params object.
+                     Example: get_all_accounts(account_id="123", symbol="AAPL")
+        
+        Returns:
+            FinaticResponse with success, error, and warning fields containing list of all items across all pages
+           * @example
+           * ```typescript-server
+           * // Get all items with optional filters
+           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```typescript-client
+           * // Get all items with optional filters
+           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
+           * 
+           * // Access the response data
+           * if (result.success) {
+           *   console.log('Total items:', result.success.data.length);
+           *   if (result.warning && result.warning.length > 0) {
+           *     console.warn('Warnings:', result.warning);
+           *   }
+           * } else if (result.error) {
+           *   console.error('Error:', result.error.message);
+           * }
+           * ```
+           * @example
+           * ```python
+           * # Get all items with optional filters
+           * result = await finatic.get_all_accounts(
+           *            broker_id='alpaca',
+                    connection_id='00000000-0000-0000-0000-000000000000',
+                    account_type='margin'
+           * )
+           * 
+           * # Access the response data
+           * if result.success:
+           *     print('Total items:', len(result.success['data']))
+           *     if result.warning:
+           *         print('Warnings:', result.warning)
+           * elif result.error:
+           *     print('Error:', result.error['message'])
+           * ```
+        """
+        from dataclasses import replace, fields
+        from .utils.pagination import PaginatedData
+        
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            valid_field_names = {f.name for f in fields(GetAccountsParams)}
+            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+            params = GetAccountsParams(**filtered_kwargs) if filtered_kwargs else GetAccountsParams()
+        else:
+            params = GetAccountsParams()
+        
+        all_data: list[LegacyBrokerAccount] = []
+        offset = 0
+        limit = 1000
+        last_error = None
+        warnings = []
+        
+        while True:
+            # Create new params with limit and offset
+            paginated_params = replace(params, limit=limit, offset=offset)
+            # Convert params dataclass to dict and unpack as kwargs
+            # Wrapper methods expect **kwargs, not a params object
+            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
+            # Unpack params dict as kwargs to wrapper method
+            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
+            # Use private wrapper (self._brokers, self._company) since wrappers are private
+            response = await self._brokers.get_accounts(**params_dict)
+            
+            # Collect warnings from each page
+            if response.get('warning') and isinstance(response.get('warning'), list):
+                warnings.extend(response.get('warning', []))
+            
+            if response.get('error'):
+                last_error = response.get('error')
+                break
+            
+            success_data = response.get('success', {})
+            result = success_data.get('data', []) if isinstance(success_data, dict) else []
+            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
+            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
+            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
+            if len(result) == 0:
+                break
+            # Extract items by iterating (PaginatedData.__iter__ works)
+            items = list(result)
+            
+            all_data.extend(items)
+            if len(items) < limit:
+                break
+            offset += limit
+        
+        # Return FinaticResponse with accumulated data
+        if last_error:
+            return {
+                'success': None,
+                'error': last_error,
+                'warning': warnings if warnings else None,
+            }
+        
+        return {
+            'success': {
+                'data': all_data,
+            },
+            'error': None,
+            'warning': warnings if warnings else None,
+        }
+
     async def get_all_orders(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrder]]:
         """Get all orders across all pages.
         
@@ -618,7 +882,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_orders method with internal pagination handling.
         
-        @methodId get_all_orders_api_v1_brokers_data_orders_get
+        @methodId get_all_orders_api_beta_brokers_data_orders_get
         @category brokers
         
         Args:
@@ -750,7 +1014,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_positions method with internal pagination handling.
         
-        @methodId get_all_positions_api_v1_brokers_data_positions_get
+        @methodId get_all_positions_api_beta_brokers_data_positions_get
         @category brokers
         
         Args:
@@ -874,138 +1138,6 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_balances(self, **kwargs) -> FinaticResponse[list[FDXBrokerBalance]]:
-        """Get all balances across all pages.
-        
-        Auto-generated from paginated endpoint.
-        
-        This method automatically paginates through all pages and returns all items in a single response.
-        It uses the underlying get_balances method with internal pagination handling.
-        
-        @methodId get_all_balances_api_v1_brokers_data_balances_get
-        @category brokers
-        
-        Args:
-            **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_balances(account_id="123", symbol="AAPL")
-        
-        Returns:
-            FinaticResponse with success, error, and warning fields containing list of all items across all pages
-           * @example
-           * ```typescript-server
-           * // Get all items with optional filters
-           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
-           * 
-           * // Access the response data
-           * if (result.success) {
-           *   console.log('Total items:', result.success.data.length);
-           *   if (result.warning && result.warning.length > 0) {
-           *     console.warn('Warnings:', result.warning);
-           *   }
-           * } else if (result.error) {
-           *   console.error('Error:', result.error.message);
-           * }
-           * ```
-           * @example
-           * ```typescript-client
-           * // Get all items with optional filters
-           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
-           * 
-           * // Access the response data
-           * if (result.success) {
-           *   console.log('Total items:', result.success.data.length);
-           *   if (result.warning && result.warning.length > 0) {
-           *     console.warn('Warnings:', result.warning);
-           *   }
-           * } else if (result.error) {
-           *   console.error('Error:', result.error.message);
-           * }
-           * ```
-           * @example
-           * ```python
-           * # Get all items with optional filters
-           * result = await finatic.get_all_balances(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_id='123456789'
-           * )
-           * 
-           * # Access the response data
-           * if result.success:
-           *     print('Total items:', len(result.success['data']))
-           *     if result.warning:
-           *         print('Warnings:', result.warning)
-           * elif result.error:
-           *     print('Error:', result.error['message'])
-           * ```
-        """
-        from dataclasses import replace, fields
-        from .utils.pagination import PaginatedData
-        
-        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
-        if kwargs:
-            valid_field_names = {f.name for f in fields(GetBalancesParams)}
-            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
-            params = GetBalancesParams(**filtered_kwargs) if filtered_kwargs else GetBalancesParams()
-        else:
-            params = GetBalancesParams()
-        
-        all_data: list[FDXBrokerBalance] = []
-        offset = 0
-        limit = 1000
-        last_error = None
-        warnings = []
-        
-        while True:
-            # Create new params with limit and offset
-            paginated_params = replace(params, limit=limit, offset=offset)
-            # Convert params dataclass to dict and unpack as kwargs
-            # Wrapper methods expect **kwargs, not a params object
-            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
-            # Unpack params dict as kwargs to wrapper method
-            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
-            # Use private wrapper (self._brokers, self._company) since wrappers are private
-            response = await self._brokers.get_balances(**params_dict)
-            
-            # Collect warnings from each page
-            if response.get('warning') and isinstance(response.get('warning'), list):
-                warnings.extend(response.get('warning', []))
-            
-            if response.get('error'):
-                last_error = response.get('error')
-                break
-            
-            success_data = response.get('success', {})
-            result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
-            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
-            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
-            if len(result) == 0:
-                break
-            # Extract items by iterating (PaginatedData.__iter__ works)
-            items = list(result)
-            
-            all_data.extend(items)
-            if len(items) < limit:
-                break
-            offset += limit
-        
-        # Return FinaticResponse with accumulated data
-        if last_error:
-            return {
-                'success': None,
-                'error': last_error,
-                'warning': warnings if warnings else None,
-            }
-        
-        return {
-            'success': {
-                'data': all_data,
-            },
-            'error': None,
-            'warning': warnings if warnings else None,
-        }
-
     async def get_all_transactions(self, **kwargs) -> FinaticResponse[list[FDXBrokerTransaction]]:
         """Get all transactions across all pages.
         
@@ -1014,7 +1146,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_transactions method with internal pagination handling.
         
-        @methodId get_all_transactions_api_v1_brokers_data_transactions_get
+        @methodId get_all_transactions_api_beta_brokers_data_transactions_get
         @category brokers
         
         Args:
@@ -1138,138 +1270,6 @@ class FinaticServer:
             'warning': warnings if warnings else None,
         }
 
-    async def get_all_accounts(self, **kwargs) -> FinaticResponse[list[FDXBrokerAccount]]:
-        """Get all accounts across all pages.
-        
-        Auto-generated from paginated endpoint.
-        
-        This method automatically paginates through all pages and returns all items in a single response.
-        It uses the underlying get_accounts method with internal pagination handling.
-        
-        @methodId get_all_accounts_api_v1_brokers_data_accounts_get
-        @category brokers
-        
-        Args:
-            **kwargs: Optional keyword arguments that will be converted to params object.
-                     Example: get_all_accounts(account_id="123", symbol="AAPL")
-        
-        Returns:
-            FinaticResponse with success, error, and warning fields containing list of all items across all pages
-           * @example
-           * ```typescript-server
-           * // Get all items with optional filters
-           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
-           * 
-           * // Access the response data
-           * if (result.success) {
-           *   console.log('Total items:', result.success.data.length);
-           *   if (result.warning && result.warning.length > 0) {
-           *     console.warn('Warnings:', result.warning);
-           *   }
-           * } else if (result.error) {
-           *   console.error('Error:', result.error.message);
-           * }
-           * ```
-           * @example
-           * ```typescript-client
-           * // Get all items with optional filters
-           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
-           * 
-           * // Access the response data
-           * if (result.success) {
-           *   console.log('Total items:', result.success.data.length);
-           *   if (result.warning && result.warning.length > 0) {
-           *     console.warn('Warnings:', result.warning);
-           *   }
-           * } else if (result.error) {
-           *   console.error('Error:', result.error.message);
-           * }
-           * ```
-           * @example
-           * ```python
-           * # Get all items with optional filters
-           * result = await finatic.get_all_accounts(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_type='margin'
-           * )
-           * 
-           * # Access the response data
-           * if result.success:
-           *     print('Total items:', len(result.success['data']))
-           *     if result.warning:
-           *         print('Warnings:', result.warning)
-           * elif result.error:
-           *     print('Error:', result.error['message'])
-           * ```
-        """
-        from dataclasses import replace, fields
-        from .utils.pagination import PaginatedData
-        
-        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
-        if kwargs:
-            valid_field_names = {f.name for f in fields(GetAccountsParams)}
-            filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
-            params = GetAccountsParams(**filtered_kwargs) if filtered_kwargs else GetAccountsParams()
-        else:
-            params = GetAccountsParams()
-        
-        all_data: list[FDXBrokerAccount] = []
-        offset = 0
-        limit = 1000
-        last_error = None
-        warnings = []
-        
-        while True:
-            # Create new params with limit and offset
-            paginated_params = replace(params, limit=limit, offset=offset)
-            # Convert params dataclass to dict and unpack as kwargs
-            # Wrapper methods expect **kwargs, not a params object
-            params_dict = paginated_params.__dict__ if hasattr(paginated_params, '__dict__') else (paginated_params if isinstance(paginated_params, dict) else {})
-            # Unpack params dict as kwargs to wrapper method
-            # Note: Wrapper methods accept **kwargs, so we can unpack the params dict directly
-            # Use private wrapper (self._brokers, self._company) since wrappers are private
-            response = await self._brokers.get_accounts(**params_dict)
-            
-            # Collect warnings from each page
-            if response.get('warning') and isinstance(response.get('warning'), list):
-                warnings.extend(response.get('warning', []))
-            
-            if response.get('error'):
-                last_error = response.get('error')
-                break
-            
-            success_data = response.get('success', {})
-            result = success_data.get('data', []) if isinstance(success_data, dict) else []
-            # PaginatedData is array-like (has __len__, __iter__, __getitem__), so we can use it directly
-            # For get_all_* methods, we iterate over PaginatedData to extract items and build a flat list
-            # get_all_* methods only work with paginated endpoints, so result is always PaginatedData
-            if len(result) == 0:
-                break
-            # Extract items by iterating (PaginatedData.__iter__ works)
-            items = list(result)
-            
-            all_data.extend(items)
-            if len(items) < limit:
-                break
-            offset += limit
-        
-        # Return FinaticResponse with accumulated data
-        if last_error:
-            return {
-                'success': None,
-                'error': last_error,
-                'warning': warnings if warnings else None,
-            }
-        
-        return {
-            'success': {
-                'data': all_data,
-            },
-            'error': None,
-            'warning': warnings if warnings else None,
-        }
-
     async def get_all_order_fills(self, **kwargs) -> FinaticResponse[list[FDXBrokerOrderFill]]:
         """Get all order_fills across all pages.
         
@@ -1278,7 +1278,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_order_fills method with internal pagination handling.
         
-        @methodId get_all_order_fills_api_v1_brokers_data_orders__order_id__fills_get
+        @methodId get_all_order_fills_api_beta_brokers_data_orders__order_id__fills_get
         @category brokers
         
         Args:
@@ -1409,7 +1409,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_order_events method with internal pagination handling.
         
-        @methodId get_all_order_events_api_v1_brokers_data_orders__order_id__events_get
+        @methodId get_all_order_events_api_beta_brokers_data_orders__order_id__events_get
         @category brokers
         
         Args:
@@ -1540,7 +1540,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_order_groups method with internal pagination handling.
         
-        @methodId get_all_order_groups_api_v1_brokers_data_orders_groups_get
+        @methodId get_all_order_groups_api_beta_brokers_data_orders_groups_get
         @category brokers
         
         Args:
@@ -1672,7 +1672,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_position_lots method with internal pagination handling.
         
-        @methodId get_all_position_lots_api_v1_brokers_data_positions_lots_get
+        @methodId get_all_position_lots_api_beta_brokers_data_positions_lots_get
         @category brokers
         
         Args:
@@ -1804,7 +1804,7 @@ class FinaticServer:
         This method automatically paginates through all pages and returns all items in a single response.
         It uses the underlying get_position_lot_fills method with internal pagination handling.
         
-        @methodId get_all_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get
+        @methodId get_all_position_lot_fills_api_beta_brokers_data_positions_lots__lot_id__fills_get
         @category brokers
         
         Args:
@@ -1934,7 +1934,7 @@ class FinaticServer:
         
         Convenience method that delegates to company wrapper.
         
-                @methodId get_company_api_v1_company__company_id__get
+                @methodId get_company_api_beta_company__company_id__get
                 @category company
         
         Args:
@@ -1994,6 +1994,178 @@ class FinaticServer:
         else:
             return await self._company.get_company()
 
+    async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[LegacyBrokerBalance]]:
+        """Get Balances
+        
+        Get current unit-based balances for all authorized broker connections.
+        
+        Returns array of current balances (one per unit_code per account).
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns balances from connections the company has read access to.
+        
+        Convenience method that delegates to brokers wrapper.
+        
+                @methodId get_balances_api_beta_brokers_data_balances_get
+                @category brokers
+        
+        Args:
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_id (str, optional): Filter by broker provided account ID or internal account UUID
+            unit_code (str, optional): Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
+            currency (str, optional): Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
+            limit (int, optional): Maximum number of balances to return
+            offset (int, optional): Number of balances to skip for pagination
+            include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
+        
+        Returns:
+            FinaticResponse[PaginatedData[LegacyBrokerBalance]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_balances()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_balances(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_id='123456789'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getBalances();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getBalances();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetBalancesParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_balances(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_balances(**kwargs)
+        else:
+            return await self._brokers.get_balances()
+
+    async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[LegacyBrokerAccount]]:
+        """Get Accounts
+        
+        Get accounts for all authorized broker connections.
+        
+        This endpoint is accessible from the portal and uses session-only authentication.
+        Returns accounts from connections the company has read access to.
+        
+        Convenience method that delegates to brokers wrapper.
+        
+                @methodId get_accounts_api_beta_brokers_data_accounts_get
+                @category brokers
+        
+        Args:
+            broker_id (str, optional): Filter by broker ID
+            connection_id (str, optional): Filter by connection ID
+            account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
+            currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
+            limit (int, optional): Maximum number of accounts to return
+            offset (int, optional): Number of accounts to skip for pagination
+            include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
+        
+        Returns:
+            FinaticResponse[PaginatedData[LegacyBrokerAccount]]: Standard FinaticResponse format
+        @example
+        ```python
+        # Example with no parameters
+        result = await finatic.get_accounts()
+        
+        # Access the response data
+        if result.success:
+            print('Data:', result.success['data'])
+        ```
+        @example
+        ```python
+        # Full example with optional parameters
+        result = await finatic.get_accounts(
+            broker_id='alpaca',
+            connection_id='00000000-0000-0000-0000-000000000000',
+            account_type='margin'
+        )
+        
+        # Handle response with warnings
+        if result.success:
+            print('Data:', result.success['data'])
+            if result.warning:
+                print('Warnings:', result.warning)
+        elif result.error:
+            print('Error:', result.error['message'], result.error['code'])
+        ```
+        @example
+        ```typescript-server
+        // Example with no parameters
+        const result = await finatic.getAccounts();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        @example
+        ```typescript-client
+        // Example with no parameters
+        const result = await finatic.getAccounts();
+        
+        // Access the response data
+        if (result.success) {
+          console.log('Data:', result.success.data);
+        }
+        ```
+        """
+        from dataclasses import fields
+        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
+        if kwargs:
+            try:
+                valid_field_names = {f.name for f in fields(GetAccountsParams)}
+                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
+                return await self._brokers.get_accounts(**filtered_kwargs)
+            except (TypeError, AttributeError):
+                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
+                # This handles edge cases where the type might not be available
+                return await self._brokers.get_accounts(**kwargs)
+        else:
+            return await self._brokers.get_accounts()
+
     async def get_brokers(self, **kwargs) -> FinaticResponse[list[BrokerInfo]]:
         """Get Brokers
         
@@ -2009,7 +2181,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_brokers_api_v1_brokers__get
+                @methodId get_brokers_api_beta_brokers__get
                 @category brokers
         
         Args:
@@ -2072,7 +2244,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId list_broker_connections_api_v1_brokers_connections_get
+                @methodId list_broker_connections_api_beta_brokers_connections_get
                 @category brokers
         
         Args:
@@ -2134,7 +2306,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId disconnect_company_from_broker_api_v1_brokers_disconnect_company__connection_id__delete
+                @methodId disconnect_company_from_broker_api_beta_brokers_disconnect_company__connection_id__delete
                 @category brokers
         
         Args:
@@ -2204,7 +2376,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_orders_api_v1_brokers_data_orders_get
+                @methodId get_orders_api_beta_brokers_data_orders_get
                 @category brokers
         
         Args:
@@ -2294,7 +2466,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_positions_api_v1_brokers_data_positions_get
+                @methodId get_positions_api_beta_brokers_data_positions_get
                 @category brokers
         
         Args:
@@ -2374,93 +2546,6 @@ class FinaticServer:
         else:
             return await self._brokers.get_positions()
 
-    async def get_balances(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerBalance]]:
-        """Get Balances
-        
-        Get current unit-based balances for all authorized broker connections.
-        
-        Returns array of current balances (one per unit_code per account).
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Returns balances from connections the company has read access to.
-        
-        Convenience method that delegates to brokers wrapper.
-        
-                @methodId get_balances_api_v1_brokers_data_balances_get
-                @category brokers
-        
-        Args:
-            broker_id (str, optional): Filter by broker ID
-            connection_id (str, optional): Filter by connection ID
-            account_id (str, optional): Filter by broker provided account ID or internal account UUID
-            unit_code (str, optional): Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-            currency (str, optional): Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-            limit (int, optional): Maximum number of balances to return
-            offset (int, optional): Number of balances to skip for pagination
-            include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
-        
-        Returns:
-            FinaticResponse[PaginatedData[FDXBrokerBalance]]: Standard FinaticResponse format
-        @example
-        ```python
-        # Example with no parameters
-        result = await finatic.get_balances()
-        
-        # Access the response data
-        if result.success:
-            print('Data:', result.success['data'])
-        ```
-        @example
-        ```python
-        # Full example with optional parameters
-        result = await finatic.get_balances(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
-        )
-        
-        # Handle response with warnings
-        if result.success:
-            print('Data:', result.success['data'])
-            if result.warning:
-                print('Warnings:', result.warning)
-        elif result.error:
-            print('Error:', result.error['message'], result.error['code'])
-        ```
-        @example
-        ```typescript-server
-        // Example with no parameters
-        const result = await finatic.getBalances();
-        
-        // Access the response data
-        if (result.success) {
-          console.log('Data:', result.success.data);
-        }
-        ```
-        @example
-        ```typescript-client
-        // Example with no parameters
-        const result = await finatic.getBalances();
-        
-        // Access the response data
-        if (result.success) {
-          console.log('Data:', result.success.data);
-        }
-        ```
-        """
-        from dataclasses import fields
-        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
-        if kwargs:
-            try:
-                valid_field_names = {f.name for f in fields(GetBalancesParams)}
-                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
-                return await self._brokers.get_balances(**filtered_kwargs)
-            except (TypeError, AttributeError):
-                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
-                # This handles edge cases where the type might not be available
-                return await self._brokers.get_balances(**kwargs)
-        else:
-            return await self._brokers.get_balances()
-
     async def get_transactions(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerTransaction]]:
         """Get Transactions
         
@@ -2471,7 +2556,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_transactions_api_v1_brokers_data_transactions_get
+                @methodId get_transactions_api_beta_brokers_data_transactions_get
                 @category brokers
         
         Args:
@@ -2549,91 +2634,6 @@ class FinaticServer:
         else:
             return await self._brokers.get_transactions()
 
-    async def get_accounts(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerAccount]]:
-        """Get Accounts
-        
-        Get accounts for all authorized broker connections.
-        
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Returns accounts from connections the company has read access to.
-        
-        Convenience method that delegates to brokers wrapper.
-        
-                @methodId get_accounts_api_v1_brokers_data_accounts_get
-                @category brokers
-        
-        Args:
-            broker_id (str, optional): Filter by broker ID
-            connection_id (str, optional): Filter by connection ID
-            account_type (BrokerDataAccountTypeEnum, optional): Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-            currency (str, optional): Filter by currency (e.g., 'USD', 'EUR')
-            limit (int, optional): Maximum number of accounts to return
-            offset (int, optional): Number of accounts to skip for pagination
-            include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
-        
-        Returns:
-            FinaticResponse[PaginatedData[FDXBrokerAccount]]: Standard FinaticResponse format
-        @example
-        ```python
-        # Example with no parameters
-        result = await finatic.get_accounts()
-        
-        # Access the response data
-        if result.success:
-            print('Data:', result.success['data'])
-        ```
-        @example
-        ```python
-        # Full example with optional parameters
-        result = await finatic.get_accounts(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_type='margin'
-        )
-        
-        # Handle response with warnings
-        if result.success:
-            print('Data:', result.success['data'])
-            if result.warning:
-                print('Warnings:', result.warning)
-        elif result.error:
-            print('Error:', result.error['message'], result.error['code'])
-        ```
-        @example
-        ```typescript-server
-        // Example with no parameters
-        const result = await finatic.getAccounts();
-        
-        // Access the response data
-        if (result.success) {
-          console.log('Data:', result.success.data);
-        }
-        ```
-        @example
-        ```typescript-client
-        // Example with no parameters
-        const result = await finatic.getAccounts();
-        
-        // Access the response data
-        if (result.success) {
-          console.log('Data:', result.success.data);
-        }
-        ```
-        """
-        from dataclasses import fields
-        # Filter kwargs to only include valid dataclass fields (exclude wrapper-specific params like with_envelope)
-        if kwargs:
-            try:
-                valid_field_names = {f.name for f in fields(GetAccountsParams)}
-                filtered_kwargs = {k: v for k, v in kwargs.items() if k in valid_field_names}
-                return await self._brokers.get_accounts(**filtered_kwargs)
-            except (TypeError, AttributeError):
-                # If params type doesn't exist or isn't a dataclass, pass kwargs as-is
-                # This handles edge cases where the type might not be available
-                return await self._brokers.get_accounts(**kwargs)
-        else:
-            return await self._brokers.get_accounts()
-
     async def get_order_fills(self, **kwargs) -> FinaticResponse[PaginatedData[FDXBrokerOrderFill]]:
         """Get Order Fills
         
@@ -2643,7 +2643,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_order_fills_api_v1_brokers_data_orders__order_id__fills_get
+                @methodId get_order_fills_api_beta_brokers_data_orders__order_id__fills_get
                 @category brokers
         
         Args:
@@ -2734,7 +2734,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_order_events_api_v1_brokers_data_orders__order_id__events_get
+                @methodId get_order_events_api_beta_brokers_data_orders__order_id__events_get
                 @category brokers
         
         Args:
@@ -2825,7 +2825,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_order_groups_api_v1_brokers_data_orders_groups_get
+                @methodId get_order_groups_api_beta_brokers_data_orders_groups_get
                 @category brokers
         
         Args:
@@ -2910,7 +2910,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_position_lots_api_v1_brokers_data_positions_lots_get
+                @methodId get_position_lots_api_beta_brokers_data_positions_lots_get
                 @category brokers
         
         Args:
@@ -2994,7 +2994,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId get_position_lot_fills_api_v1_brokers_data_positions_lots__lot_id__fills_get
+                @methodId get_position_lot_fills_api_beta_brokers_data_positions_lots__lot_id__fills_get
                 @category brokers
         
         Args:
@@ -3135,7 +3135,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId place_order_api_v1_brokers_orders_post
+                @methodId place_order_api_beta_brokers_orders_post
                 @category brokers
         
         Args:
@@ -3216,7 +3216,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId cancel_order_api_v1_brokers_orders__order_id__delete
+                @methodId cancel_order_api_beta_brokers_orders__order_id__delete
                 @category brokers
         
         Args:
@@ -3286,7 +3286,7 @@ class FinaticServer:
         
         Convenience method that delegates to brokers wrapper.
         
-                @methodId modify_order_api_v1_brokers_orders__order_id__patch
+                @methodId modify_order_api_beta_brokers_orders__order_id__patch
                 @category brokers
         
         Args:

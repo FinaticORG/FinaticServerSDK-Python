@@ -24,9 +24,9 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-PLACEORDERAPIV1BROKERSORDERSPOSTREQUEST_ONE_OF_SCHEMAS = ["NinjaTraderOrderPlaceRequest", "RobinhoodOrderPlaceRequest", "TastyTradeOrderPlaceRequest"]
+PLACEORDERAPIBETABROKERSORDERSPOSTREQUEST_ONE_OF_SCHEMAS = ["NinjaTraderOrderPlaceRequest", "RobinhoodOrderPlaceRequest", "TastyTradeOrderPlaceRequest"]
 
-class PlaceOrderApiV1BrokersOrdersPostRequest(BaseModel):
+class PlaceOrderApiBetaBrokersOrdersPostRequest(BaseModel):
     """
     Broker-specific parameters object (varies by broker)
     """
@@ -63,7 +63,7 @@ class PlaceOrderApiV1BrokersOrdersPostRequest(BaseModel):
         if v is None:
             return v
 
-        instance = PlaceOrderApiV1BrokersOrdersPostRequest.model_construct()
+        instance = PlaceOrderApiBetaBrokersOrdersPostRequest.model_construct()
         error_messages = []
         match = 0
         # validate data type: NinjaTraderOrderPlaceRequest
@@ -83,10 +83,10 @@ class PlaceOrderApiV1BrokersOrdersPostRequest(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in PlaceOrderApiV1BrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in PlaceOrderApiV1BrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -145,10 +145,10 @@ class PlaceOrderApiV1BrokersOrdersPostRequest(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into PlaceOrderApiV1BrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into PlaceOrderApiV1BrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
         else:
             return instance
 

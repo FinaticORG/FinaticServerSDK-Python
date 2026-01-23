@@ -27,7 +27,7 @@ PENDINGBALANCE_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Pendingbalance(BaseModel):
     """
-    Pending transactions
+    Pending balance
     """
 
     # data type: str

@@ -27,7 +27,7 @@ TOTALREALIZEDPNL_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Totalrealizedpnl(BaseModel):
     """
-    Total realized profit/loss from closed positions
+    Total realized PnL
     """
 
     # data type: str

@@ -40,7 +40,7 @@ class CompanyApi:
 
 
     @validate_call
-    async def get_company_api_v1_company_company_id_get(
+    async def get_company_api_beta_company_company_id_get(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -84,7 +84,7 @@ class CompanyApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_company_api_v1_company_company_id_get_serialize(
+        _param = self._get_company_api_beta_company_company_id_get_serialize(
             company_id=company_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -108,7 +108,7 @@ class CompanyApi:
 
 
     @validate_call
-    async def get_company_api_v1_company_company_id_get_with_http_info(
+    async def get_company_api_beta_company_company_id_get_with_http_info(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -152,7 +152,7 @@ class CompanyApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_company_api_v1_company_company_id_get_serialize(
+        _param = self._get_company_api_beta_company_company_id_get_serialize(
             company_id=company_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -176,7 +176,7 @@ class CompanyApi:
 
 
     @validate_call
-    async def get_company_api_v1_company_company_id_get_without_preload_content(
+    async def get_company_api_beta_company_company_id_get_without_preload_content(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -220,7 +220,7 @@ class CompanyApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_company_api_v1_company_company_id_get_serialize(
+        _param = self._get_company_api_beta_company_company_id_get_serialize(
             company_id=company_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -239,7 +239,7 @@ class CompanyApi:
         return response_data.response
 
 
-    def _get_company_api_v1_company_company_id_get_serialize(
+    def _get_company_api_beta_company_company_id_get_serialize(
         self,
         company_id,
         _request_auth,
@@ -286,7 +286,7 @@ class CompanyApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/company/{company_id}',
+            resource_path='/api/beta/company/{company_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

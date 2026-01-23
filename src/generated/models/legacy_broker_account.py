@@ -20,28 +20,26 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from .accountstatus import Accountstatus
-from .accounttype import Accounttype
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FDXBrokerAccount(BaseModel):
+class LegacyBrokerAccount(BaseModel):
     """
-    FDX-style broker account schema following FDX Account patterns.  Extends FDX Account schema with broker-specific fields.
+    Legacy broker account schema matching pre-refactor JSON format.  This model uses camelCase field names to match the legacy API response format.
     """ # noqa: E501
-    id: Optional[StrictStr] = None
-    account_id: StrictStr = Field(description="Broker-provided account identifier", alias="accountId")
+    id: StrictStr = Field(description="Account UUID")
+    account_id: StrictStr = Field(description="Broker-provided account ID", alias="accountId")
     account_number: Optional[StrictStr] = Field(default=None, alias="accountNumber")
     account_name: Optional[StrictStr] = Field(default=None, alias="accountName")
-    account_type: Optional[Accounttype] = Field(default=None, alias="accountType")
-    broker_id: StrictStr = Field(description="Finatic broker identifier", alias="brokerId")
-    broker_name: StrictStr = Field(description="Broker display name", alias="brokerName")
+    account_type: Optional[StrictStr] = Field(default=None, alias="accountType")
+    broker_id: Optional[StrictStr] = Field(default=None, alias="brokerId")
+    broker_name: Optional[StrictStr] = Field(default=None, alias="brokerName")
     institution_id: Optional[StrictStr] = Field(default=None, alias="institutionId")
     currency_code: Optional[StrictStr] = Field(default=None, alias="currencyCode")
-    account_status: Optional[Accountstatus] = Field(default=None, alias="accountStatus")
+    account_status: Optional[StrictStr] = Field(default=None, alias="accountStatus")
     sub_account_type: Optional[StrictStr] = Field(default=None, alias="subAccountType")
     account_classification: Optional[StrictStr] = Field(default=None, alias="accountClassification")
-    connection_id: StrictStr = Field(description="User-broker connection UUID", alias="connectionId")
+    connection_id: Optional[StrictStr] = Field(default=None, alias="connectionId")
     user_id: Optional[StrictStr] = Field(default=None, alias="userId")
     created_at: Optional[datetime] = Field(default=None, alias="createdAt")
     updated_at: Optional[datetime] = Field(default=None, alias="updatedAt")
@@ -52,9 +50,8 @@ class FDXBrokerAccount(BaseModel):
     balances_synced_at: Optional[datetime] = Field(default=None, alias="balancesSyncedAt")
     orders_synced_at: Optional[datetime] = Field(default=None, alias="ordersSyncedAt")
     positions_synced_at: Optional[datetime] = Field(default=None, alias="positionsSyncedAt")
-    metadata: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "accountId", "accountNumber", "accountName", "accountType", "brokerId", "brokerName", "institutionId", "currencyCode", "accountStatus", "subAccountType", "accountClassification", "connectionId", "userId", "createdAt", "updatedAt", "accountCreatedAt", "accountUpdatedAt", "accountFirstTradeAt", "lastSyncedAt", "balancesSyncedAt", "ordersSyncedAt", "positionsSyncedAt", "metadata"]
+    __properties: ClassVar[List[str]] = ["id", "accountId", "accountNumber", "accountName", "accountType", "brokerId", "brokerName", "institutionId", "currencyCode", "accountStatus", "subAccountType", "accountClassification", "connectionId", "userId", "createdAt", "updatedAt", "accountCreatedAt", "accountUpdatedAt", "accountFirstTradeAt", "lastSyncedAt", "balancesSyncedAt", "ordersSyncedAt", "positionsSyncedAt"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,7 +71,7 @@ class FDXBrokerAccount(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FDXBrokerAccount from a JSON string"""
+        """Create an instance of LegacyBrokerAccount from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -97,21 +94,10 @@ class FDXBrokerAccount(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of account_type
-        if self.account_type:
-            _dict['accountType'] = self.account_type.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of account_status
-        if self.account_status:
-            _dict['accountStatus'] = self.account_status.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
-
-        # set to None if id (nullable) is None
-        # and model_fields_set contains the field
-        if self.id is None and "id" in self.model_fields_set:
-            _dict['id'] = None
 
         # set to None if account_number (nullable) is None
         # and model_fields_set contains the field
@@ -127,6 +113,16 @@ class FDXBrokerAccount(BaseModel):
         # and model_fields_set contains the field
         if self.account_type is None and "account_type" in self.model_fields_set:
             _dict['accountType'] = None
+
+        # set to None if broker_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.broker_id is None and "broker_id" in self.model_fields_set:
+            _dict['brokerId'] = None
+
+        # set to None if broker_name (nullable) is None
+        # and model_fields_set contains the field
+        if self.broker_name is None and "broker_name" in self.model_fields_set:
+            _dict['brokerName'] = None
 
         # set to None if institution_id (nullable) is None
         # and model_fields_set contains the field
@@ -152,6 +148,11 @@ class FDXBrokerAccount(BaseModel):
         # and model_fields_set contains the field
         if self.account_classification is None and "account_classification" in self.model_fields_set:
             _dict['accountClassification'] = None
+
+        # set to None if connection_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.connection_id is None and "connection_id" in self.model_fields_set:
+            _dict['connectionId'] = None
 
         # set to None if user_id (nullable) is None
         # and model_fields_set contains the field
@@ -203,16 +204,11 @@ class FDXBrokerAccount(BaseModel):
         if self.positions_synced_at is None and "positions_synced_at" in self.model_fields_set:
             _dict['positionsSyncedAt'] = None
 
-        # set to None if metadata (nullable) is None
-        # and model_fields_set contains the field
-        if self.metadata is None and "metadata" in self.model_fields_set:
-            _dict['metadata'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FDXBrokerAccount from a dict"""
+        """Create an instance of LegacyBrokerAccount from a dict"""
         if obj is None:
             return None
 
@@ -224,12 +220,12 @@ class FDXBrokerAccount(BaseModel):
             "accountId": obj.get("accountId"),
             "accountNumber": obj.get("accountNumber"),
             "accountName": obj.get("accountName"),
-            "accountType": Accounttype.from_dict(obj["accountType"]) if obj.get("accountType") is not None else None,
+            "accountType": obj.get("accountType"),
             "brokerId": obj.get("brokerId"),
             "brokerName": obj.get("brokerName"),
             "institutionId": obj.get("institutionId"),
             "currencyCode": obj.get("currencyCode"),
-            "accountStatus": Accountstatus.from_dict(obj["accountStatus"]) if obj.get("accountStatus") is not None else None,
+            "accountStatus": obj.get("accountStatus"),
             "subAccountType": obj.get("subAccountType"),
             "accountClassification": obj.get("accountClassification"),
             "connectionId": obj.get("connectionId"),
@@ -242,8 +238,7 @@ class FDXBrokerAccount(BaseModel):
             "lastSyncedAt": obj.get("lastSyncedAt"),
             "balancesSyncedAt": obj.get("balancesSyncedAt"),
             "ordersSyncedAt": obj.get("ordersSyncedAt"),
-            "positionsSyncedAt": obj.get("positionsSyncedAt"),
-            "metadata": obj.get("metadata")
+            "positionsSyncedAt": obj.get("positionsSyncedAt")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

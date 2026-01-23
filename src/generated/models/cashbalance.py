@@ -27,7 +27,7 @@ CASHBALANCE_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Cashbalance(BaseModel):
     """
-    Cash on hand
+    Cash balance
     """
 
     # data type: str

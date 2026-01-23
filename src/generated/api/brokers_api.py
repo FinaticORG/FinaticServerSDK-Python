@@ -23,8 +23,6 @@ from typing_extensions import Annotated
 from uuid import UUID
 from ..models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from ..models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo
-from ..models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
-from ..models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
 from ..models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder
 from ..models.finatic_response_list_fdx_broker_order_event import FinaticResponseListFDXBrokerOrderEvent
 from ..models.finatic_response_list_fdx_broker_order_fill import FinaticResponseListFDXBrokerOrderFill
@@ -33,10 +31,12 @@ from ..models.finatic_response_list_fdx_broker_position import FinaticResponseLi
 from ..models.finatic_response_list_fdx_broker_position_lot import FinaticResponseListFDXBrokerPositionLot
 from ..models.finatic_response_list_fdx_broker_position_lot_fill import FinaticResponseListFDXBrokerPositionLotFill
 from ..models.finatic_response_list_fdx_broker_transaction import FinaticResponseListFDXBrokerTransaction
+from ..models.finatic_response_list_legacy_broker_account import FinaticResponseListLegacyBrokerAccount
+from ..models.finatic_response_list_legacy_broker_balance import FinaticResponseListLegacyBrokerBalance
 from ..models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions
 from ..models.finatic_response_order_action_result import FinaticResponseOrderActionResult
-from ..models.modify_order_api_v1_brokers_orders_order_id_patch_request import ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
-from ..models.place_order_api_v1_brokers_orders_post_request import PlaceOrderApiV1BrokersOrdersPostRequest
+from ..models.modify_order_api_beta_brokers_orders_order_id_patch_request import ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
+from ..models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest
 
 from ..api_client import ApiClient, RequestSerialized
 from ..api_response import ApiResponse
@@ -57,7 +57,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def cancel_order_api_v1_brokers_orders_order_id_delete(
+    async def cancel_order_api_beta_brokers_orders_order_id_delete(
         self,
         order_id: Annotated[StrictStr, Field(description="Order ID")],
         _request_timeout: Union[
@@ -101,7 +101,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+        _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -133,7 +133,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def cancel_order_api_v1_brokers_orders_order_id_delete_with_http_info(
+    async def cancel_order_api_beta_brokers_orders_order_id_delete_with_http_info(
         self,
         order_id: Annotated[StrictStr, Field(description="Order ID")],
         _request_timeout: Union[
@@ -177,7 +177,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+        _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -209,7 +209,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def cancel_order_api_v1_brokers_orders_order_id_delete_without_preload_content(
+    async def cancel_order_api_beta_brokers_orders_order_id_delete_without_preload_content(
         self,
         order_id: Annotated[StrictStr, Field(description="Order ID")],
         _request_timeout: Union[
@@ -253,7 +253,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+        _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -280,7 +280,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _cancel_order_api_v1_brokers_orders_order_id_delete_serialize(
+    def _cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
         self,
         order_id,
         _request_auth,
@@ -327,7 +327,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/api/v1/brokers/orders/{order_id}',
+            resource_path='/api/beta/brokers/orders/{order_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -344,7 +344,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete(
+    async def disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete(
         self,
         connection_id: Annotated[UUID, Field(description="Connection ID")],
         _request_timeout: Union[
@@ -388,7 +388,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete_serialize(
+        _param = self._disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -420,7 +420,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete_with_http_info(
+    async def disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_with_http_info(
         self,
         connection_id: Annotated[UUID, Field(description="Connection ID")],
         _request_timeout: Union[
@@ -464,7 +464,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete_serialize(
+        _param = self._disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -496,7 +496,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete_without_preload_content(
+    async def disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_without_preload_content(
         self,
         connection_id: Annotated[UUID, Field(description="Connection ID")],
         _request_timeout: Union[
@@ -540,7 +540,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete_serialize(
+        _param = self._disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -567,7 +567,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _disconnect_company_from_broker_api_v1_brokers_disconnect_company_connection_id_delete_serialize(
+    def _disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
         self,
         connection_id,
         _request_auth,
@@ -614,7 +614,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='DELETE',
-            resource_path='/api/v1/brokers/disconnect-company/{connection_id}',
+            resource_path='/api/beta/brokers/disconnect-company/{connection_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -631,7 +631,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_accounts_api_v1_brokers_data_accounts_get(
+    async def get_accounts_api_beta_brokers_data_accounts_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -652,7 +652,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerAccount:
+    ) -> FinaticResponseListLegacyBrokerAccount:
         """Get Accounts
 
         Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
@@ -693,7 +693,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_accounts_api_v1_brokers_data_accounts_get_serialize(
+        _param = self._get_accounts_api_beta_brokers_data_accounts_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_type=account_type,
@@ -708,7 +708,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerAccount",
+            '200': "FinaticResponseListLegacyBrokerAccount",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -731,7 +731,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_accounts_api_v1_brokers_data_accounts_get_with_http_info(
+    async def get_accounts_api_beta_brokers_data_accounts_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -752,7 +752,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerAccount]:
+    ) -> ApiResponse[FinaticResponseListLegacyBrokerAccount]:
         """Get Accounts
 
         Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
@@ -793,7 +793,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_accounts_api_v1_brokers_data_accounts_get_serialize(
+        _param = self._get_accounts_api_beta_brokers_data_accounts_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_type=account_type,
@@ -808,7 +808,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerAccount",
+            '200': "FinaticResponseListLegacyBrokerAccount",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -831,7 +831,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_accounts_api_v1_brokers_data_accounts_get_without_preload_content(
+    async def get_accounts_api_beta_brokers_data_accounts_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -893,7 +893,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_accounts_api_v1_brokers_data_accounts_get_serialize(
+        _param = self._get_accounts_api_beta_brokers_data_accounts_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_type=account_type,
@@ -908,7 +908,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerAccount",
+            '200': "FinaticResponseListLegacyBrokerAccount",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -926,7 +926,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_accounts_api_v1_brokers_data_accounts_get_serialize(
+    def _get_accounts_api_beta_brokers_data_accounts_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -1005,7 +1005,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/accounts',
+            resource_path='/api/beta/brokers/data/accounts',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1022,7 +1022,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_balances_api_v1_brokers_data_balances_get(
+    async def get_balances_api_beta_brokers_data_balances_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -1044,7 +1044,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerBalance:
+    ) -> FinaticResponseListLegacyBrokerBalance:
         """Get Balances
 
         Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
@@ -1087,7 +1087,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_balances_api_v1_brokers_data_balances_get_serialize(
+        _param = self._get_balances_api_beta_brokers_data_balances_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -1103,7 +1103,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerBalance",
+            '200': "FinaticResponseListLegacyBrokerBalance",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1126,7 +1126,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_balances_api_v1_brokers_data_balances_get_with_http_info(
+    async def get_balances_api_beta_brokers_data_balances_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -1148,7 +1148,7 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerBalance]:
+    ) -> ApiResponse[FinaticResponseListLegacyBrokerBalance]:
         """Get Balances
 
         Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
@@ -1191,7 +1191,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_balances_api_v1_brokers_data_balances_get_serialize(
+        _param = self._get_balances_api_beta_brokers_data_balances_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -1207,7 +1207,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerBalance",
+            '200': "FinaticResponseListLegacyBrokerBalance",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1230,7 +1230,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_balances_api_v1_brokers_data_balances_get_without_preload_content(
+    async def get_balances_api_beta_brokers_data_balances_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -1295,7 +1295,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_balances_api_v1_brokers_data_balances_get_serialize(
+        _param = self._get_balances_api_beta_brokers_data_balances_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -1311,7 +1311,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerBalance",
+            '200': "FinaticResponseListLegacyBrokerBalance",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1329,7 +1329,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_balances_api_v1_brokers_data_balances_get_serialize(
+    def _get_balances_api_beta_brokers_data_balances_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -1413,7 +1413,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/balances',
+            resource_path='/api/beta/brokers/data/balances',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1430,7 +1430,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_brokers_api_v1_brokers_get(
+    async def get_brokers_api_beta_brokers_get(
         self,
         _request_timeout: Union[
             None,
@@ -1471,7 +1471,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_brokers_api_v1_brokers_get_serialize(
+        _param = self._get_brokers_api_beta_brokers_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1502,7 +1502,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_brokers_api_v1_brokers_get_with_http_info(
+    async def get_brokers_api_beta_brokers_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -1543,7 +1543,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_brokers_api_v1_brokers_get_serialize(
+        _param = self._get_brokers_api_beta_brokers_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1574,7 +1574,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_brokers_api_v1_brokers_get_without_preload_content(
+    async def get_brokers_api_beta_brokers_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -1615,7 +1615,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_brokers_api_v1_brokers_get_serialize(
+        _param = self._get_brokers_api_beta_brokers_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -1641,7 +1641,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_brokers_api_v1_brokers_get_serialize(
+    def _get_brokers_api_beta_brokers_get_serialize(
         self,
         _request_auth,
         _content_type,
@@ -1685,7 +1685,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/',
+            resource_path='/api/beta/brokers/',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -1702,7 +1702,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_events_api_v1_brokers_data_orders_order_id_events_get(
+    async def get_order_events_api_beta_brokers_data_orders_order_id_events_get(
         self,
         order_id: Annotated[UUID, Field(description="Order ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -1758,7 +1758,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_events_api_v1_brokers_data_orders_order_id_events_get_serialize(
+        _param = self._get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
             order_id=order_id,
             connection_id=connection_id,
             limit=limit,
@@ -1794,7 +1794,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_events_api_v1_brokers_data_orders_order_id_events_get_with_http_info(
+    async def get_order_events_api_beta_brokers_data_orders_order_id_events_get_with_http_info(
         self,
         order_id: Annotated[UUID, Field(description="Order ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -1850,7 +1850,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_events_api_v1_brokers_data_orders_order_id_events_get_serialize(
+        _param = self._get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
             order_id=order_id,
             connection_id=connection_id,
             limit=limit,
@@ -1886,7 +1886,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_events_api_v1_brokers_data_orders_order_id_events_get_without_preload_content(
+    async def get_order_events_api_beta_brokers_data_orders_order_id_events_get_without_preload_content(
         self,
         order_id: Annotated[UUID, Field(description="Order ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -1942,7 +1942,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_events_api_v1_brokers_data_orders_order_id_events_get_serialize(
+        _param = self._get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
             order_id=order_id,
             connection_id=connection_id,
             limit=limit,
@@ -1973,7 +1973,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_order_events_api_v1_brokers_data_orders_order_id_events_get_serialize(
+    def _get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
         self,
         order_id,
         connection_id,
@@ -2040,7 +2040,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/orders/{order_id}/events',
+            resource_path='/api/beta/brokers/data/orders/{order_id}/events',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2057,7 +2057,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_fills_api_v1_brokers_data_orders_order_id_fills_get(
+    async def get_order_fills_api_beta_brokers_data_orders_order_id_fills_get(
         self,
         order_id: Annotated[UUID, Field(description="Order ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2113,7 +2113,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_fills_api_v1_brokers_data_orders_order_id_fills_get_serialize(
+        _param = self._get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
             order_id=order_id,
             connection_id=connection_id,
             limit=limit,
@@ -2149,7 +2149,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_fills_api_v1_brokers_data_orders_order_id_fills_get_with_http_info(
+    async def get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_with_http_info(
         self,
         order_id: Annotated[UUID, Field(description="Order ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2205,7 +2205,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_fills_api_v1_brokers_data_orders_order_id_fills_get_serialize(
+        _param = self._get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
             order_id=order_id,
             connection_id=connection_id,
             limit=limit,
@@ -2241,7 +2241,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_fills_api_v1_brokers_data_orders_order_id_fills_get_without_preload_content(
+    async def get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_without_preload_content(
         self,
         order_id: Annotated[UUID, Field(description="Order ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2297,7 +2297,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_fills_api_v1_brokers_data_orders_order_id_fills_get_serialize(
+        _param = self._get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
             order_id=order_id,
             connection_id=connection_id,
             limit=limit,
@@ -2328,7 +2328,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_order_fills_api_v1_brokers_data_orders_order_id_fills_get_serialize(
+    def _get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
         self,
         order_id,
         connection_id,
@@ -2395,7 +2395,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/orders/{order_id}/fills',
+            resource_path='/api/beta/brokers/data/orders/{order_id}/fills',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2412,7 +2412,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_groups_api_v1_brokers_data_orders_groups_get(
+    async def get_order_groups_api_beta_brokers_data_orders_groups_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2474,7 +2474,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_groups_api_v1_brokers_data_orders_groups_get_serialize(
+        _param = self._get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             limit=limit,
@@ -2512,7 +2512,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_groups_api_v1_brokers_data_orders_groups_get_with_http_info(
+    async def get_order_groups_api_beta_brokers_data_orders_groups_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2574,7 +2574,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_groups_api_v1_brokers_data_orders_groups_get_serialize(
+        _param = self._get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             limit=limit,
@@ -2612,7 +2612,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_order_groups_api_v1_brokers_data_orders_groups_get_without_preload_content(
+    async def get_order_groups_api_beta_brokers_data_orders_groups_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2674,7 +2674,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_order_groups_api_v1_brokers_data_orders_groups_get_serialize(
+        _param = self._get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             limit=limit,
@@ -2707,7 +2707,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_order_groups_api_v1_brokers_data_orders_groups_get_serialize(
+    def _get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -2804,7 +2804,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/orders/groups',
+            resource_path='/api/beta/brokers/data/orders/groups',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2821,7 +2821,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_orders_api_v1_brokers_data_orders_get(
+    async def get_orders_api_beta_brokers_data_orders_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -2898,7 +2898,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_orders_api_v1_brokers_data_orders_get_serialize(
+        _param = self._get_orders_api_beta_brokers_data_orders_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -2941,7 +2941,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_orders_api_v1_brokers_data_orders_get_with_http_info(
+    async def get_orders_api_beta_brokers_data_orders_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3018,7 +3018,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_orders_api_v1_brokers_data_orders_get_serialize(
+        _param = self._get_orders_api_beta_brokers_data_orders_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -3061,7 +3061,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_orders_api_v1_brokers_data_orders_get_without_preload_content(
+    async def get_orders_api_beta_brokers_data_orders_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3138,7 +3138,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_orders_api_v1_brokers_data_orders_get_serialize(
+        _param = self._get_orders_api_beta_brokers_data_orders_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -3176,7 +3176,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_orders_api_v1_brokers_data_orders_get_serialize(
+    def _get_orders_api_beta_brokers_data_orders_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -3298,7 +3298,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/orders',
+            resource_path='/api/beta/brokers/data/orders',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -3315,7 +3315,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get(
+    async def get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(
         self,
         lot_id: Annotated[UUID, Field(description="Position lot ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3368,7 +3368,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get_serialize(
+        _param = self._get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
             lot_id=lot_id,
             connection_id=connection_id,
             limit=limit,
@@ -3403,7 +3403,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get_with_http_info(
+    async def get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_with_http_info(
         self,
         lot_id: Annotated[UUID, Field(description="Position lot ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3456,7 +3456,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get_serialize(
+        _param = self._get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
             lot_id=lot_id,
             connection_id=connection_id,
             limit=limit,
@@ -3491,7 +3491,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get_without_preload_content(
+    async def get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_without_preload_content(
         self,
         lot_id: Annotated[UUID, Field(description="Position lot ID")],
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3544,7 +3544,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get_serialize(
+        _param = self._get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
             lot_id=lot_id,
             connection_id=connection_id,
             limit=limit,
@@ -3574,7 +3574,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_position_lot_fills_api_v1_brokers_data_positions_lots_lot_id_fills_get_serialize(
+    def _get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
         self,
         lot_id,
         connection_id,
@@ -3636,7 +3636,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/positions/lots/{lot_id}/fills',
+            resource_path='/api/beta/brokers/data/positions/lots/{lot_id}/fills',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -3653,7 +3653,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_position_lots_api_v1_brokers_data_positions_lots_get(
+    async def get_position_lots_api_beta_brokers_data_positions_lots_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3715,7 +3715,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_position_lots_api_v1_brokers_data_positions_lots_get_serialize(
+        _param = self._get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -3753,7 +3753,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_position_lots_api_v1_brokers_data_positions_lots_get_with_http_info(
+    async def get_position_lots_api_beta_brokers_data_positions_lots_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3815,7 +3815,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_position_lots_api_v1_brokers_data_positions_lots_get_serialize(
+        _param = self._get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -3853,7 +3853,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_position_lots_api_v1_brokers_data_positions_lots_get_without_preload_content(
+    async def get_position_lots_api_beta_brokers_data_positions_lots_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -3915,7 +3915,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_position_lots_api_v1_brokers_data_positions_lots_get_serialize(
+        _param = self._get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -3948,7 +3948,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_position_lots_api_v1_brokers_data_positions_lots_get_serialize(
+    def _get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -4027,7 +4027,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/positions/lots',
+            resource_path='/api/beta/brokers/data/positions/lots',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4044,7 +4044,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_positions_api_v1_brokers_data_positions_get(
+    async def get_positions_api_beta_brokers_data_positions_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -4121,7 +4121,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_positions_api_v1_brokers_data_positions_get_serialize(
+        _param = self._get_positions_api_beta_brokers_data_positions_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -4164,7 +4164,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_positions_api_v1_brokers_data_positions_get_with_http_info(
+    async def get_positions_api_beta_brokers_data_positions_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -4241,7 +4241,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_positions_api_v1_brokers_data_positions_get_serialize(
+        _param = self._get_positions_api_beta_brokers_data_positions_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -4284,7 +4284,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_positions_api_v1_brokers_data_positions_get_without_preload_content(
+    async def get_positions_api_beta_brokers_data_positions_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -4361,7 +4361,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_positions_api_v1_brokers_data_positions_get_serialize(
+        _param = self._get_positions_api_beta_brokers_data_positions_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -4399,7 +4399,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_positions_api_v1_brokers_data_positions_get_serialize(
+    def _get_positions_api_beta_brokers_data_positions_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -4521,7 +4521,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/positions',
+            resource_path='/api/beta/brokers/data/positions',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4538,7 +4538,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_transactions_api_v1_brokers_data_transactions_get(
+    async def get_transactions_api_beta_brokers_data_transactions_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -4609,7 +4609,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_transactions_api_v1_brokers_data_transactions_get_serialize(
+        _param = self._get_transactions_api_beta_brokers_data_transactions_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -4650,7 +4650,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_transactions_api_v1_brokers_data_transactions_get_with_http_info(
+    async def get_transactions_api_beta_brokers_data_transactions_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -4721,7 +4721,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_transactions_api_v1_brokers_data_transactions_get_serialize(
+        _param = self._get_transactions_api_beta_brokers_data_transactions_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -4762,7 +4762,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_transactions_api_v1_brokers_data_transactions_get_without_preload_content(
+    async def get_transactions_api_beta_brokers_data_transactions_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
@@ -4833,7 +4833,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._get_transactions_api_v1_brokers_data_transactions_get_serialize(
+        _param = self._get_transactions_api_beta_brokers_data_transactions_get_serialize(
             broker_id=broker_id,
             connection_id=connection_id,
             account_id=account_id,
@@ -4869,7 +4869,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_transactions_api_v1_brokers_data_transactions_get_serialize(
+    def _get_transactions_api_beta_brokers_data_transactions_get_serialize(
         self,
         broker_id,
         connection_id,
@@ -4981,7 +4981,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/data/transactions',
+            resource_path='/api/beta/brokers/data/transactions',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -4998,7 +4998,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_broker_connections_api_v1_brokers_connections_get(
+    async def list_broker_connections_api_beta_brokers_connections_get(
         self,
         _request_timeout: Union[
             None,
@@ -5039,7 +5039,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._list_broker_connections_api_v1_brokers_connections_get_serialize(
+        _param = self._list_broker_connections_api_beta_brokers_connections_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5070,7 +5070,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_broker_connections_api_v1_brokers_connections_get_with_http_info(
+    async def list_broker_connections_api_beta_brokers_connections_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -5111,7 +5111,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._list_broker_connections_api_v1_brokers_connections_get_serialize(
+        _param = self._list_broker_connections_api_beta_brokers_connections_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5142,7 +5142,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_broker_connections_api_v1_brokers_connections_get_without_preload_content(
+    async def list_broker_connections_api_beta_brokers_connections_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -5183,7 +5183,7 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._list_broker_connections_api_v1_brokers_connections_get_serialize(
+        _param = self._list_broker_connections_api_beta_brokers_connections_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5209,7 +5209,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _list_broker_connections_api_v1_brokers_connections_get_serialize(
+    def _list_broker_connections_api_beta_brokers_connections_get_serialize(
         self,
         _request_auth,
         _content_type,
@@ -5253,7 +5253,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='GET',
-            resource_path='/api/v1/brokers/connections',
+            resource_path='/api/beta/brokers/connections',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -5270,12 +5270,12 @@ class BrokersApi:
 
 
     @validate_call
-    async def modify_order_api_v1_brokers_orders_order_id_patch(
+    async def modify_order_api_beta_brokers_orders_order_id_patch(
         self,
         order_id: Annotated[StrictStr, Field(description="Order ID")],
         account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        modify_order_api_v1_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest] = None,
+        modify_order_api_beta_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5299,8 +5299,8 @@ class BrokersApi:
         :type account_number: str
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param modify_order_api_v1_brokers_orders_order_id_patch_request:
-        :type modify_order_api_v1_brokers_orders_order_id_patch_request: ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+        :param modify_order_api_beta_brokers_orders_order_id_patch_request:
+        :type modify_order_api_beta_brokers_orders_order_id_patch_request: ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5323,11 +5323,11 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
             account_number=account_number,
             connection_id=connection_id,
-            modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request,
+            modify_order_api_beta_brokers_orders_order_id_patch_request=modify_order_api_beta_brokers_orders_order_id_patch_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5358,12 +5358,12 @@ class BrokersApi:
 
 
     @validate_call
-    async def modify_order_api_v1_brokers_orders_order_id_patch_with_http_info(
+    async def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
         self,
         order_id: Annotated[StrictStr, Field(description="Order ID")],
         account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        modify_order_api_v1_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest] = None,
+        modify_order_api_beta_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5387,8 +5387,8 @@ class BrokersApi:
         :type account_number: str
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param modify_order_api_v1_brokers_orders_order_id_patch_request:
-        :type modify_order_api_v1_brokers_orders_order_id_patch_request: ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+        :param modify_order_api_beta_brokers_orders_order_id_patch_request:
+        :type modify_order_api_beta_brokers_orders_order_id_patch_request: ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5411,11 +5411,11 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
             account_number=account_number,
             connection_id=connection_id,
-            modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request,
+            modify_order_api_beta_brokers_orders_order_id_patch_request=modify_order_api_beta_brokers_orders_order_id_patch_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5446,12 +5446,12 @@ class BrokersApi:
 
 
     @validate_call
-    async def modify_order_api_v1_brokers_orders_order_id_patch_without_preload_content(
+    async def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
         self,
         order_id: Annotated[StrictStr, Field(description="Order ID")],
         account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        modify_order_api_v1_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest] = None,
+        modify_order_api_beta_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5475,8 +5475,8 @@ class BrokersApi:
         :type account_number: str
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param modify_order_api_v1_brokers_orders_order_id_patch_request:
-        :type modify_order_api_v1_brokers_orders_order_id_patch_request: ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest
+        :param modify_order_api_beta_brokers_orders_order_id_patch_request:
+        :type modify_order_api_beta_brokers_orders_order_id_patch_request: ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5499,11 +5499,11 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
             account_number=account_number,
             connection_id=connection_id,
-            modify_order_api_v1_brokers_orders_order_id_patch_request=modify_order_api_v1_brokers_orders_order_id_patch_request,
+            modify_order_api_beta_brokers_orders_order_id_patch_request=modify_order_api_beta_brokers_orders_order_id_patch_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5529,12 +5529,12 @@ class BrokersApi:
         return response_data.response
 
 
-    def _modify_order_api_v1_brokers_orders_order_id_patch_serialize(
+    def _modify_order_api_beta_brokers_orders_order_id_patch_serialize(
         self,
         order_id,
         account_number,
         connection_id,
-        modify_order_api_v1_brokers_orders_order_id_patch_request,
+        modify_order_api_beta_brokers_orders_order_id_patch_request,
         _request_auth,
         _content_type,
         _headers,
@@ -5570,8 +5570,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if modify_order_api_v1_brokers_orders_order_id_patch_request is not None:
-            _body_params = modify_order_api_v1_brokers_orders_order_id_patch_request
+        if modify_order_api_beta_brokers_orders_order_id_patch_request is not None:
+            _body_params = modify_order_api_beta_brokers_orders_order_id_patch_request
 
 
         # set the HTTP header `Accept`
@@ -5602,7 +5602,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='PATCH',
-            resource_path='/api/v1/brokers/orders/{order_id}',
+            resource_path='/api/beta/brokers/orders/{order_id}',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -5619,10 +5619,10 @@ class BrokersApi:
 
 
     @validate_call
-    async def place_order_api_v1_brokers_orders_post(
+    async def place_order_api_beta_brokers_orders_post(
         self,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        place_order_api_v1_brokers_orders_post_request: Optional[PlaceOrderApiV1BrokersOrdersPostRequest] = None,
+        place_order_api_beta_brokers_orders_post_request: Optional[PlaceOrderApiBetaBrokersOrdersPostRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5642,8 +5642,8 @@ class BrokersApi:
 
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param place_order_api_v1_brokers_orders_post_request:
-        :type place_order_api_v1_brokers_orders_post_request: PlaceOrderApiV1BrokersOrdersPostRequest
+        :param place_order_api_beta_brokers_orders_post_request:
+        :type place_order_api_beta_brokers_orders_post_request: PlaceOrderApiBetaBrokersOrdersPostRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5666,9 +5666,9 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._place_order_api_v1_brokers_orders_post_serialize(
+        _param = self._place_order_api_beta_brokers_orders_post_serialize(
             connection_id=connection_id,
-            place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request,
+            place_order_api_beta_brokers_orders_post_request=place_order_api_beta_brokers_orders_post_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5699,10 +5699,10 @@ class BrokersApi:
 
 
     @validate_call
-    async def place_order_api_v1_brokers_orders_post_with_http_info(
+    async def place_order_api_beta_brokers_orders_post_with_http_info(
         self,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        place_order_api_v1_brokers_orders_post_request: Optional[PlaceOrderApiV1BrokersOrdersPostRequest] = None,
+        place_order_api_beta_brokers_orders_post_request: Optional[PlaceOrderApiBetaBrokersOrdersPostRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5722,8 +5722,8 @@ class BrokersApi:
 
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param place_order_api_v1_brokers_orders_post_request:
-        :type place_order_api_v1_brokers_orders_post_request: PlaceOrderApiV1BrokersOrdersPostRequest
+        :param place_order_api_beta_brokers_orders_post_request:
+        :type place_order_api_beta_brokers_orders_post_request: PlaceOrderApiBetaBrokersOrdersPostRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5746,9 +5746,9 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._place_order_api_v1_brokers_orders_post_serialize(
+        _param = self._place_order_api_beta_brokers_orders_post_serialize(
             connection_id=connection_id,
-            place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request,
+            place_order_api_beta_brokers_orders_post_request=place_order_api_beta_brokers_orders_post_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5779,10 +5779,10 @@ class BrokersApi:
 
 
     @validate_call
-    async def place_order_api_v1_brokers_orders_post_without_preload_content(
+    async def place_order_api_beta_brokers_orders_post_without_preload_content(
         self,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        place_order_api_v1_brokers_orders_post_request: Optional[PlaceOrderApiV1BrokersOrdersPostRequest] = None,
+        place_order_api_beta_brokers_orders_post_request: Optional[PlaceOrderApiBetaBrokersOrdersPostRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5802,8 +5802,8 @@ class BrokersApi:
 
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param place_order_api_v1_brokers_orders_post_request:
-        :type place_order_api_v1_brokers_orders_post_request: PlaceOrderApiV1BrokersOrdersPostRequest
+        :param place_order_api_beta_brokers_orders_post_request:
+        :type place_order_api_beta_brokers_orders_post_request: PlaceOrderApiBetaBrokersOrdersPostRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5826,9 +5826,9 @@ class BrokersApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._place_order_api_v1_brokers_orders_post_serialize(
+        _param = self._place_order_api_beta_brokers_orders_post_serialize(
             connection_id=connection_id,
-            place_order_api_v1_brokers_orders_post_request=place_order_api_v1_brokers_orders_post_request,
+            place_order_api_beta_brokers_orders_post_request=place_order_api_beta_brokers_orders_post_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5854,10 +5854,10 @@ class BrokersApi:
         return response_data.response
 
 
-    def _place_order_api_v1_brokers_orders_post_serialize(
+    def _place_order_api_beta_brokers_orders_post_serialize(
         self,
         connection_id,
-        place_order_api_v1_brokers_orders_post_request,
+        place_order_api_beta_brokers_orders_post_request,
         _request_auth,
         _content_type,
         _headers,
@@ -5887,8 +5887,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if place_order_api_v1_brokers_orders_post_request is not None:
-            _body_params = place_order_api_v1_brokers_orders_post_request
+        if place_order_api_beta_brokers_orders_post_request is not None:
+            _body_params = place_order_api_beta_brokers_orders_post_request
 
 
         # set the HTTP header `Accept`
@@ -5919,7 +5919,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/api/v1/brokers/orders',
+            resource_path='/api/beta/brokers/orders',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,

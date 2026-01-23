@@ -24,9 +24,9 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-MODIFYORDERAPIV1BROKERSORDERSORDERIDPATCHREQUEST_ONE_OF_SCHEMAS = ["NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest"]
+MODIFYORDERAPIBETABROKERSORDERSORDERIDPATCHREQUEST_ONE_OF_SCHEMAS = ["NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest"]
 
-class ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest(BaseModel):
+class ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest(BaseModel):
     """
     Broker-specific parameters object for *modify order* operations
     """
@@ -63,7 +63,7 @@ class ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest(BaseModel):
         if v is None:
             return v
 
-        instance = ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest.model_construct()
+        instance = ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest.model_construct()
         error_messages = []
         match = 0
         # validate data type: NinjaTraderOrderModifyRequest
@@ -83,10 +83,10 @@ class ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -145,10 +145,10 @@ class ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into ModifyOrderApiV1BrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest with oneOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
         else:
             return instance
 
