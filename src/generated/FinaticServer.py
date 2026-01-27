@@ -630,7 +630,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllBalances({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -645,7 +645,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllBalances({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllBalances({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -661,9 +661,9 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_balances(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_id='123456789'
+           *            broker_id='example',
+                    connection_id='example',
+                    account_id='example'
            * )
            * 
            * # Access the response data
@@ -762,7 +762,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
+           * const result = await finatic.getAllAccounts({ brokerId: 'example-id', connectionId: 'example-id', accountType: 'margin' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -777,7 +777,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllAccounts({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountType: 'margin' });
+           * const result = await finatic.getAllAccounts({ brokerId: 'example-id', connectionId: 'example-id', accountType: 'margin' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -793,8 +793,8 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_accounts(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
+           *            broker_id='example',
+                    connection_id='example',
                     account_type='margin'
            * )
            * 
@@ -894,7 +894,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrders({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllOrders({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -909,7 +909,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrders({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllOrders({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -925,9 +925,9 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_orders(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_id='123456789'
+           *            broker_id='example',
+                    connection_id='example',
+                    account_id='example'
            * )
            * 
            * # Access the response data
@@ -1026,7 +1026,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllPositions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllPositions({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1041,7 +1041,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllPositions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllPositions({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1057,9 +1057,9 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_positions(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_id='123456789'
+           *            broker_id='example',
+                    connection_id='example',
+                    account_id='example'
            * )
            * 
            * # Access the response data
@@ -1158,7 +1158,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllTransactions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllTransactions({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1173,7 +1173,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllTransactions({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllTransactions({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1189,9 +1189,9 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_transactions(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_id='123456789'
+           *            broker_id='example',
+                    connection_id='example',
+                    account_id='example'
            * )
            * 
            * # Access the response data
@@ -1290,7 +1290,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
+           * const result = await finatic.getAllOrderFills({ connectionId: 'example-id', includeMetadata: true });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1305,7 +1305,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderFills({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
+           * const result = await finatic.getAllOrderFills({ connectionId: 'example-id', includeMetadata: true });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1321,8 +1321,8 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_order_fills(
-           *            connection_id='00000000-0000-0000-0000-000000000000',
-                    include_metadata=false
+           *            connection_id='example',
+                    include_metadata='example'
            * )
            * 
            * # Access the response data
@@ -1421,7 +1421,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
+           * const result = await finatic.getAllOrderEvents({ connectionId: 'example-id', includeMetadata: true });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1436,7 +1436,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderEvents({ connectionId: '00000000-0000-0000-0000-000000000000', includeMetadata: false });
+           * const result = await finatic.getAllOrderEvents({ connectionId: 'example-id', includeMetadata: true });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1452,8 +1452,8 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_order_events(
-           *            connection_id='00000000-0000-0000-0000-000000000000',
-                    include_metadata=false
+           *            connection_id='example',
+                    include_metadata='example'
            * )
            * 
            * # Access the response data
@@ -1552,7 +1552,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderGroups({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', createdAfter: '2024-01-01T00:00:00Z' });
+           * const result = await finatic.getAllOrderGroups({ brokerId: 'example-id', connectionId: 'example-id', createdAfter: 'example' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1567,7 +1567,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllOrderGroups({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', createdAfter: '2024-01-01T00:00:00Z' });
+           * const result = await finatic.getAllOrderGroups({ brokerId: 'example-id', connectionId: 'example-id', createdAfter: 'example' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1583,9 +1583,9 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_order_groups(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    created_after='2024-01-01T00:00:00Z'
+           *            broker_id='example',
+                    connection_id='example',
+                    created_after='example'
            * )
            * 
            * # Access the response data
@@ -1684,7 +1684,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllPositionLots({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllPositionLots({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1699,7 +1699,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllPositionLots({ brokerId: 'alpaca', connectionId: '00000000-0000-0000-0000-000000000000', accountId: '123456789' });
+           * const result = await finatic.getAllPositionLots({ brokerId: 'example-id', connectionId: 'example-id', accountId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1715,9 +1715,9 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_position_lots(
-           *            broker_id='alpaca',
-                    connection_id='00000000-0000-0000-0000-000000000000',
-                    account_id='123456789'
+           *            broker_id='example',
+                    connection_id='example',
+                    account_id='example'
            * )
            * 
            * # Access the response data
@@ -1816,7 +1816,7 @@ class FinaticServer:
            * @example
            * ```typescript-server
            * // Get all items with optional filters
-           * const result = await finatic.getAllPositionLotFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * const result = await finatic.getAllPositionLotFills({ connectionId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1831,7 +1831,7 @@ class FinaticServer:
            * @example
            * ```typescript-client
            * // Get all items with optional filters
-           * const result = await finatic.getAllPositionLotFills({ connectionId: '00000000-0000-0000-0000-000000000000' });
+           * const result = await finatic.getAllPositionLotFills({ connectionId: 'example-id' });
            * 
            * // Access the response data
            * if (result.success) {
@@ -1847,7 +1847,7 @@ class FinaticServer:
            * ```python
            * # Get all items with optional filters
            * result = await finatic.get_all_position_lot_fills(
-           *            connection_id='00000000-0000-0000-0000-000000000000'
+           *            connection_id='example'
            * )
            * 
            * # Access the response data
@@ -1946,7 +1946,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.get_company(
-            company_id='00000000-0000-0000-0000-000000000000'
+            company_id='example'
         )
         
         # Access the response data
@@ -1958,7 +1958,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.getCompany({ companyId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getCompany({ companyId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -1970,7 +1970,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.getCompany({ companyId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getCompany({ companyId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2033,9 +2033,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_balances(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
+            broker_id='example',
+            connection_id='example',
+            account_id='example'
         )
         
         # Handle response with warnings
@@ -2118,8 +2118,8 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_accounts(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
+            broker_id='example',
+            connection_id='example',
             account_type='margin'
         )
         
@@ -2318,7 +2318,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.disconnect_company_from_broker(
-            connection_id='00000000-0000-0000-0000-000000000000'
+            connection_id='example'
         )
         
         # Access the response data
@@ -2330,7 +2330,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.disconnectCompanyFromBroker({ connectionId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.disconnectCompanyFromBroker({ connectionId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2342,7 +2342,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.disconnectCompanyFromBroker({ connectionId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.disconnectCompanyFromBroker({ connectionId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2408,9 +2408,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_orders(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
+            broker_id='example',
+            connection_id='example',
+            account_id='example'
         )
         
         # Handle response with warnings
@@ -2498,9 +2498,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_positions(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
+            broker_id='example',
+            connection_id='example',
+            account_id='example'
         )
         
         # Handle response with warnings
@@ -2586,9 +2586,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_transactions(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
+            broker_id='example',
+            connection_id='example',
+            account_id='example'
         )
         
         # Handle response with warnings
@@ -2659,7 +2659,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.get_order_fills(
-            order_id='00000000-0000-0000-0000-000000000000'
+            order_id='example'
         )
         
         # Access the response data
@@ -2672,10 +2672,10 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_order_fills(
-            order_id='00000000-0000-0000-0000-000000000000',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            limit=100,
-            offset=0
+            order_id='example',
+            connection_id='example',
+            limit='example',
+            offset='example'
         )
         
         # Handle response with warnings
@@ -2689,7 +2689,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.getOrderFills({ orderId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getOrderFills({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2701,7 +2701,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.getOrderFills({ orderId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getOrderFills({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2750,7 +2750,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.get_order_events(
-            order_id='00000000-0000-0000-0000-000000000000'
+            order_id='example'
         )
         
         # Access the response data
@@ -2763,10 +2763,10 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_order_events(
-            order_id='00000000-0000-0000-0000-000000000000',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            limit=100,
-            offset=0
+            order_id='example',
+            connection_id='example',
+            limit='example',
+            offset='example'
         )
         
         # Handle response with warnings
@@ -2780,7 +2780,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.getOrderEvents({ orderId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getOrderEvents({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2792,7 +2792,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.getOrderEvents({ orderId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getOrderEvents({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -2852,9 +2852,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_order_groups(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            limit=100
+            broker_id='example',
+            connection_id='example',
+            limit='example'
         )
         
         # Handle response with warnings
@@ -2937,9 +2937,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_position_lots(
-            broker_id='alpaca',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            account_id='123456789'
+            broker_id='example',
+            connection_id='example',
+            account_id='example'
         )
         
         # Handle response with warnings
@@ -3009,7 +3009,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.get_position_lot_fills(
-            lot_id='00000000-0000-0000-0000-000000000000'
+            lot_id='example'
         )
         
         # Access the response data
@@ -3022,10 +3022,10 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.get_position_lot_fills(
-            lot_id='00000000-0000-0000-0000-000000000000',
-            connection_id='00000000-0000-0000-0000-000000000000',
-            limit=100,
-            offset=0
+            lot_id='example',
+            connection_id='example',
+            limit='example',
+            offset='example'
         )
         
         # Handle response with warnings
@@ -3039,7 +3039,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.getPositionLotFills({ lotId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getPositionLotFills({ lotId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -3051,7 +3051,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.getPositionLotFills({ lotId: '00000000-0000-0000-0000-000000000000' });
+        const result = await finatic.getPositionLotFills({ lotId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -3078,60 +3078,16 @@ class FinaticServer:
     async def place_order(self, **kwargs) -> FinaticResponse[OrderActionResult]:
         """Place Order
         
-        Create a new order via the specified broker connection.
+        Place a new order through the specified broker.
         
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Requires trading permissions for the company.
+        Creates an order using the broker connection associated with your account.
+        The order structure includes common fields (symbol, quantity, order type, etc.)
+        shared across all brokers, plus broker-specific fields that vary by broker.
         
-        Standard parameters
-        -------------------
-        The following fields constitute the unified Finatic *common order schema* and
-        therefore appear individually as query parameters in the autogenerated
-        OpenAPI documentation:
-        
-        - ``broker``
-        - ``account_number``
-        - ``order_type``
-        - ``asset_type``
-        - ``action``
-        - ``time_in_force``
-        - ``symbol``
-        - ``order_qty``
-        
-        They are surfaced as *query* parameters **only to make the accepted fields
-        obvious in the interactive docs**. In production usage you should send these
-        fields inside the JSON body (see ``order_request``) so that the entire order
-        specification travels in one payload. (Nothing will break if you send both, but there is no need to do so.)
-        
-        Body payload & broker-specific extras
-        -------------------------------------
-        
-        Put the standard parameters plus any broker-specific extensions under the
-        ``order`` key of the body. Refer to the bundled OpenAPI examples below to
-        see complete payloads for common order types (market, limit, spreads, etc.)
-        across supported brokers.
-        
-        For a formal reference of broker-specific extensions inspect the
-        ``BrokerOrderPlaceExtras`` schema.
-        
-        The endpoint resolves the active ``user_broker_connection`` by calling the
-        ``get_user_broker_connection_ids_for_broker`` RPC in Supabase. If no active
-        connection exists it returns a list of *available* brokers so your client
-        can guide the user accordingly.
-        
-        Broker Notes
-        ------------
-        - The responses that you get back from the broker are not always the same.
-        The response models are validated for each broker, but we do not standardize the repsonses.
-        
-        - Tasty Trade: If you want to trade options for a particular stock, first fetch the full
-        option chain via the GET https://api.tastyworks.com/option-chains/{stock_symbol}/nested endpoint.
-        This endpoint returns all available expirations that tastytrade offers for that equity symbol.
-        Each expiration contains a list of strikes, where each strike has a call and put field representing
-        the call symbol and put symbol respectively.
-        
-        We are planning to add a new endpoint to fetch the option chain for a particular stock and
-        handle this logic for you, but for now you need to fetch the option chain manually.
+        Common order fields include: broker, accountNumber, orderType, assetType,
+        action, timeInForce, symbol, and orderQty. Additional broker-specific fields
+        can be included in the order object - see the broker-specific tabs in the
+        parameters section for details.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -3139,7 +3095,7 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            order_request (OrderRequest, optional): Broker-specific extra parameters object. This is used to pass in broker-specific fields if you want to send a reqeust to a broker API with the parameters that EXTEND our standardized query parameters.
+            order_request (OrderRequest, optional): Order request containing the order object with required fields (accountNumber, orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields.
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         
         Returns:
@@ -3157,7 +3113,7 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.place_order(
-            connection_id='00000000-0000-0000-0000-000000000000'
+            connection_id='example'
         )
         
         # Handle response with warnings
@@ -3208,11 +3164,8 @@ class FinaticServer:
         
         Cancel an existing order.
         
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Requires trading permissions for the company.
-        
-        The order_id is used to identify the order and automatically resolve the
-        broker connection from the orders table.
+        Cancels an order by its order ID. The broker connection is automatically
+        resolved from the order record.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -3228,7 +3181,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.cancel_order(
-            order_id='order_1234567890abcdef'
+            order_id='example'
         )
         
         # Access the response data
@@ -3240,7 +3193,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.cancelOrder({ orderId: 'order_1234567890abcdef' });
+        const result = await finatic.cancelOrder({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -3252,7 +3205,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.cancelOrder({ orderId: 'order_1234567890abcdef' });
+        const result = await finatic.cancelOrder({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -3281,8 +3234,9 @@ class FinaticServer:
         
         Modify an existing order.
         
-        This endpoint is accessible from the portal and uses session-only authentication.
-        Requires trading permissions for the company.
+        Updates an order's parameters (price, quantity, etc.) by order ID.
+        The order structure follows the same pattern as placing orders, with common
+        fields shared across brokers and broker-specific fields available per broker.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -3291,7 +3245,7 @@ class FinaticServer:
         
         Args:
             order_id (str): Order ID
-            order_request (OrderRequest, optional): Broker-specific *modify order* payload. Pass **all** standard parameters plus any broker-specific extensions under the `order` key. See the schema for a formal reference.
+            order_request (OrderRequest, optional): Order modification request containing the order object with required fields and optional broker-specific fields. See the schema for details.
             account_number (str, optional): Account number owning the order
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         
@@ -3301,7 +3255,7 @@ class FinaticServer:
         ```python
         # Minimal example with required parameters only
         result = await finatic.modify_order(
-            order_id='order_1234567890abcdef'
+            order_id='example'
         )
         
         # Access the response data
@@ -3314,9 +3268,9 @@ class FinaticServer:
         ```python
         # Full example with optional parameters
         result = await finatic.modify_order(
-            order_id='order_1234567890abcdef',
-            account_number='123456789',
-            connection_id='00000000-0000-0000-0000-000000000000'
+            order_id='example',
+            account_number='example',
+            connection_id='example'
         )
         
         # Handle response with warnings
@@ -3330,7 +3284,7 @@ class FinaticServer:
         @example
         ```typescript-server
         // Minimal example with required parameters only
-        const result = await finatic.modifyOrder({ orderId: 'order_1234567890abcdef' });
+        const result = await finatic.modifyOrder({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {
@@ -3342,7 +3296,7 @@ class FinaticServer:
         @example
         ```typescript-client
         // Minimal example with required parameters only
-        const result = await finatic.modifyOrder({ orderId: 'order_1234567890abcdef' });
+        const result = await finatic.modifyOrder({ orderId: 'example-id' });
         
         // Access the response data
         if (result.success) {

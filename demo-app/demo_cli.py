@@ -129,18 +129,32 @@ async def main():
 
     # Trading methods
     # place_order_result = await finatic.place_order(
-    #     connection_id=all_accounts["success"]["data"][0]["connection_id"],
-    #     order_type="market",
-    #     asset_type="equity",
-    #     action="buy",
-    #     symbol="AAPL",
-    #     order_qty=1,
+    #     broker="robinhood",  # Required: broker identifier
+    #     account_number=all_accounts["success"]["data"][0].get("account_number") or all_accounts["success"]["data"][0]["account_id"],  # Required: account number at top level
+    #     order={
+    #         "order_type": "market",
+    #         "asset_type": "equity",
+    #         "action": "buy",
+    #         "time_in_force": "day",
+    #         "symbol": "AAPL",
+    #         "order_qty": 1,
+    #     },
+    #     connection_id=all_accounts["success"]["data"][0]["connection_id"],  # Optional
     # )
     # print("place_order_result", place_order_result)
 
     # modify_order_result = await finatic.modify_order(
     #     order_id=all_orders["success"]["data"][0]["order_id"],
-    #     order_qty=2,
+    #     broker="robinhood",  # Required: broker identifier
+    #     account_number=all_accounts["success"]["data"][0].get("account_number") or all_accounts["success"]["data"][0]["account_id"],  # Required: account number at top level
+    #     order={
+    #         "order_type": "market",
+    #         "asset_type": "equity",
+    #         "action": "buy",
+    #         "time_in_force": "day",
+    #         "symbol": "AAPL",
+    #         "order_qty": 2,
+    #     },
     # )
     # print("modify_order_result", modify_order_result)
 

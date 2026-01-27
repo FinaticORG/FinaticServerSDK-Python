@@ -90,7 +90,7 @@ class SessionWrapper:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
-    async def init_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseTokenresponsedata2]:
+    async def init_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2]:
         """Init Session
         
         Initialize a new session with company API key.
@@ -98,8 +98,8 @@ class SessionWrapper:
         Args:
             x_api_key (str): Company API key
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseTokenresponsedata2] format
-                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseTokenresponsedata2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -311,7 +311,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def start_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionresponsedata2]:
+    async def start_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2]:
         """Start Session
         
         Start a session with a one-time token.
@@ -320,8 +320,8 @@ class SessionWrapper:
             one_time_token (str): One-time use token obtained from init_session endpoint to authenticate and start the session
             session_start_request (SessionStartRequest): Session start request containing optional user ID to associate with the session
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionresponsedata2] format
-                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionresponsedata2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -534,7 +534,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_portal_url(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponsePortalurlresponse2]:
+    async def get_portal_url(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2]:
         """Get Portal Url
         
         Get a portal URL with token for a session.
@@ -545,8 +545,8 @@ class SessionWrapper:
         Args:
         - **kwargs: No parameters required for this method
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponsePortalurlresponse2] format
-                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponsePortalurlresponse2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -771,7 +771,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def get_session_user(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionuserresponse2]:
+    async def get_session_user(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2]:
         """Get Session User
         
         Get user information for a completed session.
@@ -789,8 +789,8 @@ class SessionWrapper:
         Args:
             session_id (str): Session ID
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionuserresponse2] format
-                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticresponseSessionuserresponse2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -801,7 +801,7 @@ class SessionWrapper:
         ```python
         # Minimal example with required parameters only
         result = await finatic.get_session_user(
-            session_id='sess_1234567890abcdef'
+            session_id='example'
         )
         
         # Access the response data

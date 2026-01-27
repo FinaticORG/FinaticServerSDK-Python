@@ -91,7 +91,7 @@ class CompanyWrapper:
         ```python
         # Minimal example with required parameters only
         result = await finatic.get_company(
-            company_id='00000000-0000-0000-0000-000000000000'
+            company_id='example'
         )
         
         # Access the response data
