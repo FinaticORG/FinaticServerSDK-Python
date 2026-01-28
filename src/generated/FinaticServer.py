@@ -3095,7 +3095,9 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            order_request (OrderRequest, optional): Order request containing the order object with required fields (accountNumber, orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields.
+            broker (str): Broker identifier (robinhood, tasty_trade, ninja_trader)
+            account_number (int): Account number for the order
+            order (dict[str, Any]): Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         
         Returns:
@@ -3244,8 +3246,9 @@ class FinaticServer:
                 @category brokers
         
         Args:
+            broker (str): Broker identifier (robinhood, tasty_trade, ninja_trader)
+            order (dict[str, Any]): Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
             order_id (str): Order ID
-            order_request (OrderRequest, optional): Order modification request containing the order object with required fields and optional broker-specific fields. See the schema for details.
             account_number (str, optional): Account number owning the order
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         

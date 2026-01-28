@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from .accountnumber import Accountnumber
-from .finatic_broker_factory_brokers_robinhood_executors_consumer_robinhood_order_place_query_params_robinhood_option_spread_leg import FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg
+from .robinhood_option_spread_leg import RobinhoodOptionSpreadLeg
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -39,7 +39,7 @@ class RobinhoodOptionStopLimitOrderPlaceQueryParams(BaseModel):
     stop_price: Union[StrictFloat, StrictInt] = Field(alias="stopPrice")
     limit_price: Union[StrictFloat, StrictInt] = Field(alias="limitPrice")
     direction: Optional[StrictStr] = None
-    spread: Optional[List[FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg]] = None
+    spread: Optional[List[RobinhoodOptionSpreadLeg]] = None
     position_effect: Optional[StrictStr] = Field(default=None, alias="positionEffect")
     credit_or_debit: Optional[StrictStr] = Field(default=None, alias="creditOrDebit")
     expiration_date: Optional[StrictStr] = Field(default=None, alias="expirationDate")
@@ -228,7 +228,7 @@ class RobinhoodOptionStopLimitOrderPlaceQueryParams(BaseModel):
             "stopPrice": obj.get("stopPrice"),
             "limitPrice": obj.get("limitPrice"),
             "direction": obj.get("direction"),
-            "spread": [FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
+            "spread": [RobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
             "positionEffect": obj.get("positionEffect"),
             "creditOrDebit": obj.get("creditOrDebit"),
             "expirationDate": obj.get("expirationDate"),

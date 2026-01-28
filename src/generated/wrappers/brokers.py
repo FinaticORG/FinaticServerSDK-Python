@@ -30,8 +30,10 @@ from ..models.fdx_broker_transaction import FDXBrokerTransaction
 from ..models.legacy_broker_account import LegacyBrokerAccount
 from ..models.legacy_broker_balance import LegacyBrokerBalance
 from ..models.order_action_result import OrderActionResult
-from ..models.order_request import OrderRequest
 from ..models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions
+from ..models.place_order_api_beta_brokers_orders_post_request import (
+    PlaceOrderApiBetaBrokersOrdersPostRequest as OrderRequest,
+)
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
 from ..utils.logger import get_logger
@@ -261,8 +263,12 @@ class GetPositionLotFillsParams:
 @dataclass
 class PlaceOrderParams:
     """Input parameters for place_order_api_beta_brokers_orders_post."""
-  # Order request containing the order object with required fields (accountNumber, orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields.
-    order_request: OrderRequest = None
+  # Broker identifier (robinhood, tasty_trade, ninja_trader)
+    broker: str
+  # Account number for the order
+    account_number: int
+  # Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
+    order: dict[str, Any]
   # Temporary bypass for testing: specify connection ID directly
     connection_id: str = None
 
@@ -275,10 +281,12 @@ class CancelOrderParams:
 @dataclass
 class ModifyOrderParams:
     """Input parameters for modify_order_api_beta_brokers_orders__order_id__patch."""
+  # Broker identifier (robinhood, tasty_trade, ninja_trader)
+    broker: str
+  # Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
+    order: dict[str, Any]
   # Order ID
     order_id: str
-  # Order modification request containing the order object with required fields and optional broker-specific fields. See the schema for details.
-    order_request: OrderRequest = None
   # Account number owning the order
     account_number: str = None
   # Temporary bypass for testing: specify connection ID directly
@@ -3729,7 +3737,9 @@ class BrokersWrapper:
         parameters section for details.
 
         Args:
-            order_request (OrderRequest, optional): Order request containing the order object with required fields (accountNumber, orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields.
+            broker (str): Broker identifier (robinhood, tasty_trade, ninja_trader)
+            account_number (int): Account number for the order
+            order (dict[str, Any]): Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         Returns:
         - Dict[str, Any]: FinaticResponse[OrderActionResult] format
@@ -3772,8 +3782,12 @@ class BrokersWrapper:
             raise ValueError('Session not initialized. Call start_session() first.')
 
         # Phase 2C: Extract individual params from input params object
-        order_request = getattr(params, 'order_request', None)
+        broker = params.broker
+        account_number = params.account_number
+        order = params.order
         connection_id = getattr(params, 'connection_id', None)
+        _order_dict = order if isinstance(order, dict) else (order.__dict__ if hasattr(order, '__dict__') else {})
+        _order_dict_camel = {'orderType': _order_dict.get('order_type') or _order_dict.get('orderType'), 'assetType': _order_dict.get('asset_type') or _order_dict.get('assetType'), 'action': _order_dict.get('action'), 'timeInForce': _order_dict.get('time_in_force') or _order_dict.get('timeInForce'), 'symbol': _order_dict.get('symbol'), 'orderQty': _order_dict.get('order_qty') or _order_dict.get('orderQty'), **{k: v for k, v in _order_dict.items() if k not in ('order_type', 'asset_type', 'time_in_force', 'order_qty', 'orderType', 'assetType', 'timeInForce', 'orderQty', 'action', 'symbol')}}
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -3819,7 +3833,14 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.place_order_api_beta_brokers_orders_post(connection_id=connection_id, order_request=order_request, _headers=headers)
+                response = await self.api.place_order_api_beta_brokers_orders_post(connection_id=connection_id, place_order_api_beta_brokers_orders_post_request=OrderRequest.from_dict({
+            'broker': broker,
+            'order': {
+                'accountNumber': account_number,
+                **_order_dict_camel,
+                **({} if _order_dict_camel.get('timeInForce') is None else ({'timeInForce': {'timeInForce': _order_dict_camel.get('timeInForce')}} if isinstance(_order_dict_camel.get('timeInForce'), str) else {'timeInForce': _order_dict_camel.get('timeInForce')}))
+            }
+        }), _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
@@ -4225,8 +4246,9 @@ class BrokersWrapper:
         fields shared across brokers and broker-specific fields available per broker.
 
         Args:
+            broker (str): Broker identifier (robinhood, tasty_trade, ninja_trader)
+            order (dict[str, Any]): Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
             order_id (str): Order ID
-            order_request (OrderRequest, optional): Order modification request containing the order object with required fields and optional broker-specific fields. See the schema for details.
             account_number (str, optional): Account number owning the order
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         Returns:
@@ -4276,10 +4298,13 @@ class BrokersWrapper:
             raise ValueError('Session not initialized. Call start_session() first.')
 
         # Phase 2C: Extract individual params from input params object
+        broker = params.broker
+        order = params.order
         order_id = params.order_id
-        order_request = getattr(params, 'order_request', None)
         account_number = getattr(params, 'account_number', None)
         connection_id = getattr(params, 'connection_id', None)
+        _order_dict = order if isinstance(order, dict) else (order.__dict__ if hasattr(order, '__dict__') else {})
+        _order_dict_camel = {'orderType': _order_dict.get('order_type') or _order_dict.get('orderType'), 'assetType': _order_dict.get('asset_type') or _order_dict.get('assetType'), 'action': _order_dict.get('action'), 'timeInForce': _order_dict.get('time_in_force') or _order_dict.get('timeInForce'), 'symbol': _order_dict.get('symbol'), 'orderQty': _order_dict.get('order_qty') or _order_dict.get('orderQty'), **{k: v for k, v in _order_dict.items() if k not in ('order_type', 'asset_type', 'time_in_force', 'order_qty', 'orderType', 'assetType', 'timeInForce', 'orderQty', 'action', 'symbol')}}
 
         # Generate request ID
         request_id = self._generate_request_id()
@@ -4325,7 +4350,14 @@ class BrokersWrapper:
                 }
                 if self.csrf_token:
                     headers["x-csrf-token"] = self.csrf_token
-                response = await self.api.modify_order_api_beta_brokers_orders_order_id_patch(order_id=order_id, account_number=account_number, connection_id=connection_id, order_request=order_request, _headers=headers)
+                response = await self.api.modify_order_api_beta_brokers_orders_order_id_patch(order_id=order_id, account_number=account_number, connection_id=connection_id, modify_order_api_beta_brokers_orders__order_id__patch_request=OrderRequest.from_dict({
+            'broker': broker,
+            'order': {
+                'accountNumber': account_number,
+                **_order_dict_camel,
+                **({} if _order_dict_camel.get('timeInForce') is None else ({'timeInForce': {'timeInForce': _order_dict_camel.get('timeInForce')}} if isinstance(_order_dict_camel.get('timeInForce'), str) else {'timeInForce': _order_dict_camel.get('timeInForce')}))
+            }
+        }), _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
             
