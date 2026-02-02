@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from .finatic_broker_factory_brokers_robinhood_executors_consumer_robinhood_order_modify_query_params_robinhood_option_spread_leg import FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderModifyQueryParamsRobinhoodOptionSpreadLeg
+from .robinhood_option_spread_leg import RobinhoodOptionSpreadLeg
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -31,7 +31,7 @@ class RobinhoodMarketOrderModifyQueryParams(BaseModel):
     extended_hours: Optional[StrictBool] = Field(default=False, description="Allow trading during extended hours (premium users only)", alias="extendedHours")
     market_hours: Optional[StrictStr] = Field(default='regular_hours', description="Market hours to trade in", alias="marketHours")
     direction: Optional[StrictStr] = None
-    spread: Optional[List[FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderModifyQueryParamsRobinhoodOptionSpreadLeg]] = None
+    spread: Optional[List[RobinhoodOptionSpreadLeg]] = None
     position_effect: Optional[StrictStr] = Field(default=None, alias="positionEffect")
     credit_or_debit: Optional[StrictStr] = Field(default=None, alias="creditOrDebit")
     expiration_date: Optional[StrictStr] = Field(default=None, alias="expirationDate")
@@ -231,7 +231,7 @@ class RobinhoodMarketOrderModifyQueryParams(BaseModel):
             "extendedHours": obj.get("extendedHours") if obj.get("extendedHours") is not None else False,
             "marketHours": obj.get("marketHours") if obj.get("marketHours") is not None else 'regular_hours',
             "direction": obj.get("direction"),
-            "spread": [FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderModifyQueryParamsRobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
+            "spread": [RobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
             "positionEffect": obj.get("positionEffect"),
             "creditOrDebit": obj.get("creditOrDebit"),
             "expirationDate": obj.get("expirationDate"),

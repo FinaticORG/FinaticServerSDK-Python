@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from .accountnumber import Accountnumber
-from .robinhood_option_spread_leg import RobinhoodOptionSpreadLeg
+from .finatic_broker_factory_brokers_robinhood_executors_consumer_robinhood_order_place_query_params_robinhood_option_spread_leg import FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,7 +29,7 @@ class RobinhoodOptionStopLimitOrderPlaceQueryParams(BaseModel):
     """
     Option stop limit order with Robinhood-specific extras.
     """ # noqa: E501
-    account_number: Accountnumber = Field(alias="accountNumber")
+    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: Optional[StrictStr] = Field(default='equity_option', alias="assetType")
     action: StrictStr
@@ -39,7 +39,7 @@ class RobinhoodOptionStopLimitOrderPlaceQueryParams(BaseModel):
     stop_price: Union[StrictFloat, StrictInt] = Field(alias="stopPrice")
     limit_price: Union[StrictFloat, StrictInt] = Field(alias="limitPrice")
     direction: Optional[StrictStr] = None
-    spread: Optional[List[RobinhoodOptionSpreadLeg]] = None
+    spread: Optional[List[FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg]] = None
     position_effect: Optional[StrictStr] = Field(default=None, alias="positionEffect")
     credit_or_debit: Optional[StrictStr] = Field(default=None, alias="creditOrDebit")
     expiration_date: Optional[StrictStr] = Field(default=None, alias="expirationDate")
@@ -171,6 +171,11 @@ class RobinhoodOptionStopLimitOrderPlaceQueryParams(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if account_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.account_number is None and "account_number" in self.model_fields_set:
+            _dict['accountNumber'] = None
+
         # set to None if direction (nullable) is None
         # and model_fields_set contains the field
         if self.direction is None and "direction" in self.model_fields_set:
@@ -228,7 +233,7 @@ class RobinhoodOptionStopLimitOrderPlaceQueryParams(BaseModel):
             "stopPrice": obj.get("stopPrice"),
             "limitPrice": obj.get("limitPrice"),
             "direction": obj.get("direction"),
-            "spread": [RobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
+            "spread": [FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
             "positionEffect": obj.get("positionEffect"),
             "creditOrDebit": obj.get("creditOrDebit"),
             "expirationDate": obj.get("expirationDate"),

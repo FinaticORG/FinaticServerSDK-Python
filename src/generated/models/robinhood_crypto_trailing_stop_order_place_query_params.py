@@ -28,7 +28,7 @@ class RobinhoodCryptoTrailingStopOrderPlaceQueryParams(BaseModel):
     """
     Crypto trailing stop order with Robinhood-specific extras.
     """ # noqa: E501
-    account_number: Accountnumber = Field(alias="accountNumber")
+    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: Optional[StrictStr] = Field(default='crypto', alias="assetType")
     action: StrictStr
@@ -125,6 +125,11 @@ class RobinhoodCryptoTrailingStopOrderPlaceQueryParams(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if account_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.account_number is None and "account_number" in self.model_fields_set:
+            _dict['accountNumber'] = None
 
         return _dict
 

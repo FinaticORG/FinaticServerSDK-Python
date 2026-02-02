@@ -128,13 +128,13 @@ async def main():
     # )  # Required: lot_id
 
     # Trading methods - ACTIVE for testing
-    # For now, using placeholder values - update these with your actual account details
+    # Place order / modify order use top-level params: broker, account_number?, order (no body wrapper)
     test_account_number = 123456789  # Replace with your account number
     test_broker = "robinhood"  # Replace with your broker
 
     place_order_result = await finatic.place_order(
         broker=test_broker,  # Required: broker identifier
-        account_number=test_account_number,  # Required: account number at top level
+        account_number=test_account_number,  # Optional: account number at top level
         order={
             "order_type": "market",
             "asset_type": "equity",

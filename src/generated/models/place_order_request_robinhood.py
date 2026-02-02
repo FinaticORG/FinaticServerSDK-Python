@@ -19,23 +19,25 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
-from .order2 import Order2
+from .account_number import AccountNumber
+from .order import Order
 from typing import Optional, Set
 from typing_extensions import Self
 
-class TastyTradeOrderPlaceRequest(BaseModel):
+class PlaceOrderRequestRobinhood(BaseModel):
     """
-    Wrapper model for TastyTrade **place order** requests (generic payload).
+    Place order request for Robinhood with top-level broker and account_number.
     """ # noqa: E501
     broker: StrictStr
-    order: Order2
-    __properties: ClassVar[List[str]] = ["broker", "order"]
+    account_number: AccountNumber
+    order: Order
+    __properties: ClassVar[List[str]] = ["broker", "account_number", "order"]
 
     @field_validator('broker')
     def broker_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['tasty_trade']):
-            raise ValueError("must be one of enum values ('tasty_trade')")
+        if value not in set(['robinhood']):
+            raise ValueError("must be one of enum values ('robinhood')")
         return value
 
     model_config = ConfigDict(
@@ -56,7 +58,7 @@ class TastyTradeOrderPlaceRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of TastyTradeOrderPlaceRequest from a JSON string"""
+        """Create an instance of PlaceOrderRequestRobinhood from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,6 +79,9 @@ class TastyTradeOrderPlaceRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of account_number
+        if self.account_number:
+            _dict['account_number'] = self.account_number.to_dict()
         # override the default output from pydantic by calling `to_dict()` of order
         if self.order:
             _dict['order'] = self.order.to_dict()
@@ -84,7 +89,7 @@ class TastyTradeOrderPlaceRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of TastyTradeOrderPlaceRequest from a dict"""
+        """Create an instance of PlaceOrderRequestRobinhood from a dict"""
         if obj is None:
             return None
 
@@ -93,7 +98,8 @@ class TastyTradeOrderPlaceRequest(BaseModel):
 
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
-            "order": Order2.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "account_number": AccountNumber.from_dict(obj["account_number"]) if obj.get("account_number") is not None else None,
+            "order": Order.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

@@ -34,7 +34,7 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
     activation_time: Optional[datetime] = Field(default=None, alias="activationTime")
     text: Optional[StrictStr] = None
     peg_difference: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="pegDifference")
-    account_number: Accountnumber = Field(alias="accountNumber")
+    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: StrictStr = Field(alias="assetType")
     action: StrictStr
@@ -137,6 +137,11 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
         # and model_fields_set contains the field
         if self.peg_difference is None and "peg_difference" in self.model_fields_set:
             _dict['pegDifference'] = None
+
+        # set to None if account_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.account_number is None and "account_number" in self.model_fields_set:
+            _dict['accountNumber'] = None
 
         return _dict
 

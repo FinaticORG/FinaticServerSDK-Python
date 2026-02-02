@@ -37,7 +37,7 @@ class TastyTradeStopOrderPlaceQueryParams(BaseModel):
     source: Optional[StrictStr] = None
     value_effect: Optional[StrictStr] = Field(default=None, alias="value-effect")
     legs: Optional[List[Dict[str, Any]]] = None
-    account_number: Accountnumber = Field(alias="accountNumber")
+    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: StrictStr = Field(alias="assetType")
     action: StrictStr
@@ -175,6 +175,11 @@ class TastyTradeStopOrderPlaceQueryParams(BaseModel):
         # and model_fields_set contains the field
         if self.legs is None and "legs" in self.model_fields_set:
             _dict['legs'] = None
+
+        # set to None if account_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.account_number is None and "account_number" in self.model_fields_set:
+            _dict['accountNumber'] = None
 
         return _dict
 

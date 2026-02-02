@@ -17,27 +17,27 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from .ninja_trader_order_place_request import NinjaTraderOrderPlaceRequest
-from .robinhood_order_place_request import RobinhoodOrderPlaceRequest
-from .tasty_trade_order_place_request import TastyTradeOrderPlaceRequest
+from .place_order_request_ninja_trader import PlaceOrderRequestNinjaTrader
+from .place_order_request_robinhood import PlaceOrderRequestRobinhood
+from .place_order_request_tasty_trade import PlaceOrderRequestTastyTrade
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-PLACEORDERAPIBETABROKERSORDERSPOSTREQUEST_ONE_OF_SCHEMAS = ["NinjaTraderOrderPlaceRequest", "RobinhoodOrderPlaceRequest", "TastyTradeOrderPlaceRequest"]
+PLACEORDERAPIBETABROKERSORDERSPOSTREQUEST_ONE_OF_SCHEMAS = ["PlaceOrderRequestNinjaTrader", "PlaceOrderRequestRobinhood", "PlaceOrderRequestTastyTrade"]
 
 class PlaceOrderApiBetaBrokersOrdersPostRequest(BaseModel):
     """
-    Broker-specific parameters object (varies by broker)
+    Place order request with top-level broker, account_number, and order.
     """
-    # data type: NinjaTraderOrderPlaceRequest
-    oneof_schema_1_validator: Optional[NinjaTraderOrderPlaceRequest] = None
-    # data type: RobinhoodOrderPlaceRequest
-    oneof_schema_2_validator: Optional[RobinhoodOrderPlaceRequest] = None
-    # data type: TastyTradeOrderPlaceRequest
-    oneof_schema_3_validator: Optional[TastyTradeOrderPlaceRequest] = None
-    actual_instance: Optional[Union[NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest]] = None
-    one_of_schemas: Set[str] = { "NinjaTraderOrderPlaceRequest", "RobinhoodOrderPlaceRequest", "TastyTradeOrderPlaceRequest" }
+    # data type: PlaceOrderRequestRobinhood
+    oneof_schema_1_validator: Optional[PlaceOrderRequestRobinhood] = None
+    # data type: PlaceOrderRequestNinjaTrader
+    oneof_schema_2_validator: Optional[PlaceOrderRequestNinjaTrader] = None
+    # data type: PlaceOrderRequestTastyTrade
+    oneof_schema_3_validator: Optional[PlaceOrderRequestTastyTrade] = None
+    actual_instance: Optional[Union[PlaceOrderRequestNinjaTrader, PlaceOrderRequestRobinhood, PlaceOrderRequestTastyTrade]] = None
+    one_of_schemas: Set[str] = { "PlaceOrderRequestNinjaTrader", "PlaceOrderRequestRobinhood", "PlaceOrderRequestTastyTrade" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -66,27 +66,27 @@ class PlaceOrderApiBetaBrokersOrdersPostRequest(BaseModel):
         instance = PlaceOrderApiBetaBrokersOrdersPostRequest.model_construct()
         error_messages = []
         match = 0
-        # validate data type: NinjaTraderOrderPlaceRequest
-        if not isinstance(v, NinjaTraderOrderPlaceRequest):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NinjaTraderOrderPlaceRequest`")
+        # validate data type: PlaceOrderRequestRobinhood
+        if not isinstance(v, PlaceOrderRequestRobinhood):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `PlaceOrderRequestRobinhood`")
         else:
             match += 1
-        # validate data type: RobinhoodOrderPlaceRequest
-        if not isinstance(v, RobinhoodOrderPlaceRequest):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `RobinhoodOrderPlaceRequest`")
+        # validate data type: PlaceOrderRequestNinjaTrader
+        if not isinstance(v, PlaceOrderRequestNinjaTrader):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `PlaceOrderRequestNinjaTrader`")
         else:
             match += 1
-        # validate data type: TastyTradeOrderPlaceRequest
-        if not isinstance(v, TastyTradeOrderPlaceRequest):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TastyTradeOrderPlaceRequest`")
+        # validate data type: PlaceOrderRequestTastyTrade
+        if not isinstance(v, PlaceOrderRequestTastyTrade):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `PlaceOrderRequestTastyTrade`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: PlaceOrderRequestNinjaTrader, PlaceOrderRequestRobinhood, PlaceOrderRequestTastyTrade. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: PlaceOrderRequestNinjaTrader, PlaceOrderRequestRobinhood, PlaceOrderRequestTastyTrade. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -109,46 +109,46 @@ class PlaceOrderApiBetaBrokersOrdersPostRequest(BaseModel):
         if not _data_type:
             raise ValueError("Failed to lookup data type from the field `broker` in the input.")
 
-        # check if data type is `NinjaTraderOrderPlaceRequest`
+        # check if data type is `PlaceOrderRequestNinjaTrader`
         if _data_type == "ninja_trader":
-            instance.actual_instance = NinjaTraderOrderPlaceRequest.from_json(json_str)
+            instance.actual_instance = PlaceOrderRequestNinjaTrader.from_json(json_str)
             return instance
 
-        # check if data type is `RobinhoodOrderPlaceRequest`
+        # check if data type is `PlaceOrderRequestRobinhood`
         if _data_type == "robinhood":
-            instance.actual_instance = RobinhoodOrderPlaceRequest.from_json(json_str)
+            instance.actual_instance = PlaceOrderRequestRobinhood.from_json(json_str)
             return instance
 
-        # check if data type is `TastyTradeOrderPlaceRequest`
+        # check if data type is `PlaceOrderRequestTastyTrade`
         if _data_type == "tasty_trade":
-            instance.actual_instance = TastyTradeOrderPlaceRequest.from_json(json_str)
+            instance.actual_instance = PlaceOrderRequestTastyTrade.from_json(json_str)
             return instance
 
-        # deserialize data into NinjaTraderOrderPlaceRequest
+        # deserialize data into PlaceOrderRequestRobinhood
         try:
-            instance.actual_instance = NinjaTraderOrderPlaceRequest.from_json(json_str)
+            instance.actual_instance = PlaceOrderRequestRobinhood.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into RobinhoodOrderPlaceRequest
+        # deserialize data into PlaceOrderRequestNinjaTrader
         try:
-            instance.actual_instance = RobinhoodOrderPlaceRequest.from_json(json_str)
+            instance.actual_instance = PlaceOrderRequestNinjaTrader.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into TastyTradeOrderPlaceRequest
+        # deserialize data into PlaceOrderRequestTastyTrade
         try:
-            instance.actual_instance = TastyTradeOrderPlaceRequest.from_json(json_str)
+            instance.actual_instance = PlaceOrderRequestTastyTrade.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: PlaceOrderRequestNinjaTrader, PlaceOrderRequestRobinhood, PlaceOrderRequestTastyTrade. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into PlaceOrderApiBetaBrokersOrdersPostRequest with oneOf schemas: PlaceOrderRequestNinjaTrader, PlaceOrderRequestRobinhood, PlaceOrderRequestTastyTrade. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -162,7 +162,7 @@ class PlaceOrderApiBetaBrokersOrdersPostRequest(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], NinjaTraderOrderPlaceRequest, RobinhoodOrderPlaceRequest, TastyTradeOrderPlaceRequest]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], PlaceOrderRequestNinjaTrader, PlaceOrderRequestRobinhood, PlaceOrderRequestTastyTrade]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

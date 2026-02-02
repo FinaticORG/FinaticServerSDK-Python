@@ -17,40 +17,32 @@ from inspect import getfullargspec
 import json
 import pprint
 import re  # noqa: F401
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, ValidationError, field_validator
 from typing import Optional
-from .order_any_of import OrderAnyOf
-from .order_any_of1 import OrderAnyOf1
-from .order_any_of2 import OrderAnyOf2
 from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-ORDER_ANY_OF_SCHEMAS = ["OrderAnyOf", "OrderAnyOf1", "OrderAnyOf2"]
+ACCOUNTNUMBER_ANY_OF_SCHEMAS = ["int", "str"]
 
-class Order(BaseModel):
+class AccountNumber(BaseModel):
     """
-    Order
+    Broker-provided account number (top-level; not part of the order itself).
     """
 
-    # data type: OrderAnyOf
-    anyof_schema_1_validator: Optional[OrderAnyOf] = None
-    # data type: OrderAnyOf1
-    anyof_schema_2_validator: Optional[OrderAnyOf1] = None
-    # data type: OrderAnyOf2
-    anyof_schema_3_validator: Optional[OrderAnyOf2] = None
+    # data type: str
+    anyof_schema_1_validator: Optional[StrictStr] = None
+    # data type: int
+    anyof_schema_2_validator: Optional[StrictInt] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[OrderAnyOf, OrderAnyOf1, OrderAnyOf2]] = None
+        actual_instance: Optional[Union[int, str]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: Set[str] = { "OrderAnyOf", "OrderAnyOf1", "OrderAnyOf2" }
+    any_of_schemas: Set[str] = { "int", "str" }
 
     model_config = {
         "validate_assignment": True,
         "protected_namespaces": (),
-    }
-
-    discriminator_value_class_map: Dict[str, str] = {
     }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -65,29 +57,23 @@ class Order(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_anyof(cls, v):
-        instance = Order.model_construct()
+        instance = AccountNumber.model_construct()
         error_messages = []
-        # validate data type: OrderAnyOf
-        if not isinstance(v, OrderAnyOf):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `OrderAnyOf`")
-        else:
+        # validate data type: str
+        try:
+            instance.anyof_schema_1_validator = v
             return v
-
-        # validate data type: OrderAnyOf1
-        if not isinstance(v, OrderAnyOf1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `OrderAnyOf1`")
-        else:
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # validate data type: int
+        try:
+            instance.anyof_schema_2_validator = v
             return v
-
-        # validate data type: OrderAnyOf2
-        if not isinstance(v, OrderAnyOf2):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `OrderAnyOf2`")
-        else:
-            return v
-
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Order with anyOf schemas: OrderAnyOf, OrderAnyOf1, OrderAnyOf2. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in AccountNumber with anyOf schemas: int, str. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -100,28 +86,28 @@ class Order(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[OrderAnyOf] = None
+        # deserialize data into str
         try:
-            instance.actual_instance = OrderAnyOf.from_json(json_str)
+            # validation
+            instance.anyof_schema_1_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_1_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[OrderAnyOf1] = None
+            error_messages.append(str(e))
+        # deserialize data into int
         try:
-            instance.actual_instance = OrderAnyOf1.from_json(json_str)
+            # validation
+            instance.anyof_schema_2_validator = json.loads(json_str)
+            # assign value to actual_instance
+            instance.actual_instance = instance.anyof_schema_2_validator
             return instance
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[OrderAnyOf2] = None
-        try:
-            instance.actual_instance = OrderAnyOf2.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
+            error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order with anyOf schemas: OrderAnyOf, OrderAnyOf1, OrderAnyOf2. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into AccountNumber with anyOf schemas: int, str. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -135,7 +121,7 @@ class Order(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], OrderAnyOf, OrderAnyOf1, OrderAnyOf2]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], int, str]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

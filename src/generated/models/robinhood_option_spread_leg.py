@@ -29,16 +29,16 @@ class RobinhoodOptionSpreadLeg(BaseModel):
     One leg within a spread for option orders.  Used by order_option_spread() function. Matches the structure expected by the raw query params layer.
     """ # noqa: E501
     expiration_date: StrictStr = Field(alias="expirationDate")
-    strike_price: Union[StrictFloat, StrictInt] = Field(alias="strikePrice")
+    strike: Union[StrictFloat, StrictInt]
     option_type: BrokerDataOptionTypeEnum = Field(alias="optionType")
-    position_effect: StrictStr = Field(alias="positionEffect")
+    effect: StrictStr
     action: BrokerDataOrderSideEnum
     ratio_quantity: Optional[StrictInt] = Field(default=1, alias="ratioQuantity")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["expirationDate", "strikePrice", "optionType", "positionEffect", "action", "ratioQuantity"]
+    __properties: ClassVar[List[str]] = ["expirationDate", "strike", "optionType", "effect", "action", "ratioQuantity"]
 
-    @field_validator('position_effect')
-    def position_effect_validate_enum(cls, value):
+    @field_validator('effect')
+    def effect_validate_enum(cls, value):
         """Validates the enum"""
         if value not in set(['open', 'close']):
             raise ValueError("must be one of enum values ('open', 'close')")
@@ -103,9 +103,9 @@ class RobinhoodOptionSpreadLeg(BaseModel):
 
         _obj = cls.model_validate({
             "expirationDate": obj.get("expirationDate"),
-            "strikePrice": obj.get("strikePrice"),
+            "strike": obj.get("strike"),
             "optionType": obj.get("optionType"),
-            "positionEffect": obj.get("positionEffect"),
+            "effect": obj.get("effect"),
             "action": obj.get("action"),
             "ratioQuantity": obj.get("ratioQuantity") if obj.get("ratioQuantity") is not None else 1
         })

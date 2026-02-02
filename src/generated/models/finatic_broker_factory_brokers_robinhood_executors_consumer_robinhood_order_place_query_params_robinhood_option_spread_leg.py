@@ -17,22 +17,32 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from .success_payload_session_response_data import SuccessPayloadSessionResponseData
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
+from .broker_data_option_type_enum import BrokerDataOptionTypeEnum
+from .broker_data_order_side_enum import BrokerDataOrderSideEnum
 from typing import Optional, Set
 from typing_extensions import Self
 
-class FinaticResponseSessionResponseData(BaseModel):
+class FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg(BaseModel):
     """
-    FinaticResponseSessionResponseData
+    One leg within a spread for option orders.  Used by order_option_spread() function. Matches the structure expected by the raw query params layer.
     """ # noqa: E501
-    trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
-    success: SuccessPayloadSessionResponseData = Field(description="Success payload containing data and optional meta")
-    error: Optional[Dict[str, Any]] = None
-    warning: Optional[List[Dict[str, Any]]] = None
+    expiration_date: StrictStr = Field(alias="expirationDate")
+    strike_price: Union[StrictFloat, StrictInt] = Field(alias="strikePrice")
+    option_type: BrokerDataOptionTypeEnum = Field(alias="optionType")
+    position_effect: StrictStr = Field(alias="positionEffect")
+    action: BrokerDataOrderSideEnum
+    ratio_quantity: Optional[StrictInt] = Field(default=1, alias="ratioQuantity")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["trace_id", "success", "error", "warning"]
+    __properties: ClassVar[List[str]] = ["expirationDate", "strikePrice", "optionType", "positionEffect", "action", "ratioQuantity"]
+
+    @field_validator('position_effect')
+    def position_effect_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['open', 'close']):
+            raise ValueError("must be one of enum values ('open', 'close')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +62,7 @@ class FinaticResponseSessionResponseData(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of FinaticResponseSessionResponseData from a JSON string"""
+        """Create an instance of FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,29 +85,16 @@ class FinaticResponseSessionResponseData(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of success
-        if self.success:
-            _dict['success'] = self.success.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if error (nullable) is None
-        # and model_fields_set contains the field
-        if self.error is None and "error" in self.model_fields_set:
-            _dict['error'] = None
-
-        # set to None if warning (nullable) is None
-        # and model_fields_set contains the field
-        if self.warning is None and "warning" in self.model_fields_set:
-            _dict['warning'] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of FinaticResponseSessionResponseData from a dict"""
+        """Create an instance of FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg from a dict"""
         if obj is None:
             return None
 
@@ -105,10 +102,12 @@ class FinaticResponseSessionResponseData(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "trace_id": obj.get("trace_id") if obj.get("trace_id") is not None else '',
-            "success": SuccessPayloadSessionResponseData.from_dict(obj["success"]) if obj.get("success") is not None else None,
-            "error": obj.get("error"),
-            "warning": obj.get("warning")
+            "expirationDate": obj.get("expirationDate"),
+            "strikePrice": obj.get("strikePrice"),
+            "optionType": obj.get("optionType"),
+            "positionEffect": obj.get("positionEffect"),
+            "action": obj.get("action"),
+            "ratioQuantity": obj.get("ratioQuantity") if obj.get("ratioQuantity") is not None else 1
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
