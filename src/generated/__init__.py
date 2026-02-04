@@ -45,6 +45,7 @@ __all__ = [
     "BrokerDataPositionStatusEnum",
     "BrokerInfo",
     "Buyingpower",
+    "CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest",
     "Cashbalance",
     "Closedquantity",
     "Closepriceavg",
@@ -86,7 +87,6 @@ __all__ = [
     "Fillprice",
     "Fillquantity",
     "FinaticAPIErrorResponse",
-    "FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg",
     "FinaticResponseAccounts",
     "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
     "FinaticResponseListBrokerInfo",
@@ -102,10 +102,10 @@ __all__ = [
     "FinaticResponseListLegacyBrokerBalance",
     "FinaticResponseListUserBrokerConnectionWithPermissions",
     "FinaticResponseOrderActionResult",
-    "FinaticResponseSessionUserResponse",
+    "FinaticResponseSessionResponseData",
+    "FinaticResponseTokenResponseData",
     "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
-    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
-    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
+    "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
     "Futureunderlyingassettype",
     "GTCTIF",
     "GTDTIF",
@@ -120,17 +120,13 @@ __all__ = [
     "Maintenancemargin",
     "Marketvalue",
     "Netliquidationvalue",
-    "NinjaTraderLimitOrderModifyQueryParams",
     "NinjaTraderLimitOrderPlaceQueryParams",
-    "NinjaTraderMarketOrderModifyQueryParams",
     "NinjaTraderMarketOrderPlaceQueryParams",
     "NinjaTraderOrderCancelQueryParams",
     "NinjaTraderOrderCancelRequest",
     "NinjaTraderOrderModifyRequest",
     "NinjaTraderOrderPlaceRequest",
-    "NinjaTraderStopOrderModifyQueryParams",
     "NinjaTraderStopOrderPlaceQueryParams",
-    "NinjaTraderTrailingStopOrderModifyQueryParams",
     "NinjaTraderTrailingStopOrderPlaceQueryParams",
     "Notional",
     "Openprice",
@@ -141,12 +137,9 @@ __all__ = [
     "Order1AnyOf1",
     "Order1AnyOf2",
     "Order2",
-    "Order3",
-    "Order4",
-    "Order5",
     "OrderActionResult",
+    "OrderModifyQueryParamsBase",
     "OrderRequest",
-    "OrderRequest1",
     "Orderclass",
     "Orderstatus",
     "Ordertype",
@@ -175,8 +168,6 @@ __all__ = [
     "RobinhoodEquityStopLimitOrderPlaceQueryParams",
     "RobinhoodEquityStopOrderPlaceQueryParams",
     "RobinhoodEquityTrailingStopOrderPlaceQueryParams",
-    "RobinhoodLimitOrderModifyQueryParams",
-    "RobinhoodMarketOrderModifyQueryParams",
     "RobinhoodOptionLimitOrderPlaceQueryParams",
     "RobinhoodOptionMarketOrderPlaceQueryParams",
     "RobinhoodOptionSpreadLeg",
@@ -187,8 +178,6 @@ __all__ = [
     "RobinhoodOrderCancelRequest",
     "RobinhoodOrderModifyRequest",
     "RobinhoodOrderPlaceRequest",
-    "RobinhoodStopOrderModifyQueryParams",
-    "RobinhoodTrailingStopOrderModifyQueryParams",
     "Securityidtype",
     "SessionResponseData",
     "SessionStartRequest",
@@ -221,20 +210,18 @@ __all__ = [
     "SuccessPayloadSessionResponseData",
     "SuccessPayloadSessionUserResponse",
     "SuccessPayloadTokenResponseData",
-    "TastyTradeLimitOrderModifyQueryParams",
     "TastyTradeLimitOrderPlaceQueryParams",
-    "TastyTradeMarketOrderModifyQueryParams",
     "TastyTradeMarketOrderPlaceQueryParams",
     "TastyTradeOrderCancelQueryParams",
     "TastyTradeOrderCancelRequest",
     "TastyTradeOrderModifyRequest",
     "TastyTradeOrderPlaceRequest",
-    "TastyTradeStopOrderModifyQueryParams",
     "TastyTradeStopOrderPlaceQueryParams",
-    "TastyTradeTrailingStopOrderModifyQueryParams",
     "TastyTradeTrailingStopOrderPlaceQueryParams",
     "Timeinforce",
     "Timeinforce1",
+    "Timeinforce2",
+    "Timeinforce2AnyOf",
     "TokenResponseData",
     "Totalcashvalue",
     "Totalrealizedpnl",
@@ -278,6 +265,7 @@ from .models.broker_data_order_side_enum import BrokerDataOrderSideEnum as Broke
 from .models.broker_data_position_status_enum import BrokerDataPositionStatusEnum as BrokerDataPositionStatusEnum
 from .models.broker_info import BrokerInfo as BrokerInfo
 from .models.buyingpower import Buyingpower as Buyingpower
+from .models.cancel_order_api_beta_brokers_orders_order_id_delete_request import CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest as CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
 from .models.cashbalance import Cashbalance as Cashbalance
 from .models.closedquantity import Closedquantity as Closedquantity
 from .models.closepriceavg import Closepriceavg as Closepriceavg
@@ -319,7 +307,6 @@ from .models.filledquantity import Filledquantity as Filledquantity
 from .models.fillprice import Fillprice as Fillprice
 from .models.fillquantity import Fillquantity as Fillquantity
 from .models.finatic_api_error_response import FinaticAPIErrorResponse as FinaticAPIErrorResponse
-from .models.finatic_broker_factory_brokers_robinhood_executors_consumer_robinhood_order_place_query_params_robinhood_option_spread_leg import FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg as FinaticBrokerFactoryBrokersRobinhoodExecutorsConsumerRobinhoodOrderPlaceQueryParamsRobinhoodOptionSpreadLeg
 from .models.finatic_response_accounts import FinaticResponseAccounts as FinaticResponseAccounts
 from .models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult as FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from .models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo as FinaticResponseListBrokerInfo
@@ -335,10 +322,10 @@ from .models.finatic_response_list_legacy_broker_account import FinaticResponseL
 from .models.finatic_response_list_legacy_broker_balance import FinaticResponseListLegacyBrokerBalance as FinaticResponseListLegacyBrokerBalance
 from .models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions as FinaticResponseListUserBrokerConnectionWithPermissions
 from .models.finatic_response_order_action_result import FinaticResponseOrderActionResult as FinaticResponseOrderActionResult
-from .models.finatic_response_session_user_response import FinaticResponseSessionUserResponse as FinaticResponseSessionUserResponse
+from .models.finatic_response_session_response_data import FinaticResponseSessionResponseData as FinaticResponseSessionResponseData
+from .models.finatic_response_token_response_data import FinaticResponseTokenResponseData as FinaticResponseTokenResponseData
 from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
-from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
-from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
+from .models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2 as FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
 from .models.futureunderlyingassettype import Futureunderlyingassettype as Futureunderlyingassettype
 from .models.gtctif import GTCTIF as GTCTIF
 from .models.gtdtif import GTDTIF as GTDTIF
@@ -353,17 +340,13 @@ from .models.location_inner import LocationInner as LocationInner
 from .models.maintenancemargin import Maintenancemargin as Maintenancemargin
 from .models.marketvalue import Marketvalue as Marketvalue
 from .models.netliquidationvalue import Netliquidationvalue as Netliquidationvalue
-from .models.ninja_trader_limit_order_modify_query_params import NinjaTraderLimitOrderModifyQueryParams as NinjaTraderLimitOrderModifyQueryParams
 from .models.ninja_trader_limit_order_place_query_params import NinjaTraderLimitOrderPlaceQueryParams as NinjaTraderLimitOrderPlaceQueryParams
-from .models.ninja_trader_market_order_modify_query_params import NinjaTraderMarketOrderModifyQueryParams as NinjaTraderMarketOrderModifyQueryParams
 from .models.ninja_trader_market_order_place_query_params import NinjaTraderMarketOrderPlaceQueryParams as NinjaTraderMarketOrderPlaceQueryParams
 from .models.ninja_trader_order_cancel_query_params import NinjaTraderOrderCancelQueryParams as NinjaTraderOrderCancelQueryParams
 from .models.ninja_trader_order_cancel_request import NinjaTraderOrderCancelRequest as NinjaTraderOrderCancelRequest
 from .models.ninja_trader_order_modify_request import NinjaTraderOrderModifyRequest as NinjaTraderOrderModifyRequest
 from .models.ninja_trader_order_place_request import NinjaTraderOrderPlaceRequest as NinjaTraderOrderPlaceRequest
-from .models.ninja_trader_stop_order_modify_query_params import NinjaTraderStopOrderModifyQueryParams as NinjaTraderStopOrderModifyQueryParams
 from .models.ninja_trader_stop_order_place_query_params import NinjaTraderStopOrderPlaceQueryParams as NinjaTraderStopOrderPlaceQueryParams
-from .models.ninja_trader_trailing_stop_order_modify_query_params import NinjaTraderTrailingStopOrderModifyQueryParams as NinjaTraderTrailingStopOrderModifyQueryParams
 from .models.ninja_trader_trailing_stop_order_place_query_params import NinjaTraderTrailingStopOrderPlaceQueryParams as NinjaTraderTrailingStopOrderPlaceQueryParams
 from .models.notional import Notional as Notional
 from .models.openprice import Openprice as Openprice
@@ -374,12 +357,9 @@ from .models.order1_any_of import Order1AnyOf as Order1AnyOf
 from .models.order1_any_of1 import Order1AnyOf1 as Order1AnyOf1
 from .models.order1_any_of2 import Order1AnyOf2 as Order1AnyOf2
 from .models.order2 import Order2 as Order2
-from .models.order3 import Order3 as Order3
-from .models.order4 import Order4 as Order4
-from .models.order5 import Order5 as Order5
 from .models.order_action_result import OrderActionResult as OrderActionResult
+from .models.order_modify_query_params_base import OrderModifyQueryParamsBase as OrderModifyQueryParamsBase
 from .models.order_request import OrderRequest as OrderRequest
-from .models.order_request1 import OrderRequest1 as OrderRequest1
 from .models.orderclass import Orderclass as Orderclass
 from .models.orderstatus import Orderstatus as Orderstatus
 from .models.ordertype import Ordertype as Ordertype
@@ -408,8 +388,6 @@ from .models.robinhood_equity_market_order_place_query_params import RobinhoodEq
 from .models.robinhood_equity_stop_limit_order_place_query_params import RobinhoodEquityStopLimitOrderPlaceQueryParams as RobinhoodEquityStopLimitOrderPlaceQueryParams
 from .models.robinhood_equity_stop_order_place_query_params import RobinhoodEquityStopOrderPlaceQueryParams as RobinhoodEquityStopOrderPlaceQueryParams
 from .models.robinhood_equity_trailing_stop_order_place_query_params import RobinhoodEquityTrailingStopOrderPlaceQueryParams as RobinhoodEquityTrailingStopOrderPlaceQueryParams
-from .models.robinhood_limit_order_modify_query_params import RobinhoodLimitOrderModifyQueryParams as RobinhoodLimitOrderModifyQueryParams
-from .models.robinhood_market_order_modify_query_params import RobinhoodMarketOrderModifyQueryParams as RobinhoodMarketOrderModifyQueryParams
 from .models.robinhood_option_limit_order_place_query_params import RobinhoodOptionLimitOrderPlaceQueryParams as RobinhoodOptionLimitOrderPlaceQueryParams
 from .models.robinhood_option_market_order_place_query_params import RobinhoodOptionMarketOrderPlaceQueryParams as RobinhoodOptionMarketOrderPlaceQueryParams
 from .models.robinhood_option_spread_leg import RobinhoodOptionSpreadLeg as RobinhoodOptionSpreadLeg
@@ -420,8 +398,6 @@ from .models.robinhood_order_cancel_query_params import RobinhoodOrderCancelQuer
 from .models.robinhood_order_cancel_request import RobinhoodOrderCancelRequest as RobinhoodOrderCancelRequest
 from .models.robinhood_order_modify_request import RobinhoodOrderModifyRequest as RobinhoodOrderModifyRequest
 from .models.robinhood_order_place_request import RobinhoodOrderPlaceRequest as RobinhoodOrderPlaceRequest
-from .models.robinhood_stop_order_modify_query_params import RobinhoodStopOrderModifyQueryParams as RobinhoodStopOrderModifyQueryParams
-from .models.robinhood_trailing_stop_order_modify_query_params import RobinhoodTrailingStopOrderModifyQueryParams as RobinhoodTrailingStopOrderModifyQueryParams
 from .models.securityidtype import Securityidtype as Securityidtype
 from .models.session_response_data import SessionResponseData as SessionResponseData
 from .models.session_start_request import SessionStartRequest as SessionStartRequest
@@ -454,20 +430,18 @@ from .models.success_payload_portal_url_response import SuccessPayloadPortalUrlR
 from .models.success_payload_session_response_data import SuccessPayloadSessionResponseData as SuccessPayloadSessionResponseData
 from .models.success_payload_session_user_response import SuccessPayloadSessionUserResponse as SuccessPayloadSessionUserResponse
 from .models.success_payload_token_response_data import SuccessPayloadTokenResponseData as SuccessPayloadTokenResponseData
-from .models.tasty_trade_limit_order_modify_query_params import TastyTradeLimitOrderModifyQueryParams as TastyTradeLimitOrderModifyQueryParams
 from .models.tasty_trade_limit_order_place_query_params import TastyTradeLimitOrderPlaceQueryParams as TastyTradeLimitOrderPlaceQueryParams
-from .models.tasty_trade_market_order_modify_query_params import TastyTradeMarketOrderModifyQueryParams as TastyTradeMarketOrderModifyQueryParams
 from .models.tasty_trade_market_order_place_query_params import TastyTradeMarketOrderPlaceQueryParams as TastyTradeMarketOrderPlaceQueryParams
 from .models.tasty_trade_order_cancel_query_params import TastyTradeOrderCancelQueryParams as TastyTradeOrderCancelQueryParams
 from .models.tasty_trade_order_cancel_request import TastyTradeOrderCancelRequest as TastyTradeOrderCancelRequest
 from .models.tasty_trade_order_modify_request import TastyTradeOrderModifyRequest as TastyTradeOrderModifyRequest
 from .models.tasty_trade_order_place_request import TastyTradeOrderPlaceRequest as TastyTradeOrderPlaceRequest
-from .models.tasty_trade_stop_order_modify_query_params import TastyTradeStopOrderModifyQueryParams as TastyTradeStopOrderModifyQueryParams
 from .models.tasty_trade_stop_order_place_query_params import TastyTradeStopOrderPlaceQueryParams as TastyTradeStopOrderPlaceQueryParams
-from .models.tasty_trade_trailing_stop_order_modify_query_params import TastyTradeTrailingStopOrderModifyQueryParams as TastyTradeTrailingStopOrderModifyQueryParams
 from .models.tasty_trade_trailing_stop_order_place_query_params import TastyTradeTrailingStopOrderPlaceQueryParams as TastyTradeTrailingStopOrderPlaceQueryParams
 from .models.timeinforce import Timeinforce as Timeinforce
 from .models.timeinforce1 import Timeinforce1 as Timeinforce1
+from .models.timeinforce2 import Timeinforce2 as Timeinforce2
+from .models.timeinforce2_any_of import Timeinforce2AnyOf as Timeinforce2AnyOf
 from .models.token_response_data import TokenResponseData as TokenResponseData
 from .models.totalcashvalue import Totalcashvalue as Totalcashvalue
 from .models.totalrealizedpnl import Totalrealizedpnl as Totalrealizedpnl

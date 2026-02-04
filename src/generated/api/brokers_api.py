@@ -21,6 +21,7 @@ from pydantic import Field, StrictBool, StrictStr
 from typing import Any, Optional
 from typing_extensions import Annotated
 from uuid import UUID
+from ..models.cancel_order_api_beta_brokers_orders_order_id_delete_request import CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
 from ..models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from ..models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo
 from ..models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder
@@ -36,7 +37,6 @@ from ..models.finatic_response_list_legacy_broker_balance import FinaticResponse
 from ..models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions
 from ..models.finatic_response_order_action_result import FinaticResponseOrderActionResult
 from ..models.order_request import OrderRequest
-from ..models.order_request1 import OrderRequest1
 from ..models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest
 
 from ..api_client import ApiClient, RequestSerialized
@@ -61,7 +61,7 @@ class BrokersApi:
     async def cancel_order_api_beta_brokers_orders_order_id_delete(
         self,
         order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
-        order_request: OrderRequest,
+        cancel_order_api_beta_brokers_orders_order_id_delete_request: Optional[CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -81,8 +81,8 @@ class BrokersApi:
 
         :param order_id: Broker-provided order ID to cancel (required)
         :type order_id: str
-        :param order_request: (required)
-        :type order_request: OrderRequest
+        :param cancel_order_api_beta_brokers_orders_order_id_delete_request:
+        :type cancel_order_api_beta_brokers_orders_order_id_delete_request: CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -107,7 +107,7 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
-            order_request=order_request,
+            cancel_order_api_beta_brokers_orders_order_id_delete_request=cancel_order_api_beta_brokers_orders_order_id_delete_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -141,7 +141,7 @@ class BrokersApi:
     async def cancel_order_api_beta_brokers_orders_order_id_delete_with_http_info(
         self,
         order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
-        order_request: OrderRequest,
+        cancel_order_api_beta_brokers_orders_order_id_delete_request: Optional[CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -161,8 +161,8 @@ class BrokersApi:
 
         :param order_id: Broker-provided order ID to cancel (required)
         :type order_id: str
-        :param order_request: (required)
-        :type order_request: OrderRequest
+        :param cancel_order_api_beta_brokers_orders_order_id_delete_request:
+        :type cancel_order_api_beta_brokers_orders_order_id_delete_request: CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -187,7 +187,7 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
-            order_request=order_request,
+            cancel_order_api_beta_brokers_orders_order_id_delete_request=cancel_order_api_beta_brokers_orders_order_id_delete_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -221,7 +221,7 @@ class BrokersApi:
     async def cancel_order_api_beta_brokers_orders_order_id_delete_without_preload_content(
         self,
         order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
-        order_request: OrderRequest,
+        cancel_order_api_beta_brokers_orders_order_id_delete_request: Optional[CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -241,8 +241,8 @@ class BrokersApi:
 
         :param order_id: Broker-provided order ID to cancel (required)
         :type order_id: str
-        :param order_request: (required)
-        :type order_request: OrderRequest
+        :param cancel_order_api_beta_brokers_orders_order_id_delete_request:
+        :type cancel_order_api_beta_brokers_orders_order_id_delete_request: CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -267,7 +267,7 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
-            order_request=order_request,
+            cancel_order_api_beta_brokers_orders_order_id_delete_request=cancel_order_api_beta_brokers_orders_order_id_delete_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -296,7 +296,7 @@ class BrokersApi:
     def _cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
         self,
         order_id,
-        order_request,
+        cancel_order_api_beta_brokers_orders_order_id_delete_request,
         _request_auth,
         _content_type,
         _headers,
@@ -324,8 +324,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if order_request is not None:
-            _body_params = order_request
+        if cancel_order_api_beta_brokers_orders_order_id_delete_request is not None:
+            _body_params = cancel_order_api_beta_brokers_orders_order_id_delete_request
 
 
         # set the HTTP header `Accept`
@@ -5302,7 +5302,7 @@ class BrokersApi:
     async def modify_order_api_beta_brokers_orders_order_id_patch(
         self,
         order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
-        order_request1: OrderRequest1,
+        order_request: OrderRequest,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
         _request_timeout: Union[
             None,
@@ -5323,8 +5323,8 @@ class BrokersApi:
 
         :param order_id: Broker-provided order ID to modify (required)
         :type order_id: str
-        :param order_request1: (required)
-        :type order_request1: OrderRequest1
+        :param order_request: (required)
+        :type order_request: OrderRequest
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
@@ -5351,7 +5351,7 @@ class BrokersApi:
 
         _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
-            order_request1=order_request1,
+            order_request=order_request,
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5386,7 +5386,7 @@ class BrokersApi:
     async def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
         self,
         order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
-        order_request1: OrderRequest1,
+        order_request: OrderRequest,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
         _request_timeout: Union[
             None,
@@ -5407,8 +5407,8 @@ class BrokersApi:
 
         :param order_id: Broker-provided order ID to modify (required)
         :type order_id: str
-        :param order_request1: (required)
-        :type order_request1: OrderRequest1
+        :param order_request: (required)
+        :type order_request: OrderRequest
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
@@ -5435,7 +5435,7 @@ class BrokersApi:
 
         _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
-            order_request1=order_request1,
+            order_request=order_request,
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5470,7 +5470,7 @@ class BrokersApi:
     async def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
         self,
         order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
-        order_request1: OrderRequest1,
+        order_request: OrderRequest,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
         _request_timeout: Union[
             None,
@@ -5491,8 +5491,8 @@ class BrokersApi:
 
         :param order_id: Broker-provided order ID to modify (required)
         :type order_id: str
-        :param order_request1: (required)
-        :type order_request1: OrderRequest1
+        :param order_request: (required)
+        :type order_request: OrderRequest
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
@@ -5519,7 +5519,7 @@ class BrokersApi:
 
         _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
-            order_request1=order_request1,
+            order_request=order_request,
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -5549,7 +5549,7 @@ class BrokersApi:
     def _modify_order_api_beta_brokers_orders_order_id_patch_serialize(
         self,
         order_id,
-        order_request1,
+        order_request,
         connection_id,
         _request_auth,
         _content_type,
@@ -5582,8 +5582,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if order_request1 is not None:
-            _body_params = order_request1
+        if order_request is not None:
+            _body_params = order_request
 
 
         # set the HTTP header `Accept`

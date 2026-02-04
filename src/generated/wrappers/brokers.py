@@ -31,7 +31,6 @@ from ..models.legacy_broker_account import LegacyBrokerAccount
 from ..models.legacy_broker_balance import LegacyBrokerBalance
 from ..models.order_action_result import OrderActionResult
 from ..models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions
-from ..models._ninja_trader_order_cancel_request import _NinjaTraderOrderCancelRequest
 from ..models._ninja_trader_order_modify_request import _NinjaTraderOrderModifyRequest
 from ..models.place_order_api_beta_brokers_orders_post_request import (
     PlaceOrderApiBetaBrokersOrdersPostRequest as OrderRequest,

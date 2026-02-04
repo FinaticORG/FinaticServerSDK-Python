@@ -20,17 +20,17 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
 from .accountnumber import Accountnumber
-from .order3 import Order3
+from .order_modify_query_params_base import OrderModifyQueryParamsBase
 from typing import Optional, Set
 from typing_extensions import Self
 
 class NinjaTraderOrderModifyRequest(BaseModel):
     """
-    NinjaTrader modify-order request body (partial update).  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : NinjaTraderOrderModifyQueryParamsUnion     NinjaTrader-specific modify parameters.  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
+    NinjaTrader modify-order request body (partial update).  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : OrderModifyQueryParamsBase     Delta of fields to change; backend merges with existing order.  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
     """ # noqa: E501
     broker: StrictStr
     account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order3
+    order: OrderModifyQueryParamsBase
     __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
@@ -99,7 +99,7 @@ class NinjaTraderOrderModifyRequest(BaseModel):
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
             "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order3.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "order": OrderModifyQueryParamsBase.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 
