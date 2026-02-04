@@ -20,24 +20,24 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
 from .accountnumber import Accountnumber
-from .order3 import Order3
+from .order1 import Order1
 from typing import Optional, Set
 from typing_extensions import Self
 
-class NinjaTraderOrderModifyRequest(BaseModel):
+class RobinhoodOrderPlaceRequest(BaseModel):
     """
-    NinjaTrader modify-order request body (partial update).  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : NinjaTraderOrderModifyQueryParamsUnion     NinjaTrader-specific modify parameters.  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
+    Robinhood place-order request body.  Attributes ---------- broker : Literal[\"robinhood\"]     Discriminator; must be ``\"robinhood\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : RobinhoodOrderPlaceQueryParamsUnion     Robinhood-specific order parameters (equity, equity_option, or crypto wire schema).  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``. JSON schema examples are attached in model_config for OpenAPI docs.
     """ # noqa: E501
     broker: StrictStr
     account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order3
+    order: Order1
     __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
     def broker_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['ninja_trader']):
-            raise ValueError("must be one of enum values ('ninja_trader')")
+        if value not in set(['robinhood']):
+            raise ValueError("must be one of enum values ('robinhood')")
         return value
 
     model_config = ConfigDict(
@@ -58,7 +58,7 @@ class NinjaTraderOrderModifyRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of NinjaTraderOrderModifyRequest from a JSON string"""
+        """Create an instance of RobinhoodOrderPlaceRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -89,7 +89,7 @@ class NinjaTraderOrderModifyRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of NinjaTraderOrderModifyRequest from a dict"""
+        """Create an instance of RobinhoodOrderPlaceRequest from a dict"""
         if obj is None:
             return None
 
@@ -99,7 +99,7 @@ class NinjaTraderOrderModifyRequest(BaseModel):
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
             "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order3.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "order": Order1.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

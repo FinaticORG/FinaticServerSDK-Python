@@ -35,7 +35,8 @@ from ..models.finatic_response_list_legacy_broker_account import FinaticResponse
 from ..models.finatic_response_list_legacy_broker_balance import FinaticResponseListLegacyBrokerBalance
 from ..models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions
 from ..models.finatic_response_order_action_result import FinaticResponseOrderActionResult
-from ..models.modify_order_api_beta_brokers_orders_order_id_patch_request import ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
+from ..models.order_request import OrderRequest
+from ..models.order_request1 import OrderRequest1
 from ..models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest
 
 from ..api_client import ApiClient, RequestSerialized
@@ -59,7 +60,8 @@ class BrokersApi:
     @validate_call
     async def cancel_order_api_beta_brokers_orders_order_id_delete(
         self,
-        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
+        order_request: OrderRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -75,10 +77,12 @@ class BrokersApi:
     ) -> FinaticResponseOrderActionResult:
         """Cancel Order
 
-        Cancel an existing order.  Cancels an order by its order ID. The broker connection is automatically resolved from the order record.
+        Cancel an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number.
 
-        :param order_id: Order ID (required)
+        :param order_id: Broker-provided order ID to cancel (required)
         :type order_id: str
+        :param order_request: (required)
+        :type order_request: OrderRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -103,6 +107,7 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
+            order_request=order_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -135,7 +140,8 @@ class BrokersApi:
     @validate_call
     async def cancel_order_api_beta_brokers_orders_order_id_delete_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
+        order_request: OrderRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -151,10 +157,12 @@ class BrokersApi:
     ) -> ApiResponse[FinaticResponseOrderActionResult]:
         """Cancel Order
 
-        Cancel an existing order.  Cancels an order by its order ID. The broker connection is automatically resolved from the order record.
+        Cancel an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number.
 
-        :param order_id: Order ID (required)
+        :param order_id: Broker-provided order ID to cancel (required)
         :type order_id: str
+        :param order_request: (required)
+        :type order_request: OrderRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -179,6 +187,7 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
+            order_request=order_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -211,7 +220,8 @@ class BrokersApi:
     @validate_call
     async def cancel_order_api_beta_brokers_orders_order_id_delete_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="Order ID")],
+        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
+        order_request: OrderRequest,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -227,10 +237,12 @@ class BrokersApi:
     ) -> RESTResponseType:
         """Cancel Order
 
-        Cancel an existing order.  Cancels an order by its order ID. The broker connection is automatically resolved from the order record.
+        Cancel an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number.
 
-        :param order_id: Order ID (required)
+        :param order_id: Broker-provided order ID to cancel (required)
         :type order_id: str
+        :param order_request: (required)
+        :type order_request: OrderRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -255,6 +267,7 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
+            order_request=order_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -283,6 +296,7 @@ class BrokersApi:
     def _cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
         self,
         order_id,
+        order_request,
         _request_auth,
         _content_type,
         _headers,
@@ -310,6 +324,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
+        if order_request is not None:
+            _body_params = order_request
 
 
         # set the HTTP header `Accept`
@@ -320,6 +336,19 @@ class BrokersApi:
                 ]
             )
 
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -5272,10 +5301,9 @@ class BrokersApi:
     @validate_call
     async def modify_order_api_beta_brokers_orders_order_id_patch(
         self,
-        order_id: Annotated[StrictStr, Field(description="Order ID")],
-        account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
+        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
+        order_request1: OrderRequest1,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        modify_order_api_beta_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5291,16 +5319,14 @@ class BrokersApi:
     ) -> FinaticResponseOrderActionResult:
         """Modify Order
 
-        Modify an existing order.  Updates an order's parameters (price, quantity, etc.) by order ID. The order structure follows the same pattern as placing orders, with common fields shared across brokers and broker-specific fields available per broker.
+        Modify an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number. The order object is a partial update.
 
-        :param order_id: Order ID (required)
+        :param order_id: Broker-provided order ID to modify (required)
         :type order_id: str
-        :param account_number: Account number owning the order
-        :type account_number: str
+        :param order_request1: (required)
+        :type order_request1: OrderRequest1
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param modify_order_api_beta_brokers_orders_order_id_patch_request:
-        :type modify_order_api_beta_brokers_orders_order_id_patch_request: ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5325,9 +5351,8 @@ class BrokersApi:
 
         _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
-            account_number=account_number,
+            order_request1=order_request1,
             connection_id=connection_id,
-            modify_order_api_beta_brokers_orders_order_id_patch_request=modify_order_api_beta_brokers_orders_order_id_patch_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5360,10 +5385,9 @@ class BrokersApi:
     @validate_call
     async def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="Order ID")],
-        account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
+        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
+        order_request1: OrderRequest1,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        modify_order_api_beta_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5379,16 +5403,14 @@ class BrokersApi:
     ) -> ApiResponse[FinaticResponseOrderActionResult]:
         """Modify Order
 
-        Modify an existing order.  Updates an order's parameters (price, quantity, etc.) by order ID. The order structure follows the same pattern as placing orders, with common fields shared across brokers and broker-specific fields available per broker.
+        Modify an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number. The order object is a partial update.
 
-        :param order_id: Order ID (required)
+        :param order_id: Broker-provided order ID to modify (required)
         :type order_id: str
-        :param account_number: Account number owning the order
-        :type account_number: str
+        :param order_request1: (required)
+        :type order_request1: OrderRequest1
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param modify_order_api_beta_brokers_orders_order_id_patch_request:
-        :type modify_order_api_beta_brokers_orders_order_id_patch_request: ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5413,9 +5435,8 @@ class BrokersApi:
 
         _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
-            account_number=account_number,
+            order_request1=order_request1,
             connection_id=connection_id,
-            modify_order_api_beta_brokers_orders_order_id_patch_request=modify_order_api_beta_brokers_orders_order_id_patch_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5448,10 +5469,9 @@ class BrokersApi:
     @validate_call
     async def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="Order ID")],
-        account_number: Annotated[Optional[StrictStr], Field(description="Account number owning the order")] = None,
+        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
+        order_request1: OrderRequest1,
         connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        modify_order_api_beta_brokers_orders_order_id_patch_request: Optional[ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -5467,16 +5487,14 @@ class BrokersApi:
     ) -> RESTResponseType:
         """Modify Order
 
-        Modify an existing order.  Updates an order's parameters (price, quantity, etc.) by order ID. The order structure follows the same pattern as placing orders, with common fields shared across brokers and broker-specific fields available per broker.
+        Modify an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number. The order object is a partial update.
 
-        :param order_id: Order ID (required)
+        :param order_id: Broker-provided order ID to modify (required)
         :type order_id: str
-        :param account_number: Account number owning the order
-        :type account_number: str
+        :param order_request1: (required)
+        :type order_request1: OrderRequest1
         :param connection_id: Temporary bypass for testing: specify connection ID directly
         :type connection_id: UUID
-        :param modify_order_api_beta_brokers_orders_order_id_patch_request:
-        :type modify_order_api_beta_brokers_orders_order_id_patch_request: ModifyOrderApiBetaBrokersOrdersOrderIdPatchRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -5501,9 +5519,8 @@ class BrokersApi:
 
         _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
             order_id=order_id,
-            account_number=account_number,
+            order_request1=order_request1,
             connection_id=connection_id,
-            modify_order_api_beta_brokers_orders_order_id_patch_request=modify_order_api_beta_brokers_orders_order_id_patch_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -5532,9 +5549,8 @@ class BrokersApi:
     def _modify_order_api_beta_brokers_orders_order_id_patch_serialize(
         self,
         order_id,
-        account_number,
+        order_request1,
         connection_id,
-        modify_order_api_beta_brokers_orders_order_id_patch_request,
         _request_auth,
         _content_type,
         _headers,
@@ -5559,10 +5575,6 @@ class BrokersApi:
         if order_id is not None:
             _path_params['order_id'] = order_id
         # process the query parameters
-        if account_number is not None:
-            
-            _query_params.append(('account_number', account_number))
-            
         if connection_id is not None:
             
             _query_params.append(('connection_id', connection_id))
@@ -5570,8 +5582,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if modify_order_api_beta_brokers_orders_order_id_patch_request is not None:
-            _body_params = modify_order_api_beta_brokers_orders_order_id_patch_request
+        if order_request1 is not None:
+            _body_params = order_request1
 
 
         # set the HTTP header `Accept`

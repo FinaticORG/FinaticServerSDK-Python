@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from .accountnumber import Accountnumber
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +27,6 @@ class RobinhoodEquityStopLimitOrderPlaceQueryParams(BaseModel):
     """
     Equity stop limit order with Robinhood-specific extras.
     """ # noqa: E501
-    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: Optional[StrictStr] = Field(default='equity', alias="assetType")
     action: StrictStr
@@ -40,7 +38,7 @@ class RobinhoodEquityStopLimitOrderPlaceQueryParams(BaseModel):
     extended_hours: Optional[StrictBool] = Field(default=False, description="Allow trading during extended hours (premium users only)", alias="extendedHours")
     market_hours: Optional[StrictStr] = Field(default='regular_hours', description="Market hours to trade in", alias="marketHours")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["accountNumber", "orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "limitPrice", "extendedHours", "marketHours"]
+    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "limitPrice", "extendedHours", "marketHours"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
@@ -117,9 +115,6 @@ class RobinhoodEquityStopLimitOrderPlaceQueryParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of account_number
-        if self.account_number:
-            _dict['accountNumber'] = self.account_number.to_dict()
         # override the default output from pydantic by calling `to_dict()` of time_in_force
         if self.time_in_force:
             _dict['timeInForce'] = self.time_in_force.to_dict()
@@ -127,11 +122,6 @@ class RobinhoodEquityStopLimitOrderPlaceQueryParams(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
-
-        # set to None if account_number (nullable) is None
-        # and model_fields_set contains the field
-        if self.account_number is None and "account_number" in self.model_fields_set:
-            _dict['accountNumber'] = None
 
         return _dict
 
@@ -145,7 +135,6 @@ class RobinhoodEquityStopLimitOrderPlaceQueryParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
             "orderType": obj.get("orderType"),
             "assetType": obj.get("assetType") if obj.get("assetType") is not None else 'equity',
             "action": obj.get("action"),

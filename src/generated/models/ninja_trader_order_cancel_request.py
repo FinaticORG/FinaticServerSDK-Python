@@ -17,27 +17,27 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
-from .account_number import AccountNumber
-from .order import Order
+from .accountnumber import Accountnumber
+from .ninja_trader_order_cancel_query_params import NinjaTraderOrderCancelQueryParams
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PlaceOrderRequestRobinhood(BaseModel):
+class NinjaTraderOrderCancelRequest(BaseModel):
     """
-    Place order request for Robinhood with top-level broker and account_number.
+    NinjaTrader cancel-order request body.  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : NinjaTraderOrderCancelQueryParamsUnion     NinjaTrader-specific cancel parameters.  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
     """ # noqa: E501
     broker: StrictStr
-    account_number: AccountNumber
-    order: Order
-    __properties: ClassVar[List[str]] = ["broker", "account_number", "order"]
+    account_number: Accountnumber = Field(alias="accountNumber")
+    order: NinjaTraderOrderCancelQueryParams
+    __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
     def broker_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['robinhood']):
-            raise ValueError("must be one of enum values ('robinhood')")
+        if value not in set(['ninja_trader']):
+            raise ValueError("must be one of enum values ('ninja_trader')")
         return value
 
     model_config = ConfigDict(
@@ -58,7 +58,7 @@ class PlaceOrderRequestRobinhood(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PlaceOrderRequestRobinhood from a JSON string"""
+        """Create an instance of NinjaTraderOrderCancelRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +81,7 @@ class PlaceOrderRequestRobinhood(BaseModel):
         )
         # override the default output from pydantic by calling `to_dict()` of account_number
         if self.account_number:
-            _dict['account_number'] = self.account_number.to_dict()
+            _dict['accountNumber'] = self.account_number.to_dict()
         # override the default output from pydantic by calling `to_dict()` of order
         if self.order:
             _dict['order'] = self.order.to_dict()
@@ -89,7 +89,7 @@ class PlaceOrderRequestRobinhood(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PlaceOrderRequestRobinhood from a dict"""
+        """Create an instance of NinjaTraderOrderCancelRequest from a dict"""
         if obj is None:
             return None
 
@@ -98,8 +98,8 @@ class PlaceOrderRequestRobinhood(BaseModel):
 
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
-            "account_number": AccountNumber.from_dict(obj["account_number"]) if obj.get("account_number") is not None else None,
-            "order": Order.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
+            "order": NinjaTraderOrderCancelQueryParams.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

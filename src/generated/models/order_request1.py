@@ -19,38 +19,35 @@ import pprint
 import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Optional
-from .order1_any_of import Order1AnyOf
-from .order1_any_of1 import Order1AnyOf1
-from .order1_any_of2 import Order1AnyOf2
+from .ninja_trader_order_modify_request import NinjaTraderOrderModifyRequest
+from .robinhood_order_modify_request import RobinhoodOrderModifyRequest
+from .tasty_trade_order_modify_request import TastyTradeOrderModifyRequest
 from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-ORDER1_ANY_OF_SCHEMAS = ["Order1AnyOf", "Order1AnyOf1", "Order1AnyOf2"]
+ORDERREQUEST1_ANY_OF_SCHEMAS = ["NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest"]
 
-class Order1(BaseModel):
+class OrderRequest1(BaseModel):
     """
-    Order1
+    Modify request with top-level broker, account_number, and partial order.
     """
 
-    # data type: Order1AnyOf
-    anyof_schema_1_validator: Optional[Order1AnyOf] = None
-    # data type: Order1AnyOf1
-    anyof_schema_2_validator: Optional[Order1AnyOf1] = None
-    # data type: Order1AnyOf2
-    anyof_schema_3_validator: Optional[Order1AnyOf2] = None
+    # data type: NinjaTraderOrderModifyRequest
+    anyof_schema_1_validator: Optional[NinjaTraderOrderModifyRequest] = None
+    # data type: TastyTradeOrderModifyRequest
+    anyof_schema_2_validator: Optional[TastyTradeOrderModifyRequest] = None
+    # data type: RobinhoodOrderModifyRequest
+    anyof_schema_3_validator: Optional[RobinhoodOrderModifyRequest] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[Order1AnyOf, Order1AnyOf1, Order1AnyOf2]] = None
+        actual_instance: Optional[Union[NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: Set[str] = { "Order1AnyOf", "Order1AnyOf1", "Order1AnyOf2" }
+    any_of_schemas: Set[str] = { "NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest" }
 
     model_config = {
         "validate_assignment": True,
         "protected_namespaces": (),
-    }
-
-    discriminator_value_class_map: Dict[str, str] = {
     }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -65,29 +62,29 @@ class Order1(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_anyof(cls, v):
-        instance = Order1.model_construct()
+        instance = OrderRequest1.model_construct()
         error_messages = []
-        # validate data type: Order1AnyOf
-        if not isinstance(v, Order1AnyOf):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order1AnyOf`")
+        # validate data type: NinjaTraderOrderModifyRequest
+        if not isinstance(v, NinjaTraderOrderModifyRequest):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `NinjaTraderOrderModifyRequest`")
         else:
             return v
 
-        # validate data type: Order1AnyOf1
-        if not isinstance(v, Order1AnyOf1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order1AnyOf1`")
+        # validate data type: TastyTradeOrderModifyRequest
+        if not isinstance(v, TastyTradeOrderModifyRequest):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `TastyTradeOrderModifyRequest`")
         else:
             return v
 
-        # validate data type: Order1AnyOf2
-        if not isinstance(v, Order1AnyOf2):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order1AnyOf2`")
+        # validate data type: RobinhoodOrderModifyRequest
+        if not isinstance(v, RobinhoodOrderModifyRequest):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `RobinhoodOrderModifyRequest`")
         else:
             return v
 
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Order1 with anyOf schemas: Order1AnyOf, Order1AnyOf1, Order1AnyOf2. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in OrderRequest1 with anyOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -100,28 +97,28 @@ class Order1(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[Order1AnyOf] = None
+        # anyof_schema_1_validator: Optional[NinjaTraderOrderModifyRequest] = None
         try:
-            instance.actual_instance = Order1AnyOf.from_json(json_str)
+            instance.actual_instance = NinjaTraderOrderModifyRequest.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
              error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[Order1AnyOf1] = None
+        # anyof_schema_2_validator: Optional[TastyTradeOrderModifyRequest] = None
         try:
-            instance.actual_instance = Order1AnyOf1.from_json(json_str)
+            instance.actual_instance = TastyTradeOrderModifyRequest.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
              error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[Order1AnyOf2] = None
+        # anyof_schema_3_validator: Optional[RobinhoodOrderModifyRequest] = None
         try:
-            instance.actual_instance = Order1AnyOf2.from_json(json_str)
+            instance.actual_instance = RobinhoodOrderModifyRequest.from_json(json_str)
             return instance
         except (ValidationError, ValueError) as e:
              error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order1 with anyOf schemas: Order1AnyOf, Order1AnyOf1, Order1AnyOf2. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into OrderRequest1 with anyOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -135,7 +132,7 @@ class Order1(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], Order1AnyOf, Order1AnyOf1, Order1AnyOf2]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

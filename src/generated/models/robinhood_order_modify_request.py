@@ -17,19 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
+from .accountnumber import Accountnumber
 from .order5 import Order5
 from typing import Optional, Set
 from typing_extensions import Self
 
 class RobinhoodOrderModifyRequest(BaseModel):
     """
-    RobinhoodOrderModifyRequest
+    Robinhood modify-order request body (partial update).  Attributes ---------- broker : Literal[\"robinhood\"]     Discriminator; must be ``\"robinhood\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : RobinhoodOrderModifyQueryParamsUnion     Robinhood-specific modify parameters (e.g. order id, quantity, price).  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
     """ # noqa: E501
     broker: StrictStr
+    account_number: Accountnumber = Field(alias="accountNumber")
     order: Order5
-    __properties: ClassVar[List[str]] = ["broker", "order"]
+    __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
     def broker_validate_enum(cls, value):
@@ -77,6 +79,9 @@ class RobinhoodOrderModifyRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of account_number
+        if self.account_number:
+            _dict['accountNumber'] = self.account_number.to_dict()
         # override the default output from pydantic by calling `to_dict()` of order
         if self.order:
             _dict['order'] = self.order.to_dict()
@@ -93,6 +98,7 @@ class RobinhoodOrderModifyRequest(BaseModel):
 
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
+            "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
             "order": Order5.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj

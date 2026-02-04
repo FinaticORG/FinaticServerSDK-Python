@@ -27,13 +27,13 @@ ACCOUNTNUMBER_ANY_OF_SCHEMAS = ["int", "str"]
 
 class Accountnumber(BaseModel):
     """
-    Accountnumber
+    Broker-provided account number (top-level).
     """
 
-    # data type: int
-    anyof_schema_1_validator: Optional[StrictInt] = None
     # data type: str
-    anyof_schema_2_validator: Optional[StrictStr] = None
+    anyof_schema_1_validator: Optional[StrictStr] = None
+    # data type: int
+    anyof_schema_2_validator: Optional[StrictInt] = None
     if TYPE_CHECKING:
         actual_instance: Optional[Union[int, str]] = None
     else:
@@ -57,18 +57,15 @@ class Accountnumber(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_anyof(cls, v):
-        if v is None:
-            return v
-
         instance = Accountnumber.model_construct()
         error_messages = []
-        # validate data type: int
+        # validate data type: str
         try:
             instance.anyof_schema_1_validator = v
             return v
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # validate data type: str
+        # validate data type: int
         try:
             instance.anyof_schema_2_validator = v
             return v
@@ -88,11 +85,8 @@ class Accountnumber(BaseModel):
     def from_json(cls, json_str: str) -> Self:
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
-        if json_str is None:
-            return instance
-
         error_messages = []
-        # deserialize data into int
+        # deserialize data into str
         try:
             # validation
             instance.anyof_schema_1_validator = json.loads(json_str)
@@ -101,7 +95,7 @@ class Accountnumber(BaseModel):
             return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into str
+        # deserialize data into int
         try:
             # validation
             instance.anyof_schema_2_validator = json.loads(json_str)

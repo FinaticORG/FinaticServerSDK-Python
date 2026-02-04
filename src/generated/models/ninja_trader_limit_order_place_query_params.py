@@ -20,7 +20,6 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from .accountnumber import Accountnumber
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,7 +33,6 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
     activation_time: Optional[datetime] = Field(default=None, alias="activationTime")
     text: Optional[StrictStr] = None
     peg_difference: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="pegDifference")
-    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: StrictStr = Field(alias="assetType")
     action: StrictStr
@@ -43,7 +41,7 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
     order_qty: StrictInt = Field(alias="orderQty")
     price: Union[StrictFloat, StrictInt]
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["accountSpec", "isAutomated", "activationTime", "text", "pegDifference", "accountNumber", "orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "price"]
+    __properties: ClassVar[List[str]] = ["accountSpec", "isAutomated", "activationTime", "text", "pegDifference", "orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "price"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
@@ -107,9 +105,6 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of account_number
-        if self.account_number:
-            _dict['accountNumber'] = self.account_number.to_dict()
         # override the default output from pydantic by calling `to_dict()` of time_in_force
         if self.time_in_force:
             _dict['timeInForce'] = self.time_in_force.to_dict()
@@ -138,11 +133,6 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
         if self.peg_difference is None and "peg_difference" in self.model_fields_set:
             _dict['pegDifference'] = None
 
-        # set to None if account_number (nullable) is None
-        # and model_fields_set contains the field
-        if self.account_number is None and "account_number" in self.model_fields_set:
-            _dict['accountNumber'] = None
-
         return _dict
 
     @classmethod
@@ -160,7 +150,6 @@ class NinjaTraderLimitOrderPlaceQueryParams(BaseModel):
             "activationTime": obj.get("activationTime"),
             "text": obj.get("text"),
             "pegDifference": obj.get("pegDifference"),
-            "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
             "orderType": obj.get("orderType"),
             "assetType": obj.get("assetType"),
             "action": obj.get("action"),

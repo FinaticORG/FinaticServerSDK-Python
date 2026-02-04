@@ -19,7 +19,6 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from .accountnumber import Accountnumber
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +27,6 @@ class RobinhoodCryptoMarketOrderPlaceQueryParams(BaseModel):
     """
     Crypto market order with Robinhood-specific extras.
     """ # noqa: E501
-    account_number: Optional[Accountnumber] = Field(default=None, alias="accountNumber")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: Optional[StrictStr] = Field(default='crypto', alias="assetType")
     action: StrictStr
@@ -37,7 +35,7 @@ class RobinhoodCryptoMarketOrderPlaceQueryParams(BaseModel):
     order_qty: StrictInt = Field(alias="orderQty")
     amount_in: Optional[StrictStr] = Field(default='quantity', description="Whether quantityOrPrice represents quantity or price", alias="amountIn")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["accountNumber", "orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "amountIn"]
+    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "amountIn"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
@@ -114,9 +112,6 @@ class RobinhoodCryptoMarketOrderPlaceQueryParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of account_number
-        if self.account_number:
-            _dict['accountNumber'] = self.account_number.to_dict()
         # override the default output from pydantic by calling `to_dict()` of time_in_force
         if self.time_in_force:
             _dict['timeInForce'] = self.time_in_force.to_dict()
@@ -124,11 +119,6 @@ class RobinhoodCryptoMarketOrderPlaceQueryParams(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
-
-        # set to None if account_number (nullable) is None
-        # and model_fields_set contains the field
-        if self.account_number is None and "account_number" in self.model_fields_set:
-            _dict['accountNumber'] = None
 
         return _dict
 
@@ -142,7 +132,6 @@ class RobinhoodCryptoMarketOrderPlaceQueryParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
             "orderType": obj.get("orderType"),
             "assetType": obj.get("assetType") if obj.get("assetType") is not None else 'crypto',
             "action": obj.get("action"),

@@ -26,11 +26,11 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ORDERANYOF2_ONE_OF_SCHEMAS = ["RobinhoodCryptoLimitOrderPlaceQueryParams", "RobinhoodCryptoMarketOrderPlaceQueryParams", "RobinhoodCryptoStopLimitOrderPlaceQueryParams", "RobinhoodCryptoStopOrderPlaceQueryParams", "RobinhoodCryptoTrailingStopOrderPlaceQueryParams"]
+ORDER1ANYOF2_ONE_OF_SCHEMAS = ["RobinhoodCryptoLimitOrderPlaceQueryParams", "RobinhoodCryptoMarketOrderPlaceQueryParams", "RobinhoodCryptoStopLimitOrderPlaceQueryParams", "RobinhoodCryptoStopOrderPlaceQueryParams", "RobinhoodCryptoTrailingStopOrderPlaceQueryParams"]
 
-class OrderAnyOf2(BaseModel):
+class Order1AnyOf2(BaseModel):
     """
-    OrderAnyOf2
+    Order1AnyOf2
     """
     # data type: RobinhoodCryptoMarketOrderPlaceQueryParams
     oneof_schema_1_validator: Optional[RobinhoodCryptoMarketOrderPlaceQueryParams] = None
@@ -66,7 +66,7 @@ class OrderAnyOf2(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = OrderAnyOf2.model_construct()
+        instance = Order1AnyOf2.model_construct()
         error_messages = []
         match = 0
         # validate data type: RobinhoodCryptoMarketOrderPlaceQueryParams
@@ -96,10 +96,10 @@ class OrderAnyOf2(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in OrderAnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order1AnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in OrderAnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order1AnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -177,10 +177,10 @@ class OrderAnyOf2(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into OrderAnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order1AnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into OrderAnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order1AnyOf2 with oneOf schemas: RobinhoodCryptoLimitOrderPlaceQueryParams, RobinhoodCryptoMarketOrderPlaceQueryParams, RobinhoodCryptoStopLimitOrderPlaceQueryParams, RobinhoodCryptoStopOrderPlaceQueryParams, RobinhoodCryptoTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return instance
 

@@ -3162,8 +3162,8 @@ class FinaticServer:
         
         Cancel an existing order.
         
-        Cancels an order by its order ID. The broker connection is automatically
-        resolved from the order record.
+        Request must include broker and account_number in the body; order_id is in the path.
+        Connection is resolved by broker and account_number.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -3171,7 +3171,10 @@ class FinaticServer:
                 @category brokers
         
         Args:
-            order_id (str): Order ID
+            broker (str): Broker identifier (robinhood, tasty_trade, ninja_trader)
+            account_number (int): Account number for the order
+            order (dict[str, Any]): Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
+            order_id (str): Broker-provided order ID to cancel
         
         Returns:
             FinaticResponse[OrderActionResult]: Standard FinaticResponse format
@@ -3232,9 +3235,8 @@ class FinaticServer:
         
         Modify an existing order.
         
-        Updates an order's parameters (price, quantity, etc.) by order ID.
-        The order structure follows the same pattern as placing orders, with common
-        fields shared across brokers and broker-specific fields available per broker.
+        Request must include broker and account_number in the body; order_id is in the path.
+        Connection is resolved by broker and account_number. The order object is a partial update.
         
         Convenience method that delegates to brokers wrapper.
         
@@ -3243,9 +3245,9 @@ class FinaticServer:
         
         Args:
             broker (str): Broker identifier (robinhood, tasty_trade, ninja_trader)
-            order (dict[str, Any]): Order object with required fields (orderType, assetType, action, timeInForce, symbol, orderQty) and optional broker-specific fields
-            order_id (str): Order ID
-            account_number (str, optional): Account number owning the order
+            account_number (int): Account number for the order
+            order (dict[str, Any]): Delta: only include fields you want to change (at least one required)
+            order_id (str): Broker-provided order ID to modify
             connection_id (str, optional): Temporary bypass for testing: specify connection ID directly
         
         Returns:
@@ -3268,7 +3270,6 @@ class FinaticServer:
         # Full example with optional parameters
         result = await finatic.modify_order(
             order_id='example',
-            account_number='example',
             connection_id='example'
         )
         

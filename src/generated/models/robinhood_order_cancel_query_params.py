@@ -18,26 +18,26 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict
-from .accountnumber import Accountnumber
-from .order3 import Order3
+from typing import Any, ClassVar, Dict, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
-class NinjaTraderOrderModifyRequest(BaseModel):
+class RobinhoodOrderCancelQueryParams(BaseModel):
     """
-    NinjaTrader modify-order request body (partial update).  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : NinjaTraderOrderModifyQueryParamsUnion     NinjaTrader-specific modify parameters.  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
+    Cancel order query params for Robinhood.  **NOTE:** This file is a template and was auto-generated. You must review and tailor the fields to pull from the full JSON query params model in the `src/finatic_broker_factory/brokers/robinhood/executors/raw/robinhood_order_cancel_raw_query_params.py` file.  The goal is to offer a type-safe yet convenient schema that callers can use without worrying about the full raw REST payload - the executor layer will translate this higher-level model into the wire-level counterpart defined in `executors/raw/robinhood_order_cancel_raw_query_params.py`.  Extends the core OrderCancelQueryParams with asset_type for routing to the correct cancel function. The order_id field is inherited from the core model.  Matches the function signatures: - cancel_stock_order(orderID): Cancel a specific order - cancel_option_order(orderID): Cancel a specific option order - cancel_crypto_order(orderID): Cancel a specific crypto order
     """ # noqa: E501
-    broker: StrictStr
-    account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order3
-    __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
+    order_id: StrictStr = Field(description="Broker-assigned order identifier", alias="orderId")
+    asset_type: Optional[StrictStr] = Field(default='equity', description="Asset type for routing to correct cancel function (EQUITY, EQUITY_OPTION, or CRYPTO)", alias="assetType")
+    __properties: ClassVar[List[str]] = ["orderId", "assetType"]
 
-    @field_validator('broker')
-    def broker_validate_enum(cls, value):
+    @field_validator('asset_type')
+    def asset_type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['ninja_trader']):
-            raise ValueError("must be one of enum values ('ninja_trader')")
+        if value is None:
+            return value
+
+        if value not in set(['equity', 'equity_option', 'crypto']):
+            raise ValueError("must be one of enum values ('equity', 'equity_option', 'crypto')")
         return value
 
     model_config = ConfigDict(
@@ -58,7 +58,7 @@ class NinjaTraderOrderModifyRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of NinjaTraderOrderModifyRequest from a JSON string"""
+        """Create an instance of RobinhoodOrderCancelQueryParams from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,17 +79,11 @@ class NinjaTraderOrderModifyRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of account_number
-        if self.account_number:
-            _dict['accountNumber'] = self.account_number.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of order
-        if self.order:
-            _dict['order'] = self.order.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of NinjaTraderOrderModifyRequest from a dict"""
+        """Create an instance of RobinhoodOrderCancelQueryParams from a dict"""
         if obj is None:
             return None
 
@@ -97,9 +91,8 @@ class NinjaTraderOrderModifyRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "broker": obj.get("broker"),
-            "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order3.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "orderId": obj.get("orderId"),
+            "assetType": obj.get("assetType") if obj.get("assetType") is not None else 'equity'
         })
         return _obj
 

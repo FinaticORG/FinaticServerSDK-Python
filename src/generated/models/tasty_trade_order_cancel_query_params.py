@@ -17,28 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict
-from .account_number import AccountNumber
-from .order2 import Order2
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PlaceOrderRequestTastyTrade(BaseModel):
+class TastyTradeOrderCancelQueryParams(BaseModel):
     """
-    Place order request for TastyTrade with top-level broker and account_number.
+    Cancel-order payload enriched with TastyTrade-specific *account_number*.
     """ # noqa: E501
-    broker: StrictStr
-    account_number: AccountNumber
-    order: Order2
-    __properties: ClassVar[List[str]] = ["broker", "account_number", "order"]
-
-    @field_validator('broker')
-    def broker_validate_enum(cls, value):
-        """Validates the enum"""
-        if value not in set(['tasty_trade']):
-            raise ValueError("must be one of enum values ('tasty_trade')")
-        return value
+    order_id: StrictStr = Field(description="Broker-assigned order identifier", alias="orderId")
+    account_number: StrictInt = Field(description="TastyTrade account number owning the order.", alias="accountNumber")
+    __properties: ClassVar[List[str]] = ["orderId", "accountNumber"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -58,7 +48,7 @@ class PlaceOrderRequestTastyTrade(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PlaceOrderRequestTastyTrade from a JSON string"""
+        """Create an instance of TastyTradeOrderCancelQueryParams from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,17 +69,11 @@ class PlaceOrderRequestTastyTrade(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of account_number
-        if self.account_number:
-            _dict['account_number'] = self.account_number.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of order
-        if self.order:
-            _dict['order'] = self.order.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PlaceOrderRequestTastyTrade from a dict"""
+        """Create an instance of TastyTradeOrderCancelQueryParams from a dict"""
         if obj is None:
             return None
 
@@ -97,9 +81,8 @@ class PlaceOrderRequestTastyTrade(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "broker": obj.get("broker"),
-            "account_number": AccountNumber.from_dict(obj["account_number"]) if obj.get("account_number") is not None else None,
-            "order": Order2.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "orderId": obj.get("orderId"),
+            "accountNumber": obj.get("accountNumber")
         })
         return _obj
 
