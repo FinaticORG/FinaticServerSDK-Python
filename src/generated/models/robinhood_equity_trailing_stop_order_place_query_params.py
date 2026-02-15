@@ -34,10 +34,12 @@ class RobinhoodEquityTrailingStopOrderPlaceQueryParams(BaseModel):
     symbol: StrictStr
     order_qty: StrictInt = Field(alias="orderQty")
     stop_price: Union[StrictFloat, StrictInt] = Field(alias="stopPrice")
+    trail_percent: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="trailPercent")
+    trail_price: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="trailPrice")
     extended_hours: Optional[StrictBool] = Field(default=False, description="Allow trading during extended hours (premium users only)", alias="extendedHours")
     market_hours: Optional[StrictStr] = Field(default='regular_hours', description="Market hours to trade in", alias="marketHours")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "extendedHours", "marketHours"]
+    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "trailPercent", "trailPrice", "extendedHours", "marketHours"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
@@ -122,6 +124,16 @@ class RobinhoodEquityTrailingStopOrderPlaceQueryParams(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if trail_percent (nullable) is None
+        # and model_fields_set contains the field
+        if self.trail_percent is None and "trail_percent" in self.model_fields_set:
+            _dict['trailPercent'] = None
+
+        # set to None if trail_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.trail_price is None and "trail_price" in self.model_fields_set:
+            _dict['trailPrice'] = None
+
         return _dict
 
     @classmethod
@@ -141,6 +153,8 @@ class RobinhoodEquityTrailingStopOrderPlaceQueryParams(BaseModel):
             "symbol": obj.get("symbol"),
             "orderQty": obj.get("orderQty"),
             "stopPrice": obj.get("stopPrice"),
+            "trailPercent": obj.get("trailPercent"),
+            "trailPrice": obj.get("trailPrice"),
             "extendedHours": obj.get("extendedHours") if obj.get("extendedHours") is not None else False,
             "marketHours": obj.get("marketHours") if obj.get("marketHours") is not None else 'regular_hours'
         })

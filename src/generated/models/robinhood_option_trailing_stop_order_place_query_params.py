@@ -35,6 +35,8 @@ class RobinhoodOptionTrailingStopOrderPlaceQueryParams(BaseModel):
     symbol: StrictStr
     order_qty: StrictInt = Field(alias="orderQty")
     stop_price: Union[StrictFloat, StrictInt] = Field(alias="stopPrice")
+    trail_percent: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="trailPercent")
+    trail_price: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="trailPrice")
     direction: Optional[StrictStr] = None
     spread: Optional[List[RobinhoodOptionSpreadLeg]] = None
     position_effect: Optional[StrictStr] = Field(default=None, alias="positionEffect")
@@ -43,7 +45,7 @@ class RobinhoodOptionTrailingStopOrderPlaceQueryParams(BaseModel):
     strike_price: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="strikePrice")
     option_type: Optional[StrictStr] = Field(default=None, alias="optionType")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "direction", "spread", "positionEffect", "creditOrDebit", "expirationDate", "strikePrice", "optionType"]
+    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "trailPercent", "trailPrice", "direction", "spread", "positionEffect", "creditOrDebit", "expirationDate", "strikePrice", "optionType"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
@@ -165,6 +167,16 @@ class RobinhoodOptionTrailingStopOrderPlaceQueryParams(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if trail_percent (nullable) is None
+        # and model_fields_set contains the field
+        if self.trail_percent is None and "trail_percent" in self.model_fields_set:
+            _dict['trailPercent'] = None
+
+        # set to None if trail_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.trail_price is None and "trail_price" in self.model_fields_set:
+            _dict['trailPrice'] = None
+
         # set to None if direction (nullable) is None
         # and model_fields_set contains the field
         if self.direction is None and "direction" in self.model_fields_set:
@@ -219,6 +231,8 @@ class RobinhoodOptionTrailingStopOrderPlaceQueryParams(BaseModel):
             "symbol": obj.get("symbol"),
             "orderQty": obj.get("orderQty"),
             "stopPrice": obj.get("stopPrice"),
+            "trailPercent": obj.get("trailPercent"),
+            "trailPrice": obj.get("trailPrice"),
             "direction": obj.get("direction"),
             "spread": [RobinhoodOptionSpreadLeg.from_dict(_item) for _item in obj["spread"]] if obj.get("spread") is not None else None,
             "positionEffect": obj.get("positionEffect"),

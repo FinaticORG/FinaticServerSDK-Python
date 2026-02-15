@@ -72,3 +72,53 @@ def append_broker_filter_to_url(base_url: str, broker_names: Optional[List[str]]
     except Exception:
         # If URL parsing fails, return original URL
         return base_url
+
+
+def append_kind_to_url(base_url: str, kind: Optional[str] = None) -> str:
+    """Append broker/exchange type filter to a portal URL.
+    
+    Args:
+        base_url: The base portal URL (may already have query parameters)
+        kind: Filter by provider type: 'broker' or 'exchange'
+    
+    Returns:
+        The portal URL with type parameter appended
+    """
+    if not kind:
+        return base_url
+    
+    try:
+        parsed = urlparse(base_url)
+        query_params = parse_qs(parsed.query)
+        query_params['type'] = [kind]
+        new_query = urlencode(query_params, doseq=True)
+        new_parsed = parsed._replace(query=new_query)
+        return urlunparse(new_parsed)
+    except Exception:
+        return base_url
+
+
+def append_asset_types_to_url(base_url: str, asset_types: Optional[List[str]] = None) -> str:
+    """Append asset types (capabilities) filter to a portal URL.
+    
+    Multiple values are AND-filtered (brokers that support all listed asset types).
+    
+    Args:
+        base_url: The base portal URL (may already have query parameters)
+        asset_types: List of capability names (e.g. ['equity', 'crypto', 'options'])
+    
+    Returns:
+        The portal URL with capabilities parameter appended
+    """
+    if not asset_types or len(asset_types) == 0:
+        return base_url
+    
+    try:
+        parsed = urlparse(base_url)
+        query_params = parse_qs(parsed.query)
+        query_params['capabilities'] = [','.join(asset_types)]
+        new_query = urlencode(query_params, doseq=True)
+        new_parsed = parsed._replace(query=new_query)
+        return urlunparse(new_parsed)
+    except Exception:
+        return base_url

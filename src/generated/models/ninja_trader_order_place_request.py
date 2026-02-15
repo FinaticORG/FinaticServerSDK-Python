@@ -20,17 +20,17 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
 from .accountnumber import Accountnumber
-from .order import Order
+from .order1 import Order1
 from typing import Optional, Set
 from typing_extensions import Self
 
 class NinjaTraderOrderPlaceRequest(BaseModel):
     """
-    NinjaTrader place-order request body.  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : NinjaTraderOrderPlaceQueryParamsUnion     NinjaTrader-specific order parameters (equity, etc.; may include accountSpec, isAutomated).  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``. JSON schema examples are attached in model_config for OpenAPI docs.
+    NinjaTrader place-order request body.  Attributes ---------- broker : Literal[\"ninja_trader\"]     Discriminator; must be ``\"ninja_trader\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : NinjaTraderOrderPlaceQueryParamsUnion     NinjaTrader-specific order parameters (futures; may include accountSpec, isAutomated).  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``. JSON schema examples are attached in model_config for OpenAPI docs.
     """ # noqa: E501
     broker: StrictStr
     account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order
+    order: Order1
     __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
@@ -99,7 +99,7 @@ class NinjaTraderOrderPlaceRequest(BaseModel):
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
             "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "order": Order1.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

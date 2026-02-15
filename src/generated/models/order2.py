@@ -13,40 +13,42 @@
 
 
 from __future__ import annotations
+from inspect import getfullargspec
 import json
 import pprint
+import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Any, List, Optional
-from .tasty_trade_limit_order_place_query_params import TastyTradeLimitOrderPlaceQueryParams
-from .tasty_trade_market_order_place_query_params import TastyTradeMarketOrderPlaceQueryParams
-from .tasty_trade_stop_order_place_query_params import TastyTradeStopOrderPlaceQueryParams
-from .tasty_trade_trailing_stop_order_place_query_params import TastyTradeTrailingStopOrderPlaceQueryParams
-from pydantic import StrictStr, Field
-from typing import Union, List, Set, Optional, Dict
+from typing import Optional
+from .order2_any_of import Order2AnyOf
+from .order2_any_of1 import Order2AnyOf1
+from .order2_any_of2 import Order2AnyOf2
+from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
+from pydantic import Field
 
-ORDER2_ONE_OF_SCHEMAS = ["TastyTradeLimitOrderPlaceQueryParams", "TastyTradeMarketOrderPlaceQueryParams", "TastyTradeStopOrderPlaceQueryParams", "TastyTradeTrailingStopOrderPlaceQueryParams"]
+ORDER2_ANY_OF_SCHEMAS = ["Order2AnyOf", "Order2AnyOf1", "Order2AnyOf2"]
 
 class Order2(BaseModel):
     """
     Order2
     """
-    # data type: TastyTradeMarketOrderPlaceQueryParams
-    oneof_schema_1_validator: Optional[TastyTradeMarketOrderPlaceQueryParams] = None
-    # data type: TastyTradeLimitOrderPlaceQueryParams
-    oneof_schema_2_validator: Optional[TastyTradeLimitOrderPlaceQueryParams] = None
-    # data type: TastyTradeStopOrderPlaceQueryParams
-    oneof_schema_3_validator: Optional[TastyTradeStopOrderPlaceQueryParams] = None
-    # data type: TastyTradeTrailingStopOrderPlaceQueryParams
-    oneof_schema_4_validator: Optional[TastyTradeTrailingStopOrderPlaceQueryParams] = None
-    actual_instance: Optional[Union[TastyTradeLimitOrderPlaceQueryParams, TastyTradeMarketOrderPlaceQueryParams, TastyTradeStopOrderPlaceQueryParams, TastyTradeTrailingStopOrderPlaceQueryParams]] = None
-    one_of_schemas: Set[str] = { "TastyTradeLimitOrderPlaceQueryParams", "TastyTradeMarketOrderPlaceQueryParams", "TastyTradeStopOrderPlaceQueryParams", "TastyTradeTrailingStopOrderPlaceQueryParams" }
 
-    model_config = ConfigDict(
-        validate_assignment=True,
-        protected_namespaces=(),
-    )
+    # data type: Order2AnyOf
+    anyof_schema_1_validator: Optional[Order2AnyOf] = None
+    # data type: Order2AnyOf1
+    anyof_schema_2_validator: Optional[Order2AnyOf1] = None
+    # data type: Order2AnyOf2
+    anyof_schema_3_validator: Optional[Order2AnyOf2] = None
+    if TYPE_CHECKING:
+        actual_instance: Optional[Union[Order2AnyOf, Order2AnyOf1, Order2AnyOf2]] = None
+    else:
+        actual_instance: Any = None
+    any_of_schemas: Set[str] = { "Order2AnyOf", "Order2AnyOf1", "Order2AnyOf2" }
 
+    model_config = {
+        "validate_assignment": True,
+        "protected_namespaces": (),
+    }
 
     discriminator_value_class_map: Dict[str, str] = {
     }
@@ -62,41 +64,35 @@ class Order2(BaseModel):
             super().__init__(**kwargs)
 
     @field_validator('actual_instance')
-    def actual_instance_must_validate_oneof(cls, v):
+    def actual_instance_must_validate_anyof(cls, v):
         instance = Order2.model_construct()
         error_messages = []
-        match = 0
-        # validate data type: TastyTradeMarketOrderPlaceQueryParams
-        if not isinstance(v, TastyTradeMarketOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TastyTradeMarketOrderPlaceQueryParams`")
+        # validate data type: Order2AnyOf
+        if not isinstance(v, Order2AnyOf):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2AnyOf`")
         else:
-            match += 1
-        # validate data type: TastyTradeLimitOrderPlaceQueryParams
-        if not isinstance(v, TastyTradeLimitOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TastyTradeLimitOrderPlaceQueryParams`")
+            return v
+
+        # validate data type: Order2AnyOf1
+        if not isinstance(v, Order2AnyOf1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2AnyOf1`")
         else:
-            match += 1
-        # validate data type: TastyTradeStopOrderPlaceQueryParams
-        if not isinstance(v, TastyTradeStopOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TastyTradeStopOrderPlaceQueryParams`")
+            return v
+
+        # validate data type: Order2AnyOf2
+        if not isinstance(v, Order2AnyOf2):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2AnyOf2`")
         else:
-            match += 1
-        # validate data type: TastyTradeTrailingStopOrderPlaceQueryParams
-        if not isinstance(v, TastyTradeTrailingStopOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `TastyTradeTrailingStopOrderPlaceQueryParams`")
-        else:
-            match += 1
-        if match > 1:
-            # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in Order2 with oneOf schemas: TastyTradeLimitOrderPlaceQueryParams, TastyTradeMarketOrderPlaceQueryParams, TastyTradeStopOrderPlaceQueryParams, TastyTradeTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
-        elif match == 0:
+            return v
+
+        if error_messages:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in Order2 with oneOf schemas: TastyTradeLimitOrderPlaceQueryParams, TastyTradeMarketOrderPlaceQueryParams, TastyTradeStopOrderPlaceQueryParams, TastyTradeTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in Order2 with anyOf schemas: Order2AnyOf, Order2AnyOf1, Order2AnyOf2. Details: " + ", ".join(error_messages))
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
+    def from_dict(cls, obj: Dict[str, Any]) -> Self:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
@@ -104,64 +100,28 @@ class Order2(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        match = 0
-
-        # use oneOf discriminator to lookup the data type
-        _data_type = json.loads(json_str).get("orderType")
-        if not _data_type:
-            raise ValueError("Failed to lookup data type from the field `orderType` in the input.")
-
-        # check if data type is `TastyTradeLimitOrderPlaceQueryParams`
-        if _data_type == "limit":
-            instance.actual_instance = TastyTradeLimitOrderPlaceQueryParams.from_json(json_str)
-            return instance
-
-        # check if data type is `TastyTradeMarketOrderPlaceQueryParams`
-        if _data_type == "market":
-            instance.actual_instance = TastyTradeMarketOrderPlaceQueryParams.from_json(json_str)
-            return instance
-
-        # check if data type is `TastyTradeStopOrderPlaceQueryParams`
-        if _data_type == "stop":
-            instance.actual_instance = TastyTradeStopOrderPlaceQueryParams.from_json(json_str)
-            return instance
-
-        # check if data type is `TastyTradeTrailingStopOrderPlaceQueryParams`
-        if _data_type == "trailing_stop":
-            instance.actual_instance = TastyTradeTrailingStopOrderPlaceQueryParams.from_json(json_str)
-            return instance
-
-        # deserialize data into TastyTradeMarketOrderPlaceQueryParams
+        # anyof_schema_1_validator: Optional[Order2AnyOf] = None
         try:
-            instance.actual_instance = TastyTradeMarketOrderPlaceQueryParams.from_json(json_str)
-            match += 1
+            instance.actual_instance = Order2AnyOf.from_json(json_str)
+            return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into TastyTradeLimitOrderPlaceQueryParams
+             error_messages.append(str(e))
+        # anyof_schema_2_validator: Optional[Order2AnyOf1] = None
         try:
-            instance.actual_instance = TastyTradeLimitOrderPlaceQueryParams.from_json(json_str)
-            match += 1
+            instance.actual_instance = Order2AnyOf1.from_json(json_str)
+            return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into TastyTradeStopOrderPlaceQueryParams
+             error_messages.append(str(e))
+        # anyof_schema_3_validator: Optional[Order2AnyOf2] = None
         try:
-            instance.actual_instance = TastyTradeStopOrderPlaceQueryParams.from_json(json_str)
-            match += 1
+            instance.actual_instance = Order2AnyOf2.from_json(json_str)
+            return instance
         except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into TastyTradeTrailingStopOrderPlaceQueryParams
-        try:
-            instance.actual_instance = TastyTradeTrailingStopOrderPlaceQueryParams.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
+             error_messages.append(str(e))
 
-        if match > 1:
-            # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into Order2 with oneOf schemas: TastyTradeLimitOrderPlaceQueryParams, TastyTradeMarketOrderPlaceQueryParams, TastyTradeStopOrderPlaceQueryParams, TastyTradeTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
-        elif match == 0:
+        if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order2 with oneOf schemas: TastyTradeLimitOrderPlaceQueryParams, TastyTradeMarketOrderPlaceQueryParams, TastyTradeStopOrderPlaceQueryParams, TastyTradeTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order2 with anyOf schemas: Order2AnyOf, Order2AnyOf1, Order2AnyOf2. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -175,7 +135,7 @@ class Order2(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], TastyTradeLimitOrderPlaceQueryParams, TastyTradeMarketOrderPlaceQueryParams, TastyTradeStopOrderPlaceQueryParams, TastyTradeTrailingStopOrderPlaceQueryParams]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], Order2AnyOf, Order2AnyOf1, Order2AnyOf2]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -183,7 +143,6 @@ class Order2(BaseModel):
         if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
             return self.actual_instance.to_dict()
         else:
-            # primitive type
             return self.actual_instance
 
     def to_str(self) -> str:

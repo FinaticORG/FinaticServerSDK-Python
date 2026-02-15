@@ -19,7 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
-from .timeinforce2 import Timeinforce2
+from .order_modify_query_params_base_time_in_force import OrderModifyQueryParamsBaseTimeInForce
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +30,7 @@ class OrderModifyQueryParamsBase(BaseModel):
     order_id: Optional[StrictStr] = Field(default=None, alias="orderId")
     order_type: Optional[StrictStr] = Field(default=None, alias="orderType")
     asset_type: Optional[StrictStr] = Field(default=None, alias="assetType")
-    time_in_force: Optional[Timeinforce2] = Field(default=None, alias="timeInForce")
+    time_in_force: Optional[OrderModifyQueryParamsBaseTimeInForce] = Field(default=None, alias="timeInForce")
     is_automated: Optional[StrictBool] = Field(default=None, alias="isAutomated")
     price: Optional[Union[StrictFloat, StrictInt]] = None
     stop_price: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="stopPrice")
@@ -54,8 +54,8 @@ class OrderModifyQueryParamsBase(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['equity', 'equity_option', 'crypto', 'forex']):
-            raise ValueError("must be one of enum values ('equity', 'equity_option', 'crypto', 'forex')")
+        if value not in set(['equity', 'equity_option', 'crypto', 'forex', 'future', 'future_option', 'bond']):
+            raise ValueError("must be one of enum values ('equity', 'equity_option', 'crypto', 'forex', 'future', 'future_option', 'bond')")
         return value
 
     model_config = ConfigDict(
@@ -162,7 +162,7 @@ class OrderModifyQueryParamsBase(BaseModel):
             "orderId": obj.get("orderId"),
             "orderType": obj.get("orderType"),
             "assetType": obj.get("assetType"),
-            "timeInForce": Timeinforce2.from_dict(obj["timeInForce"]) if obj.get("timeInForce") is not None else None,
+            "timeInForce": OrderModifyQueryParamsBaseTimeInForce.from_dict(obj["timeInForce"]) if obj.get("timeInForce") is not None else None,
             "isAutomated": obj.get("isAutomated"),
             "price": obj.get("price"),
             "stopPrice": obj.get("stopPrice"),

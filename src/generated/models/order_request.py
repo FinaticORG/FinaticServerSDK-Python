@@ -22,11 +22,12 @@ from typing import Optional
 from .ninja_trader_order_modify_request import NinjaTraderOrderModifyRequest
 from .robinhood_order_modify_request import RobinhoodOrderModifyRequest
 from .tasty_trade_order_modify_request import TastyTradeOrderModifyRequest
+from .webull_order_modify_request import WebullOrderModifyRequest
 from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
 
-ORDERREQUEST_ANY_OF_SCHEMAS = ["NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest"]
+ORDERREQUEST_ANY_OF_SCHEMAS = ["NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest", "WebullOrderModifyRequest"]
 
 class OrderRequest(BaseModel):
     """
@@ -39,11 +40,13 @@ class OrderRequest(BaseModel):
     anyof_schema_2_validator: Optional[TastyTradeOrderModifyRequest] = None
     # data type: RobinhoodOrderModifyRequest
     anyof_schema_3_validator: Optional[RobinhoodOrderModifyRequest] = None
+    # data type: WebullOrderModifyRequest
+    anyof_schema_4_validator: Optional[WebullOrderModifyRequest] = None
     if TYPE_CHECKING:
-        actual_instance: Optional[Union[NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest]] = None
+        actual_instance: Optional[Union[NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest, WebullOrderModifyRequest]] = None
     else:
         actual_instance: Any = None
-    any_of_schemas: Set[str] = { "NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest" }
+    any_of_schemas: Set[str] = { "NinjaTraderOrderModifyRequest", "RobinhoodOrderModifyRequest", "TastyTradeOrderModifyRequest", "WebullOrderModifyRequest" }
 
     model_config = {
         "validate_assignment": True,
@@ -82,9 +85,15 @@ class OrderRequest(BaseModel):
         else:
             return v
 
+        # validate data type: WebullOrderModifyRequest
+        if not isinstance(v, WebullOrderModifyRequest):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `WebullOrderModifyRequest`")
+        else:
+            return v
+
         if error_messages:
             # no match
-            raise ValueError("No match found when setting the actual_instance in OrderRequest with anyOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting the actual_instance in OrderRequest with anyOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest, WebullOrderModifyRequest. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -115,10 +124,16 @@ class OrderRequest(BaseModel):
             return instance
         except (ValidationError, ValueError) as e:
              error_messages.append(str(e))
+        # anyof_schema_4_validator: Optional[WebullOrderModifyRequest] = None
+        try:
+            instance.actual_instance = WebullOrderModifyRequest.from_json(json_str)
+            return instance
+        except (ValidationError, ValueError) as e:
+             error_messages.append(str(e))
 
         if error_messages:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into OrderRequest with anyOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into OrderRequest with anyOf schemas: NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest, WebullOrderModifyRequest. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -132,7 +147,7 @@ class OrderRequest(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], NinjaTraderOrderModifyRequest, RobinhoodOrderModifyRequest, TastyTradeOrderModifyRequest, WebullOrderModifyRequest]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

@@ -13,9 +13,7 @@ from ..api.session_api import SessionApi
 from ..configuration import Configuration
 from ..config import SdkConfig
 from ..types import FinaticResponse
-from ..models.session_response_data import SessionResponseData
 from ..models.session_start_request import SessionStartRequest
-from ..models.token_response_data import TokenResponseData
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
 from ..utils.logger import get_logger
@@ -92,7 +90,7 @@ class SessionWrapper:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
-    async def init_session(self, **kwargs) -> FinaticResponse[TokenResponseData]:
+    async def init_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2]:
         """Init Session
         
         Initialize a new session with company API key.
@@ -100,8 +98,8 @@ class SessionWrapper:
         Args:
             x_api_key (str): Company API key
         Returns:
-        - Dict[str, Any]: FinaticResponse[TokenResponseData] format
-                     success: {data: TokenResponseData, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         
@@ -313,7 +311,7 @@ class SessionWrapper:
         # TODO Phase 2D: Add orphaned method detection
         # TODO Phase 2D: Add advanced convenience methods
 
-    async def start_session(self, **kwargs) -> FinaticResponse[SessionResponseData]:
+    async def start_session(self, **kwargs) -> FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2]:
         """Start Session
         
         Start a session with a one-time token.
@@ -322,8 +320,8 @@ class SessionWrapper:
             one_time_token (str): One-time use token obtained from init_session endpoint to authenticate and start the session
             session_start_request (SessionStartRequest): Session start request containing optional user ID to associate with the session
         Returns:
-        - Dict[str, Any]: FinaticResponse[SessionResponseData] format
-                     success: {data: SessionResponseData, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2] format
+                     success: {data: FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
         

@@ -18,10 +18,10 @@ from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from ..models.finatic_response_session_response_data import FinaticResponseSessionResponseData
-from ..models.finatic_response_token_response_data import FinaticResponseTokenResponseData
 from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
+from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
 from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
+from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
 from ..models.session_start_request import SessionStartRequest
 
 from ..api_client import ApiClient, RequestSerialized
@@ -647,7 +647,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseTokenResponseData:
+    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2:
         """Init Session
 
         Initialize a new session with company API key.
@@ -685,7 +685,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -723,7 +723,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseTokenResponseData]:
+    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2]:
         """Init Session
 
         Initialize a new session with company API key.
@@ -761,7 +761,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -837,7 +837,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -935,7 +935,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseSessionResponseData:
+    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2:
         """Start Session
 
         Start a session with a one-time token.
@@ -976,7 +976,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1015,7 +1015,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseSessionResponseData]:
+    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2]:
         """Start Session
 
         Start a session with a one-time token.
@@ -1056,7 +1056,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1136,7 +1136,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",

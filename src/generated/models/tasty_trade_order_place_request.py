@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
 from .accountnumber import Accountnumber
-from .order2 import Order2
+from .order3 import Order3
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +30,7 @@ class TastyTradeOrderPlaceRequest(BaseModel):
     """ # noqa: E501
     broker: StrictStr
     account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order2
+    order: Order3
     __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
@@ -99,7 +99,7 @@ class TastyTradeOrderPlaceRequest(BaseModel):
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
             "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order2.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "order": Order3.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

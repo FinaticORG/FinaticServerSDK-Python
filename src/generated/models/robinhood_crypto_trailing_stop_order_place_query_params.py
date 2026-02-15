@@ -34,9 +34,11 @@ class RobinhoodCryptoTrailingStopOrderPlaceQueryParams(BaseModel):
     symbol: StrictStr
     order_qty: StrictInt = Field(alias="orderQty")
     stop_price: Union[StrictFloat, StrictInt] = Field(alias="stopPrice")
+    trail_percent: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="trailPercent")
+    trail_price: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="trailPrice")
     amount_in: Optional[StrictStr] = Field(default='quantity', description="Whether quantityOrPrice represents quantity or price", alias="amountIn")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "amountIn"]
+    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "stopPrice", "trailPercent", "trailPrice", "amountIn"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
@@ -121,6 +123,16 @@ class RobinhoodCryptoTrailingStopOrderPlaceQueryParams(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if trail_percent (nullable) is None
+        # and model_fields_set contains the field
+        if self.trail_percent is None and "trail_percent" in self.model_fields_set:
+            _dict['trailPercent'] = None
+
+        # set to None if trail_price (nullable) is None
+        # and model_fields_set contains the field
+        if self.trail_price is None and "trail_price" in self.model_fields_set:
+            _dict['trailPrice'] = None
+
         return _dict
 
     @classmethod
@@ -140,6 +152,8 @@ class RobinhoodCryptoTrailingStopOrderPlaceQueryParams(BaseModel):
             "symbol": obj.get("symbol"),
             "orderQty": obj.get("orderQty"),
             "stopPrice": obj.get("stopPrice"),
+            "trailPercent": obj.get("trailPercent"),
+            "trailPrice": obj.get("trailPrice"),
             "amountIn": obj.get("amountIn") if obj.get("amountIn") is not None else 'quantity'
         })
         # store additional fields in additional_properties

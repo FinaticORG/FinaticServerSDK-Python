@@ -17,30 +17,27 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from .ninja_trader_limit_order_place_query_params import NinjaTraderLimitOrderPlaceQueryParams
-from .ninja_trader_market_order_place_query_params import NinjaTraderMarketOrderPlaceQueryParams
-from .ninja_trader_stop_order_place_query_params import NinjaTraderStopOrderPlaceQueryParams
-from .ninja_trader_trailing_stop_order_place_query_params import NinjaTraderTrailingStopOrderPlaceQueryParams
+from .order_one_of import OrderOneOf
+from .order_one_of1 import OrderOneOf1
+from .order_one_of2 import OrderOneOf2
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ORDER_ONE_OF_SCHEMAS = ["NinjaTraderLimitOrderPlaceQueryParams", "NinjaTraderMarketOrderPlaceQueryParams", "NinjaTraderStopOrderPlaceQueryParams", "NinjaTraderTrailingStopOrderPlaceQueryParams"]
+ORDER_ONE_OF_SCHEMAS = ["OrderOneOf", "OrderOneOf1", "OrderOneOf2"]
 
 class Order(BaseModel):
     """
     Order
     """
-    # data type: NinjaTraderMarketOrderPlaceQueryParams
-    oneof_schema_1_validator: Optional[NinjaTraderMarketOrderPlaceQueryParams] = None
-    # data type: NinjaTraderLimitOrderPlaceQueryParams
-    oneof_schema_2_validator: Optional[NinjaTraderLimitOrderPlaceQueryParams] = None
-    # data type: NinjaTraderStopOrderPlaceQueryParams
-    oneof_schema_3_validator: Optional[NinjaTraderStopOrderPlaceQueryParams] = None
-    # data type: NinjaTraderTrailingStopOrderPlaceQueryParams
-    oneof_schema_4_validator: Optional[NinjaTraderTrailingStopOrderPlaceQueryParams] = None
-    actual_instance: Optional[Union[NinjaTraderLimitOrderPlaceQueryParams, NinjaTraderMarketOrderPlaceQueryParams, NinjaTraderStopOrderPlaceQueryParams, NinjaTraderTrailingStopOrderPlaceQueryParams]] = None
-    one_of_schemas: Set[str] = { "NinjaTraderLimitOrderPlaceQueryParams", "NinjaTraderMarketOrderPlaceQueryParams", "NinjaTraderStopOrderPlaceQueryParams", "NinjaTraderTrailingStopOrderPlaceQueryParams" }
+    # data type: OrderOneOf
+    oneof_schema_1_validator: Optional[OrderOneOf] = None
+    # data type: OrderOneOf1
+    oneof_schema_2_validator: Optional[OrderOneOf1] = None
+    # data type: OrderOneOf2
+    oneof_schema_3_validator: Optional[OrderOneOf2] = None
+    actual_instance: Optional[Union[OrderOneOf, OrderOneOf1, OrderOneOf2]] = None
+    one_of_schemas: Set[str] = { "OrderOneOf", "OrderOneOf1", "OrderOneOf2" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -66,32 +63,27 @@ class Order(BaseModel):
         instance = Order.model_construct()
         error_messages = []
         match = 0
-        # validate data type: NinjaTraderMarketOrderPlaceQueryParams
-        if not isinstance(v, NinjaTraderMarketOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NinjaTraderMarketOrderPlaceQueryParams`")
+        # validate data type: OrderOneOf
+        if not isinstance(v, OrderOneOf):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `OrderOneOf`")
         else:
             match += 1
-        # validate data type: NinjaTraderLimitOrderPlaceQueryParams
-        if not isinstance(v, NinjaTraderLimitOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NinjaTraderLimitOrderPlaceQueryParams`")
+        # validate data type: OrderOneOf1
+        if not isinstance(v, OrderOneOf1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `OrderOneOf1`")
         else:
             match += 1
-        # validate data type: NinjaTraderStopOrderPlaceQueryParams
-        if not isinstance(v, NinjaTraderStopOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NinjaTraderStopOrderPlaceQueryParams`")
-        else:
-            match += 1
-        # validate data type: NinjaTraderTrailingStopOrderPlaceQueryParams
-        if not isinstance(v, NinjaTraderTrailingStopOrderPlaceQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `NinjaTraderTrailingStopOrderPlaceQueryParams`")
+        # validate data type: OrderOneOf2
+        if not isinstance(v, OrderOneOf2):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `OrderOneOf2`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in Order with oneOf schemas: NinjaTraderLimitOrderPlaceQueryParams, NinjaTraderMarketOrderPlaceQueryParams, NinjaTraderStopOrderPlaceQueryParams, NinjaTraderTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order with oneOf schemas: OrderOneOf, OrderOneOf1, OrderOneOf2. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in Order with oneOf schemas: NinjaTraderLimitOrderPlaceQueryParams, NinjaTraderMarketOrderPlaceQueryParams, NinjaTraderStopOrderPlaceQueryParams, NinjaTraderTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order with oneOf schemas: OrderOneOf, OrderOneOf1, OrderOneOf2. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -111,57 +103,61 @@ class Order(BaseModel):
         if not _data_type:
             raise ValueError("Failed to lookup data type from the field `orderType` in the input.")
 
-        # check if data type is `NinjaTraderLimitOrderPlaceQueryParams`
+        # check if data type is `AlpacaCryptoLimitOrderPlaceQueryParams`
         if _data_type == "limit":
-            instance.actual_instance = NinjaTraderLimitOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = AlpacaCryptoLimitOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `NinjaTraderMarketOrderPlaceQueryParams`
+        # check if data type is `AlpacaCryptoMarketOrderPlaceQueryParams`
         if _data_type == "market":
-            instance.actual_instance = NinjaTraderMarketOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = AlpacaCryptoMarketOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `NinjaTraderStopOrderPlaceQueryParams`
-        if _data_type == "stop":
-            instance.actual_instance = NinjaTraderStopOrderPlaceQueryParams.from_json(json_str)
+        # check if data type is `AlpacaCryptoStopLimitOrderPlaceQueryParams`
+        if _data_type == "stop_limit":
+            instance.actual_instance = AlpacaCryptoStopLimitOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `NinjaTraderTrailingStopOrderPlaceQueryParams`
-        if _data_type == "trailing_stop":
-            instance.actual_instance = NinjaTraderTrailingStopOrderPlaceQueryParams.from_json(json_str)
+        # check if data type is `OrderOneOf`
+        if _data_type == "Order_oneOf":
+            instance.actual_instance = OrderOneOf.from_json(json_str)
             return instance
 
-        # deserialize data into NinjaTraderMarketOrderPlaceQueryParams
+        # check if data type is `OrderOneOf1`
+        if _data_type == "Order_oneOf_1":
+            instance.actual_instance = OrderOneOf1.from_json(json_str)
+            return instance
+
+        # check if data type is `OrderOneOf2`
+        if _data_type == "Order_oneOf_2":
+            instance.actual_instance = OrderOneOf2.from_json(json_str)
+            return instance
+
+        # deserialize data into OrderOneOf
         try:
-            instance.actual_instance = NinjaTraderMarketOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = OrderOneOf.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into NinjaTraderLimitOrderPlaceQueryParams
+        # deserialize data into OrderOneOf1
         try:
-            instance.actual_instance = NinjaTraderLimitOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = OrderOneOf1.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into NinjaTraderStopOrderPlaceQueryParams
+        # deserialize data into OrderOneOf2
         try:
-            instance.actual_instance = NinjaTraderStopOrderPlaceQueryParams.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into NinjaTraderTrailingStopOrderPlaceQueryParams
-        try:
-            instance.actual_instance = NinjaTraderTrailingStopOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = OrderOneOf2.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into Order with oneOf schemas: NinjaTraderLimitOrderPlaceQueryParams, NinjaTraderMarketOrderPlaceQueryParams, NinjaTraderStopOrderPlaceQueryParams, NinjaTraderTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order with oneOf schemas: OrderOneOf, OrderOneOf1, OrderOneOf2. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order with oneOf schemas: NinjaTraderLimitOrderPlaceQueryParams, NinjaTraderMarketOrderPlaceQueryParams, NinjaTraderStopOrderPlaceQueryParams, NinjaTraderTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order with oneOf schemas: OrderOneOf, OrderOneOf1, OrderOneOf2. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -175,7 +171,7 @@ class Order(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], NinjaTraderLimitOrderPlaceQueryParams, NinjaTraderMarketOrderPlaceQueryParams, NinjaTraderStopOrderPlaceQueryParams, NinjaTraderTrailingStopOrderPlaceQueryParams]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], OrderOneOf, OrderOneOf1, OrderOneOf2]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

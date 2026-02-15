@@ -17,17 +17,18 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, Optional
+from .accountnumber1 import Accountnumber1
 from typing import Optional, Set
 from typing_extensions import Self
 
 class TastyTradeOrderCancelQueryParams(BaseModel):
     """
-    Cancel-order payload enriched with TastyTrade-specific *account_number*.
+    Cancel-order payload enriched with TastyTrade-specific *account_number*.  Notes ----- *account_number* is optional in the request body. The top-level *accountNumber* from the request is passed through the call chain (broker_service → broker → executor) and used by the executor to build the DELETE URL ``/accounts/{account_number}/orders/{order_id}``. This field remains for backward compatibility but is typically not needed in the nested ``order`` object.
     """ # noqa: E501
     order_id: StrictStr = Field(description="Broker-assigned order identifier", alias="orderId")
-    account_number: StrictInt = Field(description="TastyTrade account number owning the order.", alias="accountNumber")
+    account_number: Optional[Accountnumber1] = Field(default=None, alias="accountNumber")
     __properties: ClassVar[List[str]] = ["orderId", "accountNumber"]
 
     model_config = ConfigDict(
@@ -69,6 +70,14 @@ class TastyTradeOrderCancelQueryParams(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of account_number
+        if self.account_number:
+            _dict['accountNumber'] = self.account_number.to_dict()
+        # set to None if account_number (nullable) is None
+        # and model_fields_set contains the field
+        if self.account_number is None and "account_number" in self.model_fields_set:
+            _dict['accountNumber'] = None
+
         return _dict
 
     @classmethod
@@ -82,7 +91,7 @@ class TastyTradeOrderCancelQueryParams(BaseModel):
 
         _obj = cls.model_validate({
             "orderId": obj.get("orderId"),
-            "accountNumber": obj.get("accountNumber")
+            "accountNumber": Accountnumber1.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None
         })
         return _obj
 
