@@ -33,7 +33,7 @@ class TastyTradeOptionLimitOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     price: Union[StrictFloat, StrictInt]
     automated_source: Optional[StrictBool] = Field(default=True, alias="automated-source")
     price_effect: Optional[StrictStr] = Field(default=None, alias="price-effect")

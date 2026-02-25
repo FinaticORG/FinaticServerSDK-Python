@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from .notional2 import Notional2
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
@@ -33,7 +34,7 @@ class AlpacaCryptoMarketOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     client_order_id: Optional[StrictStr] = None
     order_class: Optional[StrictStr] = None
     notional: Optional[Notional2] = None

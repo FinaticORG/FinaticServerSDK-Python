@@ -17,24 +17,30 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from .order5_one_of import Order5OneOf
-from .order5_one_of1 import Order5OneOf1
+from .trading212_limit_order_place_query_params import Trading212LimitOrderPlaceQueryParams
+from .trading212_market_order_place_query_params import Trading212MarketOrderPlaceQueryParams
+from .trading212_stop_limit_order_place_query_params import Trading212StopLimitOrderPlaceQueryParams
+from .trading212_stop_order_place_query_params import Trading212StopOrderPlaceQueryParams
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ORDER5_ONE_OF_SCHEMAS = ["Order5OneOf", "Order5OneOf1"]
+ORDER5_ONE_OF_SCHEMAS = ["Trading212LimitOrderPlaceQueryParams", "Trading212MarketOrderPlaceQueryParams", "Trading212StopLimitOrderPlaceQueryParams", "Trading212StopOrderPlaceQueryParams"]
 
 class Order5(BaseModel):
     """
     Order5
     """
-    # data type: Order5OneOf
-    oneof_schema_1_validator: Optional[Order5OneOf] = None
-    # data type: Order5OneOf1
-    oneof_schema_2_validator: Optional[Order5OneOf1] = None
-    actual_instance: Optional[Union[Order5OneOf, Order5OneOf1]] = None
-    one_of_schemas: Set[str] = { "Order5OneOf", "Order5OneOf1" }
+    # data type: Trading212MarketOrderPlaceQueryParams
+    oneof_schema_1_validator: Optional[Trading212MarketOrderPlaceQueryParams] = None
+    # data type: Trading212LimitOrderPlaceQueryParams
+    oneof_schema_2_validator: Optional[Trading212LimitOrderPlaceQueryParams] = None
+    # data type: Trading212StopOrderPlaceQueryParams
+    oneof_schema_3_validator: Optional[Trading212StopOrderPlaceQueryParams] = None
+    # data type: Trading212StopLimitOrderPlaceQueryParams
+    oneof_schema_4_validator: Optional[Trading212StopLimitOrderPlaceQueryParams] = None
+    actual_instance: Optional[Union[Trading212LimitOrderPlaceQueryParams, Trading212MarketOrderPlaceQueryParams, Trading212StopLimitOrderPlaceQueryParams, Trading212StopOrderPlaceQueryParams]] = None
+    one_of_schemas: Set[str] = { "Trading212LimitOrderPlaceQueryParams", "Trading212MarketOrderPlaceQueryParams", "Trading212StopLimitOrderPlaceQueryParams", "Trading212StopOrderPlaceQueryParams" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -60,22 +66,32 @@ class Order5(BaseModel):
         instance = Order5.model_construct()
         error_messages = []
         match = 0
-        # validate data type: Order5OneOf
-        if not isinstance(v, Order5OneOf):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order5OneOf`")
+        # validate data type: Trading212MarketOrderPlaceQueryParams
+        if not isinstance(v, Trading212MarketOrderPlaceQueryParams):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Trading212MarketOrderPlaceQueryParams`")
         else:
             match += 1
-        # validate data type: Order5OneOf1
-        if not isinstance(v, Order5OneOf1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order5OneOf1`")
+        # validate data type: Trading212LimitOrderPlaceQueryParams
+        if not isinstance(v, Trading212LimitOrderPlaceQueryParams):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Trading212LimitOrderPlaceQueryParams`")
+        else:
+            match += 1
+        # validate data type: Trading212StopOrderPlaceQueryParams
+        if not isinstance(v, Trading212StopOrderPlaceQueryParams):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Trading212StopOrderPlaceQueryParams`")
+        else:
+            match += 1
+        # validate data type: Trading212StopLimitOrderPlaceQueryParams
+        if not isinstance(v, Trading212StopLimitOrderPlaceQueryParams):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Trading212StopLimitOrderPlaceQueryParams`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in Order5 with oneOf schemas: Order5OneOf, Order5OneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order5 with oneOf schemas: Trading212LimitOrderPlaceQueryParams, Trading212MarketOrderPlaceQueryParams, Trading212StopLimitOrderPlaceQueryParams, Trading212StopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in Order5 with oneOf schemas: Order5OneOf, Order5OneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order5 with oneOf schemas: Trading212LimitOrderPlaceQueryParams, Trading212MarketOrderPlaceQueryParams, Trading212StopLimitOrderPlaceQueryParams, Trading212StopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -95,50 +111,57 @@ class Order5(BaseModel):
         if not _data_type:
             raise ValueError("Failed to lookup data type from the field `orderType` in the input.")
 
-        # check if data type is `WebullOptionLimitOrderPlaceQueryParams`
+        # check if data type is `Trading212LimitOrderPlaceQueryParams`
         if _data_type == "limit":
-            instance.actual_instance = WebullOptionLimitOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = Trading212LimitOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `WebullOptionMarketOrderPlaceQueryParams`
+        # check if data type is `Trading212MarketOrderPlaceQueryParams`
         if _data_type == "market":
-            instance.actual_instance = WebullOptionMarketOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = Trading212MarketOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `WebullOptionStopOrderPlaceQueryParams`
+        # check if data type is `Trading212StopOrderPlaceQueryParams`
         if _data_type == "stop":
-            instance.actual_instance = WebullOptionStopOrderPlaceQueryParams.from_json(json_str)
+            instance.actual_instance = Trading212StopOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `Order5OneOf`
-        if _data_type == "Order_5_oneOf":
-            instance.actual_instance = Order5OneOf.from_json(json_str)
+        # check if data type is `Trading212StopLimitOrderPlaceQueryParams`
+        if _data_type == "stop_limit":
+            instance.actual_instance = Trading212StopLimitOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `Order5OneOf1`
-        if _data_type == "Order_5_oneOf_1":
-            instance.actual_instance = Order5OneOf1.from_json(json_str)
-            return instance
-
-        # deserialize data into Order5OneOf
+        # deserialize data into Trading212MarketOrderPlaceQueryParams
         try:
-            instance.actual_instance = Order5OneOf.from_json(json_str)
+            instance.actual_instance = Trading212MarketOrderPlaceQueryParams.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into Order5OneOf1
+        # deserialize data into Trading212LimitOrderPlaceQueryParams
         try:
-            instance.actual_instance = Order5OneOf1.from_json(json_str)
+            instance.actual_instance = Trading212LimitOrderPlaceQueryParams.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into Trading212StopOrderPlaceQueryParams
+        try:
+            instance.actual_instance = Trading212StopOrderPlaceQueryParams.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into Trading212StopLimitOrderPlaceQueryParams
+        try:
+            instance.actual_instance = Trading212StopLimitOrderPlaceQueryParams.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into Order5 with oneOf schemas: Order5OneOf, Order5OneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order5 with oneOf schemas: Trading212LimitOrderPlaceQueryParams, Trading212MarketOrderPlaceQueryParams, Trading212StopLimitOrderPlaceQueryParams, Trading212StopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order5 with oneOf schemas: Order5OneOf, Order5OneOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order5 with oneOf schemas: Trading212LimitOrderPlaceQueryParams, Trading212MarketOrderPlaceQueryParams, Trading212StopLimitOrderPlaceQueryParams, Trading212StopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -152,7 +175,7 @@ class Order5(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], Order5OneOf, Order5OneOf1]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], Trading212LimitOrderPlaceQueryParams, Trading212MarketOrderPlaceQueryParams, Trading212StopLimitOrderPlaceQueryParams, Trading212StopOrderPlaceQueryParams]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

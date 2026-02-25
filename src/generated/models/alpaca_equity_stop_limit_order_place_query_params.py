@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from .notional1 import Notional1
 from .timeinforce1 import Timeinforce1
 from .trail_percent import TrailPercent
@@ -35,7 +36,7 @@ class AlpacaEquityStopLimitOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     stop_price: Union[StrictFloat, StrictInt] = Field(alias="stopPrice")
     limit_price: Union[StrictFloat, StrictInt] = Field(alias="limitPrice")
     client_order_id: Optional[StrictStr] = None

@@ -20,7 +20,7 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
 from .accountnumber import Accountnumber
-from .order6 import Order6
+from .order7 import Order7
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,7 +30,7 @@ class WebullOrderModifyRequest(BaseModel):
     """ # noqa: E501
     broker: StrictStr
     account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order6
+    order: Order7
     __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
@@ -99,7 +99,7 @@ class WebullOrderModifyRequest(BaseModel):
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
             "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order6.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "order": Order7.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

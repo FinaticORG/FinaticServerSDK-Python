@@ -20,6 +20,7 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
@@ -33,7 +34,7 @@ class NinjaTraderFutureLimitOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     price: Union[StrictFloat, StrictInt]
     account_spec: Optional[StrictStr] = Field(default=None, alias="accountSpec")
     is_automated: Optional[StrictBool] = Field(default=True, alias="isAutomated")

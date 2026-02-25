@@ -24,11 +24,11 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ORDER5ONEOF1_ONE_OF_SCHEMAS = ["WebullOptionLimitOrderPlaceQueryParams", "WebullOptionMarketOrderPlaceQueryParams", "WebullOptionStopOrderPlaceQueryParams"]
+ORDER6ONEOF1_ONE_OF_SCHEMAS = ["WebullOptionLimitOrderPlaceQueryParams", "WebullOptionMarketOrderPlaceQueryParams", "WebullOptionStopOrderPlaceQueryParams"]
 
-class Order5OneOf1(BaseModel):
+class Order6OneOf1(BaseModel):
     """
-    Order5OneOf1
+    Order6OneOf1
     """
     # data type: WebullOptionMarketOrderPlaceQueryParams
     oneof_schema_1_validator: Optional[WebullOptionMarketOrderPlaceQueryParams] = None
@@ -60,7 +60,7 @@ class Order5OneOf1(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = Order5OneOf1.model_construct()
+        instance = Order6OneOf1.model_construct()
         error_messages = []
         match = 0
         # validate data type: WebullOptionMarketOrderPlaceQueryParams
@@ -80,10 +80,10 @@ class Order5OneOf1(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in Order5OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order6OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in Order5OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order6OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -139,10 +139,10 @@ class Order5OneOf1(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into Order5OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order6OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order5OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order6OneOf1 with oneOf schemas: WebullOptionLimitOrderPlaceQueryParams, WebullOptionMarketOrderPlaceQueryParams, WebullOptionStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return instance
 

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .timeinforce1 import Timeinforce1
@@ -33,7 +33,7 @@ class TastyTradeEquityMarketOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     automated_source: Optional[StrictBool] = Field(default=True, alias="automated-source")
     price_effect: Optional[StrictStr] = Field(default=None, alias="price-effect")
     external_identifier: Optional[Annotated[str, Field(strict=True, max_length=128)]] = Field(default=None, alias="external-identifier")

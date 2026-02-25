@@ -17,30 +17,24 @@ import json
 import pprint
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
 from typing import Any, List, Optional
-from .webull_limit_order_modify_query_params import WebullLimitOrderModifyQueryParams
-from .webull_market_order_modify_query_params import WebullMarketOrderModifyQueryParams
-from .webull_stop_order_modify_query_params import WebullStopOrderModifyQueryParams
-from .webull_trailing_stop_order_modify_query_params import WebullTrailingStopOrderModifyQueryParams
+from .order6_one_of import Order6OneOf
+from .order6_one_of1 import Order6OneOf1
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ORDER6_ONE_OF_SCHEMAS = ["WebullLimitOrderModifyQueryParams", "WebullMarketOrderModifyQueryParams", "WebullStopOrderModifyQueryParams", "WebullTrailingStopOrderModifyQueryParams"]
+ORDER6_ONE_OF_SCHEMAS = ["Order6OneOf", "Order6OneOf1"]
 
 class Order6(BaseModel):
     """
     Order6
     """
-    # data type: WebullMarketOrderModifyQueryParams
-    oneof_schema_1_validator: Optional[WebullMarketOrderModifyQueryParams] = None
-    # data type: WebullLimitOrderModifyQueryParams
-    oneof_schema_2_validator: Optional[WebullLimitOrderModifyQueryParams] = None
-    # data type: WebullStopOrderModifyQueryParams
-    oneof_schema_3_validator: Optional[WebullStopOrderModifyQueryParams] = None
-    # data type: WebullTrailingStopOrderModifyQueryParams
-    oneof_schema_4_validator: Optional[WebullTrailingStopOrderModifyQueryParams] = None
-    actual_instance: Optional[Union[WebullLimitOrderModifyQueryParams, WebullMarketOrderModifyQueryParams, WebullStopOrderModifyQueryParams, WebullTrailingStopOrderModifyQueryParams]] = None
-    one_of_schemas: Set[str] = { "WebullLimitOrderModifyQueryParams", "WebullMarketOrderModifyQueryParams", "WebullStopOrderModifyQueryParams", "WebullTrailingStopOrderModifyQueryParams" }
+    # data type: Order6OneOf
+    oneof_schema_1_validator: Optional[Order6OneOf] = None
+    # data type: Order6OneOf1
+    oneof_schema_2_validator: Optional[Order6OneOf1] = None
+    actual_instance: Optional[Union[Order6OneOf, Order6OneOf1]] = None
+    one_of_schemas: Set[str] = { "Order6OneOf", "Order6OneOf1" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -66,32 +60,22 @@ class Order6(BaseModel):
         instance = Order6.model_construct()
         error_messages = []
         match = 0
-        # validate data type: WebullMarketOrderModifyQueryParams
-        if not isinstance(v, WebullMarketOrderModifyQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WebullMarketOrderModifyQueryParams`")
+        # validate data type: Order6OneOf
+        if not isinstance(v, Order6OneOf):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order6OneOf`")
         else:
             match += 1
-        # validate data type: WebullLimitOrderModifyQueryParams
-        if not isinstance(v, WebullLimitOrderModifyQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WebullLimitOrderModifyQueryParams`")
-        else:
-            match += 1
-        # validate data type: WebullStopOrderModifyQueryParams
-        if not isinstance(v, WebullStopOrderModifyQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WebullStopOrderModifyQueryParams`")
-        else:
-            match += 1
-        # validate data type: WebullTrailingStopOrderModifyQueryParams
-        if not isinstance(v, WebullTrailingStopOrderModifyQueryParams):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `WebullTrailingStopOrderModifyQueryParams`")
+        # validate data type: Order6OneOf1
+        if not isinstance(v, Order6OneOf1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order6OneOf1`")
         else:
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in Order6 with oneOf schemas: WebullLimitOrderModifyQueryParams, WebullMarketOrderModifyQueryParams, WebullStopOrderModifyQueryParams, WebullTrailingStopOrderModifyQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order6 with oneOf schemas: Order6OneOf, Order6OneOf1. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in Order6 with oneOf schemas: WebullLimitOrderModifyQueryParams, WebullMarketOrderModifyQueryParams, WebullStopOrderModifyQueryParams, WebullTrailingStopOrderModifyQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order6 with oneOf schemas: Order6OneOf, Order6OneOf1. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -111,57 +95,50 @@ class Order6(BaseModel):
         if not _data_type:
             raise ValueError("Failed to lookup data type from the field `orderType` in the input.")
 
-        # check if data type is `WebullLimitOrderModifyQueryParams`
+        # check if data type is `WebullOptionLimitOrderPlaceQueryParams`
         if _data_type == "limit":
-            instance.actual_instance = WebullLimitOrderModifyQueryParams.from_json(json_str)
+            instance.actual_instance = WebullOptionLimitOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `WebullMarketOrderModifyQueryParams`
+        # check if data type is `WebullOptionMarketOrderPlaceQueryParams`
         if _data_type == "market":
-            instance.actual_instance = WebullMarketOrderModifyQueryParams.from_json(json_str)
+            instance.actual_instance = WebullOptionMarketOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `WebullStopOrderModifyQueryParams`
+        # check if data type is `WebullOptionStopOrderPlaceQueryParams`
         if _data_type == "stop":
-            instance.actual_instance = WebullStopOrderModifyQueryParams.from_json(json_str)
+            instance.actual_instance = WebullOptionStopOrderPlaceQueryParams.from_json(json_str)
             return instance
 
-        # check if data type is `WebullTrailingStopOrderModifyQueryParams`
-        if _data_type == "trailing_stop":
-            instance.actual_instance = WebullTrailingStopOrderModifyQueryParams.from_json(json_str)
+        # check if data type is `Order6OneOf`
+        if _data_type == "Order_6_oneOf":
+            instance.actual_instance = Order6OneOf.from_json(json_str)
             return instance
 
-        # deserialize data into WebullMarketOrderModifyQueryParams
+        # check if data type is `Order6OneOf1`
+        if _data_type == "Order_6_oneOf_1":
+            instance.actual_instance = Order6OneOf1.from_json(json_str)
+            return instance
+
+        # deserialize data into Order6OneOf
         try:
-            instance.actual_instance = WebullMarketOrderModifyQueryParams.from_json(json_str)
+            instance.actual_instance = Order6OneOf.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into WebullLimitOrderModifyQueryParams
+        # deserialize data into Order6OneOf1
         try:
-            instance.actual_instance = WebullLimitOrderModifyQueryParams.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into WebullStopOrderModifyQueryParams
-        try:
-            instance.actual_instance = WebullStopOrderModifyQueryParams.from_json(json_str)
-            match += 1
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        # deserialize data into WebullTrailingStopOrderModifyQueryParams
-        try:
-            instance.actual_instance = WebullTrailingStopOrderModifyQueryParams.from_json(json_str)
+            instance.actual_instance = Order6OneOf1.from_json(json_str)
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into Order6 with oneOf schemas: WebullLimitOrderModifyQueryParams, WebullMarketOrderModifyQueryParams, WebullStopOrderModifyQueryParams, WebullTrailingStopOrderModifyQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order6 with oneOf schemas: Order6OneOf, Order6OneOf1. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order6 with oneOf schemas: WebullLimitOrderModifyQueryParams, WebullMarketOrderModifyQueryParams, WebullStopOrderModifyQueryParams, WebullTrailingStopOrderModifyQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order6 with oneOf schemas: Order6OneOf, Order6OneOf1. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -175,7 +152,7 @@ class Order6(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], WebullLimitOrderModifyQueryParams, WebullMarketOrderModifyQueryParams, WebullStopOrderModifyQueryParams, WebullTrailingStopOrderModifyQueryParams]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], Order6OneOf, Order6OneOf1]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

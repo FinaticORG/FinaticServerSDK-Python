@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, Optional, Union
+from typing_extensions import Annotated
 from .order_modify_query_params_base_time_in_force import OrderModifyQueryParamsBaseTimeInForce
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,7 +28,7 @@ class WebullLimitOrderModifyQueryParams(BaseModel):
     """
     WebullLimitOrderModifyQueryParams
     """ # noqa: E501
-    order_qty: Optional[StrictInt] = Field(default=None, alias="orderQty")
+    order_qty: Optional[Annotated[int, Field(strict=True, gt=0)]] = Field(default=None, alias="orderQty")
     order_id: Optional[StrictStr] = Field(default=None, alias="orderId")
     order_type: StrictStr = Field(alias="orderType")
     asset_type: Optional[StrictStr] = Field(default=None, alias="assetType")

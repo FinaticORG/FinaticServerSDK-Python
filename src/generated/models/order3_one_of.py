@@ -25,11 +25,11 @@ from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-ORDER3ANYOF_ONE_OF_SCHEMAS = ["TastyTradeEquityLimitOrderPlaceQueryParams", "TastyTradeEquityMarketOrderPlaceQueryParams", "TastyTradeEquityStopOrderPlaceQueryParams", "TastyTradeEquityTrailingStopOrderPlaceQueryParams"]
+ORDER3ONEOF_ONE_OF_SCHEMAS = ["TastyTradeEquityLimitOrderPlaceQueryParams", "TastyTradeEquityMarketOrderPlaceQueryParams", "TastyTradeEquityStopOrderPlaceQueryParams", "TastyTradeEquityTrailingStopOrderPlaceQueryParams"]
 
-class Order3AnyOf(BaseModel):
+class Order3OneOf(BaseModel):
     """
-    Order3AnyOf
+    Order3OneOf
     """
     # data type: TastyTradeEquityMarketOrderPlaceQueryParams
     oneof_schema_1_validator: Optional[TastyTradeEquityMarketOrderPlaceQueryParams] = None
@@ -63,7 +63,7 @@ class Order3AnyOf(BaseModel):
 
     @field_validator('actual_instance')
     def actual_instance_must_validate_oneof(cls, v):
-        instance = Order3AnyOf.model_construct()
+        instance = Order3OneOf.model_construct()
         error_messages = []
         match = 0
         # validate data type: TastyTradeEquityMarketOrderPlaceQueryParams
@@ -88,10 +88,10 @@ class Order3AnyOf(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in Order3AnyOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order3OneOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in Order3AnyOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order3OneOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -158,10 +158,10 @@ class Order3AnyOf(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into Order3AnyOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order3OneOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order3AnyOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order3OneOf with oneOf schemas: TastyTradeEquityLimitOrderPlaceQueryParams, TastyTradeEquityMarketOrderPlaceQueryParams, TastyTradeEquityStopOrderPlaceQueryParams, TastyTradeEquityTrailingStopOrderPlaceQueryParams. Details: " + ", ".join(error_messages))
         else:
             return instance
 

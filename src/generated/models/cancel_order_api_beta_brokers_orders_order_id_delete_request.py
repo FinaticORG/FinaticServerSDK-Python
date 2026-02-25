@@ -22,12 +22,13 @@ from .ninja_trader_order_cancel_request import NinjaTraderOrderCancelRequest
 from .robinhood_order_cancel_request import RobinhoodOrderCancelRequest
 from .tasty_trade_order_cancel_request import TastyTradeOrderCancelRequest
 from .tradestation_order_cancel_request import TradestationOrderCancelRequest
+from .trading212_order_cancel_request import Trading212OrderCancelRequest
 from .webull_order_cancel_request import WebullOrderCancelRequest
 from pydantic import StrictStr, Field
 from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
 
-CANCELORDERAPIBETABROKERSORDERSORDERIDDELETEREQUEST_ONE_OF_SCHEMAS = ["AlpacaOrderCancelRequest", "NinjaTraderOrderCancelRequest", "RobinhoodOrderCancelRequest", "TastyTradeOrderCancelRequest", "TradestationOrderCancelRequest", "WebullOrderCancelRequest"]
+CANCELORDERAPIBETABROKERSORDERSORDERIDDELETEREQUEST_ONE_OF_SCHEMAS = ["AlpacaOrderCancelRequest", "NinjaTraderOrderCancelRequest", "RobinhoodOrderCancelRequest", "TastyTradeOrderCancelRequest", "TradestationOrderCancelRequest", "Trading212OrderCancelRequest", "WebullOrderCancelRequest"]
 
 class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
     """
@@ -43,10 +44,12 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
     oneof_schema_4_validator: Optional[RobinhoodOrderCancelRequest] = None
     # data type: TradestationOrderCancelRequest
     oneof_schema_5_validator: Optional[TradestationOrderCancelRequest] = None
+    # data type: Trading212OrderCancelRequest
+    oneof_schema_6_validator: Optional[Trading212OrderCancelRequest] = None
     # data type: WebullOrderCancelRequest
-    oneof_schema_6_validator: Optional[WebullOrderCancelRequest] = None
-    actual_instance: Optional[Union[AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, WebullOrderCancelRequest]] = None
-    one_of_schemas: Set[str] = { "AlpacaOrderCancelRequest", "NinjaTraderOrderCancelRequest", "RobinhoodOrderCancelRequest", "TastyTradeOrderCancelRequest", "TradestationOrderCancelRequest", "WebullOrderCancelRequest" }
+    oneof_schema_7_validator: Optional[WebullOrderCancelRequest] = None
+    actual_instance: Optional[Union[AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, Trading212OrderCancelRequest, WebullOrderCancelRequest]] = None
+    one_of_schemas: Set[str] = { "AlpacaOrderCancelRequest", "NinjaTraderOrderCancelRequest", "RobinhoodOrderCancelRequest", "TastyTradeOrderCancelRequest", "TradestationOrderCancelRequest", "Trading212OrderCancelRequest", "WebullOrderCancelRequest" }
 
     model_config = ConfigDict(
         validate_assignment=True,
@@ -100,6 +103,11 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
             error_messages.append(f"Error! Input type `{type(v)}` is not `TradestationOrderCancelRequest`")
         else:
             match += 1
+        # validate data type: Trading212OrderCancelRequest
+        if not isinstance(v, Trading212OrderCancelRequest):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Trading212OrderCancelRequest`")
+        else:
+            match += 1
         # validate data type: WebullOrderCancelRequest
         if not isinstance(v, WebullOrderCancelRequest):
             error_messages.append(f"Error! Input type `{type(v)}` is not `WebullOrderCancelRequest`")
@@ -107,10 +115,10 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
             match += 1
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when setting `actual_instance` in CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when setting `actual_instance` in CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, Trading212OrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when setting `actual_instance` in CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, Trading212OrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
         else:
             return v
 
@@ -158,6 +166,11 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
             instance.actual_instance = TradestationOrderCancelRequest.from_json(json_str)
             return instance
 
+        # check if data type is `Trading212OrderCancelRequest`
+        if _data_type == "trading212":
+            instance.actual_instance = Trading212OrderCancelRequest.from_json(json_str)
+            return instance
+
         # check if data type is `WebullOrderCancelRequest`
         if _data_type == "webull":
             instance.actual_instance = WebullOrderCancelRequest.from_json(json_str)
@@ -193,6 +206,12 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
             match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
+        # deserialize data into Trading212OrderCancelRequest
+        try:
+            instance.actual_instance = Trading212OrderCancelRequest.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
         # deserialize data into WebullOrderCancelRequest
         try:
             instance.actual_instance = WebullOrderCancelRequest.from_json(json_str)
@@ -202,10 +221,10 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
 
         if match > 1:
             # more than 1 match
-            raise ValueError("Multiple matches found when deserializing the JSON string into CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("Multiple matches found when deserializing the JSON string into CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, Trading212OrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
         elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest with oneOf schemas: AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, Trading212OrderCancelRequest, WebullOrderCancelRequest. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -219,7 +238,7 @@ class CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, WebullOrderCancelRequest]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], AlpacaOrderCancelRequest, NinjaTraderOrderCancelRequest, RobinhoodOrderCancelRequest, TastyTradeOrderCancelRequest, TradestationOrderCancelRequest, Trading212OrderCancelRequest, WebullOrderCancelRequest]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None

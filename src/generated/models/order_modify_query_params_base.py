@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from .order_modify_query_params_base_time_in_force import OrderModifyQueryParamsBaseTimeInForce
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,7 +35,7 @@ class OrderModifyQueryParamsBase(BaseModel):
     is_automated: Optional[StrictBool] = Field(default=None, alias="isAutomated")
     price: Optional[Union[StrictFloat, StrictInt]] = None
     stop_price: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, alias="stopPrice")
-    order_qty: Optional[StrictInt] = Field(default=None, alias="orderQty")
+    order_qty: Optional[Annotated[int, Field(strict=True, gt=0)]] = Field(default=None, alias="orderQty")
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["orderId", "orderType", "assetType", "timeInForce", "isAutomated", "price", "stopPrice", "orderQty"]
 

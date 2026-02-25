@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -11,6 +9,7 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -18,10 +17,10 @@ from typing_extensions import Annotated
 
 from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
-from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
-from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
-from ..models.finaticapi_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
+from ..models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
+from ..models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
+from ..models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
+from ..models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
 from ..models.session_start_request import SessionStartRequest
 
 from ..api_client import ApiClient, RequestSerialized
@@ -58,7 +57,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2:
         """Get Portal Url
 
         Get a portal URL with token for a session.  The session must be in ACTIVE or AUTHENTICATING state and the request must come from the same device that initiated the session. Device info is automatically validated from the request.
@@ -96,7 +95,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -134,7 +133,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2]:
         """Get Portal Url
 
         Get a portal URL with token for a session.  The session must be in ACTIVE or AUTHENTICATING state and the request must come from the same device that initiated the session. Device info is automatically validated from the request.
@@ -172,7 +171,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -248,7 +247,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -346,7 +345,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2:
         """Get Session User
 
         Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
@@ -387,7 +386,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -426,7 +425,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2]:
         """Get Session User
 
         Get user information for a completed session.  This endpoint is designed for server SDKs to retrieve user information after successful OTP verification.   Security: - Requires valid session in ACTIVE state - Validates device fingerprint binding - Only accessible to authenticated sessions with user_id - Validates that header session_id matches path session_id
@@ -467,7 +466,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -547,7 +546,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -647,7 +646,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2:
         """Init Session
 
         Initialize a new session with company API key.
@@ -685,7 +684,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -723,7 +722,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2]:
         """Init Session
 
         Initialize a new session with company API key.
@@ -761,7 +760,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -837,7 +836,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -935,7 +934,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2:
         """Start Session
 
         Start a session with a one-time token.
@@ -976,7 +975,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1015,7 +1014,7 @@ class SessionApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2]:
         """Start Session
 
         Start a session with a one-time token.
@@ -1056,7 +1055,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1136,7 +1135,7 @@ class SessionApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticapiCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",

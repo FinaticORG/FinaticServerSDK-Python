@@ -28,7 +28,7 @@ class FinaticResponseDisconnectCompanyFromBrokerConnectionResult(BaseModel):
     FinaticResponseDisconnectCompanyFromBrokerConnectionResult
     """ # noqa: E501
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
-    success: SuccessPayloadDisconnectCompanyFromBrokerConnectionResult = Field(description="Success payload containing data and optional meta")
+    success: Optional[SuccessPayloadDisconnectCompanyFromBrokerConnectionResult] = None
     error: Optional[Dict[str, Any]] = None
     warning: Optional[List[Dict[str, Any]]] = None
     additional_properties: Dict[str, Any] = {}
@@ -82,6 +82,11 @@ class FinaticResponseDisconnectCompanyFromBrokerConnectionResult(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if success (nullable) is None
+        # and model_fields_set contains the field
+        if self.success is None and "success" in self.model_fields_set:
+            _dict['success'] = None
 
         # set to None if error (nullable) is None
         # and model_fields_set contains the field

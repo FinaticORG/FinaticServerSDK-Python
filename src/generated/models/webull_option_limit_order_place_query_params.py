@@ -35,7 +35,7 @@ class WebullOptionLimitOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     price: Union[StrictFloat, StrictInt]
     support_trading_session: Optional[StrictStr] = Field(default=None, alias="supportTradingSession")
     client_order_id: Optional[Annotated[str, Field(strict=True, max_length=64)]] = Field(default=None, alias="clientOrderId")

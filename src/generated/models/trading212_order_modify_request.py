@@ -20,24 +20,24 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict
 from .accountnumber import Accountnumber
-from .order6 import Order6
+from .order_modify_query_params_base import OrderModifyQueryParamsBase
 from typing import Optional, Set
 from typing_extensions import Self
 
-class WebullOrderPlaceRequest(BaseModel):
+class Trading212OrderModifyRequest(BaseModel):
     """
-    Webull place-order request body.  Attributes ---------- broker : Literal[\"webull\"]     Discriminator; must be ``\"webull\"``. account_number : str | int     Broker-provided account ID (top-level). Serialized as ``accountNumber``. order : WebullOrderPlaceQueryParamsUnion     Webull equity order (market, limit, stop, stop_limit, trailing_stop).  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
+    Trading212 modify-order request body (partial update).  Note: Trading212 does NOT support order modification via API. This variant exists for API completeness; the executor raises NotImplementedError.  Attributes ---------- broker : Literal[\"trading212\"]     Discriminator; must be ``\"trading212\"``. account_number : str | int     Broker-provided account number (top-level). Serialized as ``accountNumber``. order : OrderModifyQueryParamsBase     Delta of fields to change; backend merges with existing order.  Notes ----- Uses ``extra=\"forbid\"`` and ``populate_by_name=True``.
     """ # noqa: E501
     broker: StrictStr
     account_number: Accountnumber = Field(alias="accountNumber")
-    order: Order6
+    order: OrderModifyQueryParamsBase
     __properties: ClassVar[List[str]] = ["broker", "accountNumber", "order"]
 
     @field_validator('broker')
     def broker_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['webull']):
-            raise ValueError("must be one of enum values ('webull')")
+        if value not in set(['trading212']):
+            raise ValueError("must be one of enum values ('trading212')")
         return value
 
     model_config = ConfigDict(
@@ -58,7 +58,7 @@ class WebullOrderPlaceRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of WebullOrderPlaceRequest from a JSON string"""
+        """Create an instance of Trading212OrderModifyRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -89,7 +89,7 @@ class WebullOrderPlaceRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of WebullOrderPlaceRequest from a dict"""
+        """Create an instance of Trading212OrderModifyRequest from a dict"""
         if obj is None:
             return None
 
@@ -99,7 +99,7 @@ class WebullOrderPlaceRequest(BaseModel):
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
             "accountNumber": Accountnumber.from_dict(obj["accountNumber"]) if obj.get("accountNumber") is not None else None,
-            "order": Order6.from_dict(obj["order"]) if obj.get("order") is not None else None
+            "order": OrderModifyQueryParamsBase.from_dict(obj["order"]) if obj.get("order") is not None else None
         })
         return _obj
 

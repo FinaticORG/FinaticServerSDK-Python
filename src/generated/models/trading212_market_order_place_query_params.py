@@ -17,44 +17,39 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
 from typing_extensions import Self
 
-class RobinhoodEquityLimitOrderPlaceQueryParams(BaseModel):
+class Trading212MarketOrderPlaceQueryParams(BaseModel):
     """
-    Equity limit order with Robinhood-specific extras.
+    Consumer params for Trading212 market order placement.  Market orders are executed immediately at the best available price. Extended hours trading is supported.
     """ # noqa: E501
+    extended_hours: Optional[StrictBool] = Field(default=False, description="Allow execution outside regular trading hours (market orders only)", alias="extendedHours")
     order_type: StrictStr = Field(alias="orderType")
-    asset_type: Optional[StrictStr] = Field(default='equity', alias="assetType")
+    asset_type: StrictStr = Field(alias="assetType")
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
     order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
-    price: Union[StrictFloat, StrictInt]
-    extended_hours: Optional[StrictBool] = Field(default=False, description="Allow trading during extended hours (premium users only)", alias="extendedHours")
-    market_hours: Optional[StrictStr] = Field(default='regular_hours', description="Market hours to trade in", alias="marketHours")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["orderType", "assetType", "action", "timeInForce", "symbol", "orderQty", "price", "extendedHours", "marketHours"]
+    __properties: ClassVar[List[str]] = ["extendedHours", "orderType", "assetType", "action", "timeInForce", "symbol", "orderQty"]
 
     @field_validator('order_type')
     def order_type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['limit']):
-            raise ValueError("must be one of enum values ('limit')")
+        if value not in set(['market']):
+            raise ValueError("must be one of enum values ('market')")
         return value
 
     @field_validator('asset_type')
     def asset_type_validate_enum(cls, value):
         """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['equity']):
-            raise ValueError("must be one of enum values ('equity')")
+        if value not in set(['equity', 'equity_option', 'crypto', 'forex', 'future', 'future_option', 'bond']):
+            raise ValueError("must be one of enum values ('equity', 'equity_option', 'crypto', 'forex', 'future', 'future_option', 'bond')")
         return value
 
     @field_validator('action')
@@ -62,16 +57,6 @@ class RobinhoodEquityLimitOrderPlaceQueryParams(BaseModel):
         """Validates the enum"""
         if value not in set(['buy', 'sell']):
             raise ValueError("must be one of enum values ('buy', 'sell')")
-        return value
-
-    @field_validator('market_hours')
-    def market_hours_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['regular_hours', 'all_day_hours', 'extended_hours']):
-            raise ValueError("must be one of enum values ('regular_hours', 'all_day_hours', 'extended_hours')")
         return value
 
     model_config = ConfigDict(
@@ -92,7 +77,7 @@ class RobinhoodEquityLimitOrderPlaceQueryParams(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of RobinhoodEquityLimitOrderPlaceQueryParams from a JSON string"""
+        """Create an instance of Trading212MarketOrderPlaceQueryParams from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -127,7 +112,7 @@ class RobinhoodEquityLimitOrderPlaceQueryParams(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of RobinhoodEquityLimitOrderPlaceQueryParams from a dict"""
+        """Create an instance of Trading212MarketOrderPlaceQueryParams from a dict"""
         if obj is None:
             return None
 
@@ -135,15 +120,13 @@ class RobinhoodEquityLimitOrderPlaceQueryParams(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "extendedHours": obj.get("extendedHours") if obj.get("extendedHours") is not None else False,
             "orderType": obj.get("orderType"),
-            "assetType": obj.get("assetType") if obj.get("assetType") is not None else 'equity',
+            "assetType": obj.get("assetType"),
             "action": obj.get("action"),
             "timeInForce": Timeinforce1.from_dict(obj["timeInForce"]) if obj.get("timeInForce") is not None else None,
             "symbol": obj.get("symbol"),
-            "orderQty": obj.get("orderQty"),
-            "price": obj.get("price"),
-            "extendedHours": obj.get("extendedHours") if obj.get("extendedHours") is not None else False,
-            "marketHours": obj.get("marketHours") if obj.get("marketHours") is not None else 'regular_hours'
+            "orderQty": obj.get("orderQty")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

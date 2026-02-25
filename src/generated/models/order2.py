@@ -13,42 +13,37 @@
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
-import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Optional
-from .order2_any_of import Order2AnyOf
-from .order2_any_of1 import Order2AnyOf1
-from .order2_any_of2 import Order2AnyOf2
-from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
+from typing import Any, List, Optional
+from .order2_one_of import Order2OneOf
+from .order2_one_of1 import Order2OneOf1
+from .order2_one_of2 import Order2OneOf2
+from pydantic import StrictStr, Field
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
-from pydantic import Field
 
-ORDER2_ANY_OF_SCHEMAS = ["Order2AnyOf", "Order2AnyOf1", "Order2AnyOf2"]
+ORDER2_ONE_OF_SCHEMAS = ["Order2OneOf", "Order2OneOf1", "Order2OneOf2"]
 
 class Order2(BaseModel):
     """
     Order2
     """
+    # data type: Order2OneOf
+    oneof_schema_1_validator: Optional[Order2OneOf] = None
+    # data type: Order2OneOf1
+    oneof_schema_2_validator: Optional[Order2OneOf1] = None
+    # data type: Order2OneOf2
+    oneof_schema_3_validator: Optional[Order2OneOf2] = None
+    actual_instance: Optional[Union[Order2OneOf, Order2OneOf1, Order2OneOf2]] = None
+    one_of_schemas: Set[str] = { "Order2OneOf", "Order2OneOf1", "Order2OneOf2" }
 
-    # data type: Order2AnyOf
-    anyof_schema_1_validator: Optional[Order2AnyOf] = None
-    # data type: Order2AnyOf1
-    anyof_schema_2_validator: Optional[Order2AnyOf1] = None
-    # data type: Order2AnyOf2
-    anyof_schema_3_validator: Optional[Order2AnyOf2] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[Order2AnyOf, Order2AnyOf1, Order2AnyOf2]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: Set[str] = { "Order2AnyOf", "Order2AnyOf1", "Order2AnyOf2" }
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
-    model_config = {
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
 
     discriminator_value_class_map: Dict[str, str] = {
     }
@@ -64,35 +59,36 @@ class Order2(BaseModel):
             super().__init__(**kwargs)
 
     @field_validator('actual_instance')
-    def actual_instance_must_validate_anyof(cls, v):
+    def actual_instance_must_validate_oneof(cls, v):
         instance = Order2.model_construct()
         error_messages = []
-        # validate data type: Order2AnyOf
-        if not isinstance(v, Order2AnyOf):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2AnyOf`")
+        match = 0
+        # validate data type: Order2OneOf
+        if not isinstance(v, Order2OneOf):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2OneOf`")
         else:
-            return v
-
-        # validate data type: Order2AnyOf1
-        if not isinstance(v, Order2AnyOf1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2AnyOf1`")
+            match += 1
+        # validate data type: Order2OneOf1
+        if not isinstance(v, Order2OneOf1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2OneOf1`")
         else:
-            return v
-
-        # validate data type: Order2AnyOf2
-        if not isinstance(v, Order2AnyOf2):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2AnyOf2`")
+            match += 1
+        # validate data type: Order2OneOf2
+        if not isinstance(v, Order2OneOf2):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order2OneOf2`")
         else:
-            return v
-
-        if error_messages:
+            match += 1
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order2 with oneOf schemas: Order2OneOf, Order2OneOf1, Order2OneOf2. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Order2 with anyOf schemas: Order2AnyOf, Order2AnyOf1, Order2AnyOf2. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order2 with oneOf schemas: Order2OneOf, Order2OneOf1, Order2OneOf2. Details: " + ", ".join(error_messages))
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: Dict[str, Any]) -> Self:
+    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
@@ -100,28 +96,78 @@ class Order2(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[Order2AnyOf] = None
-        try:
-            instance.actual_instance = Order2AnyOf.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[Order2AnyOf1] = None
-        try:
-            instance.actual_instance = Order2AnyOf1.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_3_validator: Optional[Order2AnyOf2] = None
-        try:
-            instance.actual_instance = Order2AnyOf2.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
+        match = 0
 
-        if error_messages:
+        # use oneOf discriminator to lookup the data type
+        _data_type = json.loads(json_str).get("orderType")
+        if not _data_type:
+            raise ValueError("Failed to lookup data type from the field `orderType` in the input.")
+
+        # check if data type is `RobinhoodCryptoLimitOrderPlaceQueryParams`
+        if _data_type == "limit":
+            instance.actual_instance = RobinhoodCryptoLimitOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `RobinhoodCryptoMarketOrderPlaceQueryParams`
+        if _data_type == "market":
+            instance.actual_instance = RobinhoodCryptoMarketOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `RobinhoodCryptoStopOrderPlaceQueryParams`
+        if _data_type == "stop":
+            instance.actual_instance = RobinhoodCryptoStopOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `RobinhoodCryptoStopLimitOrderPlaceQueryParams`
+        if _data_type == "stop_limit":
+            instance.actual_instance = RobinhoodCryptoStopLimitOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `RobinhoodCryptoTrailingStopOrderPlaceQueryParams`
+        if _data_type == "trailing_stop":
+            instance.actual_instance = RobinhoodCryptoTrailingStopOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `Order2OneOf`
+        if _data_type == "Order_2_oneOf":
+            instance.actual_instance = Order2OneOf.from_json(json_str)
+            return instance
+
+        # check if data type is `Order2OneOf1`
+        if _data_type == "Order_2_oneOf_1":
+            instance.actual_instance = Order2OneOf1.from_json(json_str)
+            return instance
+
+        # check if data type is `Order2OneOf2`
+        if _data_type == "Order_2_oneOf_2":
+            instance.actual_instance = Order2OneOf2.from_json(json_str)
+            return instance
+
+        # deserialize data into Order2OneOf
+        try:
+            instance.actual_instance = Order2OneOf.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into Order2OneOf1
+        try:
+            instance.actual_instance = Order2OneOf1.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into Order2OneOf2
+        try:
+            instance.actual_instance = Order2OneOf2.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order2 with oneOf schemas: Order2OneOf, Order2OneOf1, Order2OneOf2. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order2 with anyOf schemas: Order2AnyOf, Order2AnyOf1, Order2AnyOf2. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order2 with oneOf schemas: Order2OneOf, Order2OneOf1, Order2OneOf2. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -135,7 +181,7 @@ class Order2(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], Order2AnyOf, Order2AnyOf1, Order2AnyOf2]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], Order2OneOf, Order2OneOf1, Order2OneOf2]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -143,6 +189,7 @@ class Order2(BaseModel):
         if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
             return self.actual_instance.to_dict()
         else:
+            # primitive type
             return self.actual_instance
 
     def to_str(self) -> str:

@@ -19,6 +19,7 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing_extensions import Annotated
 from .robinhood_option_spread_leg import RobinhoodOptionSpreadLeg
 from .timeinforce1 import Timeinforce1
 from typing import Optional, Set
@@ -33,7 +34,7 @@ class RobinhoodOptionLimitOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     price: Union[StrictFloat, StrictInt]
     direction: Optional[StrictStr] = None
     spread: Optional[List[RobinhoodOptionSpreadLeg]] = None

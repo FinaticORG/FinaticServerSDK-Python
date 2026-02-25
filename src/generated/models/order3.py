@@ -13,39 +13,34 @@
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
-import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Optional
-from .order3_any_of import Order3AnyOf
-from .order3_any_of1 import Order3AnyOf1
-from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
+from typing import Any, List, Optional
+from .order3_one_of import Order3OneOf
+from .order3_one_of1 import Order3OneOf1
+from pydantic import StrictStr, Field
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
-from pydantic import Field
 
-ORDER3_ANY_OF_SCHEMAS = ["Order3AnyOf", "Order3AnyOf1"]
+ORDER3_ONE_OF_SCHEMAS = ["Order3OneOf", "Order3OneOf1"]
 
 class Order3(BaseModel):
     """
     Order3
     """
+    # data type: Order3OneOf
+    oneof_schema_1_validator: Optional[Order3OneOf] = None
+    # data type: Order3OneOf1
+    oneof_schema_2_validator: Optional[Order3OneOf1] = None
+    actual_instance: Optional[Union[Order3OneOf, Order3OneOf1]] = None
+    one_of_schemas: Set[str] = { "Order3OneOf", "Order3OneOf1" }
 
-    # data type: Order3AnyOf
-    anyof_schema_1_validator: Optional[Order3AnyOf] = None
-    # data type: Order3AnyOf1
-    anyof_schema_2_validator: Optional[Order3AnyOf1] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[Order3AnyOf, Order3AnyOf1]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: Set[str] = { "Order3AnyOf", "Order3AnyOf1" }
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
-    model_config = {
-        "validate_assignment": True,
-        "protected_namespaces": (),
-    }
 
     discriminator_value_class_map: Dict[str, str] = {
     }
@@ -61,29 +56,31 @@ class Order3(BaseModel):
             super().__init__(**kwargs)
 
     @field_validator('actual_instance')
-    def actual_instance_must_validate_anyof(cls, v):
+    def actual_instance_must_validate_oneof(cls, v):
         instance = Order3.model_construct()
         error_messages = []
-        # validate data type: Order3AnyOf
-        if not isinstance(v, Order3AnyOf):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order3AnyOf`")
+        match = 0
+        # validate data type: Order3OneOf
+        if not isinstance(v, Order3OneOf):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order3OneOf`")
         else:
-            return v
-
-        # validate data type: Order3AnyOf1
-        if not isinstance(v, Order3AnyOf1):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `Order3AnyOf1`")
+            match += 1
+        # validate data type: Order3OneOf1
+        if not isinstance(v, Order3OneOf1):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `Order3OneOf1`")
         else:
-            return v
-
-        if error_messages:
+            match += 1
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when setting `actual_instance` in Order3 with oneOf schemas: Order3OneOf, Order3OneOf1. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Order3 with anyOf schemas: Order3AnyOf, Order3AnyOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Order3 with oneOf schemas: Order3OneOf, Order3OneOf1. Details: " + ", ".join(error_messages))
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: Dict[str, Any]) -> Self:
+    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
@@ -91,22 +88,62 @@ class Order3(BaseModel):
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
         error_messages = []
-        # anyof_schema_1_validator: Optional[Order3AnyOf] = None
-        try:
-            instance.actual_instance = Order3AnyOf.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # anyof_schema_2_validator: Optional[Order3AnyOf1] = None
-        try:
-            instance.actual_instance = Order3AnyOf1.from_json(json_str)
-            return instance
-        except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
+        match = 0
 
-        if error_messages:
+        # use oneOf discriminator to lookup the data type
+        _data_type = json.loads(json_str).get("orderType")
+        if not _data_type:
+            raise ValueError("Failed to lookup data type from the field `orderType` in the input.")
+
+        # check if data type is `TastyTradeOptionLimitOrderPlaceQueryParams`
+        if _data_type == "limit":
+            instance.actual_instance = TastyTradeOptionLimitOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `TastyTradeOptionMarketOrderPlaceQueryParams`
+        if _data_type == "market":
+            instance.actual_instance = TastyTradeOptionMarketOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `TastyTradeOptionStopOrderPlaceQueryParams`
+        if _data_type == "stop":
+            instance.actual_instance = TastyTradeOptionStopOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `TastyTradeOptionTrailingStopOrderPlaceQueryParams`
+        if _data_type == "trailing_stop":
+            instance.actual_instance = TastyTradeOptionTrailingStopOrderPlaceQueryParams.from_json(json_str)
+            return instance
+
+        # check if data type is `Order3OneOf`
+        if _data_type == "Order_3_oneOf":
+            instance.actual_instance = Order3OneOf.from_json(json_str)
+            return instance
+
+        # check if data type is `Order3OneOf1`
+        if _data_type == "Order_3_oneOf_1":
+            instance.actual_instance = Order3OneOf1.from_json(json_str)
+            return instance
+
+        # deserialize data into Order3OneOf
+        try:
+            instance.actual_instance = Order3OneOf.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into Order3OneOf1
+        try:
+            instance.actual_instance = Order3OneOf1.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when deserializing the JSON string into Order3 with oneOf schemas: Order3OneOf, Order3OneOf1. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Order3 with anyOf schemas: Order3AnyOf, Order3AnyOf1. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Order3 with oneOf schemas: Order3OneOf, Order3OneOf1. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -120,7 +157,7 @@ class Order3(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], Order3AnyOf, Order3AnyOf1]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], Order3OneOf, Order3OneOf1]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -128,6 +165,7 @@ class Order3(BaseModel):
         if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
             return self.actual_instance.to_dict()
         else:
+            # primitive type
             return self.actual_instance
 
     def to_str(self) -> str:

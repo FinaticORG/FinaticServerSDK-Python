@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from .notional1 import Notional1
 from .timeinforce1 import Timeinforce1
 from .trail_percent import TrailPercent
@@ -35,7 +36,7 @@ class AlpacaEquityMarketOrderPlaceQueryParams(BaseModel):
     action: StrictStr
     time_in_force: Timeinforce1 = Field(alias="timeInForce")
     symbol: StrictStr
-    order_qty: StrictInt = Field(alias="orderQty")
+    order_qty: Annotated[int, Field(strict=True, gt=0)] = Field(alias="orderQty")
     client_order_id: Optional[StrictStr] = None
     extended_hours: Optional[StrictBool] = None
     order_class: Optional[StrictStr] = None
