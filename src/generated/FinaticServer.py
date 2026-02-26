@@ -12,7 +12,7 @@ from .configuration import Configuration
 from .api_client import ApiClient
 from .config import SdkConfig, get_config
 from .types import FinaticResponse
-from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url, append_kind_to_url, append_asset_types_to_url
+from .utils.url_utils import append_theme_to_url, append_broker_filter_to_url, append_kind_to_url, append_asset_types_to_url, append_stage_to_url
 from .utils.logger import get_logger
 from .models.session_response_data import SessionResponseData
 from .models.session_user_response import SessionUserResponse
@@ -469,6 +469,7 @@ class FinaticServer:
             brokers: Optional list of broker names/IDs to filter
             kind: Optional filter by provider type ('broker' or 'exchange')
             asset_types: Optional list of asset types/capabilities to filter (AND logic)
+            stage: Optional list of broker stages: 'production', 'beta', 'alpha' (OR; omit = show all)
             email: Optional email for pre-filling
             mode: Optional mode ('light' or 'dark')
         
@@ -477,7 +478,7 @@ class FinaticServer:
         
         @example
         ```python
-        url = await finatic.get_portal_url(theme='default', brokers=['broker-1'], kind='exchange', asset_types=['crypto'], email='user@example.com', mode='dark')
+        url = await finatic.get_portal_url(theme='default', brokers=['broker-1'], kind='exchange', asset_types=['crypto'], stage=['production'], email='user@example.com', mode='dark')
         ```
         @example
         ```typescript-server
@@ -492,6 +493,7 @@ class FinaticServer:
         brokers = kwargs.get('brokers')
         kind = kwargs.get('kind')
         asset_types = kwargs.get('asset_types')
+        stage = kwargs.get('stage')
         email = kwargs.get('email')
         mode = kwargs.get('mode')
         
@@ -550,6 +552,10 @@ class FinaticServer:
         # Append asset types (capabilities) filter if provided
         if asset_types and len(asset_types) > 0:
             portal_url = append_asset_types_to_url(portal_url, asset_types)
+
+        # Append stage filter if provided
+        if stage and len(stage) > 0:
+            portal_url = append_stage_to_url(portal_url, stage)
 
         # Append email if provided
         if email:

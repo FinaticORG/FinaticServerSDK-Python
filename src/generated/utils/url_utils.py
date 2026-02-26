@@ -122,3 +122,33 @@ def append_asset_types_to_url(base_url: str, asset_types: Optional[List[str]] = 
         return urlunparse(new_parsed)
     except Exception:
         return base_url
+
+
+def append_stage_to_url(
+    base_url: str,
+    stages: Optional[List[str]] = None,
+) -> str:
+    """Append stage filter to a portal URL.
+
+    Portal shows only brokers in any of the given stages (OR). Omit or empty = show all.
+    Valid stages: 'production', 'beta', 'alpha'.
+
+    Args:
+        base_url: The base portal URL (may already have query parameters)
+        stages: One or more of 'production' | 'beta' | 'alpha'
+
+    Returns:
+        The portal URL with stage parameter appended
+    """
+    if not stages or len(stages) == 0:
+        return base_url
+
+    try:
+        parsed = urlparse(base_url)
+        query_params = parse_qs(parsed.query)
+        query_params['stage'] = [','.join(stages)]
+        new_query = urlencode(query_params, doseq=True)
+        new_parsed = parsed._replace(query=new_query)
+        return urlunparse(new_parsed)
+    except Exception:
+        return base_url
