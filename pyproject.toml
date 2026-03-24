@@ -106,6 +106,7 @@ ignore_errors = true
 asyncio_mode = "auto"
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+pythonpath = ["."]
 addopts = "--cov=src --cov-report=term-missing"
 
 [tool.flake8]

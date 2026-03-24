@@ -1,0 +1,3 @@
+from .ninja_trader_order_modify_request import NinjaTraderOrderModifyRequest
+
+_NinjaTraderOrderModifyRequest = NinjaTraderOrderModifyRequest
