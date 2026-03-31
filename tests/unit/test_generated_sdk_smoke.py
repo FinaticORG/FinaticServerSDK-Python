@@ -25,6 +25,11 @@ def _invoke_callable_with_dummy_arguments(method: object) -> object:
     for parameter_name, parameter in signature.parameters.items():
         if parameter_name == "self":
             continue
+        # Skip VAR_KEYWORD parameters like `**kwargs` so we don't pass invalid
+        # keyword arguments into generated FinaticServer methods.
+        parameter_obj = signature.parameters[parameter_name]
+        if parameter_obj.kind == inspect.Parameter.VAR_KEYWORD:  # type: ignore[attr-defined]
+            continue
         if parameter.default is not inspect.Signature.empty:
             continue
         keyword_arguments[parameter_name] = _dummy_value(parameter_name)

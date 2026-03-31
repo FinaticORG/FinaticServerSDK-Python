@@ -11,59 +11,54 @@ from src.generated.wrappers.session import SessionWrapper
 
 class _ApiProxy:
     def __getattr__(self, _name: str) -> Any:
-        async def _fake_call(*_args: Any, **_kwargs: Any) -> dict[str, Any]:
-            return {"success": {"data": []}, "error": None, "warning": None}
+        class _FinaticResponseLike:
+            def __init__(self) -> None:
+                self.success = {"data": []}
+                self.error = None
+                self.warning = None
+
+        async def _fake_call(*_args: Any, **_kwargs: Any) -> Any:
+            return _FinaticResponseLike()
 
         return _fake_call
 
 
-def _dummy_value(parameter_name: str) -> Any:
-    lowered_parameter_name = parameter_name.lower()
-    if "id" in lowered_parameter_name:
-        return "test-id"
-    if "limit" in lowered_parameter_name or "offset" in lowered_parameter_name:
-        return 1
-    if lowered_parameter_name.startswith("is_") or lowered_parameter_name.startswith("include_"):
-        return True
-    return "value"
+async def _invoke_awaitable(maybe_awaitable: Any) -> None:
+    if inspect.isawaitable(maybe_awaitable):
+        await maybe_awaitable
 
 
-def _invoke_callable_with_dummy_arguments(method: Any) -> Any:
-    signature = inspect.signature(method)
-    keyword_arguments: dict[str, Any] = {}
-    for parameter_name, parameter in signature.parameters.items():
-        if parameter_name == "self":
-            continue
-        if parameter.default is not inspect.Signature.empty:
-            continue
-        keyword_arguments[parameter_name] = _dummy_value(parameter_name)
-    return method(**keyword_arguments)
+def _build_brokers_wrapper() -> BrokersWrapper:
+    wrapper = BrokersWrapper(_ApiProxy(), None, None)
+    wrapper.set_session_context("session-id", "company-id", "csrf-token")
+    return wrapper
 
 
-def _invoke_wrapper_methods(wrapper_cls: type[Any]) -> int:
-    wrapper = wrapper_cls(_ApiProxy(), None, None)
-    if hasattr(wrapper, "set_session_context"):
-        wrapper.set_session_context("session-id", "company-id", "csrf-token")
+def _build_company_wrapper() -> CompanyWrapper:
+    return CompanyWrapper(_ApiProxy(), None, None)
 
-    invoked_count = 0
-    for method_name, method in inspect.getmembers(wrapper, predicate=callable):
-        if method_name.startswith("_") or method_name in {"set_session_context"}:
-            continue
-        try:
-            result = _invoke_callable_with_dummy_arguments(method)
-            if inspect.isawaitable(result):
-                asyncio.run(result)
-            invoked_count += 1
-        except Exception:
-            invoked_count += 1
-    return invoked_count
+
+def _build_session_wrapper() -> SessionWrapper:
+    return SessionWrapper(_ApiProxy(), None, None)
 
 
 def test_generated_wrappers_smoke_invokes_many_methods() -> None:
-    brokers_invoked = _invoke_wrapper_methods(BrokersWrapper)
-    company_invoked = _invoke_wrapper_methods(CompanyWrapper)
-    session_invoked = _invoke_wrapper_methods(SessionWrapper)
+    brokers = _build_brokers_wrapper()
+    company = _build_company_wrapper()
+    session = _build_session_wrapper()
 
-    assert brokers_invoked > 10
-    assert company_invoked > 0
-    assert session_invoked > 0
+    # Brokers wrapper: hit the most commonly used broker browsing/disconnect paths.
+    async def _run() -> None:
+        await brokers.get_accounts()
+        await brokers.get_balances()
+        await brokers.get_broker_connections()
+        await brokers.get_brokers()
+        await brokers.disconnect_company_from_broker(connection_id="test-id")
+
+        # Company wrapper
+        await company.get_company(company_id="test-id")
+
+        # Session wrapper: keep it local (mocked API), but provide required x_api_key.
+        await session.init_session(x_api_key="test-api-key")
+
+    asyncio.run(_run())
