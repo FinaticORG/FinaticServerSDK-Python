@@ -9,12 +9,11 @@ from typing import Annotated, Any, Union, get_args, get_origin
 from uuid import UUID
 
 from pydantic import BaseModel
-
 from src.generated import rest
-from src.generated.api_client import ApiClient
 from src.generated.api.brokers_api import BrokersApi
 from src.generated.api.company_api import CompanyApi
 from src.generated.api.session_api import SessionApi
+from src.generated.api_client import ApiClient
 from src.generated.configuration import Configuration
 
 
@@ -45,7 +44,9 @@ def _minimal_valid_order_request() -> Any:
     from src.generated.models.webull_market_order_modify_query_params import (
         WebullMarketOrderModifyQueryParams,
     )
-    from src.generated.models.webull_order_modify_request import WebullOrderModifyRequest
+    from src.generated.models.webull_order_modify_request import (
+        WebullOrderModifyRequest,
+    )
 
     order_delta = WebullMarketOrderModifyQueryParams(order_type="market")
     return OrderRequest(
@@ -79,7 +80,9 @@ def _dummy_value(parameter_name: str, annotation: Any) -> Any:
 
     if inspect.isclass(inner) and issubclass(inner, BaseModel):
         from src.generated.models.order_request import OrderRequest
-        from src.generated.models.session_start_request import SessionStartRequest
+        from src.generated.models.session_start_request import (
+            SessionStartRequest,
+        )
 
         if inner is OrderRequest or inner.__name__ == "OrderRequest":
             return _minimal_valid_order_request()

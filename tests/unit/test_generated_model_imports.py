@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import importlib
-from pathlib import Path
 import runpy
+from pathlib import Path
 
 
 def test_import_generated_models_for_public_surface_coverage() -> None:

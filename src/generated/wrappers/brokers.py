@@ -1,5 +1,4 @@
-"""
-Generated wrapper functions for brokers operations (Phase 2B).
+"""Generated wrapper functions for brokers operations (Phase 2B).
 
 This file is regenerated on each run - do not edit directly.
 For custom logic, edit src/custom/wrappers/brokers.py instead.
@@ -7,18 +6,22 @@ For custom logic, edit src/custom/wrappers/brokers.py instead.
 
 from __future__ import annotations
 
-from typing import Optional, Any, Dict, List
 from dataclasses import dataclass
+from typing import Any
+
 from ..api.brokers_api import BrokersApi
-from ..configuration import Configuration
 from ..config import SdkConfig
-from ..types import FinaticResponse
+from ..configuration import Configuration
 from ..models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from ..models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
 from ..models.broker_data_order_side_enum import BrokerDataOrderSideEnum
-from ..models.broker_data_position_status_enum import BrokerDataPositionStatusEnum
+from ..models.broker_data_position_status_enum import (
+    BrokerDataPositionStatusEnum,
+)
 from ..models.broker_info import BrokerInfo
-from ..models.disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult
+from ..models.disconnect_company_from_broker_connection_result import (
+    DisconnectCompanyFromBrokerConnectionResult,
+)
 from ..models.fdx_broker_order import FDXBrokerOrder
 from ..models.fdx_broker_order_event import FDXBrokerOrderEvent
 from ..models.fdx_broker_order_fill import FDXBrokerOrderFill
@@ -30,30 +33,32 @@ from ..models.fdx_broker_transaction import FDXBrokerTransaction
 from ..models.legacy_broker_account import LegacyBrokerAccount
 from ..models.legacy_broker_balance import LegacyBrokerBalance
 from ..models.order_action_result import OrderActionResult
-from ..models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions
-from ..models._ninja_trader_order_modify_request import _NinjaTraderOrderModifyRequest
 from ..models.place_order_api_beta_brokers_orders_post_request import (
     PlaceOrderApiBetaBrokersOrdersPostRequest as OrderRequest,
 )
+from ..models.user_broker_connection_with_permissions import (
+    UserBrokerConnectionWithPermissions,
+)
+from ..types import FinaticResponse
+from ..utils.cache import generate_cache_key, get_cache
+from ..utils.enum_coercion import coerce_enum_value
+from ..utils.error_handling import handle_error
+from ..utils.interceptors import (
+    apply_error_interceptors,
+    apply_response_interceptors,
+)
+from ..utils.logger import get_logger
+from ..utils.pagination import PaginatedData, PaginationMeta
+from ..utils.plain_object import convert_to_plain_object
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
-from ..utils.logger import get_logger
-from ..utils.error_handling import handle_error
-from ..utils.cache import get_cache, generate_cache_key
-from ..utils.interceptors import (
-    apply_request_interceptors,
-    apply_response_interceptors,
-    apply_error_interceptors,
-)
-from ..utils.enum_coercion import coerce_enum_value
-from ..utils.plain_object import convert_to_plain_object
-from ..utils.pagination import PaginatedData, PaginationMeta
 
 
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
 class GetBalancesParams:
     """Input parameters for get_balances_api_beta_brokers_data_balances_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -65,15 +70,16 @@ class GetBalancesParams:
   # Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
     currency: str = None
   # Maximum number of balances to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of balances to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Include balance metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetAccountsParams:
     """Input parameters for get_accounts_api_beta_brokers_data_accounts_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -83,31 +89,35 @@ class GetAccountsParams:
   # Filter by currency (e.g., 'USD', 'EUR')
     currency: str = None
   # Maximum number of accounts to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of accounts to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Include connection metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetBrokersParams:
     """Input parameters for get_brokers_api_beta_brokers__get."""
+
     pass
 
 @dataclass
 class GetBrokerConnectionsParams:
     """Input parameters for list_broker_connections_api_beta_brokers_connections_get."""
+
     pass
 
 @dataclass
 class DisconnectCompanyFromBrokerParams:
     """Input parameters for disconnect_company_from_broker_api_beta_brokers_disconnect_company__connection_id__delete."""
+
   # Connection ID
     connection_id: str
 
 @dataclass
 class GetOrdersParams:
     """Input parameters for get_orders_api_beta_brokers_data_orders_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -123,19 +133,20 @@ class GetOrdersParams:
   # Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
     asset_type: BrokerDataAssetTypeEnum = None
   # Maximum number of orders to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of orders to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Filter orders created after this timestamp
     created_after: str = None
   # Filter orders created before this timestamp
     created_before: str = None
   # Include order metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetPositionsParams:
     """Input parameters for get_positions_api_beta_brokers_data_positions_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -151,19 +162,20 @@ class GetPositionsParams:
   # Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
     position_status: BrokerDataPositionStatusEnum = None
   # Maximum number of positions to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of positions to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Filter positions updated after this timestamp
     updated_after: str = None
   # Filter positions updated before this timestamp
     updated_before: str = None
   # Include position metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetTransactionsParams:
     """Input parameters for get_transactions_api_beta_brokers_data_transactions_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -181,59 +193,63 @@ class GetTransactionsParams:
   # Filter transactions until this date (ISO 8601)
     end_date: str = None
   # Maximum number of transactions to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of transactions to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
 
 @dataclass
 class GetOrderFillsParams:
     """Input parameters for get_order_fills_api_beta_brokers_data_orders__order_id__fills_get."""
+
   # Order ID
     order_id: str
   # Filter by connection ID
     connection_id: str = None
   # Maximum number of fills to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of fills to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Include fill metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetOrderEventsParams:
     """Input parameters for get_order_events_api_beta_brokers_data_orders__order_id__events_get."""
+
   # Order ID
     order_id: str
   # Filter by connection ID
     connection_id: str = None
   # Maximum number of events to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of events to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Include event metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetOrderGroupsParams:
     """Input parameters for get_order_groups_api_beta_brokers_data_orders_groups_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
     connection_id: str = None
   # Maximum number of order groups to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of order groups to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
   # Filter order groups created after this timestamp
     created_after: str = None
   # Filter order groups created before this timestamp
     created_before: str = None
   # Include group metadata in response (excluded by default for FDX compliance)
-    include_metadata: Optional[bool] = None
+    include_metadata: bool | None = None
 
 @dataclass
 class GetPositionLotsParams:
     """Input parameters for get_position_lots_api_beta_brokers_data_positions_lots_get."""
+
   # Filter by broker ID
     broker_id: str = None
   # Filter by connection ID
@@ -245,25 +261,27 @@ class GetPositionLotsParams:
   # Filter by position ID
     position_id: str = None
   # Maximum number of position lots to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of position lots to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
 
 @dataclass
 class GetPositionLotFillsParams:
     """Input parameters for get_position_lot_fills_api_beta_brokers_data_positions_lots__lot_id__fills_get."""
+
   # Position lot ID
     lot_id: str
   # Filter by connection ID
     connection_id: str = None
   # Maximum number of fills to return
-    limit: Optional[int] = None
+    limit: int | None = None
   # Number of fills to skip for pagination
-    offset: Optional[int] = None
+    offset: int | None = None
 
 @dataclass
 class PlaceOrderParams:
     """Input parameters for place_order_api_beta_brokers_orders_post."""
+
   # Broker identifier (robinhood, tasty_trade, ninja_trader)
     broker: str
   # Account number for the order
@@ -276,6 +294,7 @@ class PlaceOrderParams:
 @dataclass
 class CancelOrderParams:
     """Input parameters for cancel_order_api_beta_brokers_orders__order_id__delete."""
+
   # Broker identifier (robinhood, tasty_trade, ninja_trader)
     broker: str
   # Account number for the order
@@ -288,6 +307,7 @@ class CancelOrderParams:
 @dataclass
 class ModifyOrderParams:
     """Input parameters for modify_order_api_beta_brokers_orders__order_id__patch."""
+
   # Broker identifier (robinhood, tasty_trade, ninja_trader)
     broker: str
   # Account number for the order
@@ -305,33 +325,33 @@ class BrokersWrapper:
     
     Provides simplified method names and response unwrapping.
     """
-    
-    def __init__(self, api: BrokersApi, config: Optional[Configuration] = None, sdk_config: Optional[SdkConfig] = None):
+
+    def __init__(self, api: BrokersApi, config: Configuration | None = None, sdk_config: SdkConfig | None = None):
         self.api = api
         self.config = config
         self.sdk_config = sdk_config
         self.logger = get_logger(sdk_config)
-        self.session_id: Optional[str] = None
-        self.company_id: Optional[str] = None
-        self.csrf_token: Optional[str] = None
-    
+        self.session_id: str | None = None
+        self.company_id: str | None = None
+        self.csrf_token: str | None = None
+
     # Session context setters (called by session management)
     def set_session_context(self, session_id: str, company_id: str, csrf_token: str) -> None:
         """Set session context for API calls."""
         self.session_id = session_id
         self.company_id = company_id
         self.csrf_token = csrf_token
-    
+
     # Utility methods (Phase 2B)
     def _generate_request_id(self) -> str:
         """Generate a unique request ID."""
         return generate_request_id()
-    
+
     async def _retry_api_call(self, fn):
         """Retry an API call with exponential backoff."""
         return await retry_api_call(fn)
-    
-    def _handle_error(self, error: Exception, request_id: Optional[str] = None) -> Exception:
+
+    def _handle_error(self, error: Exception, request_id: str | None = None) -> Exception:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
@@ -353,6 +373,7 @@ class BrokersWrapper:
             limit (int, optional): Maximum number of balances to return
             offset (int, optional): Number of balances to skip for pagination
             include_metadata (bool, optional): Include balance metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[LegacyBrokerBalance]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -388,6 +409,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetBalancesParams(**kwargs) if kwargs else GetBalancesParams()
@@ -452,13 +474,13 @@ class BrokersWrapper:
                 response = await self.api.get_balances_api_beta_brokers_data_balances_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, unit_code=unit_code, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -478,18 +500,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/balances', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Balances completed',
                 request_id=request_id,
                 action='get_balances'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -513,29 +535,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Balances failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_balances',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -584,7 +606,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -597,7 +619,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -620,6 +642,7 @@ class BrokersWrapper:
             limit (int, optional): Maximum number of accounts to return
             offset (int, optional): Number of accounts to skip for pagination
             include_metadata (bool, optional): Include connection metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[LegacyBrokerAccount]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -655,6 +678,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetAccountsParams(**kwargs) if kwargs else GetAccountsParams()
@@ -718,13 +742,13 @@ class BrokersWrapper:
                 response = await self.api.get_accounts_api_beta_brokers_data_accounts_get(broker_id=broker_id, connection_id=connection_id, account_type=account_type, currency=currency, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -744,18 +768,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/accounts', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Accounts completed',
                 request_id=request_id,
                 action='get_accounts'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -779,29 +803,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Accounts failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_accounts',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -850,7 +874,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -863,7 +887,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -878,7 +902,7 @@ class BrokersWrapper:
         This is a fast operation that returns a cached list of available brokers.
         The list is loaded once at startup and never changes during runtime.
         
-        Returns
+        Returns:
         -------
         FinaticResponse[list[BrokerInfo]]
             list of available brokers with their metadata.
@@ -903,6 +927,7 @@ class BrokersWrapper:
         if result.success:
             print('Data:', result.success['data'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetBrokersParams(**kwargs) if kwargs else GetBrokersParams()
@@ -947,13 +972,13 @@ class BrokersWrapper:
                 response = await self.api.get_brokers_api_beta_brokers_get()
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -973,18 +998,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Brokers completed',
                 request_id=request_id,
                 action='get_brokers'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -1008,29 +1033,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Brokers failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_brokers',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -1079,7 +1104,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -1092,7 +1117,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -1128,6 +1153,7 @@ class BrokersWrapper:
         if result.success:
             print('Data:', result.success['data'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetBrokerConnectionsParams(**kwargs) if kwargs else GetBrokerConnectionsParams()
@@ -1185,13 +1211,13 @@ class BrokersWrapper:
                 response = await self.api.list_broker_connections_api_beta_brokers_connections_get(_headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -1211,18 +1237,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/connections', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('List Broker Connections completed',
                 request_id=request_id,
                 action='get_broker_connections'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -1246,29 +1272,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('List Broker Connections failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_broker_connections',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -1317,7 +1343,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -1330,7 +1356,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -1369,6 +1395,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'])
         ```
+
         """
         # Convert kwargs to params object
         params = DisconnectCompanyFromBrokerParams(**kwargs) if kwargs else DisconnectCompanyFromBrokerParams()
@@ -1426,13 +1453,13 @@ class BrokersWrapper:
                 response = await self.api.disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete(connection_id=connection_id, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -1452,18 +1479,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('DELETE', '/api/beta/brokers/disconnect-company/{connection_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Disconnect Company From Broker completed',
                 request_id=request_id,
                 action='disconnect_company_from_broker'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -1487,29 +1514,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Disconnect Company From Broker failed',
                 error=str(e),
                 request_id=request_id,
                 action='disconnect_company_from_broker',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -1558,7 +1585,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -1571,7 +1598,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -1599,6 +1626,7 @@ class BrokersWrapper:
             created_after (str, optional): Filter orders created after this timestamp
             created_before (str, optional): Filter orders created before this timestamp
             include_metadata (bool, optional): Include order metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrder]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -1634,6 +1662,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetOrdersParams(**kwargs) if kwargs else GetOrdersParams()
@@ -1702,13 +1731,13 @@ class BrokersWrapper:
                 response = await self.api.get_orders_api_beta_brokers_data_orders_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, order_status=order_status, side=side, asset_type=asset_type, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -1728,18 +1757,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Orders completed',
                 request_id=request_id,
                 action='get_orders'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -1763,29 +1792,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Orders failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_orders',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -1834,7 +1863,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -1847,7 +1876,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -1875,6 +1904,7 @@ class BrokersWrapper:
             updated_after (str, optional): Filter positions updated after this timestamp
             updated_before (str, optional): Filter positions updated before this timestamp
             include_metadata (bool, optional): Include position metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerPosition]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -1910,6 +1940,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetPositionsParams(**kwargs) if kwargs else GetPositionsParams()
@@ -1978,13 +2009,13 @@ class BrokersWrapper:
                 response = await self.api.get_positions_api_beta_brokers_data_positions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, side=side, asset_type=asset_type, position_status=position_status, limit=limit, offset=offset, updated_after=updated_after, updated_before=updated_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -2004,18 +2035,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Positions completed',
                 request_id=request_id,
                 action='get_positions'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -2039,29 +2070,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Positions failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_positions',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -2110,7 +2141,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -2123,7 +2154,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -2184,6 +2215,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetTransactionsParams(**kwargs) if kwargs else GetTransactionsParams()
@@ -2250,13 +2282,13 @@ class BrokersWrapper:
                 response = await self.api.get_transactions_api_beta_brokers_data_transactions_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, unit_code=unit_code, currency=currency, transaction_type=transaction_type, start_date=start_date, end_date=end_date, limit=limit, offset=offset, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -2276,18 +2308,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/transactions', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Transactions completed',
                 request_id=request_id,
                 action='get_transactions'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -2311,29 +2343,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Transactions failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_transactions',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -2382,7 +2414,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -2395,7 +2427,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -2415,6 +2447,7 @@ class BrokersWrapper:
             limit (int, optional): Maximum number of fills to return
             offset (int, optional): Number of fills to skip for pagination
             include_metadata (bool, optional): Include fill metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrderFill]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -2455,6 +2488,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetOrderFillsParams(**kwargs) if kwargs else GetOrderFillsParams()
@@ -2516,13 +2550,13 @@ class BrokersWrapper:
                 response = await self.api.get_order_fills_api_beta_brokers_data_orders_order_id_fills_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -2542,18 +2576,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/{order_id}/fills', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Order Fills completed',
                 request_id=request_id,
                 action='get_order_fills'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -2577,29 +2611,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Order Fills failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_order_fills',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -2648,7 +2682,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -2661,7 +2695,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -2681,6 +2715,7 @@ class BrokersWrapper:
             limit (int, optional): Maximum number of events to return
             offset (int, optional): Number of events to skip for pagination
             include_metadata (bool, optional): Include event metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrderEvent]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -2721,6 +2756,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetOrderEventsParams(**kwargs) if kwargs else GetOrderEventsParams()
@@ -2782,13 +2818,13 @@ class BrokersWrapper:
                 response = await self.api.get_order_events_api_beta_brokers_data_orders_order_id_events_get(order_id=order_id, connection_id=connection_id, limit=limit, offset=offset, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -2808,18 +2844,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/{order_id}/events', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Order Events completed',
                 request_id=request_id,
                 action='get_order_events'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -2843,29 +2879,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Order Events failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_order_events',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -2914,7 +2950,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -2927,7 +2963,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -2949,6 +2985,7 @@ class BrokersWrapper:
             created_after (str, optional): Filter order groups created after this timestamp
             created_before (str, optional): Filter order groups created before this timestamp
             include_metadata (bool, optional): Include group metadata in response (excluded by default for FDX compliance)
+
         Returns:
         - Dict[str, Any]: FinaticResponse[PaginatedData[FDXBrokerOrderGroup]] format
                      success: {data: PaginatedData[T], meta: dict | None}
@@ -2984,6 +3021,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetOrderGroupsParams(**kwargs) if kwargs else GetOrderGroupsParams()
@@ -3047,13 +3085,13 @@ class BrokersWrapper:
                 response = await self.api.get_order_groups_api_beta_brokers_data_orders_groups_get(broker_id=broker_id, connection_id=connection_id, limit=limit, offset=offset, created_after=created_after, created_before=created_before, include_metadata=include_metadata, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -3073,18 +3111,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/orders/groups', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Order Groups completed',
                 request_id=request_id,
                 action='get_order_groups'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -3108,29 +3146,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Order Groups failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_order_groups',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -3179,7 +3217,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -3192,7 +3230,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -3250,6 +3288,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetPositionLotsParams(**kwargs) if kwargs else GetPositionLotsParams()
@@ -3313,13 +3352,13 @@ class BrokersWrapper:
                 response = await self.api.get_position_lots_api_beta_brokers_data_positions_lots_get(broker_id=broker_id, connection_id=connection_id, account_id=account_id, symbol=symbol, position_id=position_id, limit=limit, offset=offset, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -3339,18 +3378,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions/lots', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Position Lots completed',
                 request_id=request_id,
                 action='get_position_lots'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -3374,29 +3413,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Position Lots failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_position_lots',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -3445,7 +3484,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -3458,7 +3497,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -3517,6 +3556,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetPositionLotFillsParams(**kwargs) if kwargs else GetPositionLotFillsParams()
@@ -3577,13 +3617,13 @@ class BrokersWrapper:
                 response = await self.api.get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(lot_id=lot_id, connection_id=connection_id, limit=limit, offset=offset, _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -3603,18 +3643,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/brokers/data/positions/lots/{lot_id}/fills', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Position Lot Fills completed',
                 request_id=request_id,
                 action='get_position_lot_fills'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = True
             has_offset = True
@@ -3638,29 +3678,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Position Lot Fills failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_position_lot_fills',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -3709,7 +3749,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -3722,7 +3762,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -3777,6 +3817,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = PlaceOrderParams(**kwargs) if kwargs else PlaceOrderParams()
@@ -3846,13 +3887,13 @@ class BrokersWrapper:
         }), _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -3872,18 +3913,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('POST', '/api/beta/brokers/orders', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Place Order completed',
                 request_id=request_id,
                 action='place_order'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -3907,29 +3948,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Place Order failed',
                 error=str(e),
                 request_id=request_id,
                 action='place_order',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -3978,7 +4019,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -3991,7 +4032,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -4033,6 +4074,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'])
         ```
+
         """
         # Convert kwargs to params object
         params = CancelOrderParams(**kwargs) if kwargs else CancelOrderParams()
@@ -4102,13 +4144,13 @@ class BrokersWrapper:
         }), _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -4128,18 +4170,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('DELETE', '/api/beta/brokers/orders/{order_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Cancel Order completed',
                 request_id=request_id,
                 action='cancel_order'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -4163,29 +4205,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Cancel Order failed',
                 error=str(e),
                 request_id=request_id,
                 action='cancel_order',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -4234,7 +4276,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -4247,7 +4289,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)
@@ -4306,6 +4348,7 @@ class BrokersWrapper:
         elif result.error:
             print('Error:', result.error['message'], result.error['code'])
         ```
+
         """
         # Convert kwargs to params object
         params = ModifyOrderParams(**kwargs) if kwargs else ModifyOrderParams()
@@ -4376,13 +4419,13 @@ class BrokersWrapper:
         }), _headers=headers)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -4402,18 +4445,18 @@ class BrokersWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('PATCH', '/api/beta/brokers/orders/{order_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Modify Order completed',
                 request_id=request_id,
                 action='modify_order'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -4437,29 +4480,29 @@ class BrokersWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Modify Order failed',
                 error=str(e),
                 request_id=request_id,
                 action='modify_order',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -4508,7 +4551,7 @@ class BrokersWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -4521,7 +4564,7 @@ class BrokersWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)

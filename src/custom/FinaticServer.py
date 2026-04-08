@@ -1,5 +1,4 @@
-"""
-Custom FinaticServer extension.
+"""Custom FinaticServer extension.
 
 This file is protected and will not be overwritten during regeneration.
 Add custom logic to extend or override generated FinaticServer behavior.

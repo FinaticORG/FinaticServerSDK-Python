@@ -6,13 +6,16 @@ from enum import Enum
 
 import pytest
 from pydantic import BaseModel, Field
-
 from src.generated.config import SdkConfig
-from src.generated.utils import enum_coercion
-from src.generated.utils import plain_object
-from src.generated.utils import url_utils
-from src.generated.utils import validation
-from src.generated.utils.error_handling import ValidationError as SdkValidationError
+from src.generated.utils import (
+    enum_coercion,
+    plain_object,
+    url_utils,
+    validation,
+)
+from src.generated.utils.error_handling import (
+    ValidationError as SdkValidationError,
+)
 
 
 class _SampleEnum(str, Enum):

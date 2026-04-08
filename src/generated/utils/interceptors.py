@@ -1,17 +1,18 @@
-"""
-Request/Response interceptor utilities (Phase 2B).
+"""Request/Response interceptor utilities (Phase 2B).
 
 Generated - do not edit directly.
 """
 
-from typing import Callable, List, Optional, Any, Dict
+from collections.abc import Callable
+from typing import Any
+
 from ..config import SdkConfig
 
-RequestInterceptor = Callable[[Dict[str, Any]], Dict[str, Any]]
+RequestInterceptor = Callable[[dict[str, Any]], dict[str, Any]]
 ResponseInterceptor = Callable[[Any], Any]
 ErrorInterceptor = Callable[[Exception], Exception]
 
-_interceptors: Dict[str, List[Callable]] = {
+_interceptors: dict[str, list[Callable]] = {
     'request': [],
     'response': [],
     'error': [],
@@ -34,9 +35,9 @@ def add_error_interceptor(interceptor: ErrorInterceptor) -> None:
 
 
 async def apply_request_interceptors(
-    config: Dict[str, Any],
-    sdk_config: Optional[SdkConfig] = None
-) -> Dict[str, Any]:
+    config: dict[str, Any],
+    sdk_config: SdkConfig | None = None
+) -> dict[str, Any]:
     """Apply request interceptors.
     
     Args:
@@ -45,20 +46,21 @@ async def apply_request_interceptors(
     
     Returns:
         Modified configuration
+
     """
     if sdk_config and not sdk_config.request_interceptors_enabled:
         return config
-    
+
     result = config
     for interceptor in _interceptors['request']:
         result = await interceptor(result) if hasattr(interceptor, '__call__') else interceptor(result)
-    
+
     return result
 
 
 async def apply_response_interceptors(
     response: Any,
-    sdk_config: Optional[SdkConfig] = None
+    sdk_config: SdkConfig | None = None
 ) -> Any:
     """Apply response interceptors.
     
@@ -68,20 +70,21 @@ async def apply_response_interceptors(
     
     Returns:
         Modified response
+
     """
     if sdk_config and not sdk_config.response_interceptors_enabled:
         return response
-    
+
     result = response
     for interceptor in _interceptors['response']:
         result = await interceptor(result) if hasattr(interceptor, '__call__') else interceptor(result)
-    
+
     return result
 
 
 async def apply_error_interceptors(
     error: Exception,
-    sdk_config: Optional[SdkConfig] = None
+    sdk_config: SdkConfig | None = None
 ) -> Exception:
     """Apply error interceptors.
     
@@ -91,12 +94,13 @@ async def apply_error_interceptors(
     
     Returns:
         Processed exception
+
     """
     if sdk_config and not sdk_config.response_interceptors_enabled:
         raise error
-    
+
     result = error
     for interceptor in _interceptors['error']:
         result = await interceptor(result) if hasattr(interceptor, '__call__') else interceptor(result)
-    
+
     return result

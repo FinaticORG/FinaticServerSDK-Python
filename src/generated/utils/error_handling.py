@@ -1,31 +1,30 @@
-"""
-Error handling utility (Phase 2A/2B).
+"""Error handling utility (Phase 2A/2B).
 
 Generated - do not edit directly.
 """
 
-from typing import Optional, Any, TypedDict, List, Dict
+from typing import Any, TypedDict
 
 
 class ParsedFinaticError(TypedDict, total=False):
-    type: Optional[str]
-    code: Optional[str]
+    type: str | None
+    code: str | None
     message: str
-    trace_id: Optional[str]
+    trace_id: str | None
     details: Any
-    fields: Optional[List[Dict[str, Optional[str]]]]
+    fields: list[dict[str, str | None]] | None
 
 
 class FinaticError(Exception):
     """Base error class for Finatic SDK."""
-    
+
     def __init__(
         self,
         message: str,
-        status_code: Optional[int] = None,
-        request_id: Optional[str] = None,
-        original_error: Optional[Exception] = None,
-        finatic: Optional[ParsedFinaticError] = None,
+        status_code: int | None = None,
+        request_id: str | None = None,
+        original_error: Exception | None = None,
+        finatic: ParsedFinaticError | None = None,
     ):
         super().__init__(message)
         self.message = message
@@ -37,32 +36,32 @@ class FinaticError(Exception):
 
 class ApiError(FinaticError):
     """Error for API call failures."""
-    
+
     def __init__(
         self,
         message: str,
         status_code: int,
-        request_id: Optional[str] = None,
-        original_error: Optional[Exception] = None,
-        finatic: Optional[ParsedFinaticError] = None,
+        request_id: str | None = None,
+        original_error: Exception | None = None,
+        finatic: ParsedFinaticError | None = None,
     ):
         super().__init__(message, status_code, request_id, original_error, finatic)
 
 
 class ValidationError(FinaticError):
     """Error for validation failures."""
-    
+
     def __init__(
         self,
         message: str,
-        request_id: Optional[str] = None,
-        original_error: Optional[Exception] = None,
-        finatic: Optional[ParsedFinaticError] = None,
+        request_id: str | None = None,
+        original_error: Exception | None = None,
+        finatic: ParsedFinaticError | None = None,
     ):
         super().__init__(message, 422, request_id, original_error, finatic)
 
 
-def _extract_finatic_error(error: Exception | Any) -> Optional[ParsedFinaticError]:
+def _extract_finatic_error(error: Exception | Any) -> ParsedFinaticError | None:
     data = getattr(error, 'response', None)
     if data and hasattr(data, 'json'):
         try:
@@ -70,7 +69,7 @@ def _extract_finatic_error(error: Exception | Any) -> Optional[ParsedFinaticErro
         except Exception:
             pass
     elif hasattr(error, 'data'):
-        data = getattr(error, 'data')
+        data = error.data
 
     if not data:
         return None
@@ -106,7 +105,7 @@ def _extract_finatic_error(error: Exception | Any) -> Optional[ParsedFinaticErro
     }
 
 
-def handle_error(error: Exception, request_id: Optional[str] = None) -> Exception:
+def handle_error(error: Exception, request_id: str | None = None) -> Exception:
     """Handle and transform errors from API calls.
     
     Args:
@@ -115,6 +114,7 @@ def handle_error(error: Exception, request_id: Optional[str] = None) -> Exceptio
     
     Returns:
         Transformed error (FinaticError or subclass)
+
     """
     status_code = getattr(error, 'status_code', None) or getattr(error, 'status', None)
     finatic = _extract_finatic_error(error)
@@ -125,5 +125,5 @@ def handle_error(error: Exception, request_id: Optional[str] = None) -> Exceptio
         return ValidationError(message, trace_id, error, finatic)
     elif status_code and status_code >= 400:
         return ApiError(message, status_code, trace_id, error, finatic)
-    
+
     return FinaticError(message, status_code, trace_id, error, finatic)

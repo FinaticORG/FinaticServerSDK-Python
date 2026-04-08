@@ -1,10 +1,10 @@
-"""
-Pagination utilities for Python SDK.
+"""Pagination utilities for Python SDK.
 
 Provides PaginatedData class for wrapping paginated responses with helper methods.
 """
 
-from typing import TypeVar, Generic, Callable, Awaitable, Any
+from collections.abc import Awaitable, Callable
+from typing import Any, Generic, TypeVar
 
 # FinaticResponse is Dict[str, Any] in generated types
 # Use string annotation to avoid circular import
@@ -24,8 +24,7 @@ class PaginationMeta:
 
 
 class PaginatedData(Generic[T]):
-    """
-    PaginatedData wraps a data array with pagination metadata and helper methods.
+    """PaginatedData wraps a data array with pagination metadata and helper methods.
 
     Generic parameter T is the element type (e.g., FDXBrokerAccount).
 
@@ -99,48 +98,48 @@ class PaginatedData(Generic[T]):
 
     # Array-like methods - delegate to items list
     def for_each(self, callback):
-        """
-        Calls a function for each element in the list.
+        """Calls a function for each element in the list.
 
         Args:
             callback: Function to call for each item (item, index)
+
         """
         for index, item in enumerate(self.items):
             callback(item, index)
 
     def map(self, callback):
-        """
-        Creates a new list with the results of calling a function for every list element.
+        """Creates a new list with the results of calling a function for every list element.
 
         Args:
             callback: Function to call for each item (item, index) -> new_value
 
         Returns:
             New list with transformed values
+
         """
         return [callback(item, index) for index, item in enumerate(self.items)]
 
     def filter(self, callback):
-        """
-        Returns the elements of a list that meet the condition specified in a callback function.
+        """Returns the elements of a list that meet the condition specified in a callback function.
 
         Args:
             callback: Function to test each item (item, index) -> bool
 
         Returns:
             New list with filtered items
+
         """
         return [item for index, item in enumerate(self.items) if callback(item, index)]
 
     def find(self, predicate):
-        """
-        Returns the value of the first element in the list where predicate is true.
+        """Returns the value of the first element in the list where predicate is true.
 
         Args:
             predicate: Function to test each item (item, index) -> bool
 
         Returns:
             First matching item or None
+
         """
         for index, item in enumerate(self.items):
             if predicate(item, index):
@@ -148,14 +147,14 @@ class PaginatedData(Generic[T]):
         return None
 
     def find_index(self, predicate):
-        """
-        Returns the index of the first element in the list where predicate is true.
+        """Returns the index of the first element in the list where predicate is true.
 
         Args:
             predicate: Function to test each item (item, index) -> bool
 
         Returns:
             Index of first matching item or -1
+
         """
         for index, item in enumerate(self.items):
             if predicate(item, index):
@@ -163,20 +162,19 @@ class PaginatedData(Generic[T]):
         return -1
 
     def includes(self, search_element: T) -> bool:
-        """
-        Determines whether a list includes a certain element.
+        """Determines whether a list includes a certain element.
 
         Args:
             search_element: Element to search for
 
         Returns:
             True if element is found, False otherwise
+
         """
         return search_element in self.items
 
     def index_of(self, search_element: T, from_index: int = 0) -> int:
-        """
-        Returns the index of the first occurrence of a value in a list.
+        """Returns the index of the first occurrence of a value in a list.
 
         Args:
             search_element: Element to search for
@@ -184,6 +182,7 @@ class PaginatedData(Generic[T]):
 
         Returns:
             Index of first occurrence or -1
+
         """
         try:
             return self.items.index(search_element, from_index)
@@ -191,8 +190,7 @@ class PaginatedData(Generic[T]):
             return -1
 
     def to_dict(self) -> list[T]:
-        """
-        Return the items array as a list (for JSON serialization).
+        """Return the items array as a list (for JSON serialization).
 
         This allows clean serialization without exposing internal methods.
         Use with json.dumps() default parameter for automatic serialization.
@@ -206,18 +204,19 @@ class PaginatedData(Generic[T]):
             >>> print(orders)  # Shows full PaginatedData with methods
             >>> print(orders.to_dict())  # Shows just the items array
             >>> json.dumps(orders, default=lambda o: o.to_dict() if hasattr(o, 'to_dict') else o.__dict__)
+
         """
         return self.items
 
     async def next_page(self) -> "PaginatedData[T]":
-        """
-        Get the next page of data.
+        """Get the next page of data.
 
         Returns:
             PaginatedData[T]: The next page (not wrapped in FinaticResponse)
 
         Raises:
             ValueError: If no more pages are available or fetch fails
+
         """
         if not self.has_more:
             raise ValueError("No more pages available")
@@ -235,14 +234,14 @@ class PaginatedData(Generic[T]):
         return response["success"]["data"]  # Return PaginatedData directly
 
     async def prev_page(self) -> "PaginatedData[T]":
-        """
-        Get the previous page of data.
+        """Get the previous page of data.
 
         Returns:
             PaginatedData[T]: The previous page (not wrapped in FinaticResponse)
 
         Raises:
             ValueError: If fetch fails
+
         """
         prev_offset = max(0, self.meta.current_offset - self.meta.limit)
         new_params = {**self._current_params, "offset": prev_offset}
@@ -257,14 +256,14 @@ class PaginatedData(Generic[T]):
         return response["success"]["data"]  # Return PaginatedData directly
 
     async def first_page(self) -> "PaginatedData[T]":
-        """
-        Get the first page of data.
+        """Get the first page of data.
 
         Returns:
             PaginatedData[T]: The first page (not wrapped in FinaticResponse)
 
         Raises:
             ValueError: If fetch fails
+
         """
         new_params = {**self._current_params, "offset": 0}
         response = await self._original_method(**new_params)
@@ -278,8 +277,7 @@ class PaginatedData(Generic[T]):
         return response["success"]["data"]  # Return PaginatedData directly
 
     async def last_page(self) -> "PaginatedData[T]":
-        """
-        Get the last page of data.
+        """Get the last page of data.
         Uses iterative approach to find the last page.
 
         Returns:
@@ -287,6 +285,7 @@ class PaginatedData(Generic[T]):
 
         Raises:
             ValueError: If fetch fails
+
         """
         # Iterative approach to find last page
         current_offset = self.meta.current_offset

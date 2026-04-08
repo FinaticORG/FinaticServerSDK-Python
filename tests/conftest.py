@@ -1,12 +1,12 @@
-"""
-Test setup file.
+"""Test setup file.
 
 This file is regenerated on each run - do not edit directly.
 For custom setup, create tests/conftest.py and add your fixtures there.
 """
 
-import pytest
 import asyncio
+
+import pytest
 
 
 @pytest.fixture(scope='session')

@@ -1,5 +1,4 @@
-"""
-Request ID generator utility.
+"""Request ID generator utility.
 
 Generated - do not edit directly.
 """

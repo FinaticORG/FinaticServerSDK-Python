@@ -1,11 +1,13 @@
-"""
-Input validation utility with pydantic package (Phase 2B).
+"""Input validation utility with pydantic package (Phase 2B).
 
 Generated - do not edit directly.
 """
 
-from pydantic import BaseModel, Field, ValidationError as PydanticValidationError
-from typing import Optional, Any, TypeVar, Type
+from typing import TypeVar
+
+from pydantic import BaseModel
+from pydantic import ValidationError as PydanticValidationError
+
 from ..config import SdkConfig
 from .error_handling import ValidationError
 
@@ -13,9 +15,9 @@ T = TypeVar('T', bound=BaseModel)
 
 
 def validate_params(
-    model_class: Type[T],
+    model_class: type[T],
     params: dict,
-    config: Optional[SdkConfig] = None
+    config: SdkConfig | None = None
 ) -> T:
     """Validate parameters using pydantic model.
     
@@ -29,15 +31,16 @@ def validate_params(
     
     Raises:
         ValidationError: If validation fails and strict mode is enabled
+
     """
     if config and not config.validation_enabled:
         return model_class(**params)
-    
+
     try:
         return model_class(**params)
     except PydanticValidationError as error:
         message = f"Validation failed: {error.errors()}"
-        
+
         if config and config.validation_strict:
             raise ValidationError(message)
         else:

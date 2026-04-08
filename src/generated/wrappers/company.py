@@ -1,5 +1,4 @@
-"""
-Generated wrapper functions for company operations (Phase 2B).
+"""Generated wrapper functions for company operations (Phase 2B).
 
 This file is regenerated on each run - do not edit directly.
 For custom logic, edit src/custom/wrappers/company.py instead.
@@ -7,31 +6,30 @@ For custom logic, edit src/custom/wrappers/company.py instead.
 
 from __future__ import annotations
 
-from typing import Optional, Any, Dict, List
 from dataclasses import dataclass
+
 from ..api.company_api import CompanyApi
-from ..configuration import Configuration
 from ..config import SdkConfig
-from ..types import FinaticResponse
+from ..configuration import Configuration
 from ..models.accounts import Accounts
+from ..types import FinaticResponse
+from ..utils.cache import generate_cache_key, get_cache
+from ..utils.error_handling import handle_error
+from ..utils.interceptors import (
+    apply_error_interceptors,
+    apply_response_interceptors,
+)
+from ..utils.logger import get_logger
+from ..utils.plain_object import convert_to_plain_object
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
-from ..utils.logger import get_logger
-from ..utils.error_handling import handle_error
-from ..utils.cache import get_cache, generate_cache_key
-from ..utils.interceptors import (
-    apply_request_interceptors,
-    apply_response_interceptors,
-    apply_error_interceptors,
-)
-from ..utils.enum_coercion import coerce_enum_value
-from ..utils.plain_object import convert_to_plain_object
 
 
 # Phase 2C: Input type definitions (output types use FinaticResponse[DataType] pattern - no models needed)
 @dataclass
 class GetCompanyParams:
     """Input parameters for get_company_api_beta_company__company_id__get."""
+
   # Company ID
     company_id: str
 
@@ -41,33 +39,33 @@ class CompanyWrapper:
     
     Provides simplified method names and response unwrapping.
     """
-    
-    def __init__(self, api: CompanyApi, config: Optional[Configuration] = None, sdk_config: Optional[SdkConfig] = None):
+
+    def __init__(self, api: CompanyApi, config: Configuration | None = None, sdk_config: SdkConfig | None = None):
         self.api = api
         self.config = config
         self.sdk_config = sdk_config
         self.logger = get_logger(sdk_config)
-        self.session_id: Optional[str] = None
-        self.company_id: Optional[str] = None
-        self.csrf_token: Optional[str] = None
-    
+        self.session_id: str | None = None
+        self.company_id: str | None = None
+        self.csrf_token: str | None = None
+
     # Session context setters (called by session management)
     def set_session_context(self, session_id: str, company_id: str, csrf_token: str) -> None:
         """Set session context for API calls."""
         self.session_id = session_id
         self.company_id = company_id
         self.csrf_token = csrf_token
-    
+
     # Utility methods (Phase 2B)
     def _generate_request_id(self) -> str:
         """Generate a unique request ID."""
         return generate_request_id()
-    
+
     async def _retry_api_call(self, fn):
         """Retry an API call with exponential backoff."""
         return await retry_api_call(fn)
-    
-    def _handle_error(self, error: Exception, request_id: Optional[str] = None) -> Exception:
+
+    def _handle_error(self, error: Exception, request_id: str | None = None) -> Exception:
         """Handle and transform errors from API calls."""
         return handle_error(error, request_id)
 
@@ -100,6 +98,7 @@ class CompanyWrapper:
         elif result.error:
             print('Error:', result.error['message'])
         ```
+
         """
         # Convert kwargs to params object
         params = GetCompanyParams(**kwargs) if kwargs else GetCompanyParams()
@@ -144,13 +143,13 @@ class CompanyWrapper:
                 response = await self.api.get_company_api_beta_company_company_id_get(company_id=company_id)
 
                 return await apply_response_interceptors(response, self.sdk_config)
-            
+
             response = await retry_api_call(api_call, config=self.sdk_config)
-            
+
             # OpenAPI generator returns response - check if it's the FinaticResponse directly or wrapped in .data
             if not response:
                 raise ValueError('Unexpected response shape: response is None')
-            
+
             # Check if response has .data attribute (wrapped response) or is the FinaticResponse directly
             if hasattr(response, 'data'):
                 # Response is wrapped - extract .data which contains the FinaticResponse
@@ -170,18 +169,18 @@ class CompanyWrapper:
                 if hasattr(response, 'text'):
                     error_info += f", text: {response.text}"
                 raise ValueError(f'Unexpected response shape: response is not a FinaticResponse. {error_info}')
-            
+
             if cache and self.sdk_config and self.sdk_config.cache_enabled and should_cache:
                 # Get params dict safely (dataclass or dict)
                 params_dict = params.__dict__ if hasattr(params, '__dict__') else (params if isinstance(params, dict) else {})
                 cache_key = generate_cache_key('GET', '/api/beta/company/{company_id}', params_dict, self.sdk_config)
                 cache[cache_key] = standard_response
-            
+
             self.logger.debug('Get Company completed',
                 request_id=request_id,
                 action='get_company'
             )
-            
+
             # Phase 2: Wrap paginated responses with PaginatedData
             has_limit = False
             has_offset = False
@@ -205,29 +204,29 @@ class CompanyWrapper:
                     self
                 )
                 standard_response['success']['data'] = paginated_data
-            
+
             # Phase 2C: Return standard response structure (already plain objects)
             return standard_response
-            
+
         except Exception as e:
             try:
                 await apply_error_interceptors(e, self.sdk_config)
             except Exception:
                 pass
-            
+
             self.logger.error('Get Company failed',
                 error=str(e),
                 request_id=request_id,
                 action='get_company',
                 exc_info=True
             )
-            
+
             # Phase 2C: Extract error details from HTTP errors or generic errors
             error_message = str(e)
             error_code = getattr(e, 'code', 'UNKNOWN_ERROR')
             error_status = None
             error_details = {'error': str(e), 'type': type(e).__name__}
-            
+
             # Handle HTTP errors (from OpenAPI generator - httpx/requests)
             if hasattr(e, 'status_code'):
                 error_status = e.status_code
@@ -276,7 +275,7 @@ class CompanyWrapper:
                 # Generic error - include stack trace if available
                 import traceback
                 error_details['traceback'] = traceback.format_exc()
-            
+
             # Phase 2C: Return standard error response structure
             # FinaticResponse is a type alias (Dict[str, Any]), not a class, so construct a dict directly
             error_response = {
@@ -289,7 +288,7 @@ class CompanyWrapper:
                 },
                 'warning': None,
             }
-            
+
             return error_response
 
         # TODO Phase 2D: Add complex validation schemas (unions, enums, nested)

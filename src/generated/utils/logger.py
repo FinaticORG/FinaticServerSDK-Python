@@ -1,19 +1,19 @@
-"""
-Structured logger utility with structlog package (Phase 2B).
+"""Structured logger utility with structlog package (Phase 2B).
 
 Generated - do not edit directly.
 """
 
-import structlog
 import logging
 import sys
-from typing import Optional
+
+import structlog
+
 from ..config import SdkConfig
 
-_logger: Optional[structlog.BoundLogger] = None
+_logger: structlog.BoundLogger | None = None
 
 
-def get_logger(config: Optional[SdkConfig] = None) -> structlog.BoundLogger:
+def get_logger(config: SdkConfig | None = None) -> structlog.BoundLogger:
     """Get or create a structured logger instance.
     
     Args:
@@ -21,15 +21,16 @@ def get_logger(config: Optional[SdkConfig] = None) -> structlog.BoundLogger:
     
     Returns:
         Structured logger instance
+
     """
     global _logger
-    
+
     if _logger is not None:
         return _logger
-    
+
     import os
     log_level = (config.log_level if config else None) or os.getenv('FINATIC_LOG_LEVEL', 'error')
-    
+
     # Determine if we should use structured (JSON) or pretty (console) logging
     # Use pretty console renderer in development unless explicitly requested
     is_production = os.getenv('NODE_ENV', '').lower() in ('production', 'prod')
@@ -37,7 +38,7 @@ def get_logger(config: Optional[SdkConfig] = None) -> structlog.BoundLogger:
         (config.structured_logging if config else None) is True or
         (is_production and (config.structured_logging if config else None) is not False)
     )
-    
+
     # Configure structlog
     structlog.configure(
         processors=[
@@ -56,14 +57,14 @@ def get_logger(config: Optional[SdkConfig] = None) -> structlog.BoundLogger:
         logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
     )
-    
+
     # Set standard library logging level
     logging.basicConfig(
         format="%(message)s",
         stream=sys.stdout,
         level=getattr(logging, log_level.upper(), logging.ERROR),
     )
-    
+
     _logger = structlog.get_logger('finatic_sdk')
-    
+
     return _logger

@@ -1,5 +1,4 @@
-"""
-Finatic Server Python SDK
+"""Finatic Server Python SDK
 
 This package re-exports everything from src to provide a clean import path:
     from finatic_server_python import FinaticServer

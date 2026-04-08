@@ -1,24 +1,25 @@
-"""
-Retry utility with tenacity package (Phase 2B).
+"""Retry utility with tenacity package (Phase 2B).
 
 Generated - do not edit directly.
 """
 
+from collections.abc import Awaitable, Callable
+from typing import TypeVar
+
 from tenacity import (
     retry,
-    stop_after_attempt,
-    wait_exponential,
     retry_if_exception_type,
     retry_if_result,
-    RetryCallState,
+    stop_after_attempt,
+    wait_exponential,
 )
-from typing import Callable, TypeVar, Optional, List, Any, Awaitable
+
 from ..config import SdkConfig
 
 T = TypeVar('T')
 
 
-def _should_retry_on_status(error: Exception, retry_on_status: List[int]) -> bool:
+def _should_retry_on_status(error: Exception, retry_on_status: list[int]) -> bool:
     """Check if error status code matches retry list."""
     status_code = getattr(error, 'status_code', None) or getattr(error, 'status', None)
     return status_code in retry_on_status if status_code else False
@@ -26,13 +27,13 @@ def _should_retry_on_status(error: Exception, retry_on_status: List[int]) -> boo
 
 async def retry_api_call(
     fn: Callable[[], Awaitable[T]],
-    config: Optional[SdkConfig] = None,
-    max_retries: Optional[int] = None,
-    retry_delay: Optional[float] = None,
-    retry_max_delay: Optional[float] = None,
-    retry_multiplier: Optional[float] = None,
-    retry_on_status: Optional[List[int]] = None,
-    retry_on_network_error: Optional[bool] = None,
+    config: SdkConfig | None = None,
+    max_retries: int | None = None,
+    retry_delay: float | None = None,
+    retry_max_delay: float | None = None,
+    retry_multiplier: float | None = None,
+    retry_on_status: list[int] | None = None,
+    retry_on_network_error: bool | None = None,
 ) -> T:
     """Retry an async function with exponential backoff using tenacity.
     
@@ -51,6 +52,7 @@ async def retry_api_call(
     
     Raises:
         Last exception if all retries fail
+
     """
     # Use config values if provided, otherwise use parameters or defaults
     max_attempts = max_retries or (config.retry_count if config else 3)
@@ -59,7 +61,7 @@ async def retry_api_call(
     multiplier = retry_multiplier or (config.retry_multiplier if config else 2.0)
     status_list = retry_on_status or (config.retry_on_status if config else [429, 500, 502, 503, 504])
     network_retry = retry_on_network_error if retry_on_network_error is not None else (config.retry_on_network_error if config else True)
-    
+
     # Build retry decorator conditionally
     if network_retry:
         @retry(
@@ -95,5 +97,5 @@ async def retry_api_call(
                     raise  # Re-raise to trigger retry
                 # Don't retry if status code doesn't match
                 raise
-    
+
     return await _retry_wrapper()

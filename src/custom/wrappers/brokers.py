@@ -1,5 +1,4 @@
-"""
-Custom brokers wrapper - Extends generated wrapper.
+"""Custom brokers wrapper - Extends generated wrapper.
 
 This file is protected and will not be overwritten during regeneration.
 Add your custom brokers logic here.

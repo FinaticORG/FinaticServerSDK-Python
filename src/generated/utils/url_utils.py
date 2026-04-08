@@ -1,16 +1,15 @@
-"""
-URL utility functions for portal URL manipulation.
+"""URL utility functions for portal URL manipulation.
 
 Generated - do not edit directly.
 """
 
-from typing import Optional, Dict, Any, List, Union
-from urllib.parse import urlparse, urlencode, parse_qs, urlunparse
 import base64
 import json
+from typing import Any
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 
-def append_theme_to_url(base_url: str, theme: Optional[Union[str, Dict[str, Any]]] = None) -> str:
+def append_theme_to_url(base_url: str, theme: str | dict[str, Any] | None = None) -> str:
     """Append theme parameters to a portal URL.
     
     Args:
@@ -19,14 +18,15 @@ def append_theme_to_url(base_url: str, theme: Optional[Union[str, Dict[str, Any]
     
     Returns:
         The portal URL with theme parameters appended
+
     """
     if not theme:
         return base_url
-    
+
     try:
         parsed = urlparse(base_url)
         query_params = parse_qs(parsed.query)
-        
+
         if isinstance(theme, str):
             # Preset theme
             query_params['theme'] = [theme]
@@ -39,7 +39,7 @@ def append_theme_to_url(base_url: str, theme: Optional[Union[str, Dict[str, Any]
                 encoded_theme = base64.b64encode(json.dumps(theme['custom']).encode()).decode()
                 query_params['theme'] = ['custom']
                 query_params['themeObject'] = [encoded_theme]
-        
+
         new_query = urlencode(query_params, doseq=True)
         new_parsed = parsed._replace(query=new_query)
         return urlunparse(new_parsed)
@@ -48,7 +48,7 @@ def append_theme_to_url(base_url: str, theme: Optional[Union[str, Dict[str, Any]
         return base_url
 
 
-def append_broker_filter_to_url(base_url: str, broker_names: Optional[List[str]] = None) -> str:
+def append_broker_filter_to_url(base_url: str, broker_names: list[str] | None = None) -> str:
     """Append broker filter parameters to a portal URL.
     
     Args:
@@ -57,10 +57,11 @@ def append_broker_filter_to_url(base_url: str, broker_names: Optional[List[str]]
     
     Returns:
         The portal URL with broker filter parameters appended
+
     """
     if not broker_names or len(broker_names) == 0:
         return base_url
-    
+
     try:
         parsed = urlparse(base_url)
         query_params = parse_qs(parsed.query)
@@ -74,7 +75,7 @@ def append_broker_filter_to_url(base_url: str, broker_names: Optional[List[str]]
         return base_url
 
 
-def append_kind_to_url(base_url: str, kind: Optional[str] = None) -> str:
+def append_kind_to_url(base_url: str, kind: str | None = None) -> str:
     """Append broker/exchange type filter to a portal URL.
     
     Args:
@@ -83,10 +84,11 @@ def append_kind_to_url(base_url: str, kind: Optional[str] = None) -> str:
     
     Returns:
         The portal URL with type parameter appended
+
     """
     if not kind:
         return base_url
-    
+
     try:
         parsed = urlparse(base_url)
         query_params = parse_qs(parsed.query)
@@ -98,7 +100,7 @@ def append_kind_to_url(base_url: str, kind: Optional[str] = None) -> str:
         return base_url
 
 
-def append_asset_types_to_url(base_url: str, asset_types: Optional[List[str]] = None) -> str:
+def append_asset_types_to_url(base_url: str, asset_types: list[str] | None = None) -> str:
     """Append asset types (capabilities) filter to a portal URL.
     
     Multiple values are AND-filtered (brokers that support all listed asset types).
@@ -109,10 +111,11 @@ def append_asset_types_to_url(base_url: str, asset_types: Optional[List[str]] = 
     
     Returns:
         The portal URL with capabilities parameter appended
+
     """
     if not asset_types or len(asset_types) == 0:
         return base_url
-    
+
     try:
         parsed = urlparse(base_url)
         query_params = parse_qs(parsed.query)
@@ -126,7 +129,7 @@ def append_asset_types_to_url(base_url: str, asset_types: Optional[List[str]] = 
 
 def append_stage_to_url(
     base_url: str,
-    stages: Optional[List[str]] = None,
+    stages: list[str] | None = None,
 ) -> str:
     """Append stage filter to a portal URL.
 
@@ -139,6 +142,7 @@ def append_stage_to_url(
 
     Returns:
         The portal URL with stage parameter appended
+
     """
     if not stages or len(stages) == 0:
         return base_url

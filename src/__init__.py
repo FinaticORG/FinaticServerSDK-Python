@@ -1,5 +1,4 @@
-"""
-Main SDK entry point.
+"""Main SDK entry point.
 
 This file is protected - customize exports as needed.
 """

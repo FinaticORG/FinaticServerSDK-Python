@@ -1,17 +1,18 @@
-"""
-Response caching utility with cachetools (Phase 2B).
+"""Response caching utility with cachetools (Phase 2B).
 
 Generated - do not edit directly.
 """
 
+from typing import Any
+
 from cachetools import TTLCache
-from typing import Optional, Any, Dict
+
 from ..config import SdkConfig
 
-_cache_instance: Optional[TTLCache] = None
+_cache_instance: TTLCache | None = None
 
 
-def get_cache(config: Optional[SdkConfig] = None) -> Optional[TTLCache]:
+def get_cache(config: SdkConfig | None = None) -> TTLCache | None:
     """Get or create cache instance.
     
     Args:
@@ -19,28 +20,29 @@ def get_cache(config: Optional[SdkConfig] = None) -> Optional[TTLCache]:
     
     Returns:
         Cache instance or None if caching disabled
+
     """
     global _cache_instance
-    
+
     if config and not config.cache_enabled:
         return None
-    
+
     if _cache_instance is not None:
         return _cache_instance
-    
+
     ttl = (config.cache_ttl if config else 300)
     max_size = (config.cache_max_size if config else 1000)
-    
+
     _cache_instance = TTLCache(maxsize=max_size, ttl=ttl)
-    
+
     return _cache_instance
 
 
 def generate_cache_key(
     method: str,
     path: str,
-    params: Dict[str, Any],
-    config: Optional[SdkConfig] = None
+    params: dict[str, Any],
+    config: SdkConfig | None = None
 ) -> str:
     """Generate cache key from method and parameters.
     
@@ -52,10 +54,11 @@ def generate_cache_key(
     
     Returns:
         Cache key string
+
     """
     include = (config.cache_key_include if config else ['method', 'path', 'query', 'body'])
     parts = []
-    
+
     if 'method' in include:
         parts.append(f'method:{method}')
     if 'path' in include:
@@ -68,5 +71,5 @@ def generate_cache_key(
         import json
         body = params.get('body', {})
         parts.append(f'body:{json.dumps(body, sort_keys=True)}')
-    
+
     return f'finatic:{"|".join(parts)}'
