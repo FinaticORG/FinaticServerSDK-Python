@@ -7,7 +7,7 @@ from pathlib import Path
 
 def test_import_generated_models_for_public_surface_coverage() -> None:
     root = Path(__file__).resolve().parents[2]
-    models_dir = root / "src" / "generated" / "models"
+    models_dir = root / "src" / "openapi" / "generated" / "models"
     model_modules = sorted(
         module_path.stem
         for module_path in models_dir.glob("*.py")
@@ -17,7 +17,7 @@ def test_import_generated_models_for_public_surface_coverage() -> None:
     imported_count = 0
     for module_name in model_modules:
         try:
-            importlib.import_module(f"src.generated.models.{module_name}")
+            importlib.import_module(f"src.openapi.generated.models.{module_name}")
             imported_count += 1
         except Exception:
             module_path = models_dir / f"{module_name}.py"

@@ -4,9 +4,9 @@ import asyncio
 import inspect
 from typing import Any
 
-from src.generated.wrappers.brokers import BrokersWrapper
-from src.generated.wrappers.company import CompanyWrapper
-from src.generated.wrappers.session import SessionWrapper
+from src.wrappers.brokers import BrokersWrapper
+from src.wrappers.company import CompanyWrapper
+from src.wrappers.session import SessionWrapper
 
 
 class _ApiProxy:

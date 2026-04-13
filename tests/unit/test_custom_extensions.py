@@ -6,8 +6,8 @@ import importlib
 
 
 def test_custom_finatic_server_subclasses_generated_base() -> None:
-    custom_module = importlib.import_module("src.custom.FinaticServer")
-    generated_module = importlib.import_module("src.generated.FinaticServer")
+    custom_module = importlib.import_module("src.FinaticServer")
+    generated_module = importlib.import_module("src.FinaticServerCore")
 
     custom_cls = custom_module.FinaticServer
     generated_cls = generated_module.FinaticServer
@@ -16,17 +16,9 @@ def test_custom_finatic_server_subclasses_generated_base() -> None:
     assert issubclass(custom_cls, generated_cls)
 
 
-def test_custom_wrappers_subclass_generated_wrappers() -> None:
-    custom_session_module = importlib.import_module("src.custom.wrappers.session")
-    custom_brokers_module = importlib.import_module("src.custom.wrappers.brokers")
-    generated_session_module = importlib.import_module("src.generated.wrappers.session")
-    generated_brokers_module = importlib.import_module("src.generated.wrappers.brokers")
+def test_wrappers_module_exports_expected_classes() -> None:
+    session_module = importlib.import_module("src.wrappers.session")
+    brokers_module = importlib.import_module("src.wrappers.brokers")
 
-    assert issubclass(
-        custom_session_module.CustomSessionWrapper,
-        generated_session_module.SessionWrapper,
-    )
-    assert issubclass(
-        custom_brokers_module.CustomBrokersWrapper,
-        generated_brokers_module.BrokersWrapper,
-    )
+    assert hasattr(session_module, "SessionWrapper")
+    assert hasattr(brokers_module, "BrokersWrapper")

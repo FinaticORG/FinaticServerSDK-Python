@@ -9,12 +9,12 @@ from typing import Annotated, Any, Union, get_args, get_origin
 from uuid import UUID
 
 from pydantic import BaseModel
-from src.generated import rest
-from src.generated.api.brokers_api import BrokersApi
-from src.generated.api.company_api import CompanyApi
-from src.generated.api.session_api import SessionApi
-from src.generated.api_client import ApiClient
-from src.generated.configuration import Configuration
+from src.openapi.generated import rest
+from src.openapi.generated.api.brokers_api import BrokersApi
+from src.openapi.generated.api.company_api import CompanyApi
+from src.openapi.generated.api.session_api import SessionApi
+from src.openapi.generated.api_client import ApiClient
+from src.openapi.generated.configuration import Configuration
 
 
 class _FakeAiohttpLikeResponse:
@@ -38,13 +38,13 @@ class _FakeAiohttpLikeResponse:
 
 def _minimal_valid_order_request() -> Any:
     """Smallest valid OrderRequest for generated API validate_call (Webull modify delta)."""
-    from src.generated.models.accountnumber import Accountnumber
-    from src.generated.models.order7 import Order7
-    from src.generated.models.order_request import OrderRequest
-    from src.generated.models.webull_market_order_modify_query_params import (
+    from src.openapi.generated.models.accountnumber import Accountnumber
+    from src.openapi.generated.models.order7 import Order7
+    from src.openapi.generated.models.order_request import OrderRequest
+    from src.openapi.generated.models.webull_market_order_modify_query_params import (
         WebullMarketOrderModifyQueryParams,
     )
-    from src.generated.models.webull_order_modify_request import (
+    from src.openapi.generated.models.webull_order_modify_request import (
         WebullOrderModifyRequest,
     )
 
@@ -79,8 +79,8 @@ def _dummy_value(parameter_name: str, annotation: Any) -> Any:
         return UUID("00000000-0000-4000-8000-000000000001")
 
     if inspect.isclass(inner) and issubclass(inner, BaseModel):
-        from src.generated.models.order_request import OrderRequest
-        from src.generated.models.session_start_request import (
+        from src.openapi.generated.models.order_request import OrderRequest
+        from src.openapi.generated.models.session_start_request import (
             SessionStartRequest,
         )
 

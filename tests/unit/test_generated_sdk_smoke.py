@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 
-from src.generated.FinaticServer import FinaticServer
+from src.FinaticServerCore import FinaticServer
 
 
 def _dummy_value(parameter_name: str) -> object:
