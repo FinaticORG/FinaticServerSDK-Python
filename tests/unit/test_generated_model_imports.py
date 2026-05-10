@@ -4,10 +4,12 @@ import importlib
 import runpy
 from pathlib import Path
 
+import src.openapi.path_bootstrap  # noqa: F401
+
 
 def test_import_generated_models_for_public_surface_coverage() -> None:
     root = Path(__file__).resolve().parents[2]
-    models_dir = root / "src" / "openapi" / "generated" / "models"
+    models_dir = root / "src" / "openapi" / "finatic_server" / "models"
     model_modules = sorted(
         module_path.stem
         for module_path in models_dir.glob("*.py")
@@ -17,7 +19,7 @@ def test_import_generated_models_for_public_surface_coverage() -> None:
     imported_count = 0
     for module_name in model_modules:
         try:
-            importlib.import_module(f"src.openapi.generated.models.{module_name}")
+            importlib.import_module(f"finatic_server.models.{module_name}")
             imported_count += 1
         except Exception:
             module_path = models_dir / f"{module_name}.py"

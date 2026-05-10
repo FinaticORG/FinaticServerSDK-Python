@@ -91,7 +91,7 @@ show_error_codes = true
 
 # Generated OpenAPI code and smoke tests are not held to the same mypy bar as hand-written SDK code.
 [[tool.mypy.overrides]]
-module = ["src.openapi.generated.*"]
+module = ["finatic_server.*"]
 ignore_errors = true
 
 
@@ -113,14 +113,14 @@ exclude = [
     "*.egg-info",
     ".venv",
     "venv",
-    "src/openapi/generated",
+    "src/openapi/finatic_server",
 ]
 import-order-style = "google"
 application-import-names = ["src"]
 
 [tool.ruff]
-exclude = ["src/openapi/generated"]
+exclude = ["src/openapi/finatic_server"]
 
 [tool.ruff.lint.per-file-ignores]
-# Star re-exports from optional custom/generated subpackages; names are re-exported intentionally.
+# Star re-exports from OpenAPI client package; names are re-exported intentionally.
 "src/__init__.py" = ["F403", "F401", "F405"]
