@@ -67,7 +67,6 @@ __all__ = [
     "EtoroOrderPlaceRequest",
     "FOKTIF",
     "FinaticAPIErrorResponse",
-    "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2",
     "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2",
     "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2",
     "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2",
@@ -95,8 +94,6 @@ __all__ = [
     "LegacyBrokerAccount",
     "LegacyBrokerBalance",
     "LocationInner",
-    "MCPBootstrapRequest",
-    "MCPBootstrapResponseData",
     "Maintenancemargin",
     "Netliquidationvalue",
     "NinjaTraderFutureLimitOrderPlaceQueryParams",
@@ -182,7 +179,6 @@ __all__ = [
     "SuccessPayloadListLegacyBrokerAccount",
     "SuccessPayloadListLegacyBrokerBalance",
     "SuccessPayloadListUserBrokerConnectionWithPermissions",
-    "SuccessPayloadMCPBootstrapResponseData",
     "SuccessPayloadOrderActionResult",
     "SuccessPayloadPortalUrlResponse",
     "SuccessPayloadSessionResponseData",
@@ -306,7 +302,6 @@ from finatic_server.models.etoro_order_place_query_params import EtoroOrderPlace
 from finatic_server.models.etoro_order_place_request import EtoroOrderPlaceRequest as EtoroOrderPlaceRequest
 from finatic_server.models.foktif import FOKTIF as FOKTIF
 from finatic_server.models.finatic_api_error_response import FinaticAPIErrorResponse as FinaticAPIErrorResponse
-from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_mcp_bootstrap_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2 as FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2 as FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2 as FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2 as FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
@@ -334,8 +329,6 @@ from finatic_server.models.initialmargin import Initialmargin as Initialmargin
 from finatic_server.models.legacy_broker_account import LegacyBrokerAccount as LegacyBrokerAccount
 from finatic_server.models.legacy_broker_balance import LegacyBrokerBalance as LegacyBrokerBalance
 from finatic_server.models.location_inner import LocationInner as LocationInner
-from finatic_server.models.mcp_bootstrap_request import MCPBootstrapRequest as MCPBootstrapRequest
-from finatic_server.models.mcp_bootstrap_response_data import MCPBootstrapResponseData as MCPBootstrapResponseData
 from finatic_server.models.maintenancemargin import Maintenancemargin as Maintenancemargin
 from finatic_server.models.netliquidationvalue import Netliquidationvalue as Netliquidationvalue
 from finatic_server.models.ninja_trader_future_limit_order_place_query_params import NinjaTraderFutureLimitOrderPlaceQueryParams as NinjaTraderFutureLimitOrderPlaceQueryParams
@@ -421,7 +414,6 @@ from finatic_server.models.success_payload_list_fdx_broker_transaction import Su
 from finatic_server.models.success_payload_list_legacy_broker_account import SuccessPayloadListLegacyBrokerAccount as SuccessPayloadListLegacyBrokerAccount
 from finatic_server.models.success_payload_list_legacy_broker_balance import SuccessPayloadListLegacyBrokerBalance as SuccessPayloadListLegacyBrokerBalance
 from finatic_server.models.success_payload_list_user_broker_connection_with_permissions import SuccessPayloadListUserBrokerConnectionWithPermissions as SuccessPayloadListUserBrokerConnectionWithPermissions
-from finatic_server.models.success_payload_mcp_bootstrap_response_data import SuccessPayloadMCPBootstrapResponseData as SuccessPayloadMCPBootstrapResponseData
 from finatic_server.models.success_payload_order_action_result import SuccessPayloadOrderActionResult as SuccessPayloadOrderActionResult
 from finatic_server.models.success_payload_portal_url_response import SuccessPayloadPortalUrlResponse as SuccessPayloadPortalUrlResponse
 from finatic_server.models.success_payload_session_response_data import SuccessPayloadSessionResponseData as SuccessPayloadSessionResponseData

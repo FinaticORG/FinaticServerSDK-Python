@@ -18,12 +18,10 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_mcp_bootstrap_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_portal_url_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_user_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_token_response_data2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
-from finatic_server.models.mcp_bootstrap_request import MCPBootstrapRequest
 from finatic_server.models.session_start_request import SessionStartRequest
 
 from finatic_server.api_client import ApiClient, RequestSerialized
@@ -42,321 +40,6 @@ class SessionApi:
         if api_client is None:
             api_client = ApiClient.get_default()
         self.api_client = api_client
-
-
-    @validate_call
-    async def bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post(
-        self,
-        x_api_key: Annotated[StrictStr, Field(description="Company API key")],
-        mcp_bootstrap_request: Optional[MCPBootstrapRequest] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2:
-        """Bootstrap Mcp Bearer
-
-        Exchange API key for a short-lived MCP bearer token.
-
-        :param x_api_key: Company API key (required)
-        :type x_api_key: str
-        :param mcp_bootstrap_request:
-        :type mcp_bootstrap_request: MCPBootstrapRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post_serialize(
-            x_api_key=x_api_key,
-            mcp_bootstrap_request=mcp_bootstrap_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    async def bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post_with_http_info(
-        self,
-        x_api_key: Annotated[StrictStr, Field(description="Company API key")],
-        mcp_bootstrap_request: Optional[MCPBootstrapRequest] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2]:
-        """Bootstrap Mcp Bearer
-
-        Exchange API key for a short-lived MCP bearer token.
-
-        :param x_api_key: Company API key (required)
-        :type x_api_key: str
-        :param mcp_bootstrap_request:
-        :type mcp_bootstrap_request: MCPBootstrapRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post_serialize(
-            x_api_key=x_api_key,
-            mcp_bootstrap_request=mcp_bootstrap_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        await response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    async def bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post_without_preload_content(
-        self,
-        x_api_key: Annotated[StrictStr, Field(description="Company API key")],
-        mcp_bootstrap_request: Optional[MCPBootstrapRequest] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """Bootstrap Mcp Bearer
-
-        Exchange API key for a short-lived MCP bearer token.
-
-        :param x_api_key: Company API key (required)
-        :type x_api_key: str
-        :param mcp_bootstrap_request:
-        :type mcp_bootstrap_request: MCPBootstrapRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-
-        _param = self._bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post_serialize(
-            x_api_key=x_api_key,
-            mcp_bootstrap_request=mcp_bootstrap_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseMCPBootstrapResponseData2",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = await self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _bootstrap_mcp_bearer_api_beta_session_mcp_bootstrap_post_serialize(
-        self,
-        x_api_key,
-        mcp_bootstrap_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        if x_api_key is not None:
-            _header_params['x-api-key'] = x_api_key
-        # process the form parameters
-        # process the body parameter
-        if mcp_bootstrap_request is not None:
-            _body_params = mcp_bootstrap_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/api/beta/session/mcp/bootstrap',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
 
 
     @validate_call
@@ -1239,7 +922,7 @@ class SessionApi:
     async def start_session_api_beta_session_start_post(
         self,
         one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
-        session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
+        session_start_request: Annotated[Optional[SessionStartRequest], Field(description="Session start request containing optional user ID to associate with the session")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1259,7 +942,7 @@ class SessionApi:
 
         :param one_time_token: One-time use token obtained from init_session endpoint to authenticate and start the session (required)
         :type one_time_token: str
-        :param session_start_request: Session start request containing optional user ID to associate with the session (required)
+        :param session_start_request: Session start request containing optional user ID to associate with the session
         :type session_start_request: SessionStartRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1319,7 +1002,7 @@ class SessionApi:
     async def start_session_api_beta_session_start_post_with_http_info(
         self,
         one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
-        session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
+        session_start_request: Annotated[Optional[SessionStartRequest], Field(description="Session start request containing optional user ID to associate with the session")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1339,7 +1022,7 @@ class SessionApi:
 
         :param one_time_token: One-time use token obtained from init_session endpoint to authenticate and start the session (required)
         :type one_time_token: str
-        :param session_start_request: Session start request containing optional user ID to associate with the session (required)
+        :param session_start_request: Session start request containing optional user ID to associate with the session
         :type session_start_request: SessionStartRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -1399,7 +1082,7 @@ class SessionApi:
     async def start_session_api_beta_session_start_post_without_preload_content(
         self,
         one_time_token: Annotated[StrictStr, Field(description="One-time use token obtained from init_session endpoint to authenticate and start the session")],
-        session_start_request: Annotated[SessionStartRequest, Field(description="Session start request containing optional user ID to associate with the session")],
+        session_start_request: Annotated[Optional[SessionStartRequest], Field(description="Session start request containing optional user ID to associate with the session")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1419,7 +1102,7 @@ class SessionApi:
 
         :param one_time_token: One-time use token obtained from init_session endpoint to authenticate and start the session (required)
         :type one_time_token: str
-        :param session_start_request: Session start request containing optional user ID to associate with the session (required)
+        :param session_start_request: Session start request containing optional user ID to associate with the session
         :type session_start_request: SessionStartRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
