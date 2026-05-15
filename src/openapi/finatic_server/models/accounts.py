@@ -56,7 +56,7 @@ class Accounts(BaseModel):
     trading_usage_description: Optional[StrictStr] = None
     updated_at: Optional[datetime]
     updated_by: Optional[UUID] = None
-    use_case_features: Optional[Any] = None
+    use_case_features: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["id", "api_key_created_at", "api_key_expires_at", "api_key_hash", "api_key_last_used_at", "compliance_agreement", "created_at", "created_by", "email", "is_personal_account", "name", "onboarding_completed", "onboarding_step", "picture_url", "primary_owner_user_id", "public_data", "referral_source", "sandbox_api_key_hash", "sandbox_key_created_at", "sandbox_key_expires_at", "sandbox_key_last_used_at", "slug", "terms_accepted_at", "trading_enabled", "trading_usage_description", "updated_at", "updated_by", "use_case_features"]
 
@@ -101,9 +101,6 @@ class Accounts(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of use_case_features
-        if self.use_case_features:
-            _dict['use_case_features'] = self.use_case_features.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -273,7 +270,7 @@ class Accounts(BaseModel):
             "trading_usage_description": obj.get("trading_usage_description"),
             "updated_at": obj.get("updated_at"),
             "updated_by": obj.get("updated_by"),
-            "use_case_features": AnyOf.from_dict(obj["use_case_features"]) if obj.get("use_case_features") is not None else None
+            "use_case_features": obj.get("use_case_features")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

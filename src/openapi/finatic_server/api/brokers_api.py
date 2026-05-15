@@ -390,7 +390,7 @@ class BrokersApi:
     ) -> FinaticResponseDisconnectCompanyFromBrokerConnectionResult:
         """Disconnect Company From Broker
 
-        Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
+        Remove a company's access to a broker connection.  When other companies still have access, only the calling company's access is removed. When the calling company is the last access holder, the connection is marked ``deletion_pending`` for asynchronous purge and this endpoint returns immediately.
 
         :param connection_id: Connection ID (required)
         :type connection_id: UUID
@@ -466,7 +466,7 @@ class BrokersApi:
     ) -> ApiResponse[FinaticResponseDisconnectCompanyFromBrokerConnectionResult]:
         """Disconnect Company From Broker
 
-        Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
+        Remove a company's access to a broker connection.  When other companies still have access, only the calling company's access is removed. When the calling company is the last access holder, the connection is marked ``deletion_pending`` for asynchronous purge and this endpoint returns immediately.
 
         :param connection_id: Connection ID (required)
         :type connection_id: UUID
@@ -542,7 +542,7 @@ class BrokersApi:
     ) -> RESTResponseType:
         """Disconnect Company From Broker
 
-        Remove a company's access to a broker connection.  If the company is the only one with access, the entire connection is deleted. If other companies have access, only the company's access is removed.
+        Remove a company's access to a broker connection.  When other companies still have access, only the calling company's access is removed. When the calling company is the last access holder, the connection is marked ``deletion_pending`` for asynchronous purge and this endpoint returns immediately.
 
         :param connection_id: Connection ID (required)
         :type connection_id: UUID

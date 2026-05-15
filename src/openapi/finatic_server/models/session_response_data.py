@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.session_status import SessionStatus
 from typing import Optional, Set
@@ -34,8 +34,10 @@ class SessionResponseData(BaseModel):
     status: SessionStatus = Field(description="Session status")
     expires_at: datetime = Field(description="Session expiration time")
     user_id: Optional[StrictStr] = Field(default=None, description="User ID if authenticated")
+    provided_user_id_rejected: Optional[StrictBool] = Field(default=False, description="True when a provisional user_id was supplied on start but was not applied (invalid UUID or no active broker connection for this company).")
+    portal_connection_management_pending: Optional[StrictBool] = Field(default=False, description="True when a valid provisional user_id was applied: trading/data may proceed, but portal connection-management still requires link-user / OTP step-up.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["session_id", "company_id", "status", "expires_at", "user_id"]
+    __properties: ClassVar[List[str]] = ["session_id", "company_id", "status", "expires_at", "user_id", "provided_user_id_rejected", "portal_connection_management_pending"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -104,7 +106,9 @@ class SessionResponseData(BaseModel):
             "company_id": obj.get("company_id"),
             "status": obj.get("status"),
             "expires_at": obj.get("expires_at"),
-            "user_id": obj.get("user_id")
+            "user_id": obj.get("user_id"),
+            "provided_user_id_rejected": obj.get("provided_user_id_rejected") if obj.get("provided_user_id_rejected") is not None else False,
+            "portal_connection_management_pending": obj.get("portal_connection_management_pending") if obj.get("portal_connection_management_pending") is not None else False
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
