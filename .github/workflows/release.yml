@@ -1,0 +1,155 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build artifacts without publishing to PyPI"
+        required: true
+        default: "true"
+        type: choice
+        options: ["true", "false"]
+      version:
+        description: "Optional release version. Defaults to the next patch version."
+        required: false
+        type: string
+      publish_repository:
+        description: "Publish target for non-dry-run manual releases"
+        required: true
+        default: "pypi"
+        type: choice
+        options: ["pypi", "testpypi"]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'chore(release):')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Install build dependencies
+        run: |
+          uv venv
+          uv pip install -e ".[dev]"
+
+      - name: Resolve release mode
+        id: mode
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "dry_run=${{ inputs.dry_run }}" >> "$GITHUB_OUTPUT"
+            echo "repository=${{ inputs.publish_repository }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "dry_run=false" >> "$GITHUB_OUTPUT"
+            echo "repository=pypi" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Guard publish ref
+        shell: bash
+        run: |
+          if [[ "${{ steps.mode.outputs.dry_run }}" != "true" && "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "::error::Non-dry-run releases must run from refs/heads/main."
+            exit 1
+          fi
+
+      - name: Prepare release version
+        id: version
+        shell: python
+        env:
+          REQUESTED_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || '' }}
+          DRY_RUN: ${{ steps.mode.outputs.dry_run }}
+        run: |
+          from pathlib import Path
+          import os
+          import re
+
+          pyproject = Path("pyproject.toml")
+          text = pyproject.read_text()
+          match = re.search(r'^version = "([^"]+)"$', text, flags=re.MULTILINE)
+          if not match:
+              raise SystemExit("Could not find project version in pyproject.toml")
+
+          current = match.group(1)
+          requested = os.environ["REQUESTED_VERSION"].strip()
+          if requested:
+              next_version = requested
+          else:
+              parts = current.split(".")
+              if len(parts) != 3 or not all(part.isdigit() for part in parts):
+                  raise SystemExit(f"Cannot auto-bump non-semver version: {current}")
+              major, minor, patch = map(int, parts)
+              next_version = f"{major}.{minor}.{patch + 1}"
+
+          if os.environ["DRY_RUN"] != "true":
+              pyproject.write_text(
+                  text[: match.start(1)] + next_version + text[match.end(1) :]
+              )
+              changelog = Path("CHANGELOG.md")
+              existing = changelog.read_text() if changelog.exists() else "# Changelog\n\n"
+              entry = (
+                  f"## {next_version}\n\n"
+                  f"- Release from {os.environ.get('GITHUB_SHA', 'unknown commit')}.\n\n"
+              )
+              if f"## {next_version}" not in existing:
+                  if existing.startswith("# Changelog\n\n"):
+                      existing = "# Changelog\n\n" + entry + existing[len("# Changelog\n\n") :]
+                  else:
+                      existing = "# Changelog\n\n" + entry + existing
+                  changelog.write_text(existing)
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"version={next_version}\n")
+              output.write(f"tag=v{next_version}\n")
+
+      - name: Run quality gate
+        run: |
+          uv run python -m compileall finatic_server_python src tests
+          uv run pytest -q
+
+      - name: Build wheel and sdist
+        run: uv run python -m build
+
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: finatic-server-python-${{ steps.version.outputs.version }}
+          path: dist/*
+
+      - name: Commit version bump and tag
+        if: steps.mode.outputs.dry_run != 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml CHANGELOG.md
+          git commit -m "chore(release): v${{ steps.version.outputs.version }}"
+          git tag "${{ steps.version.outputs.tag }}"
+          git push origin HEAD:main --follow-tags
+
+      - name: Publish to TestPyPI
+        if: steps.mode.outputs.dry_run != 'true' && steps.mode.outputs.repository == 'testpypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Publish to PyPI
+        if: steps.mode.outputs.dry_run != 'true' && steps.mode.outputs.repository == 'pypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
