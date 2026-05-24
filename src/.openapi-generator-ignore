@@ -21,3 +21,6 @@
 #docs/*.md
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
+
+# Hand-maintained path setup for ``from finatic_server…`` imports (see path_bootstrap.py).
+path_bootstrap.py

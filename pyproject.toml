@@ -46,6 +46,7 @@ dev = [
     "flake8>=6.0.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
+    "build>=1.2.2",
     "types-cachetools>=5.3.0",
     "types-python-dateutil>=2.8.0",
 ]
@@ -57,11 +58,11 @@ Repository = "https://github.com/FinaticORG/FinaticServerSDK-Python"
 Issues = "https://github.com/FinaticORG/FinaticServerSDK-Python/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["finatic_server_python", "src"]
+packages = ["finatic_server_python", "src", "src/openapi/finatic_server"]
 include = ["/LICENSE", "/CHANGELOG.md"]
 
 [tool.hatch.build.targets.editable]
-packages = ["finatic_server_python", "src"]
+packages = ["finatic_server_python", "src", "src/openapi/finatic_server"]
 
 [tool.black]
 line-length = 88
@@ -91,7 +92,7 @@ show_error_codes = true
 
 # Generated OpenAPI code and smoke tests are not held to the same mypy bar as hand-written SDK code.
 [[tool.mypy.overrides]]
-module = ["src.openapi.generated.*"]
+module = ["finatic_server.*"]
 ignore_errors = true
 
 
@@ -113,14 +114,14 @@ exclude = [
     "*.egg-info",
     ".venv",
     "venv",
-    "src/openapi/generated",
+    "src/openapi/finatic_server",
 ]
 import-order-style = "google"
 application-import-names = ["src"]
 
 [tool.ruff]
-exclude = ["src/openapi/generated"]
+exclude = ["src/openapi/finatic_server"]
 
 [tool.ruff.lint.per-file-ignores]
-# Star re-exports from optional custom/generated subpackages; names are re-exported intentionally.
+# Star re-exports from OpenAPI client package; names are re-exported intentionally.
 "src/__init__.py" = ["F403", "F401", "F405"]
