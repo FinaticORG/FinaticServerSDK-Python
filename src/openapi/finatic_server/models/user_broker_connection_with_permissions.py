@@ -38,8 +38,11 @@ class UserBrokerConnectionWithPermissions(BaseModel):
     updated_at: Optional[datetime] = None
     last_synced_at: Optional[datetime] = None
     permissions: Optional[Dict[str, StrictBool]] = Field(default=None, description="Permissions for the current company (read/write access)")
+    requires_customer_agent: Optional[StrictBool] = Field(default=None, description="True when connection uses a customer-hosted push agent (MT4/MT5).")
+    push_agent_connector_state: Optional[StrictStr] = Field(default=None, description="MT connector lifecycle state when requires_customer_agent is true.")
+    push_agent_last_heartbeat_at: Optional[datetime] = Field(default=None, description="Last EA heartbeat timestamp from mt_connectors.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["id", "user_id", "broker_id", "status", "connection_metadata", "created_at", "updated_at", "last_synced_at", "permissions"]
+    __properties: ClassVar[List[str]] = ["id", "user_id", "broker_id", "status", "connection_metadata", "created_at", "updated_at", "last_synced_at", "permissions", "requires_customer_agent", "push_agent_connector_state", "push_agent_last_heartbeat_at"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -112,6 +115,21 @@ class UserBrokerConnectionWithPermissions(BaseModel):
         if self.last_synced_at is None and "last_synced_at" in self.model_fields_set:
             _dict['last_synced_at'] = None
 
+        # set to None if requires_customer_agent (nullable) is None
+        # and model_fields_set contains the field
+        if self.requires_customer_agent is None and "requires_customer_agent" in self.model_fields_set:
+            _dict['requires_customer_agent'] = None
+
+        # set to None if push_agent_connector_state (nullable) is None
+        # and model_fields_set contains the field
+        if self.push_agent_connector_state is None and "push_agent_connector_state" in self.model_fields_set:
+            _dict['push_agent_connector_state'] = None
+
+        # set to None if push_agent_last_heartbeat_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.push_agent_last_heartbeat_at is None and "push_agent_last_heartbeat_at" in self.model_fields_set:
+            _dict['push_agent_last_heartbeat_at'] = None
+
         return _dict
 
     @classmethod
@@ -132,7 +150,10 @@ class UserBrokerConnectionWithPermissions(BaseModel):
             "created_at": obj.get("created_at"),
             "updated_at": obj.get("updated_at"),
             "last_synced_at": obj.get("last_synced_at"),
-            "permissions": obj.get("permissions")
+            "permissions": obj.get("permissions"),
+            "requires_customer_agent": obj.get("requires_customer_agent"),
+            "push_agent_connector_state": obj.get("push_agent_connector_state"),
+            "push_agent_last_heartbeat_at": obj.get("push_agent_last_heartbeat_at")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
