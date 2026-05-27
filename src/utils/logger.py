@@ -15,10 +15,10 @@ _logger: structlog.BoundLogger | None = None
 
 def get_logger(config: SdkConfig | None = None) -> structlog.BoundLogger:
     """Get or create a structured logger instance.
-    
+
     Args:
         config: SDK configuration (optional)
-    
+
     Returns:
         Structured logger instance
 
@@ -29,14 +29,16 @@ def get_logger(config: SdkConfig | None = None) -> structlog.BoundLogger:
         return _logger
 
     import os
-    log_level = (config.log_level if config else None) or os.getenv('FINATIC_LOG_LEVEL', 'error')
+
+    log_level = (config.log_level if config else None) or os.getenv(
+        "FINATIC_LOG_LEVEL", "error"
+    )
 
     # Determine if we should use structured (JSON) or pretty (console) logging
     # Use pretty console renderer in development unless explicitly requested
-    is_production = os.getenv('NODE_ENV', '').lower() in ('production', 'prod')
-    use_structured = (
-        (config.structured_logging if config else None) is True or
-        (is_production and (config.structured_logging if config else None) is not False)
+    is_production = os.getenv("NODE_ENV", "").lower() in ("production", "prod")
+    use_structured = (config.structured_logging if config else None) is True or (
+        is_production and (config.structured_logging if config else None) is not False
     )
 
     # Configure structlog
@@ -50,7 +52,11 @@ def get_logger(config: SdkConfig | None = None) -> structlog.BoundLogger:
             structlog.processors.StackInfoRenderer(),
             structlog.processors.format_exc_info,
             structlog.processors.UnicodeDecoder(),
-            structlog.processors.JSONRenderer() if use_structured else structlog.dev.ConsoleRenderer(),
+            (
+                structlog.processors.JSONRenderer()
+                if use_structured
+                else structlog.dev.ConsoleRenderer()
+            ),
         ],
         wrapper_class=structlog.stdlib.BoundLogger,
         context_class=dict,
@@ -65,6 +71,6 @@ def get_logger(config: SdkConfig | None = None) -> structlog.BoundLogger:
         level=getattr(logging, log_level.upper(), logging.ERROR),
     )
 
-    _logger = structlog.get_logger('finatic_sdk')
+    _logger = structlog.get_logger("finatic_sdk")
 
     return _logger

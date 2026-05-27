@@ -14,7 +14,9 @@ def _dummy_value(parameter_name: str) -> object:
         return "test-api-key"
     if "limit" in lowered_parameter_name or "offset" in lowered_parameter_name:
         return 1
-    if lowered_parameter_name.startswith("is_") or lowered_parameter_name.startswith("include_"):
+    if lowered_parameter_name.startswith("is_") or lowered_parameter_name.startswith(
+        "include_"
+    ):
         return True
     return "value"
 

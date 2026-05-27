@@ -18,6 +18,7 @@ from ..utils.interceptors import (
     apply_response_interceptors,
 )
 from ..utils.logger import get_logger
+from ..utils.pagination import PaginatedData, PaginationMeta
 from ..utils.plain_object import convert_to_plain_object
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
@@ -314,12 +315,16 @@ class CompanyWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -352,12 +357,16 @@ class CompanyWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available

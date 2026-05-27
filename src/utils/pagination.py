@@ -16,7 +16,9 @@ T = TypeVar("T")
 class PaginationMeta:
     """Pagination metadata from API response."""
 
-    def __init__(self, has_more: bool, next_offset: int | None, current_offset: int, limit: int):
+    def __init__(
+        self, has_more: bool, next_offset: int | None, current_offset: int, limit: int
+    ):
         self.has_more = has_more
         self.next_offset = next_offset
         self.current_offset = current_offset
@@ -60,7 +62,9 @@ class PaginatedData(Generic[T]):
         self,
         items: list[T],  # The actual data array
         meta: PaginationMeta,
-        original_method: Callable[..., Awaitable[Any]],  # Returns FinaticResponse[PaginatedData[T]]
+        original_method: Callable[
+            ..., Awaitable[Any]
+        ],  # Returns FinaticResponse[PaginatedData[T]]
         current_params: dict[str, Any],
         wrapper_instance: Any,
     ):
@@ -84,7 +88,9 @@ class PaginatedData(Generic[T]):
 
     def __repr__(self) -> str:
         """String representation showing it's a paginated array."""
-        return f"<PaginatedData[{len(self.items)} items, has_more={self.meta.has_more}]>"
+        return (
+            f"<PaginatedData[{len(self.items)} items, has_more={self.meta.has_more}]>"
+        )
 
     @property
     def length(self) -> int:
@@ -248,7 +254,9 @@ class PaginatedData(Generic[T]):
         response = await self._original_method(**new_params)
         if not response.get("success"):
             error_msg = (
-                response.get("error", {}).get("message", "Failed to fetch previous page")
+                response.get("error", {}).get(
+                    "message", "Failed to fetch previous page"
+                )
                 if response.get("error")
                 else "Failed to fetch previous page"
             )

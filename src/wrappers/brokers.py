@@ -678,12 +678,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -716,12 +720,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -1049,12 +1057,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -1087,12 +1099,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -1356,12 +1372,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -1394,12 +1414,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -1684,12 +1708,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -1722,12 +1750,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -2021,12 +2053,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -2059,12 +2095,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -2408,12 +2448,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -2446,12 +2490,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -2808,12 +2856,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -2846,12 +2898,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -3182,12 +3238,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -3220,12 +3280,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -3546,12 +3610,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -3584,12 +3652,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -3910,12 +3982,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -3948,12 +4024,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -4275,12 +4355,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -4313,12 +4397,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -4640,12 +4728,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -4678,12 +4770,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -5004,12 +5100,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -5042,12 +5142,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -5408,12 +5512,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -5446,12 +5554,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -5805,12 +5917,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -5843,12 +5959,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -6221,12 +6341,16 @@ class BrokersWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -6259,12 +6383,16 @@ class BrokersWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available

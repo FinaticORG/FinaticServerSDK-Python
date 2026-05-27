@@ -6,7 +6,7 @@ This file is regenerated on each run - do not edit directly.
 from typing import Any, TypeVar
 
 # Generic type variable for response data
-T = TypeVar('T')
+T = TypeVar("T")
 
 # Type alias for FinaticResponse structure
 # This provides IntelliSense and type checking while runtime is a plain dict

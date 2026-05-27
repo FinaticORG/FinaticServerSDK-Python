@@ -8,7 +8,7 @@ Only matches actual enum value names (case-insensitive), no aliases.
 
 from typing import TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 def coerce_enum_value(
@@ -17,18 +17,18 @@ def coerce_enum_value(
     enum_name: str,
 ) -> T | None:
     """Coerce a string or enum value to the matching enum value (case-insensitive).
-    
+
     Args:
         input_value: String or enum value to coerce
         enum_class: Enum class to match against
         enum_name: Name of the enum (for error messages)
-    
+
     Returns:
         The matching enum value, or None if input is None/undefined
-    
+
     Raises:
         ValueError: If input cannot be coerced to a valid enum value
-    
+
     Example:
         >>> status = coerce_enum_value('open', PublicPositionStatusEnum, 'positionStatus')
         >>> # Returns PublicPositionStatusEnum.Open (case-insensitive match)
@@ -44,10 +44,6 @@ def coerce_enum_value(
     if isinstance(input_value, str):
         normalized = input_value.strip().lower()
 
-        # Get all enum values
-        enum_values = [e.value for e in enum_class]
-        enum_keys = [e.name for e in enum_class]
-
         # Direct match by value (case-insensitive)
         for enum_val in enum_class:
             if enum_val.value.lower() == normalized:
@@ -59,5 +55,5 @@ def coerce_enum_value(
                 return enum_val
 
     # Not coercible - raise descriptive error
-    allowed = ', '.join([e.value for e in enum_class])
+    allowed = ", ".join([e.value for e in enum_class])
     raise ValueError(f"Invalid {enum_name}: {input_value}. Allowed values: {allowed}")

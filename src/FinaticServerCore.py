@@ -10,10 +10,19 @@ from finatic_server.api.company_api import CompanyApi
 from finatic_server.api.session_api import SessionApi
 from finatic_server.api_client import ApiClient
 from finatic_server.configuration import Configuration
+from finatic_server.models.accounts import Accounts
+from finatic_server.models.broker_info import BrokerInfo
+from finatic_server.models.disconnect_company_from_broker_connection_result import (
+    DisconnectCompanyFromBrokerConnectionResult,
+)
 from finatic_server.models.legacy_broker_account import LegacyBrokerAccount
 from finatic_server.models.legacy_broker_balance import LegacyBrokerBalance
+from finatic_server.models.order_action_result import OrderActionResult
 from finatic_server.models.session_response_data import SessionResponseData
 from finatic_server.models.session_user_response import SessionUserResponse
+from finatic_server.models.user_broker_connection_with_permissions import (
+    UserBrokerConnectionWithPermissions,
+)
 
 from .config import SdkConfig, get_config
 from .finatic_fdx_types import (
@@ -29,6 +38,7 @@ from .finatic_fdx_types import (
 from .openapi import path_bootstrap  # noqa: F401
 from .types import FinaticResponse
 from .utils.logger import get_logger
+from .utils.pagination import PaginatedData
 from .utils.url_utils import (
     append_asset_types_to_url,
     append_broker_filter_to_url,
@@ -586,12 +596,16 @@ class FinaticServer:
                 "Failed to get portal URL",
                 extra={
                     "error": error_msg,
-                    "code": response.get("error", {}).get("code")
-                    if isinstance(response.get("error"), dict)
-                    else None,
-                    "status": response.get("error", {}).get("status")
-                    if isinstance(response.get("error"), dict)
-                    else None,
+                    "code": (
+                        response.get("error", {}).get("code")
+                        if isinstance(response.get("error"), dict)
+                        else None
+                    ),
+                    "status": (
+                        response.get("error", {}).get("status")
+                        if isinstance(response.get("error"), dict)
+                        else None
+                    ),
                 },
             )
             raise Exception(error_msg)

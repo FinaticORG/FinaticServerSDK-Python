@@ -6,7 +6,7 @@ This package re-exports everything from src to provide a clean import path:
 This matches the pattern used by:
     - Node.js: import { FinaticServer } from '@finatic/server-node'
     - TypeScript: import { FinaticConnect } from '@finatic/client'
-    
+
 Package name: finatic-server-python (pip install finatic-server-python)
 Import name: finatic_server_python (from finatic_server_python import ...)
 """

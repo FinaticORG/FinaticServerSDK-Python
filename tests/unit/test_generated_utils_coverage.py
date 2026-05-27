@@ -6,6 +6,7 @@ from enum import Enum
 
 import pytest
 from pydantic import BaseModel, Field
+
 from src.config import SdkConfig
 from src.utils import (
     enum_coercion,
@@ -13,9 +14,7 @@ from src.utils import (
     url_utils,
     validation,
 )
-from src.utils.error_handling import (
-    ValidationError as SdkValidationError,
-)
+from src.utils.error_handling import ValidationError as SdkValidationError
 
 
 class _SampleEnum(str, Enum):
@@ -24,7 +23,10 @@ class _SampleEnum(str, Enum):
 
 
 def test_append_theme_and_broker_urls() -> None:
-    assert url_utils.append_theme_to_url("https://example.com", None) == "https://example.com"
+    assert (
+        url_utils.append_theme_to_url("https://example.com", None)
+        == "https://example.com"
+    )
     out = url_utils.append_theme_to_url("https://example.com/path", "dark")
     assert "theme=dark" in out
     out2 = url_utils.append_theme_to_url(
@@ -46,7 +48,10 @@ def test_append_theme_and_broker_urls() -> None:
         ["alpaca"],
     )
     assert "brokers=" in brokers
-    assert url_utils.append_kind_to_url("https://example.com", "broker") != "https://example.com"
+    assert (
+        url_utils.append_kind_to_url("https://example.com", "broker")
+        != "https://example.com"
+    )
     caps = url_utils.append_asset_types_to_url(
         "https://example.com",
         ["equity", "crypto"],
@@ -58,7 +63,10 @@ def test_append_theme_and_broker_urls() -> None:
 
 def test_coerce_enum_value() -> None:
     assert enum_coercion.coerce_enum_value(None, _SampleEnum, "s") is None
-    assert enum_coercion.coerce_enum_value(_SampleEnum.OPEN, _SampleEnum, "s") == _SampleEnum.OPEN
+    assert (
+        enum_coercion.coerce_enum_value(_SampleEnum.OPEN, _SampleEnum, "s")
+        == _SampleEnum.OPEN
+    )
     assert enum_coercion.coerce_enum_value("OPEN", _SampleEnum, "s") == _SampleEnum.OPEN
     assert enum_coercion.coerce_enum_value("open", _SampleEnum, "s") == _SampleEnum.OPEN
     with pytest.raises(ValueError):

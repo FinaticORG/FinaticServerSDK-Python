@@ -6,6 +6,18 @@ from dataclasses import dataclass
 
 from finatic_server.api.session_api import SessionApi
 from finatic_server.configuration import Configuration
+from finatic_server.models.finatic_response_portal_url_response import (
+    FinaticResponsePortalUrlResponse,
+)
+from finatic_server.models.finatic_response_session_response_data import (
+    FinaticResponseSessionResponseData,
+)
+from finatic_server.models.finatic_response_session_user_response import (
+    FinaticResponseSessionUserResponse,
+)
+from finatic_server.models.finatic_response_token_response_data import (
+    FinaticResponseTokenResponseData,
+)
 from finatic_server.models.session_start_request import SessionStartRequest
 
 from ..config import SdkConfig
@@ -18,6 +30,7 @@ from ..utils.interceptors import (
     apply_response_interceptors,
 )
 from ..utils.logger import get_logger
+from ..utils.pagination import PaginatedData, PaginationMeta
 from ..utils.plain_object import convert_to_plain_object
 from ..utils.request_id import generate_request_id
 from ..utils.retry import retry_api_call
@@ -103,9 +116,7 @@ class SessionWrapper:
 
     async def init_session(
         self, **kwargs
-    ) -> FinaticResponse[
-        FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2
-    ]:
+    ) -> FinaticResponse[FinaticResponseTokenResponseData]:
         """Init Session
 
         Initialize a new session with company API key.
@@ -113,8 +124,8 @@ class SessionWrapper:
         Args:
             x_api_key (str): Company API key
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2] format
-                     success: {data: FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticResponseTokenResponseData] format
+                     success: {data: FinaticResponseTokenResponseData, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
 
@@ -336,12 +347,16 @@ class SessionWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -374,12 +389,16 @@ class SessionWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -408,9 +427,7 @@ class SessionWrapper:
 
     async def start_session(
         self, **kwargs
-    ) -> FinaticResponse[
-        FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2
-    ]:
+    ) -> FinaticResponse[FinaticResponseSessionResponseData]:
         """Start Session
 
         Start a session with a one-time token.
@@ -419,8 +436,8 @@ class SessionWrapper:
             one_time_token (str): One-time use token obtained from init_session endpoint to authenticate and start the session
             session_start_request (SessionStartRequest): Session start request containing optional user ID to associate with the session
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2] format
-                     success: {data: FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticResponseSessionResponseData] format
+                     success: {data: FinaticResponseSessionResponseData, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
 
@@ -644,12 +661,16 @@ class SessionWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -682,12 +703,16 @@ class SessionWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -716,9 +741,7 @@ class SessionWrapper:
 
     async def get_portal_url(
         self, **kwargs
-    ) -> FinaticResponse[
-        FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2
-    ]:
+    ) -> FinaticResponse[FinaticResponsePortalUrlResponse]:
         """Get Portal Url
 
         Get a portal URL with token for a session.
@@ -729,8 +752,8 @@ class SessionWrapper:
         Args:
         - **kwargs: No parameters required for this method
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2] format
-                     success: {data: FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalUrlResponse2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticResponsePortalUrlResponse] format
+                     success: {data: FinaticResponsePortalUrlResponse, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
 
@@ -969,12 +992,16 @@ class SessionWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -1007,12 +1034,16 @@ class SessionWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available
@@ -1041,9 +1072,7 @@ class SessionWrapper:
 
     async def get_session_user(
         self, **kwargs
-    ) -> FinaticResponse[
-        FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2
-    ]:
+    ) -> FinaticResponse[FinaticResponseSessionUserResponse]:
         """Get Session User
 
         Get user information for a completed session.
@@ -1061,8 +1090,8 @@ class SessionWrapper:
         Args:
             session_id (str): Session ID
         Returns:
-        - Dict[str, Any]: FinaticResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2] format
-                     success: {data: FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse2, meta: dict | None}
+        - Dict[str, Any]: FinaticResponse[FinaticResponseSessionUserResponse] format
+                     success: {data: FinaticResponseSessionUserResponse, meta: dict | None}
                      error: dict | None
                      warning: list[dict] | None
 
@@ -1311,12 +1340,16 @@ class SessionWrapper:
                     "statusText": getattr(e, "reason", None),
                     "responseData": getattr(e, "body", None)
                     or getattr(e, "response", None),
-                    "requestUrl": getattr(e, "request", {}).get("url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e, "request", {}).get("method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e, "request", {}).get("url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e, "request", {}).get("method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             elif hasattr(e, "response") and hasattr(e.response, "status_code"):
                 # Handle httpx/requests response errors
@@ -1349,12 +1382,16 @@ class SessionWrapper:
                     "status": error_status,
                     "statusText": getattr(e.response, "reason", None),
                     "responseData": response_data,
-                    "requestUrl": getattr(e.request, "url", None)
-                    if hasattr(e, "request")
-                    else None,
-                    "requestMethod": getattr(e.request, "method", None)
-                    if hasattr(e, "request")
-                    else None,
+                    "requestUrl": (
+                        getattr(e.request, "url", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
+                    "requestMethod": (
+                        getattr(e.request, "method", None)
+                        if hasattr(e, "request")
+                        else None
+                    ),
                 }
             else:
                 # Generic error - include stack trace if available

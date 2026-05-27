@@ -36,7 +36,7 @@ def run_command(cmd: list[str], description: str, fix_mode: bool = False) -> boo
             error_output = (result.stderr or result.stdout or "").lower()
             if "failed to spawn" in error_output or "no such file" in error_output:
                 print(f"⚠️  {description} skipped (tool not installed)")
-                print(f"   Install with: uv sync --extra dev")
+                print("   Install with: uv sync --extra dev")
                 return True  # Skip missing tools gracefully
             print(f"❌ {description} failed!")
             if result.stderr:
@@ -52,7 +52,9 @@ def run_command(cmd: list[str], description: str, fix_mode: bool = False) -> boo
 
 def main() -> int:
     """Run all quality checks or fixes."""
-    parser = argparse.ArgumentParser(description="Quality check script for FinaticServerSDK-Python")
+    parser = argparse.ArgumentParser(
+        description="Quality check script for FinaticServerSDK-Python"
+    )
     parser.add_argument(
         "--fix",
         action="store_true",
@@ -111,4 +113,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-

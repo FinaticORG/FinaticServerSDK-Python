@@ -14,10 +14,10 @@ _cache_instance: TTLCache | None = None
 
 def get_cache(config: SdkConfig | None = None) -> TTLCache | None:
     """Get or create cache instance.
-    
+
     Args:
         config: SDK configuration (optional)
-    
+
     Returns:
         Cache instance or None if caching disabled
 
@@ -30,8 +30,8 @@ def get_cache(config: SdkConfig | None = None) -> TTLCache | None:
     if _cache_instance is not None:
         return _cache_instance
 
-    ttl = (config.cache_ttl if config else 300)
-    max_size = (config.cache_max_size if config else 1000)
+    ttl = config.cache_ttl if config else 300
+    max_size = config.cache_max_size if config else 1000
 
     _cache_instance = TTLCache(maxsize=max_size, ttl=ttl)
 
@@ -39,37 +39,37 @@ def get_cache(config: SdkConfig | None = None) -> TTLCache | None:
 
 
 def generate_cache_key(
-    method: str,
-    path: str,
-    params: dict[str, Any],
-    config: SdkConfig | None = None
+    method: str, path: str, params: dict[str, Any], config: SdkConfig | None = None
 ) -> str:
     """Generate cache key from method and parameters.
-    
+
     Args:
         method: HTTP method
         path: API path
         params: Request parameters
         config: SDK configuration (optional)
-    
+
     Returns:
         Cache key string
 
     """
-    include = (config.cache_key_include if config else ['method', 'path', 'query', 'body'])
+    include = (
+        config.cache_key_include if config else ["method", "path", "query", "body"]
+    )
     parts = []
 
-    if 'method' in include:
-        parts.append(f'method:{method}')
-    if 'path' in include:
-        parts.append(f'path:{path}')
-    if 'query' in include:
-        query = params.get('query', params)
-        query_str = '&'.join(f'{k}={repr(query[k])}' for k in sorted(query.keys()))
-        parts.append(f'query:{query_str}')
-    if 'body' in include:
+    if "method" in include:
+        parts.append(f"method:{method}")
+    if "path" in include:
+        parts.append(f"path:{path}")
+    if "query" in include:
+        query = params.get("query", params)
+        query_str = "&".join(f"{k}={repr(query[k])}" for k in sorted(query.keys()))
+        parts.append(f"query:{query_str}")
+    if "body" in include:
         import json
-        body = params.get('body', {})
-        parts.append(f'body:{json.dumps(body, sort_keys=True)}')
+
+        body = params.get("body", {})
+        parts.append(f"body:{json.dumps(body, sort_keys=True)}")
 
     return f'finatic:{"|".join(parts)}'

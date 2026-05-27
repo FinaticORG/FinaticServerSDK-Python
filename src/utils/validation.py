@@ -11,24 +11,22 @@ from pydantic import ValidationError as PydanticValidationError
 from ..config import SdkConfig
 from .error_handling import ValidationError
 
-T = TypeVar('T', bound=BaseModel)
+T = TypeVar("T", bound=BaseModel)
 
 
 def validate_params(
-    model_class: type[T],
-    params: dict,
-    config: SdkConfig | None = None
+    model_class: type[T], params: dict, config: SdkConfig | None = None
 ) -> T:
     """Validate parameters using pydantic model.
-    
+
     Args:
         model_class: Pydantic model class
         params: Parameters to validate
         config: SDK configuration (optional)
-    
+
     Returns:
         Validated model instance
-    
+
     Raises:
         ValidationError: If validation fails and strict mode is enabled
 
@@ -45,5 +43,6 @@ def validate_params(
             raise ValidationError(message)
         else:
             import logging
+
             logging.warning(f"[Validation Warning] {message}")
             return model_class(**params)  # Try to create anyway

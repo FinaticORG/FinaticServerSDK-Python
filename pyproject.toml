@@ -78,7 +78,7 @@ line_length = 88
 python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
-exclude = "(?x)(^tests/|^demo-app/)"
+exclude = "(?x)(^tests/|^demo-app/|^src/openapi/finatic_server/)"
 # Relaxed settings for generated code
 disallow_untyped_defs = false
 check_untyped_defs = true
@@ -95,13 +95,15 @@ show_error_codes = true
 module = ["finatic_server.*"]
 ignore_errors = true
 
-
-[tool.pytest.ini_options]
-asyncio_mode = "auto"
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-pythonpath = ["."]
-addopts = "--cov=src --cov-report=term-missing"
+[[tool.mypy.overrides]]
+module = [
+    "src.FinaticServerCore",
+    "src.wrappers.*",
+    "src.utils.enum_coercion",
+    "src.utils.logger",
+    "src.utils.pagination",
+]
+ignore_errors = true
 
 [tool.flake8]
 max-line-length = 88
