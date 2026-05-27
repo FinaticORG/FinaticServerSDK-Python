@@ -626,7 +626,7 @@ wheels = [
 
 [[package]]
 name = "finatic-server-python"
-version = "0.9.13"
+version = "0.9.14"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
