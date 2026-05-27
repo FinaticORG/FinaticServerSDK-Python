@@ -20,6 +20,16 @@ import re  # noqa: F401
 from inspect import getfullargspec
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.ninja_trader_order_modify_request import (
     NinjaTraderOrderModifyRequest,
 )
@@ -33,15 +43,6 @@ from finatic_server.models.trading212_order_modify_request import (
     Trading212OrderModifyRequest,
 )
 from finatic_server.models.webull_order_modify_request import WebullOrderModifyRequest
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 ORDERREQUEST_ANY_OF_SCHEMAS = [
     "NinjaTraderOrderModifyRequest",

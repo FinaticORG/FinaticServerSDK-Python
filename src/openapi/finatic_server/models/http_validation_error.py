@@ -19,10 +19,11 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Set
 
-from finatic_server.models.validation_error import ValidationError
 from pydantic import BaseModel, ConfigDict
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.validation_error import ValidationError
 
 
 class HTTPValidationError(BaseModel):

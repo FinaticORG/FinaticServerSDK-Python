@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.robinhood_option_limit_order_place_query_params import (
     RobinhoodOptionLimitOrderPlaceQueryParams,
 )
@@ -33,15 +43,6 @@ from finatic_server.models.robinhood_option_stop_order_place_query_params import
 from finatic_server.models.robinhood_option_trailing_stop_order_place_query_params import (
     RobinhoodOptionTrailingStopOrderPlaceQueryParams,
 )
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 ORDER2ANYOF1_ONE_OF_SCHEMAS = [
     "RobinhoodOptionLimitOrderPlaceQueryParams",

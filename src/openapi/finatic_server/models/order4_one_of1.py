@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.tradestation_future_limit_order_place_query_params import (
     TradestationFutureLimitOrderPlaceQueryParams,
 )
@@ -33,15 +43,6 @@ from finatic_server.models.tradestation_future_stop_order_place_query_params imp
 from finatic_server.models.tradestation_future_trailing_stop_order_place_query_params import (
     TradestationFutureTrailingStopOrderPlaceQueryParams,
 )
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 ORDER4ONEOF1_ONE_OF_SCHEMAS = [
     "TradestationFutureLimitOrderPlaceQueryParams",

@@ -20,10 +20,11 @@ import re  # noqa: F401
 from datetime import datetime
 from typing import Any, ClassVar, Dict, List, Optional, Set
 
-from finatic_server.models.session_status import SessionStatus
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.session_status import SessionStatus
 
 
 class SessionResponseData(BaseModel):

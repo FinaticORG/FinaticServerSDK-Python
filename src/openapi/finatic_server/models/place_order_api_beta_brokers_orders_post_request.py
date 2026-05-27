@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.alpaca_order_place_request import AlpacaOrderPlaceRequest
 from finatic_server.models.etoro_order_place_request import EtoroOrderPlaceRequest
 from finatic_server.models.ninja_trader_order_place_request import (
@@ -36,15 +46,6 @@ from finatic_server.models.trading212_order_place_request import (
     Trading212OrderPlaceRequest,
 )
 from finatic_server.models.webull_order_place_request import WebullOrderPlaceRequest
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 PLACEORDERAPIBETABROKERSORDERSPOSTREQUEST_ONE_OF_SCHEMAS = [
     "AlpacaOrderPlaceRequest",

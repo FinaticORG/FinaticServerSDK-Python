@@ -19,10 +19,11 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, Optional, Set
 
-from finatic_server.models.accountnumber2 import Accountnumber2
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.accountnumber2 import Accountnumber2
 
 
 class TastyTradeOrderCancelQueryParams(BaseModel):

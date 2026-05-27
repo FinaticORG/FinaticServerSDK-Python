@@ -58,11 +58,11 @@ Repository = "https://github.com/FinaticORG/FinaticServerSDK-Python"
 Issues = "https://github.com/FinaticORG/FinaticServerSDK-Python/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["finatic_server_python", "src", "src/openapi/finatic_server"]
+packages = ["finatic_server_python", "finatic_server", "src"]
 include = ["/LICENSE", "/CHANGELOG.md"]
 
 [tool.hatch.build.targets.editable]
-packages = ["finatic_server_python", "src", "src/openapi/finatic_server"]
+packages = ["finatic_server_python", "finatic_server", "src"]
 
 [tool.black]
 line-length = 88

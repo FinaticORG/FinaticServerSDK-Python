@@ -20,6 +20,7 @@ from typing import Optional, Union
 
 import aiohttp
 import aiohttp_retry
+
 from finatic_server.exceptions import ApiException, ApiValueError
 
 RESTResponseType = aiohttp.ClientResponse

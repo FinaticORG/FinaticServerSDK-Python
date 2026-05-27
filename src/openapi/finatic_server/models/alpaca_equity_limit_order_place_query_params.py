@@ -19,11 +19,6 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
-from finatic_server.models.notional import Notional
-from finatic_server.models.orderqty import Orderqty
-from finatic_server.models.timeinforce import Timeinforce
-from finatic_server.models.trail_percent import TrailPercent
-from finatic_server.models.trail_price import TrailPrice
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -36,6 +31,12 @@ from pydantic import (
 )
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.notional import Notional
+from finatic_server.models.orderqty import Orderqty
+from finatic_server.models.timeinforce import Timeinforce
+from finatic_server.models.trail_percent import TrailPercent
+from finatic_server.models.trail_price import TrailPrice
 
 
 class AlpacaEquityLimitOrderPlaceQueryParams(BaseModel):

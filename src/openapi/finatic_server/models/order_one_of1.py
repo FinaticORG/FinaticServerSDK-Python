@@ -18,12 +18,6 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
-from finatic_server.models.alpaca_option_limit_order_place_query_params import (
-    AlpacaOptionLimitOrderPlaceQueryParams,
-)
-from finatic_server.models.alpaca_option_market_order_place_query_params import (
-    AlpacaOptionMarketOrderPlaceQueryParams,
-)
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -33,6 +27,13 @@ from pydantic import (
     field_validator,
 )
 from typing_extensions import Literal, Self
+
+from finatic_server.models.alpaca_option_limit_order_place_query_params import (
+    AlpacaOptionLimitOrderPlaceQueryParams,
+)
+from finatic_server.models.alpaca_option_market_order_place_query_params import (
+    AlpacaOptionMarketOrderPlaceQueryParams,
+)
 
 ORDERONEOF1_ONE_OF_SCHEMAS = [
     "AlpacaOptionLimitOrderPlaceQueryParams",

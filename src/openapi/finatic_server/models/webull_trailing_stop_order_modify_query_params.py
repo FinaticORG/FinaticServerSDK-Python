@@ -19,9 +19,6 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, Optional, Set, Union
 
-from finatic_server.models.order_modify_query_params_base_time_in_force import (
-    OrderModifyQueryParamsBaseTimeInForce,
-)
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -34,6 +31,10 @@ from pydantic import (
 )
 from pydantic_core import to_jsonable_python
 from typing_extensions import Annotated, Self
+
+from finatic_server.models.order_modify_query_params_base_time_in_force import (
+    OrderModifyQueryParamsBaseTimeInForce,
+)
 
 
 class WebullTrailingStopOrderModifyQueryParams(BaseModel):

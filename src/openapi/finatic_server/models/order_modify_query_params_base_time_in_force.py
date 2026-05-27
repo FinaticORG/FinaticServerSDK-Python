@@ -18,11 +18,6 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
-from finatic_server.models.day_tif import DayTIF
-from finatic_server.models.foktif import FOKTIF
-from finatic_server.models.gtctif import GTCTIF
-from finatic_server.models.gtdtif import GTDTIF
-from finatic_server.models.ioctif import IOCTIF
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -32,6 +27,12 @@ from pydantic import (
     field_validator,
 )
 from typing_extensions import Literal, Self
+
+from finatic_server.models.day_tif import DayTIF
+from finatic_server.models.foktif import FOKTIF
+from finatic_server.models.gtctif import GTCTIF
+from finatic_server.models.gtdtif import GTDTIF
+from finatic_server.models.ioctif import IOCTIF
 
 ORDERMODIFYQUERYPARAMSBASETIMEINFORCE_ONE_OF_SCHEMAS = [
     "DayTIF",

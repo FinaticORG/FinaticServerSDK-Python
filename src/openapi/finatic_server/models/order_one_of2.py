@@ -18,15 +18,6 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
-from finatic_server.models.alpaca_crypto_limit_order_place_query_params import (
-    AlpacaCryptoLimitOrderPlaceQueryParams,
-)
-from finatic_server.models.alpaca_crypto_market_order_place_query_params import (
-    AlpacaCryptoMarketOrderPlaceQueryParams,
-)
-from finatic_server.models.alpaca_crypto_stop_limit_order_place_query_params import (
-    AlpacaCryptoStopLimitOrderPlaceQueryParams,
-)
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -36,6 +27,16 @@ from pydantic import (
     field_validator,
 )
 from typing_extensions import Literal, Self
+
+from finatic_server.models.alpaca_crypto_limit_order_place_query_params import (
+    AlpacaCryptoLimitOrderPlaceQueryParams,
+)
+from finatic_server.models.alpaca_crypto_market_order_place_query_params import (
+    AlpacaCryptoMarketOrderPlaceQueryParams,
+)
+from finatic_server.models.alpaca_crypto_stop_limit_order_place_query_params import (
+    AlpacaCryptoStopLimitOrderPlaceQueryParams,
+)
 
 ORDERONEOF2_ONE_OF_SCHEMAS = [
     "AlpacaCryptoLimitOrderPlaceQueryParams",

@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.trading212_limit_order_place_query_params import (
     Trading212LimitOrderPlaceQueryParams,
 )
@@ -30,15 +40,6 @@ from finatic_server.models.trading212_stop_limit_order_place_query_params import
 from finatic_server.models.trading212_stop_order_place_query_params import (
     Trading212StopOrderPlaceQueryParams,
 )
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 ORDER5_ONE_OF_SCHEMAS = [
     "Trading212LimitOrderPlaceQueryParams",

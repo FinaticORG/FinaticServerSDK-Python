@@ -20,6 +20,10 @@ import re  # noqa: F401
 from datetime import datetime
 from typing import Any, ClassVar, Dict, List, Optional, Set
 
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic_core import to_jsonable_python
+from typing_extensions import Self
+
 from finatic_server.models.availablebalance import Availablebalance
 from finatic_server.models.availabletowithdraw import Availabletowithdraw
 from finatic_server.models.buyingpower import Buyingpower
@@ -31,9 +35,6 @@ from finatic_server.models.netliquidationvalue import Netliquidationvalue
 from finatic_server.models.pendingbalance import Pendingbalance
 from finatic_server.models.totalcashvalue import Totalcashvalue
 from finatic_server.models.totalrealizedpnl import Totalrealizedpnl
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from pydantic_core import to_jsonable_python
-from typing_extensions import Self
 
 
 class LegacyBrokerBalance(BaseModel):

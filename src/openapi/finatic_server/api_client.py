@@ -21,8 +21,10 @@ from enum import Enum
 from typing import Dict, List, Optional, Tuple, Union
 from urllib.parse import quote
 
-import finatic_server.models
 from dateutil.parser import parse
+from pydantic import SecretStr
+
+import finatic_server.models
 from finatic_server import rest
 from finatic_server.api_response import ApiResponse
 from finatic_server.api_response import T as ApiResponseT
@@ -36,7 +38,6 @@ from finatic_server.exceptions import (
     ServiceException,
     UnauthorizedException,
 )
-from pydantic import SecretStr
 
 RequestSerialized = Tuple[str, str, Dict[str, str], Optional[str], List[str]]
 

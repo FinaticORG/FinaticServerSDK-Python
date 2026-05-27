@@ -19,8 +19,6 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
-from finatic_server.models.broker_data_option_type_enum import BrokerDataOptionTypeEnum
-from finatic_server.models.broker_data_order_side_enum import BrokerDataOrderSideEnum
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -32,6 +30,9 @@ from pydantic import (
 )
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.broker_data_option_type_enum import BrokerDataOptionTypeEnum
+from finatic_server.models.broker_data_order_side_enum import BrokerDataOrderSideEnum
 
 
 class RobinhoodOptionSpreadLeg(BaseModel):

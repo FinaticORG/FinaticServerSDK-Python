@@ -19,11 +19,12 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, Optional, Set
 
-from finatic_server.models.accountnumber import Accountnumber
-from finatic_server.models.order4 import Order4
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.accountnumber import Accountnumber
+from finatic_server.models.order4 import Order4
 
 
 class TradestationOrderPlaceRequest(BaseModel):

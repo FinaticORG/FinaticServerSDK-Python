@@ -19,12 +19,13 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Set
 
-from finatic_server.models.user_broker_connection_with_permissions import (
-    UserBrokerConnectionWithPermissions,
-)
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from pydantic_core import to_jsonable_python
 from typing_extensions import Self
+
+from finatic_server.models.user_broker_connection_with_permissions import (
+    UserBrokerConnectionWithPermissions,
+)
 
 
 class SuccessPayloadListUserBrokerConnectionWithPermissions(BaseModel):

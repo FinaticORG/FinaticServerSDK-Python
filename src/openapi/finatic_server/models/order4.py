@@ -18,9 +18,6 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
-from finatic_server.models.order4_one_of import Order4OneOf
-from finatic_server.models.order4_one_of1 import Order4OneOf1
-from finatic_server.models.order4_one_of2 import Order4OneOf2
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -30,6 +27,10 @@ from pydantic import (
     field_validator,
 )
 from typing_extensions import Literal, Self
+
+from finatic_server.models.order4_one_of import Order4OneOf
+from finatic_server.models.order4_one_of1 import Order4OneOf1
+from finatic_server.models.order4_one_of2 import Order4OneOf2
 
 ORDER4_ONE_OF_SCHEMAS = ["Order4OneOf", "Order4OneOf1", "Order4OneOf2"]
 

@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.webull_equity_limit_order_place_query_params import (
     WebullEquityLimitOrderPlaceQueryParams,
 )
@@ -33,15 +43,6 @@ from finatic_server.models.webull_equity_stop_order_place_query_params import (
 from finatic_server.models.webull_equity_trailing_stop_order_place_query_params import (
     WebullEquityTrailingStopOrderPlaceQueryParams,
 )
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 ORDER6ONEOF_ONE_OF_SCHEMAS = [
     "WebullEquityLimitOrderPlaceQueryParams",

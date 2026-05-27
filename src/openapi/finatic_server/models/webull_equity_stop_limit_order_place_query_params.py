@@ -19,8 +19,6 @@ import pprint
 import re  # noqa: F401
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
-from finatic_server.models.orderqty4 import Orderqty4
-from finatic_server.models.timeinforce import Timeinforce
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -33,6 +31,9 @@ from pydantic import (
 )
 from pydantic_core import to_jsonable_python
 from typing_extensions import Annotated, Self
+
+from finatic_server.models.orderqty4 import Orderqty4
+from finatic_server.models.timeinforce import Timeinforce
 
 
 class WebullEquityStopLimitOrderPlaceQueryParams(BaseModel):

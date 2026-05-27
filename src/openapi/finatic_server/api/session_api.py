@@ -12,6 +12,9 @@ Do not edit the class manually.
 import warnings
 from typing import Any, Dict, List, Optional, Tuple, Union
 
+from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
+from typing_extensions import Annotated
+
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
 from finatic_server.models.finatic_response_portal_url_response import (
@@ -28,8 +31,6 @@ from finatic_server.models.finatic_response_token_response_data import (
 )
 from finatic_server.models.session_start_request import SessionStartRequest
 from finatic_server.rest import RESTResponseType
-from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
-from typing_extensions import Annotated
 
 
 class SessionApi:

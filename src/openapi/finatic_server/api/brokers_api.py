@@ -14,6 +14,9 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple, Union
 from uuid import UUID
 
+from pydantic import Field, StrictBool, StrictFloat, StrictInt, StrictStr, validate_call
+from typing_extensions import Annotated
+
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
 from finatic_server.models.cancel_order_api_beta_brokers_orders_order_id_delete_request import (
@@ -66,8 +69,6 @@ from finatic_server.models.place_order_api_beta_brokers_orders_post_request impo
     PlaceOrderApiBetaBrokersOrdersPostRequest,
 )
 from finatic_server.rest import RESTResponseType
-from pydantic import Field, StrictBool, StrictFloat, StrictInt, StrictStr, validate_call
-from typing_extensions import Annotated
 
 
 class BrokersApi:

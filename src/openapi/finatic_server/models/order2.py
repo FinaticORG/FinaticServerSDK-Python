@@ -20,9 +20,6 @@ import re  # noqa: F401
 from inspect import getfullargspec
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Union
 
-from finatic_server.models.order2_any_of import Order2AnyOf
-from finatic_server.models.order2_any_of1 import Order2AnyOf1
-from finatic_server.models.order2_any_of2 import Order2AnyOf2
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -32,6 +29,10 @@ from pydantic import (
     field_validator,
 )
 from typing_extensions import Literal, Self
+
+from finatic_server.models.order2_any_of import Order2AnyOf
+from finatic_server.models.order2_any_of1 import Order2AnyOf1
+from finatic_server.models.order2_any_of2 import Order2AnyOf2
 
 ORDER2_ANY_OF_SCHEMAS = ["Order2AnyOf", "Order2AnyOf1", "Order2AnyOf2"]
 

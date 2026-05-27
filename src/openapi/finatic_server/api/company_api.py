@@ -13,12 +13,13 @@ import warnings
 from typing import Any, Dict, List, Optional, Tuple, Union
 from uuid import UUID
 
+from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
+from typing_extensions import Annotated
+
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
 from finatic_server.models.finatic_response_accounts import FinaticResponseAccounts
 from finatic_server.rest import RESTResponseType
-from pydantic import Field, StrictFloat, StrictInt, StrictStr, validate_call
-from typing_extensions import Annotated
 
 
 class CompanyApi:

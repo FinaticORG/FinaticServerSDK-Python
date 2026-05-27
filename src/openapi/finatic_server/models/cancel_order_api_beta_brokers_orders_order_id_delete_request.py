@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.alpaca_order_cancel_request import AlpacaOrderCancelRequest
 from finatic_server.models.etoro_order_cancel_request import EtoroOrderCancelRequest
 from finatic_server.models.ninja_trader_order_cancel_request import (
@@ -36,15 +46,6 @@ from finatic_server.models.trading212_order_cancel_request import (
     Trading212OrderCancelRequest,
 )
 from finatic_server.models.webull_order_cancel_request import WebullOrderCancelRequest
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 CANCELORDERAPIBETABROKERSORDERSORDERIDDELETEREQUEST_ONE_OF_SCHEMAS = [
     "AlpacaOrderCancelRequest",

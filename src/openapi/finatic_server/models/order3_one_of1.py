@@ -18,6 +18,16 @@ import json
 import pprint
 from typing import Any, Dict, List, Optional, Set, Union
 
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictStr,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Literal, Self
+
 from finatic_server.models.tasty_trade_option_limit_order_place_query_params import (
     TastyTradeOptionLimitOrderPlaceQueryParams,
 )
@@ -30,15 +40,6 @@ from finatic_server.models.tasty_trade_option_stop_order_place_query_params impo
 from finatic_server.models.tasty_trade_option_trailing_stop_order_place_query_params import (
     TastyTradeOptionTrailingStopOrderPlaceQueryParams,
 )
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    StrictStr,
-    ValidationError,
-    field_validator,
-)
-from typing_extensions import Literal, Self
 
 ORDER3ONEOF1_ONE_OF_SCHEMAS = [
     "TastyTradeOptionLimitOrderPlaceQueryParams",
