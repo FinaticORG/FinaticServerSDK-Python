@@ -33,7 +33,22 @@ finatic = FinaticServer(
     sdk_config={"environment": "live"},
 )
 
-session = await finatic.v1.create_session(user_id="optional-user-id")
+session = await finatic.v1.create_session()
+await finatic.v1.link_portal_user("user-id")
+institutions = await finatic.v1.list_portal_institutions()
+auth_attempt = await finatic.v1.create_portal_auth_attempt("alpaca")
+discovered = await finatic.v1.list_discovered_accounts()
+grant = await finatic.v1.create_portal_account_grant(
+    {
+        "accountId": "broker-account-id",
+        "userBrokerConnectionId": "connection-id",
+        "userId": "user-id",
+        "brokerId": "alpaca",
+        "canRead": True,
+        "canTrade": False,
+        "dataClusters": ["accounts", "balances"],
+    }
+)
 accounts = await finatic.v1.list_accounts()
 orders = await finatic.v1.list_account_orders("broker-account-id")
 created = await finatic.v1.create_account_order(

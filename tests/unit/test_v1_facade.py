@@ -74,7 +74,7 @@ async def test_v1_create_session_sets_context_and_headers() -> None:
     fake_api_client = FakeApiClient()
     sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
 
-    response = await sdk.v1.create_session(user_id="user-1")
+    response = await sdk.v1.create_session(device_info={"platform": "server"})
 
     assert response["success"]["data"]["session_id"] == "session-1"
     assert sdk.v1.session_id == "session-1"
@@ -83,7 +83,7 @@ async def test_v1_create_session_sets_context_and_headers() -> None:
     assert fake_api_client.calls[0]["url"] == "https://api.test/api/v1/sessions"
     assert fake_api_client.calls[0]["headers"]["X-API-Key"] == "fntc_live_key"
     assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "live"
-    assert fake_api_client.calls[0]["body"] == {"user_id": "user-1"}
+    assert fake_api_client.calls[0]["body"] == {"device_info": {"platform": "server"}}
 
 
 @pytest.mark.asyncio
@@ -110,8 +110,93 @@ async def test_v1_account_routes_use_session_environment_and_query() -> None:
 
 
 @pytest.mark.asyncio
+async def test_v1_portal_flow_routes_match_account_first_api() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key",
+        sdk_config={"base_url": "https://api.test", "environment": "live"},
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+    sdk.v1.set_session_context("session-1", "company-1")
+
+    await sdk.v1.link_portal_user("11111111-1111-1111-1111-111111111111")
+    await sdk.v1.list_portal_institutions()
+    await sdk.v1.create_portal_auth_attempt("alpaca")
+    await sdk.v1.get_portal_auth_attempt("attempt-1")
+    await sdk.v1.list_discovered_accounts()
+    await sdk.v1.create_portal_account_grant(
+        {
+            "accountId": "22222222-2222-2222-2222-222222222222",
+            "userBrokerConnectionId": "33333333-3333-3333-3333-333333333333",
+            "userId": "11111111-1111-1111-1111-111111111111",
+            "brokerId": "alpaca",
+            "canRead": True,
+            "canTrade": False,
+            "dataClusters": ["accounts", "balances"],
+        }
+    )
+    await sdk.v1.complete_portal_session()
+
+    assert fake_api_client.calls[0]["method"] == "POST"
+    assert (
+        fake_api_client.calls[0]["url"]
+        == "https://api.test/api/v1/portal/session-1/user-link"
+    )
+    assert fake_api_client.calls[0]["body"] == {
+        "userId": "11111111-1111-1111-1111-111111111111"
+    }
+    assert (
+        fake_api_client.calls[1]["url"]
+        == "https://api.test/api/v1/portal/session-1/institutions"
+    )
+    assert (
+        fake_api_client.calls[2]["url"]
+        == "https://api.test/api/v1/portal/session-1/auth-attempts"
+    )
+    assert fake_api_client.calls[2]["body"] == {"brokerId": "alpaca"}
+    assert (
+        fake_api_client.calls[3]["url"]
+        == "https://api.test/api/v1/portal/session-1/auth-attempts/attempt-1"
+    )
+    assert (
+        fake_api_client.calls[4]["url"]
+        == "https://api.test/api/v1/portal/session-1/discovered-accounts"
+    )
+    assert (
+        fake_api_client.calls[5]["url"]
+        == "https://api.test/api/v1/portal/session-1/account-grants"
+    )
+    assert fake_api_client.calls[5]["body"]["accountId"] == (
+        "22222222-2222-2222-2222-222222222222"
+    )
+    assert (
+        fake_api_client.calls[6]["url"]
+        == "https://api.test/api/v1/portal/session-1/complete"
+    )
+
+
+@pytest.mark.asyncio
+async def test_v1_webhook_catalog_uses_catalog_route() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key",
+        sdk_config={"base_url": "https://api.test", "environment": "live"},
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    await sdk.v1.get_webhook_catalog()
+
+    assert fake_api_client.calls[0]["method"] == "GET"
+    assert fake_api_client.calls[0]["url"] == (
+        "https://api.test/api/v1/webhooks/catalog"
+    )
+
+
+@pytest.mark.asyncio
 async def test_v1_order_commands_send_idempotency_key() -> None:
-    sdk = FinaticServer(api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"})
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
     fake_api_client = FakeApiClient()
     sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
 

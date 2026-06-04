@@ -63,12 +63,9 @@ class V1Client:
     async def create_session(
         self,
         *,
-        user_id: str | None = None,
         device_info: dict[str, Any] | None = None,
     ) -> FinaticResponse:
         body: dict[str, Any] = {}
-        if user_id is not None:
-            body["user_id"] = user_id
         if device_info is not None:
             body["device_info"] = device_info
         response = await self._request("POST", "/api/v1/sessions", body=body or None)
@@ -94,12 +91,75 @@ class V1Client:
             "POST", f"/api/v1/sessions/{resolved_session_id}/portal-links"
         )
 
-    async def get_session_user(
+    async def get_session_user(self, session_id: str | None = None) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "GET", f"/api/v1/sessions/{resolved_session_id}/user"
+        )
+
+    async def link_portal_user(
+        self, user_id: str, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "POST",
+            f"/api/v1/portal/{resolved_session_id}/user-link",
+            body={"userId": user_id},
+        )
+
+    async def list_portal_institutions(
         self, session_id: str | None = None
     ) -> FinaticResponse:
         resolved_session_id = session_id or self._require_session_id()
         return await self._request(
-            "GET", f"/api/v1/sessions/{resolved_session_id}/user"
+            "GET", f"/api/v1/portal/{resolved_session_id}/institutions"
+        )
+
+    async def create_portal_auth_attempt(
+        self, broker_id: str, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "POST",
+            f"/api/v1/portal/{resolved_session_id}/auth-attempts",
+            body={"brokerId": broker_id},
+        )
+
+    async def get_portal_auth_attempt(
+        self, auth_attempt_id: str, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "GET",
+            f"/api/v1/portal/{resolved_session_id}/auth-attempts/{auth_attempt_id}",
+        )
+
+    async def list_discovered_accounts(
+        self, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "GET", f"/api/v1/portal/{resolved_session_id}/discovered-accounts"
+        )
+
+    async def create_portal_account_grant(
+        self,
+        grant: dict[str, Any],
+        session_id: str | None = None,
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "POST",
+            f"/api/v1/portal/{resolved_session_id}/account-grants",
+            body=grant,
+        )
+
+    async def complete_portal_session(
+        self, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "POST", f"/api/v1/portal/{resolved_session_id}/complete"
         )
 
     async def list_accounts(self) -> FinaticResponse:
@@ -229,9 +289,7 @@ class V1Client:
             "PATCH", f"/api/v1/account-grants/{grant_id}", body=update
         )
 
-    async def revoke_account_grant(
-        self, grant_id: str
-    ) -> FinaticResponse:
+    async def revoke_account_grant(self, grant_id: str) -> FinaticResponse:
         return await self._request("POST", f"/api/v1/account-grants/{grant_id}/revoke")
 
     async def list_consents(self) -> FinaticResponse:
@@ -244,7 +302,7 @@ class V1Client:
         return await self._request("POST", f"/api/v1/consents/{consent_id}/revoke")
 
     async def get_webhook_catalog(self) -> FinaticResponse:
-        return await self._request("GET", "/api/v1/webhooks")
+        return await self._request("GET", "/api/v1/webhooks/catalog")
 
     async def get_webhook_payload_schema(self) -> FinaticResponse:
         return await self._request("GET", "/api/v1/webhooks/payload-schema")
