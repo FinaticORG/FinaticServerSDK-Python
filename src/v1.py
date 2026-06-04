@@ -17,6 +17,26 @@ from finatic_server.configuration import Configuration
 from .types import FinaticResponse
 
 Environment = str
+_ERROR_CODE_BY_STATUS = {
+    400: "VALIDATION",
+    401: "AUTHENTICATION",
+    403: "AUTHORIZATION",
+    404: "NOT_FOUND",
+    409: "CONFLICT",
+    422: "VALIDATION",
+    429: "RATE_LIMITED",
+}
+_STABLE_ERROR_CODES = {
+    "AUTHENTICATION",
+    "AUTHORIZATION",
+    "VALIDATION",
+    "RATE_LIMITED",
+    "REAUTH_REQUIRED",
+    "PROVIDER_ERROR",
+    "CONFLICT",
+    "NOT_FOUND",
+    "INTERNAL",
+}
 
 
 @dataclass(frozen=True)
@@ -391,6 +411,7 @@ class V1Client:
     def _deserialize_response(self, response: Any) -> FinaticResponse:
         status = getattr(response, "status", None)
         data = getattr(response, "data", None)
+        headers = getattr(response, "headers", None)
         if isinstance(data, bytes):
             payload: Any = json.loads(data.decode("utf-8")) if data else {}
         elif isinstance(data, str):
@@ -399,17 +420,91 @@ class V1Client:
             payload = data if data is not None else {}
 
         if isinstance(status, int) and not 200 <= status <= 299:
-            if isinstance(payload, dict):
-                message = payload.get("message") or payload.get("detail") or payload
-            else:
-                message = payload
-            return {
-                "success": {"data": None, "meta": None},
-                "error": {"message": str(message), "status": status},
-                "warning": None,
-            }
+            return self._error_envelope(
+                payload=payload,
+                status=status,
+                trace_id=self._trace_id(payload, headers),
+            )
 
-        return cast(FinaticResponse, payload)
+        return self._success_envelope(
+            payload=payload,
+            trace_id=self._trace_id(payload, headers),
+        )
+
+    def _success_envelope(self, payload: Any, trace_id: str | None) -> FinaticResponse:
+        if isinstance(payload, dict) and (
+            "success" in payload or "error" in payload or "warning" in payload
+        ):
+            envelope = dict(payload)
+            if "warning" not in envelope and "warnings" in envelope:
+                envelope["warning"] = envelope.pop("warnings")
+            if trace_id and not envelope.get("trace_id"):
+                envelope["trace_id"] = trace_id
+            envelope.setdefault("error", None)
+            envelope.setdefault("warning", None)
+            return cast(FinaticResponse, envelope)
+
+        return cast(
+            FinaticResponse,
+            {
+                "trace_id": trace_id,
+                "success": {"data": payload, "meta": None},
+                "error": None,
+                "warning": None,
+            },
+        )
+
+    def _error_envelope(
+        self, *, payload: Any, status: int, trace_id: str | None
+    ) -> FinaticResponse:
+        if isinstance(payload, dict):
+            error_payload = payload.get("error")
+            if isinstance(error_payload, dict):
+                error = dict(error_payload)
+            else:
+                message = (
+                    payload.get("message")
+                    or payload.get("detail")
+                    or payload.get("title")
+                    or payload
+                )
+                error = {"message": str(message)}
+            warnings = payload.get("warning", payload.get("warnings"))
+        else:
+            error = {"message": str(payload)}
+            warnings = None
+
+        error["status"] = status
+        code = error.get("code")
+        if code not in _STABLE_ERROR_CODES:
+            error["code"] = self._error_code_for_status(status, error)
+
+        return {
+            "trace_id": trace_id,
+            "success": {"data": None, "meta": None},
+            "error": error,
+            "warning": warnings,
+        }
+
+    def _error_code_for_status(self, status: int, error: dict[str, Any]) -> str:
+        raw_message = str(error.get("message", "")).lower()
+        if "reauth" in raw_message or "re-authoriz" in raw_message:
+            return "REAUTH_REQUIRED"
+        if "provider" in raw_message or "broker" in raw_message:
+            return "PROVIDER_ERROR"
+        return _ERROR_CODE_BY_STATUS.get(status, "INTERNAL")
+
+    def _trace_id(self, payload: Any, headers: Any) -> str | None:
+        if isinstance(payload, dict):
+            trace_id = payload.get("trace_id") or payload.get("_id")
+            if isinstance(trace_id, str):
+                return trace_id
+        if headers is not None:
+            for name in ("x-trace-id", "X-Trace-ID", "x-request-id", "X-Request-ID"):
+                value = headers.get(name) if hasattr(headers, "get") else None
+                if isinstance(value, str):
+                    return value
+        return None
 
     def _extract_data(self, response: FinaticResponse) -> Any:
         success = response.get("success") if isinstance(response, dict) else None

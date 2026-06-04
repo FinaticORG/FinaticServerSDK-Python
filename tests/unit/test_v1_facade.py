@@ -14,6 +14,7 @@ class FakeResponse:
 
     def __init__(self, payload: dict[str, Any]) -> None:
         self.data = json.dumps(payload).encode("utf-8")
+        self.headers = {"x-trace-id": "trace-1"}
 
     async def read(self) -> bytes:
         return self.data
@@ -221,3 +222,34 @@ def test_v1_rejects_invalid_environment_and_resource() -> None:
 
     with pytest.raises(ValueError, match="Unsupported account resource"):
         sdk.v1._validate_resource("connections")
+
+
+def test_v1_normalizes_success_envelope_trace_and_warning_alias() -> None:
+    sdk = FinaticServer(api_key="fntc_live_key")
+    response = sdk.v1._deserialize_response(
+        FakeResponse(
+            {
+                "success": {"data": {"syncStatus": "pending"}, "meta": None},
+                "error": None,
+                "warnings": [{"code": "SYNC_PENDING"}],
+            }
+        )
+    )
+
+    assert response["trace_id"] == "trace-1"
+    assert response["success"]["data"]["syncStatus"] == "pending"
+    assert response["warning"] == [{"code": "SYNC_PENDING"}]
+    assert "warnings" not in response
+
+
+def test_v1_normalizes_error_envelope_with_stable_code() -> None:
+    sdk = FinaticServer(api_key="fntc_live_key")
+    response = FakeResponse({"message": "missing accountId"})
+    response.status = 422
+
+    result = sdk.v1._deserialize_response(response)
+
+    assert result["trace_id"] == "trace-1"
+    assert result["success"]["data"] is None
+    assert result["error"]["code"] == "VALIDATION"
+    assert result["error"]["status"] == 422
