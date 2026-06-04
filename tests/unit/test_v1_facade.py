@@ -77,7 +77,7 @@ async def test_v1_create_session_sets_context_and_headers() -> None:
 
     response = await sdk.v1.create_session(device_info={"platform": "server"})
 
-    assert response["success"]["data"]["session_id"] == "session-1"
+    assert response["data"]["session_id"] == "session-1"
     assert sdk.v1.session_id == "session-1"
     assert sdk.v1.company_id == "company-1"
     assert fake_api_client.calls[0]["method"] == "POST"
@@ -236,10 +236,12 @@ def test_v1_normalizes_success_envelope_trace_and_warning_alias() -> None:
         )
     )
 
-    assert response["trace_id"] == "trace-1"
-    assert response["success"]["data"]["syncStatus"] == "pending"
-    assert response["warning"] == [{"code": "SYNC_PENDING"}]
-    assert "warnings" not in response
+    assert response["traceId"] == "trace-1"
+    assert response["data"]["syncStatus"] == "pending"
+    assert response["warnings"] == [{"code": "SYNC_PENDING"}]
+    assert response["errors"] == []
+    assert "success" not in response
+    assert "warning" not in response
 
 
 def test_v1_normalizes_error_envelope_with_stable_code() -> None:
@@ -249,7 +251,30 @@ def test_v1_normalizes_error_envelope_with_stable_code() -> None:
 
     result = sdk.v1._deserialize_response(response)
 
-    assert result["trace_id"] == "trace-1"
-    assert result["success"]["data"] is None
-    assert result["error"]["code"] == "VALIDATION"
-    assert result["error"]["status"] == 422
+    assert result["traceId"] == "trace-1"
+    assert result["data"] is None
+    assert result["warnings"] == []
+    assert result["errors"][0]["category"] == "VALIDATION"
+    assert result["errors"][0]["code"] == "VALIDATION"
+    assert result["errors"][0]["status"] == 422
+
+
+def test_v1_preserves_current_public_envelope_shape() -> None:
+    sdk = FinaticServer(api_key="fntc_live_key")
+    response = sdk.v1._deserialize_response(
+        FakeResponse(
+            {
+                "traceId": "trace-from-body",
+                "data": {"syncStatus": "reauth_required"},
+                "warnings": [],
+                "errors": [],
+            }
+        )
+    )
+
+    assert response == {
+        "traceId": "trace-from-body",
+        "data": {"syncStatus": "reauth_required"},
+        "warnings": [],
+        "errors": [],
+    }

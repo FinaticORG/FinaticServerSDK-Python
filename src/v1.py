@@ -433,24 +433,40 @@ class V1Client:
 
     def _success_envelope(self, payload: Any, trace_id: str | None) -> FinaticResponse:
         if isinstance(payload, dict) and (
-            "success" in payload or "error" in payload or "warning" in payload
+            "traceId" in payload or "data" in payload or "errors" in payload
         ):
             envelope = dict(payload)
-            if "warning" not in envelope and "warnings" in envelope:
-                envelope["warning"] = envelope.pop("warnings")
-            if trace_id and not envelope.get("trace_id"):
-                envelope["trace_id"] = trace_id
-            envelope.setdefault("error", None)
-            envelope.setdefault("warning", None)
+            if trace_id and not envelope.get("traceId"):
+                envelope["traceId"] = trace_id
+            envelope.setdefault("data", None)
+            envelope.setdefault("warnings", [])
+            envelope.setdefault("errors", [])
             return cast(FinaticResponse, envelope)
+
+        if isinstance(payload, dict) and (
+            "success" in payload or "error" in payload or "warning" in payload
+        ):
+            success = payload.get("success")
+            data = success.get("data") if isinstance(success, dict) else None
+            errors = self._errors_from_legacy_error(payload.get("error"))
+            warnings = payload.get("warnings", payload.get("warning")) or []
+            return cast(
+                FinaticResponse,
+                {
+                    "traceId": self._trace_id(payload, None) or trace_id,
+                    "data": data,
+                    "warnings": warnings,
+                    "errors": errors,
+                },
+            )
 
         return cast(
             FinaticResponse,
             {
-                "trace_id": trace_id,
-                "success": {"data": payload, "meta": None},
-                "error": None,
-                "warning": None,
+                "traceId": trace_id,
+                "data": payload,
+                "warnings": [],
+                "errors": [],
             },
         )
 
@@ -459,8 +475,11 @@ class V1Client:
     ) -> FinaticResponse:
         if isinstance(payload, dict):
             error_payload = payload.get("error")
-            if isinstance(error_payload, dict):
-                error = dict(error_payload)
+            errors_payload = payload.get("errors")
+            if isinstance(errors_payload, list) and errors_payload:
+                error = self._normalize_error(errors_payload[0], status)
+            elif isinstance(error_payload, dict):
+                error = self._normalize_error(error_payload, status)
             else:
                 message = (
                     payload.get("message")
@@ -469,34 +488,67 @@ class V1Client:
                     or payload
                 )
                 error = {"message": str(message)}
-            warnings = payload.get("warning", payload.get("warnings"))
+            warnings = payload.get("warnings", payload.get("warning")) or []
         else:
             error = {"message": str(payload)}
-            warnings = None
+            warnings = []
 
-        error["status"] = status
-        code = error.get("code")
-        if code not in _STABLE_ERROR_CODES:
-            error["code"] = self._error_code_for_status(status, error)
+        error = self._normalize_error(error, status)
 
         return {
-            "trace_id": trace_id,
-            "success": {"data": None, "meta": None},
-            "error": error,
-            "warning": warnings,
+            "traceId": trace_id,
+            "data": None,
+            "warnings": warnings,
+            "errors": [error],
         }
 
-    def _error_code_for_status(self, status: int, error: dict[str, Any]) -> str:
+    def _errors_from_legacy_error(self, error: Any) -> list[dict[str, Any]]:
+        if error is None:
+            return []
+        if isinstance(error, list):
+            return [
+                self._normalize_error(item, None)
+                for item in error
+                if isinstance(item, dict)
+            ]
+        if isinstance(error, dict):
+            return [self._normalize_error(error, None)]
+        return [self._normalize_error({"message": str(error)}, None)]
+
+    def _normalize_error(self, error: Any, status: int | None) -> dict[str, Any]:
+        if isinstance(error, dict):
+            normalized = dict(error)
+        else:
+            normalized = {"message": str(error)}
+        if status is not None:
+            normalized["status"] = status
+        category = normalized.get("category")
+        code = normalized.get("code")
+        if category not in _STABLE_ERROR_CODES:
+            category = self._error_category_for_status(status, normalized)
+            normalized["category"] = category
+        if not isinstance(code, str) or not code:
+            normalized["code"] = str(category)
+        normalized.setdefault("message", "")
+        return normalized
+
+    def _error_category_for_status(
+        self, status: int | None, error: dict[str, Any]
+    ) -> str:
         raw_message = str(error.get("message", "")).lower()
         if "reauth" in raw_message or "re-authoriz" in raw_message:
             return "REAUTH_REQUIRED"
         if "provider" in raw_message or "broker" in raw_message:
             return "PROVIDER_ERROR"
+        if status is None:
+            return "INTERNAL"
         return _ERROR_CODE_BY_STATUS.get(status, "INTERNAL")
 
     def _trace_id(self, payload: Any, headers: Any) -> str | None:
         if isinstance(payload, dict):
-            trace_id = payload.get("trace_id") or payload.get("_id")
+            trace_id = (
+                payload.get("traceId") or payload.get("trace_id") or payload.get("_id")
+            )
             if isinstance(trace_id, str):
                 return trace_id
         if headers is not None:
@@ -507,6 +559,8 @@ class V1Client:
         return None
 
     def _extract_data(self, response: FinaticResponse) -> Any:
+        if isinstance(response, dict) and "data" in response:
+            return response.get("data")
         success = response.get("success") if isinstance(response, dict) else None
         if isinstance(success, dict):
             return success.get("data")
