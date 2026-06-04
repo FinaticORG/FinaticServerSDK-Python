@@ -20,6 +20,32 @@ token = await finatic.get_token()
 positions = await finatic.get_all_positions()
 ```
 
+## Account-First v1 Preview
+
+The v1 facade targets the account-first FinaticAPI contract and sends
+`X-Finatic-Environment` on every request.
+
+```python
+from finatic_server_python import FinaticServer
+
+finatic = FinaticServer(
+    api_key="fntc_live_your_key",
+    sdk_config={"environment": "live"},
+)
+
+session = await finatic.v1.create_session(user_id="optional-user-id")
+accounts = await finatic.v1.list_accounts()
+orders = await finatic.v1.list_account_orders("broker-account-id")
+created = await finatic.v1.create_account_order(
+    "broker-account-id",
+    {"symbol": "AAPL", "quantity": 1, "side": "BUY", "type": "MARKET"},
+    idempotency_key="partner-order-123",
+)
+```
+
+Use `sdk_config={"environment": "sandbox"}` for Finatic synthetic sandbox data.
+Broker paper or simulated accounts remain `live` environment accounts.
+
 ## Common Commands
 
 | Task | Command |

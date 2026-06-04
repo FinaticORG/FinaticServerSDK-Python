@@ -34,3 +34,7 @@ def test_finatic_server_stable_instance_api_subset() -> None:
     assert hasattr(FinaticServer, "start_session")
     assert inspect.iscoroutinefunction(FinaticServer.start_session)
     assert hasattr(FinaticServer, "get_session_id")
+    sdk = FinaticServer(api_key="test-api-key")
+    assert hasattr(sdk, "v1")
+    assert hasattr(sdk.v1, "list_accounts")
+    assert inspect.iscoroutinefunction(sdk.v1.list_accounts)

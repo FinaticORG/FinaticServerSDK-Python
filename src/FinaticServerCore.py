@@ -67,6 +67,7 @@ from .wrappers.brokers import (
 )
 from .wrappers.company import CompanyWrapper, GetCompanyParams
 from .wrappers.session import SessionWrapper
+from .v1 import V1Client
 
 
 class FinaticServer:
@@ -225,6 +226,12 @@ class FinaticServer:
         self.company_id: str | None = None
         self.csrf_token: str | None = None
         self.user_id: str | None = None
+        environment = "live"
+        if sdk_config:
+            if isinstance(sdk_config, dict):
+                environment = sdk_config.get("environment", environment)
+            elif hasattr(sdk_config, "environment"):
+                environment = getattr(sdk_config, "environment")
 
         # Initialize logger
         self.logger = get_logger(self.sdk_config)
@@ -237,6 +244,12 @@ class FinaticServer:
         )
         self._session = SessionWrapper(
             SessionApi(self.api_client), self.config, self.sdk_config
+        )
+        self.v1 = V1Client(
+            api_client=self.api_client,
+            config=self.config,
+            api_key=api_key,
+            environment=environment,
         )
 
     async def close(self) -> None:
@@ -262,6 +275,7 @@ class FinaticServer:
         self._brokers.set_session_context(session_id, company_id, csrf_token)
         self._company.set_session_context(session_id, company_id, csrf_token)
         self._session.set_session_context(session_id, company_id, csrf_token)
+        self.v1.set_session_context(session_id=session_id, company_id=company_id)
 
     def get_session_id(self) -> str | None:
         """Get current session ID."""

@@ -8,6 +8,11 @@ except ModuleNotFoundError:
     pass
 
 try:
+    from .v1 import AccountOrderCommand, V1Client
+except ModuleNotFoundError:
+    pass
+
+try:
     from finatic_server import *  # type: ignore[F401,F403]
 except ModuleNotFoundError:
     pass

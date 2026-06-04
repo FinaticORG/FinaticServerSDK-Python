@@ -32,6 +32,9 @@ class SdkConfig:
         default_factory=lambda: int(os.getenv("FINATIC_TIMEOUT", "30"))
     )
     headers: dict[str, str] = field(default_factory=dict)
+    environment: str = field(
+        default_factory=lambda: os.getenv("FINATIC_ENVIRONMENT", "live")
+    )
 
     # ═══════════════════════════════════════════════════════════════════════
     # Retry Configuration
