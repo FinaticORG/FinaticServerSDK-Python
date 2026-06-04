@@ -180,6 +180,68 @@ async def test_v1_portal_flow_routes_match_account_first_api() -> None:
 
 
 @pytest.mark.asyncio
+async def test_v1_session_compatibility_routes_match_sdk_openapi() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key",
+        sdk_config={"base_url": "https://api.test", "environment": "live"},
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+    sdk.v1.set_session_context("session-1", "company-1")
+
+    await sdk.v1.init_legacy_session()
+    await sdk.v1.start_legacy_session("ott-1", user_id="user-1")
+    await sdk.v1.get_legacy_portal_url()
+    await sdk.v1.get_legacy_session_user()
+    await sdk.v1.get_session_sync_status()
+
+    assert fake_api_client.calls[0]["method"] == "POST"
+    assert fake_api_client.calls[0]["url"] == "https://api.test/api/v1/session/init"
+    assert fake_api_client.calls[1]["method"] == "POST"
+    assert fake_api_client.calls[1]["url"] == "https://api.test/api/v1/session/start"
+    assert fake_api_client.calls[1]["headers"]["One-Time-Token"] == "ott-1"
+    assert fake_api_client.calls[1]["body"] == {"user_id": "user-1"}
+    assert fake_api_client.calls[2]["url"] == "https://api.test/api/v1/session/portal"
+    assert (
+        fake_api_client.calls[3]["url"]
+        == "https://api.test/api/v1/session/session-1/user"
+    )
+    assert (
+        fake_api_client.calls[4]["url"]
+        == "https://api.test/api/v1/sessions/session-1/sync-status"
+    )
+
+
+@pytest.mark.asyncio
+async def test_v1_company_and_fdx_alias_routes_match_sdk_openapi() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key",
+        sdk_config={"base_url": "https://api.test", "environment": "sandbox"},
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+    sdk.v1.set_session_context("session-1", "company-1")
+
+    await sdk.v1.get_company("company-1")
+    await sdk.v1.list_fdx_balances(account_id="account-1", limit=25, offset=5)
+    await sdk.v1.list_fdx_accounts(broker_id="alpaca", include_metadata=True)
+
+    assert fake_api_client.calls[0]["method"] == "GET"
+    assert (
+        fake_api_client.calls[0]["url"] == "https://api.test/api/v1/company/company-1"
+    )
+    assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "sandbox"
+    assert fake_api_client.calls[1]["url"] == (
+        "https://api.test/api/v1/brokers/data/balances?"
+        "account_id=account-1&limit=25&offset=5"
+    )
+    assert fake_api_client.calls[2]["url"] == (
+        "https://api.test/api/v1/brokers/data/accounts?"
+        "broker_id=alpaca&include_metadata=True"
+    )
+
+
+@pytest.mark.asyncio
 async def test_v1_webhook_catalog_uses_catalog_route() -> None:
     sdk = FinaticServer(
         api_key="fntc_live_key",

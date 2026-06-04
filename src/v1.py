@@ -103,6 +103,37 @@ class V1Client:
     async def get_session(self, session_id: str) -> FinaticResponse:
         return await self._request("GET", f"/api/v1/sessions/{session_id}")
 
+    async def get_session_sync_status(
+        self, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "GET", f"/api/v1/sessions/{resolved_session_id}/sync-status"
+        )
+
+    async def init_legacy_session(self) -> FinaticResponse:
+        return await self._request("POST", "/api/v1/session/init")
+
+    async def start_legacy_session(
+        self, one_time_token: str, *, user_id: str | None = None
+    ) -> FinaticResponse:
+        body = {"user_id": user_id} if user_id is not None else None
+        return await self._request(
+            "POST",
+            "/api/v1/session/start",
+            body=body,
+            headers={"One-Time-Token": one_time_token},
+        )
+
+    async def get_legacy_portal_url(self) -> FinaticResponse:
+        return await self._request("GET", "/api/v1/session/portal")
+
+    async def get_legacy_session_user(
+        self, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request("GET", f"/api/v1/session/{resolved_session_id}/user")
+
     async def create_portal_link(
         self, session_id: str | None = None
     ) -> FinaticResponse:
@@ -182,6 +213,9 @@ class V1Client:
             "POST", f"/api/v1/portal/{resolved_session_id}/complete"
         )
 
+    async def get_company(self, company_id: str) -> FinaticResponse:
+        return await self._request("GET", f"/api/v1/company/{company_id}")
+
     async def list_accounts(self) -> FinaticResponse:
         return await self._request("GET", "/api/v1/accounts")
 
@@ -227,6 +261,16 @@ class V1Client:
         self, account_id: str, **query: Any
     ) -> FinaticResponse:
         return await self.list_account_resource(account_id, "position-lots", **query)
+
+    async def list_fdx_balances(self, **query: Any) -> FinaticResponse:
+        return await self._request(
+            "GET", "/api/v1/brokers/data/balances", query=self._compact_query(query)
+        )
+
+    async def list_fdx_accounts(self, **query: Any) -> FinaticResponse:
+        return await self._request(
+            "GET", "/api/v1/brokers/data/accounts", query=self._compact_query(query)
+        )
 
     async def get_account_order(
         self, account_id: str, order_id: str
