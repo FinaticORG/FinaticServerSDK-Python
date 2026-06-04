@@ -87,7 +87,7 @@ class V1Client:
     ) -> FinaticResponse:
         body: dict[str, Any] = {}
         if device_info is not None:
-            body["device_info"] = device_info
+            body["deviceInfo"] = device_info
         response = await self._request("POST", "/api/v1/sessions", body=body or None)
         session_data = self._extract_data(response)
         if isinstance(session_data, dict):

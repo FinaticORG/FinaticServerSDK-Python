@@ -84,7 +84,7 @@ async def test_v1_create_session_sets_context_and_headers() -> None:
     assert fake_api_client.calls[0]["url"] == "https://api.test/api/v1/sessions"
     assert fake_api_client.calls[0]["headers"]["X-API-Key"] == "fntc_live_key"
     assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "live"
-    assert fake_api_client.calls[0]["body"] == {"device_info": {"platform": "server"}}
+    assert fake_api_client.calls[0]["body"] == {"deviceInfo": {"platform": "server"}}
 
 
 @pytest.mark.asyncio
