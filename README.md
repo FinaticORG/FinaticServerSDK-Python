@@ -41,9 +41,7 @@ discovered = await finatic.v1.list_discovered_accounts()
 grant = await finatic.v1.create_portal_account_grant(
     {
         "accountId": "broker-account-id",
-        "userBrokerConnectionId": "connection-id",
-        "userId": "user-id",
-        "brokerId": "alpaca",
+        "authAttemptId": auth_attempt["data"]["id"],
         "canRead": True,
         "canTrade": False,
         "dataClusters": ["accounts", "balances"],

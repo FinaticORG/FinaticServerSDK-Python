@@ -128,9 +128,7 @@ async def test_v1_portal_flow_routes_match_account_first_api() -> None:
     await sdk.v1.create_portal_account_grant(
         {
             "accountId": "22222222-2222-2222-2222-222222222222",
-            "userBrokerConnectionId": "33333333-3333-3333-3333-333333333333",
-            "userId": "11111111-1111-1111-1111-111111111111",
-            "brokerId": "alpaca",
+            "authAttemptId": "44444444-4444-4444-4444-444444444444",
             "canRead": True,
             "canTrade": False,
             "dataClusters": ["accounts", "balances"],
@@ -170,6 +168,11 @@ async def test_v1_portal_flow_routes_match_account_first_api() -> None:
     assert fake_api_client.calls[5]["body"]["accountId"] == (
         "22222222-2222-2222-2222-222222222222"
     )
+    assert fake_api_client.calls[5]["body"]["authAttemptId"] == (
+        "44444444-4444-4444-4444-444444444444"
+    )
+    assert "userBrokerConnectionId" not in fake_api_client.calls[5]["body"]
+    assert "brokerId" not in fake_api_client.calls[5]["body"]
     assert (
         fake_api_client.calls[6]["url"]
         == "https://api.test/api/v1/portal/session-1/complete"
