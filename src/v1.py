@@ -136,18 +136,35 @@ class V1Client:
         resolved_session_id = session_id or self._require_session_id()
         return await self._request("GET", f"/api/v1/session/{resolved_session_id}/user")
 
-    async def link_session_user(self, user_id: str) -> FinaticResponse:
+    async def link_session_user(
+        self,
+        user_id: str,
+        session_id: str | None = None,
+        *,
+        email: str | None = None,
+        link_context_id: str | None = None,
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
         return await self._request(
             "POST",
             "/api/v1/session/link-user",
-            body={"userId": user_id},
+            query={"session_id": resolved_session_id},
+            body=self._compact_query(
+                {
+                    "user_id": user_id,
+                    "email": email,
+                    "link_context_id": link_context_id,
+                }
+            ),
         )
 
-    async def link_mcp_session_user(self, user_id: str) -> FinaticResponse:
+    async def link_mcp_session_user(
+        self, user_id: str, link_context_id: str
+    ) -> FinaticResponse:
         return await self._request(
             "POST",
             "/api/v1/session/mcp/link-user",
-            body={"userId": user_id},
+            body={"user_id": user_id, "link_context_id": link_context_id},
         )
 
     async def create_portal_link(

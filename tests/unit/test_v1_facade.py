@@ -322,8 +322,10 @@ async def test_v1_session_compatibility_routes_match_sdk_openapi() -> None:
 
     await sdk.v1.init_legacy_session()
     await sdk.v1.start_legacy_session("ott-1", user_id="user-1")
-    await sdk.v1.link_session_user("user-1")
-    await sdk.v1.link_mcp_session_user("user-1")
+    await sdk.v1.link_session_user(
+        "user-1", email="user@example.com", link_context_id="link-context-1"
+    )
+    await sdk.v1.link_mcp_session_user("user-1", "mcp-link-context-1")
     await sdk.v1.get_legacy_portal_url()
     await sdk.v1.get_legacy_session_user()
     await sdk.v1.get_session_sync_status()
@@ -335,14 +337,22 @@ async def test_v1_session_compatibility_routes_match_sdk_openapi() -> None:
     assert fake_api_client.calls[1]["headers"]["One-Time-Token"] == "ott-1"
     assert fake_api_client.calls[1]["body"] == {"user_id": "user-1"}
     assert (
-        fake_api_client.calls[2]["url"] == "https://api.test/api/v1/session/link-user"
+        fake_api_client.calls[2]["url"]
+        == "https://api.test/api/v1/session/link-user?session_id=session-1"
     )
-    assert fake_api_client.calls[2]["body"] == {"userId": "user-1"}
+    assert fake_api_client.calls[2]["body"] == {
+        "user_id": "user-1",
+        "email": "user@example.com",
+        "link_context_id": "link-context-1",
+    }
     assert (
         fake_api_client.calls[3]["url"]
         == "https://api.test/api/v1/session/mcp/link-user"
     )
-    assert fake_api_client.calls[3]["body"] == {"userId": "user-1"}
+    assert fake_api_client.calls[3]["body"] == {
+        "user_id": "user-1",
+        "link_context_id": "mcp-link-context-1",
+    }
     assert fake_api_client.calls[4]["url"] == "https://api.test/api/v1/session/portal"
     assert (
         fake_api_client.calls[5]["url"]
