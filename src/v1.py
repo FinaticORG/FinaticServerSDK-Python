@@ -1,7 +1,7 @@
-"""Account-first v1 SDK facade.
+"""Account-first v1 SDK facade over the generated transport.
 
-This module is hand-maintained until the generated OpenAPI surface exposes
-stable methods for every v1 SDK-audience route.
+The public method coverage is validated against the checked-in FinaticAPI v1
+OpenAPI snapshot at ``artifacts/openapi/finaticapi-v1.json``.
 """
 
 from __future__ import annotations
@@ -134,6 +134,20 @@ class V1Client:
         resolved_session_id = session_id or self._require_session_id()
         return await self._request("GET", f"/api/v1/session/{resolved_session_id}/user")
 
+    async def link_session_user(self, user_id: str) -> FinaticResponse:
+        return await self._request(
+            "POST",
+            "/api/v1/session/link-user",
+            body={"userId": user_id},
+        )
+
+    async def link_mcp_session_user(self, user_id: str) -> FinaticResponse:
+        return await self._request(
+            "POST",
+            "/api/v1/session/mcp/link-user",
+            body={"userId": user_id},
+        )
+
     async def create_portal_link(
         self, session_id: str | None = None
     ) -> FinaticResponse:
@@ -141,6 +155,12 @@ class V1Client:
         return await self._request(
             "POST", f"/api/v1/sessions/{resolved_session_id}/portal-links"
         )
+
+    async def get_portal(self, token: str) -> FinaticResponse:
+        return await self._request("GET", f"/api/v1/portal/{token}")
+
+    async def get_portal_oauth_completion(self, token: str) -> FinaticResponse:
+        return await self._request("GET", f"/api/v1/portal/oauth/completion/{token}")
 
     async def get_session_user(self, session_id: str | None = None) -> FinaticResponse:
         resolved_session_id = session_id or self._require_session_id()
@@ -358,6 +378,9 @@ class V1Client:
 
     async def list_consents(self) -> FinaticResponse:
         return await self._request("GET", "/api/v1/consents")
+
+    async def create_consent(self, consent: dict[str, Any]) -> FinaticResponse:
+        return await self._request("POST", "/api/v1/consents", body=consent)
 
     async def get_consent(self, consent_id: str) -> FinaticResponse:
         return await self._request("GET", f"/api/v1/consents/{consent_id}")
