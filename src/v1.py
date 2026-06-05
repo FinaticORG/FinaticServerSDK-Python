@@ -6,6 +6,8 @@ OpenAPI snapshot at ``artifacts/openapi/finaticapi-v1.json``.
 
 from __future__ import annotations
 
+import asyncio
+import inspect
 import json
 from dataclasses import dataclass
 from typing import Any, cast
@@ -448,14 +450,28 @@ class V1Client:
     ) -> FinaticResponse:
         url = self._url(path, query)
         header_params = self._headers(headers)
-        response = await self.api_client.call_api(
-            method,
-            url,
-            header_params=header_params,
-            body=body,
-        )
-        if hasattr(response, "read"):
-            await response.read()
+        call_api = self.api_client.call_api
+        if inspect.iscoroutinefunction(call_api):
+            response = await call_api(
+                method,
+                url,
+                header_params=header_params,
+                body=body,
+            )
+        else:
+            response = await asyncio.to_thread(
+                call_api,
+                method,
+                url,
+                header_params=header_params,
+                body=body,
+            )
+        read = getattr(response, "read", None)
+        if read is not None:
+            if inspect.iscoroutinefunction(read):
+                await read()
+            else:
+                await asyncio.to_thread(read)
         return self._deserialize_response(response)
 
     def _headers(self, extra: dict[str, str] | None = None) -> dict[str, str]:

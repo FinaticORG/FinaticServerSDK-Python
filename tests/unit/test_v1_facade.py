@@ -17,7 +17,7 @@ class FakeResponse:
         self.data = json.dumps(payload).encode("utf-8")
         self.headers = {"x-trace-id": "trace-1"}
 
-    async def read(self) -> bytes:
+    def read(self) -> bytes:
         return self.data
 
 
@@ -25,7 +25,7 @@ class FakeApiClient:
     def __init__(self) -> None:
         self.calls: list[dict[str, Any]] = []
 
-    async def call_api(
+    def call_api(
         self,
         method: str,
         url: str,
