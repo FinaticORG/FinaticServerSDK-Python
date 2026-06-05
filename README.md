@@ -37,7 +37,9 @@ session = await finatic.v1.create_session()
 await finatic.v1.link_portal_user("user-id")
 institutions = await finatic.v1.list_portal_institutions()
 auth_attempt = await finatic.v1.create_portal_auth_attempt("alpaca")
-discovered = await finatic.v1.list_discovered_accounts()
+discovered = await finatic.v1.list_discovered_accounts(
+    auth_attempt_id=auth_attempt["data"]["id"]
+)
 grant = await finatic.v1.create_portal_account_grant(
     {
         "accountId": "broker-account-id",
