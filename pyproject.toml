@@ -68,6 +68,7 @@ packages = ["finatic_server_python", "finatic_server", "src"]
 line-length = 88
 target-version = ['py38']
 include = '\.pyi?$'
+exclude = 'src/openapi/finatic_server'
 
 [tool.isort]
 profile = "black"

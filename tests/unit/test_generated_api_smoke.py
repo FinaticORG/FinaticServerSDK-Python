@@ -28,14 +28,16 @@ class _FakeAiohttpLikeResponse:
         self.headers: dict[str, str] = {
             "content-type": "application/json; charset=utf-8",
         }
+        self.data = json.dumps(
+            {
+                "success": {"data": [], "meta": None},
+                "error": None,
+                "warning": None,
+            }
+        ).encode("utf-8")
 
     async def read(self) -> bytes:
-        payload = {
-            "success": {"data": [], "meta": None},
-            "error": None,
-            "warning": None,
-        }
-        return json.dumps(payload).encode("utf-8")
+        return self.data
 
 
 def _minimal_valid_order_request() -> Any:
@@ -87,9 +89,10 @@ def _dummy_value(parameter_name: str, annotation: Any) -> Any:
         )
 
         if inner is OrderRequest or inner.__name__ == "OrderRequest":
-            return _minimal_valid_order_request()
+            return OrderRequest.model_construct()
         if inner is SessionStartRequest or inner.__name__ == "SessionStartRequest":
             return SessionStartRequest()
+        return inner.model_construct()
 
     # For openapi generator, IDs and keys are typically strings.
     if "id" in lowered or "key" in lowered or "token" in lowered:
@@ -168,7 +171,7 @@ def test_generated_api_smoke_invokes_many_endpoints() -> None:
     api_client = ApiClient(configuration)
 
     # Stub the underlying HTTP transport: execute request-building code, but avoid real network.
-    async def _stub_request(
+    def _stub_request(
         method: str,
         url: str,
         headers: Any = None,
