@@ -892,6 +892,7 @@ class PortalApi:
     def finatic_v1_get_portal_session_id_discovered_accounts(
         self,
         session_id: StrictStr,
+        auth_attempt_id: Optional[UUID] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -912,6 +913,8 @@ class PortalApi:
 
         :param session_id: (required)
         :type session_id: str
+        :param auth_attempt_id:
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -938,6 +941,7 @@ class PortalApi:
 
         _param = self._finatic_v1_get_portal_session_id_discovered_accounts_serialize(
             session_id=session_id,
+            auth_attempt_id=auth_attempt_id,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -964,6 +968,7 @@ class PortalApi:
     def finatic_v1_get_portal_session_id_discovered_accounts_with_http_info(
         self,
         session_id: StrictStr,
+        auth_attempt_id: Optional[UUID] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -984,6 +989,8 @@ class PortalApi:
 
         :param session_id: (required)
         :type session_id: str
+        :param auth_attempt_id:
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1010,6 +1017,7 @@ class PortalApi:
 
         _param = self._finatic_v1_get_portal_session_id_discovered_accounts_serialize(
             session_id=session_id,
+            auth_attempt_id=auth_attempt_id,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1036,6 +1044,7 @@ class PortalApi:
     def finatic_v1_get_portal_session_id_discovered_accounts_without_preload_content(
         self,
         session_id: StrictStr,
+        auth_attempt_id: Optional[UUID] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1056,6 +1065,8 @@ class PortalApi:
 
         :param session_id: (required)
         :type session_id: str
+        :param auth_attempt_id:
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1082,6 +1093,7 @@ class PortalApi:
 
         _param = self._finatic_v1_get_portal_session_id_discovered_accounts_serialize(
             session_id=session_id,
+            auth_attempt_id=auth_attempt_id,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1103,6 +1115,7 @@ class PortalApi:
     def _finatic_v1_get_portal_session_id_discovered_accounts_serialize(
         self,
         session_id,
+        auth_attempt_id,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -1128,6 +1141,10 @@ class PortalApi:
         if session_id is not None:
             _path_params['sessionId'] = session_id
         # process the query parameters
+        if auth_attempt_id is not None:
+
+            _query_params.append(('authAttemptId', auth_attempt_id))
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment

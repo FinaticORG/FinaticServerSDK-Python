@@ -43,92 +43,27 @@ __all__ = [
     "ApiAttributeError",
     "ApiException",
     "AccountOrderRequest",
-    "Accountnumber",
-    "Accountnumber1",
-    "Accountnumber2",
     "Accounts",
-    "AlpacaCryptoLimitOrderPlaceQueryParams",
-    "AlpacaCryptoMarketOrderPlaceQueryParams",
-    "AlpacaCryptoStopLimitOrderPlaceQueryParams",
-    "AlpacaEquityLimitOrderPlaceQueryParams",
-    "AlpacaEquityMarketOrderPlaceQueryParams",
-    "AlpacaEquityStopLimitOrderPlaceQueryParams",
-    "AlpacaEquityStopOrderPlaceQueryParams",
-    "AlpacaEquityTrailingStopOrderPlaceQueryParams",
-    "AlpacaOptionLimitOrderPlaceQueryParams",
-    "AlpacaOptionMarketOrderPlaceQueryParams",
-    "AlpacaOrderCancelQueryParams",
-    "AlpacaOrderCancelRequest",
-    "AlpacaOrderPlaceRequest",
-    "Assettype",
     "AuthAttempt",
-    "AuthStepAction",
-    "AuthStepType",
-    "Availablebalance",
-    "Availabletowithdraw",
-    "Averagefillprice",
+    "BetaBrokerShimResponse",
     "BrokerConnectionRequest",
-    "BrokerConnectionUpdateRequest",
     "BrokerDataAccountTypeEnum",
-    "BrokerDataAssetTypeEnum",
-    "BrokerDataConnectionStatusEnum",
-    "BrokerDataOptionTypeEnum",
-    "BrokerDataOrderSideEnum",
-    "BrokerDataOrderStatusEnum",
-    "BrokerDataPositionStatusEnum",
-    "BrokerDataUserBrokerConnections",
-    "BrokerInfo",
-    "BrokerInstitutionCapabilityProfile",
-    "BrokerPermissionCluster",
-    "BrokerPermissionClusterGrant",
     "BrokerPermissions",
-    "BrokerRealtimeSupport",
-    "BrokerResourceOrderingRule",
-    "BrokerResourceVersionStrategy",
-    "BrokerTracePropagationContract",
-    "BrokerTradeCapability",
-    "Buyingpower",
-    "CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest",
-    "Cashbalance",
     "CompleteSessionResponse",
     "ConnectorListItem",
     "CreateSessionRequest",
-    "Currentbalance",
-    "Data",
-    "DayTIF",
-    "DeleteBrokerConnectionResult",
-    "DisconnectCompanyFromBrokerConnectionResult",
     "EaConfigurationPayload",
-    "EtoroOrderCancelQueryParams",
-    "EtoroOrderCancelRequest",
-    "EtoroOrderPlaceQueryParams",
-    "EtoroOrderPlaceRequest",
     "FDXAccountGrant",
     "FDXAccountGrantUpdate",
     "FDXAccountStatus",
     "FDXAccountType",
-    "FDXAssetType",
     "FDXBalanceType",
     "FDXConsentGrant",
     "FDXConsentGrantCreate",
-    "FDXOrderClass",
-    "FDXOrderEventType",
-    "FDXOrderGroupOrder",
-    "FDXOrderGroupType",
-    "FDXOrderLeg",
-    "FDXOrderSide",
-    "FDXOrderStatus",
-    "FDXOrderType",
-    "FDXPositionSide",
-    "FDXPositionStatus",
-    "FDXSecurityIdType",
-    "FDXTimeInForce",
     "FDXWebhookEventDefinition",
     "FDXWebhookSubscription",
     "FDXWebhookSubscriptionCreate",
     "FDXWebhookSubscriptionUpdate",
-    "FOKTIF",
-    "Filledquantity",
     "FinaticAPIErrorResponse",
     "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1",
     "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse2",
@@ -138,61 +73,41 @@ __all__ = [
     "FinaticResponseAccounts",
     "FinaticResponseAny",
     "FinaticResponseAuthAttempt",
+    "FinaticResponseBetaBrokerShimResponse",
     "FinaticResponseBool",
-    "FinaticResponseBrokerDataUserBrokerConnections",
     "FinaticResponseCompleteSessionResponse",
-    "FinaticResponseDeleteBrokerConnectionResult",
     "FinaticResponseDict",
     "FinaticResponseDictStrAny",
-    "FinaticResponseDictStrBool",
     "FinaticResponseDictStrObject",
     "FinaticResponseDictStrStr",
-    "FinaticResponseDictStrUnionIntNoneType",
     "FinaticResponseDictStrUnionStrNoneType",
-    "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
     "FinaticResponseFDXAccountGrant",
     "FinaticResponseFDXConsentGrant",
     "FinaticResponseFDXWebhookSubscription",
     "FinaticResponseLinkUserToMCPSessionResponse",
     "FinaticResponseLinkUserToSessionResponse",
-    "FinaticResponseListBrokerInfo",
     "FinaticResponseListConnectorListItem",
     "FinaticResponseListDictStrAny",
     "FinaticResponseListDictStrStr",
     "FinaticResponseListFDXAccountGrant",
     "FinaticResponseListFDXBrokerAccount",
     "FinaticResponseListFDXBrokerBalance",
-    "FinaticResponseListFDXBrokerOrder",
-    "FinaticResponseListFDXBrokerOrderEvent",
-    "FinaticResponseListFDXBrokerOrderFill",
-    "FinaticResponseListFDXBrokerOrderGroup",
-    "FinaticResponseListFDXBrokerPosition",
-    "FinaticResponseListFDXBrokerPositionLot",
-    "FinaticResponseListFDXBrokerPositionLotFill",
-    "FinaticResponseListFDXBrokerTransaction",
     "FinaticResponseListFDXConsentGrant",
     "FinaticResponseListFDXWebhookEventDefinition",
     "FinaticResponseListFDXWebhookSubscription",
-    "FinaticResponseListLegacyBrokerAccount",
-    "FinaticResponseListLegacyBrokerBalance",
-    "FinaticResponseListUserBrokerConnectionWithPermissions",
     "FinaticResponseMCPBootstrapResponseData",
     "FinaticResponseMTConnectResponseData",
     "FinaticResponseOAuthCompletionResponse",
-    "FinaticResponseOrderActionResult",
     "FinaticResponseOwnerPortalBootstrapResponse",
     "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
     "FinaticResponsePortalSessionValidationResponse",
     "FinaticResponsePortalUrlResponse",
-    "FinaticResponseReauthNotificationOptOutResult",
     "FinaticResponseReauthNotificationPreference",
     "FinaticResponseRotateSecretResponse",
-    "FinaticResponseSandboxOrderSimulateResult",
     "FinaticResponseSessionResponseData",
     "FinaticResponseSessionSyncStatusResponse",
     "FinaticResponseSessionUserResponse",
     "FinaticResponseTokenResponseData",
-    "FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse",
     "FinaticV1AccountSyncStatus",
     "FinaticV1Error",
     "FinaticV1ErrorCategory",
@@ -202,16 +117,8 @@ __all__ = [
     "FinaticV1Warning",
     "FinaticapiApiBetaRoutersPortalPortalRouterPortalSessionResponse",
     "FinaticapiApiV1RoutersPortalPortalRouterPortalSessionResponse",
-    "Futureunderlyingassettype",
-    "GTCTIF",
-    "GTDTIF",
     "HTTPValidationError",
-    "IOCTIF",
-    "Initialmargin",
     "Lastsyncedat",
-    "LegacyBrokerAccount",
-    "LegacyBrokerBalance",
-    "Limitprice",
     "LinkUserToMCPSessionRequest",
     "LinkUserToMCPSessionResponse",
     "LinkUserToSessionResponse",
@@ -220,96 +127,21 @@ __all__ = [
     "MCPBootstrapResponseData",
     "MTConnectRequest",
     "MTConnectResponseData",
-    "Maintenancemargin",
-    "MultiStepAuthResponse",
-    "Netliquidationvalue",
-    "NinjaTraderFutureLimitOrderPlaceQueryParams",
-    "NinjaTraderFutureMarketOrderPlaceQueryParams",
-    "NinjaTraderFutureStopLimitOrderPlaceQueryParams",
-    "NinjaTraderFutureStopOrderPlaceQueryParams",
-    "NinjaTraderFutureTrailingStopOrderPlaceQueryParams",
-    "NinjaTraderOrderCancelQueryParams",
-    "NinjaTraderOrderCancelRequest",
-    "NinjaTraderOrderModifyRequest",
-    "NinjaTraderOrderPlaceRequest",
-    "Notional",
-    "Notional1",
-    "Notional2",
     "OAuthCompletionResponse",
-    "Order",
-    "Order1",
-    "Order2",
-    "Order2AnyOf",
-    "Order2AnyOf1",
-    "Order2AnyOf2",
-    "Order3",
-    "Order3OneOf",
-    "Order3OneOf1",
-    "Order4",
-    "Order4OneOf",
-    "Order4OneOf1",
-    "Order4OneOf2",
-    "Order5",
-    "Order6",
-    "Order7",
-    "Order7OneOf",
-    "Order7OneOf1",
-    "OrderActionResult",
-    "OrderModifyQueryParamsBase",
-    "OrderModifyQueryParamsBaseTimeInForce",
-    "OrderOneOf",
-    "OrderOneOf1",
-    "OrderOneOf2",
-    "OrderRequest",
-    "Orderqty",
-    "Orderqty1",
-    "Orderqty2",
-    "Orderqty3",
-    "Orderqty4",
     "OwnerPortalBootstrapResponse",
     "OwnerPortalCompanyGrant",
     "OwnerPortalCompanyPermissionsUpdate",
     "OwnerPortalConnection",
     "OwnerPortalKnownCompany",
     "OwnerPortalRevokeAllCompaniesResult",
-    "Pendingbalance",
-    "PlaceOrderApiBetaBrokersOrdersPostRequest",
     "PortalAccountGrantRequest",
     "PortalAuthAttemptRequest",
     "PortalSessionValidationResponse",
     "PortalUrlResponse",
     "PortalUserLinkRequest",
-    "Quantity",
-    "ReauthNotificationOptOutRequest",
-    "ReauthNotificationOptOutResult",
     "ReauthNotificationPreference",
     "ReauthNotificationPreferenceUpdateRequest",
-    "Remainingquantity",
-    "RobinhoodCryptoLimitOrderPlaceQueryParams",
-    "RobinhoodCryptoMarketOrderPlaceQueryParams",
-    "RobinhoodCryptoStopLimitOrderPlaceQueryParams",
-    "RobinhoodCryptoStopOrderPlaceQueryParams",
-    "RobinhoodCryptoTrailingStopOrderPlaceQueryParams",
-    "RobinhoodEquityLimitOrderPlaceQueryParams",
-    "RobinhoodEquityMarketOrderPlaceQueryParams",
-    "RobinhoodEquityStopLimitOrderPlaceQueryParams",
-    "RobinhoodEquityStopOrderPlaceQueryParams",
-    "RobinhoodEquityTrailingStopOrderPlaceQueryParams",
-    "RobinhoodOptionLimitOrderPlaceQueryParams",
-    "RobinhoodOptionMarketOrderPlaceQueryParams",
-    "RobinhoodOptionSpreadLeg",
-    "RobinhoodOptionStopLimitOrderPlaceQueryParams",
-    "RobinhoodOptionStopOrderPlaceQueryParams",
-    "RobinhoodOptionTrailingStopOrderPlaceQueryParams",
-    "RobinhoodOrderCancelQueryParams",
-    "RobinhoodOrderCancelRequest",
-    "RobinhoodOrderModifyRequest",
-    "RobinhoodOrderPlaceRequest",
     "RotateSecretResponse",
-    "SandboxOrderSimulateRequestBody",
-    "SandboxOrderSimulateResult",
-    "SandboxUserBrokerConnections",
-    "Securityidtype",
     "SessionLinkRequest",
     "SessionResponseData",
     "SessionStartRequest",
@@ -317,133 +149,47 @@ __all__ = [
     "SessionSyncAccountStatus",
     "SessionSyncStatusResponse",
     "SessionUserResponse",
-    "Side",
-    "Stopprice",
-    "Strikeprice",
-    "Strikeprice1",
     "SuccessPayloadAccounts",
     "SuccessPayloadAny",
     "SuccessPayloadAuthAttempt",
+    "SuccessPayloadBetaBrokerShimResponse",
     "SuccessPayloadBool",
-    "SuccessPayloadBrokerDataUserBrokerConnections",
     "SuccessPayloadCompleteSessionResponse",
-    "SuccessPayloadDeleteBrokerConnectionResult",
     "SuccessPayloadDict",
     "SuccessPayloadDictStrAny",
-    "SuccessPayloadDictStrBool",
     "SuccessPayloadDictStrObject",
     "SuccessPayloadDictStrStr",
-    "SuccessPayloadDictStrUnionIntNoneType",
-    "SuccessPayloadDictStrUnionIntNoneTypeDataValue",
     "SuccessPayloadDictStrUnionStrNoneType",
     "SuccessPayloadDictStrUnionStrNoneTypeDataValue",
-    "SuccessPayloadDisconnectCompanyFromBrokerConnectionResult",
     "SuccessPayloadFDXAccountGrant",
     "SuccessPayloadFDXConsentGrant",
     "SuccessPayloadFDXWebhookSubscription",
     "SuccessPayloadLinkUserToMCPSessionResponse",
     "SuccessPayloadLinkUserToSessionResponse",
-    "SuccessPayloadListBrokerInfo",
     "SuccessPayloadListConnectorListItem",
     "SuccessPayloadListDictStrAny",
     "SuccessPayloadListDictStrStr",
     "SuccessPayloadListFDXAccountGrant",
     "SuccessPayloadListFDXBrokerAccount",
     "SuccessPayloadListFDXBrokerBalance",
-    "SuccessPayloadListFDXBrokerOrder",
-    "SuccessPayloadListFDXBrokerOrderEvent",
-    "SuccessPayloadListFDXBrokerOrderFill",
-    "SuccessPayloadListFDXBrokerOrderGroup",
-    "SuccessPayloadListFDXBrokerPosition",
-    "SuccessPayloadListFDXBrokerPositionLot",
-    "SuccessPayloadListFDXBrokerPositionLotFill",
-    "SuccessPayloadListFDXBrokerTransaction",
     "SuccessPayloadListFDXConsentGrant",
     "SuccessPayloadListFDXWebhookEventDefinition",
     "SuccessPayloadListFDXWebhookSubscription",
-    "SuccessPayloadListLegacyBrokerAccount",
-    "SuccessPayloadListLegacyBrokerBalance",
-    "SuccessPayloadListUserBrokerConnectionWithPermissions",
     "SuccessPayloadMCPBootstrapResponseData",
     "SuccessPayloadMTConnectResponseData",
     "SuccessPayloadOAuthCompletionResponse",
-    "SuccessPayloadOrderActionResult",
     "SuccessPayloadOwnerPortalBootstrapResponse",
     "SuccessPayloadOwnerPortalRevokeAllCompaniesResult",
     "SuccessPayloadPortalSessionValidationResponse",
     "SuccessPayloadPortalUrlResponse",
-    "SuccessPayloadReauthNotificationOptOutResult",
     "SuccessPayloadReauthNotificationPreference",
     "SuccessPayloadRotateSecretResponse",
-    "SuccessPayloadSandboxOrderSimulateResult",
     "SuccessPayloadSessionResponseData",
     "SuccessPayloadSessionSyncStatusResponse",
     "SuccessPayloadSessionUserResponse",
     "SuccessPayloadTokenResponseData",
-    "SuccessPayloadUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse",
-    "SyncOrdersRequest",
-    "TastyTradeEquityLimitOrderPlaceQueryParams",
-    "TastyTradeEquityMarketOrderPlaceQueryParams",
-    "TastyTradeEquityStopOrderPlaceQueryParams",
-    "TastyTradeEquityTrailingStopOrderPlaceQueryParams",
-    "TastyTradeOptionLimitOrderPlaceQueryParams",
-    "TastyTradeOptionMarketOrderPlaceQueryParams",
-    "TastyTradeOptionStopOrderPlaceQueryParams",
-    "TastyTradeOptionTrailingStopOrderPlaceQueryParams",
-    "TastyTradeOrderCancelQueryParams",
-    "TastyTradeOrderCancelRequest",
-    "TastyTradeOrderModifyRequest",
-    "TastyTradeOrderPlaceRequest",
-    "Timeinforce",
     "TokenResponseData",
-    "Totalcashvalue",
-    "Totalrealizedpnl",
-    "TradestationEquityLimitOrderPlaceQueryParams",
-    "TradestationEquityMarketOrderPlaceQueryParams",
-    "TradestationEquityStopLimitOrderPlaceQueryParams",
-    "TradestationEquityStopOrderPlaceQueryParams",
-    "TradestationEquityTrailingStopOrderPlaceQueryParams",
-    "TradestationFutureLimitOrderPlaceQueryParams",
-    "TradestationFutureMarketOrderPlaceQueryParams",
-    "TradestationFutureStopLimitOrderPlaceQueryParams",
-    "TradestationFutureStopOrderPlaceQueryParams",
-    "TradestationFutureTrailingStopOrderPlaceQueryParams",
-    "TradestationOptionLimitOrderPlaceQueryParams",
-    "TradestationOptionMarketOrderPlaceQueryParams",
-    "TradestationOptionStopLimitOrderPlaceQueryParams",
-    "TradestationOptionStopOrderPlaceQueryParams",
-    "TradestationOptionTrailingStopOrderPlaceQueryParams",
-    "TradestationOrderCancelQueryParams",
-    "TradestationOrderCancelRequest",
-    "TradestationOrderPlaceRequest",
-    "Trading212LimitOrderPlaceQueryParams",
-    "Trading212MarketOrderPlaceQueryParams",
-    "Trading212OrderCancelQueryParams",
-    "Trading212OrderCancelRequest",
-    "Trading212OrderModifyRequest",
-    "Trading212OrderPlaceRequest",
-    "Trading212StopLimitOrderPlaceQueryParams",
-    "Trading212StopOrderPlaceQueryParams",
-    "TrailPercent",
-    "TrailPrice",
-    "UserBrokerConnectionWithPermissions",
     "ValidationError",
-    "WebullEquityLimitOrderPlaceQueryParams",
-    "WebullEquityMarketOrderPlaceQueryParams",
-    "WebullEquityStopLimitOrderPlaceQueryParams",
-    "WebullEquityStopOrderPlaceQueryParams",
-    "WebullEquityTrailingStopOrderPlaceQueryParams",
-    "WebullLimitOrderModifyQueryParams",
-    "WebullMarketOrderModifyQueryParams",
-    "WebullOptionLimitOrderPlaceQueryParams",
-    "WebullOptionMarketOrderPlaceQueryParams",
-    "WebullOptionStopOrderPlaceQueryParams",
-    "WebullOrderCancelQueryParams",
-    "WebullOrderCancelRequest",
-    "WebullOrderModifyRequest",
-    "WebullOrderPlaceRequest",
-    "WebullStopOrderModifyQueryParams",
-    "WebullTrailingStopOrderModifyQueryParams",
 ]
 
 # import apis into sdk package
@@ -476,92 +222,27 @@ from finatic_server.exceptions import ApiException as ApiException
 
 # import models into sdk package
 from finatic_server.models.account_order_request import AccountOrderRequest as AccountOrderRequest
-from finatic_server.models.accountnumber import Accountnumber as Accountnumber
-from finatic_server.models.accountnumber1 import Accountnumber1 as Accountnumber1
-from finatic_server.models.accountnumber2 import Accountnumber2 as Accountnumber2
 from finatic_server.models.accounts import Accounts as Accounts
-from finatic_server.models.alpaca_crypto_limit_order_place_query_params import AlpacaCryptoLimitOrderPlaceQueryParams as AlpacaCryptoLimitOrderPlaceQueryParams
-from finatic_server.models.alpaca_crypto_market_order_place_query_params import AlpacaCryptoMarketOrderPlaceQueryParams as AlpacaCryptoMarketOrderPlaceQueryParams
-from finatic_server.models.alpaca_crypto_stop_limit_order_place_query_params import AlpacaCryptoStopLimitOrderPlaceQueryParams as AlpacaCryptoStopLimitOrderPlaceQueryParams
-from finatic_server.models.alpaca_equity_limit_order_place_query_params import AlpacaEquityLimitOrderPlaceQueryParams as AlpacaEquityLimitOrderPlaceQueryParams
-from finatic_server.models.alpaca_equity_market_order_place_query_params import AlpacaEquityMarketOrderPlaceQueryParams as AlpacaEquityMarketOrderPlaceQueryParams
-from finatic_server.models.alpaca_equity_stop_limit_order_place_query_params import AlpacaEquityStopLimitOrderPlaceQueryParams as AlpacaEquityStopLimitOrderPlaceQueryParams
-from finatic_server.models.alpaca_equity_stop_order_place_query_params import AlpacaEquityStopOrderPlaceQueryParams as AlpacaEquityStopOrderPlaceQueryParams
-from finatic_server.models.alpaca_equity_trailing_stop_order_place_query_params import AlpacaEquityTrailingStopOrderPlaceQueryParams as AlpacaEquityTrailingStopOrderPlaceQueryParams
-from finatic_server.models.alpaca_option_limit_order_place_query_params import AlpacaOptionLimitOrderPlaceQueryParams as AlpacaOptionLimitOrderPlaceQueryParams
-from finatic_server.models.alpaca_option_market_order_place_query_params import AlpacaOptionMarketOrderPlaceQueryParams as AlpacaOptionMarketOrderPlaceQueryParams
-from finatic_server.models.alpaca_order_cancel_query_params import AlpacaOrderCancelQueryParams as AlpacaOrderCancelQueryParams
-from finatic_server.models.alpaca_order_cancel_request import AlpacaOrderCancelRequest as AlpacaOrderCancelRequest
-from finatic_server.models.alpaca_order_place_request import AlpacaOrderPlaceRequest as AlpacaOrderPlaceRequest
-from finatic_server.models.assettype import Assettype as Assettype
 from finatic_server.models.auth_attempt import AuthAttempt as AuthAttempt
-from finatic_server.models.auth_step_action import AuthStepAction as AuthStepAction
-from finatic_server.models.auth_step_type import AuthStepType as AuthStepType
-from finatic_server.models.availablebalance import Availablebalance as Availablebalance
-from finatic_server.models.availabletowithdraw import Availabletowithdraw as Availabletowithdraw
-from finatic_server.models.averagefillprice import Averagefillprice as Averagefillprice
+from finatic_server.models.beta_broker_shim_response import BetaBrokerShimResponse as BetaBrokerShimResponse
 from finatic_server.models.broker_connection_request import BrokerConnectionRequest as BrokerConnectionRequest
-from finatic_server.models.broker_connection_update_request import BrokerConnectionUpdateRequest as BrokerConnectionUpdateRequest
 from finatic_server.models.broker_data_account_type_enum import BrokerDataAccountTypeEnum as BrokerDataAccountTypeEnum
-from finatic_server.models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum as BrokerDataAssetTypeEnum
-from finatic_server.models.broker_data_connection_status_enum import BrokerDataConnectionStatusEnum as BrokerDataConnectionStatusEnum
-from finatic_server.models.broker_data_option_type_enum import BrokerDataOptionTypeEnum as BrokerDataOptionTypeEnum
-from finatic_server.models.broker_data_order_side_enum import BrokerDataOrderSideEnum as BrokerDataOrderSideEnum
-from finatic_server.models.broker_data_order_status_enum import BrokerDataOrderStatusEnum as BrokerDataOrderStatusEnum
-from finatic_server.models.broker_data_position_status_enum import BrokerDataPositionStatusEnum as BrokerDataPositionStatusEnum
-from finatic_server.models.broker_data_user_broker_connections import BrokerDataUserBrokerConnections as BrokerDataUserBrokerConnections
-from finatic_server.models.broker_info import BrokerInfo as BrokerInfo
-from finatic_server.models.broker_institution_capability_profile import BrokerInstitutionCapabilityProfile as BrokerInstitutionCapabilityProfile
-from finatic_server.models.broker_permission_cluster import BrokerPermissionCluster as BrokerPermissionCluster
-from finatic_server.models.broker_permission_cluster_grant import BrokerPermissionClusterGrant as BrokerPermissionClusterGrant
 from finatic_server.models.broker_permissions import BrokerPermissions as BrokerPermissions
-from finatic_server.models.broker_realtime_support import BrokerRealtimeSupport as BrokerRealtimeSupport
-from finatic_server.models.broker_resource_ordering_rule import BrokerResourceOrderingRule as BrokerResourceOrderingRule
-from finatic_server.models.broker_resource_version_strategy import BrokerResourceVersionStrategy as BrokerResourceVersionStrategy
-from finatic_server.models.broker_trace_propagation_contract import BrokerTracePropagationContract as BrokerTracePropagationContract
-from finatic_server.models.broker_trade_capability import BrokerTradeCapability as BrokerTradeCapability
-from finatic_server.models.buyingpower import Buyingpower as Buyingpower
-from finatic_server.models.cancel_order_api_beta_brokers_orders_order_id_delete_request import CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest as CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
-from finatic_server.models.cashbalance import Cashbalance as Cashbalance
 from finatic_server.models.complete_session_response import CompleteSessionResponse as CompleteSessionResponse
 from finatic_server.models.connector_list_item import ConnectorListItem as ConnectorListItem
 from finatic_server.models.create_session_request import CreateSessionRequest as CreateSessionRequest
-from finatic_server.models.currentbalance import Currentbalance as Currentbalance
-from finatic_server.models.data import Data as Data
-from finatic_server.models.day_tif import DayTIF as DayTIF
-from finatic_server.models.delete_broker_connection_result import DeleteBrokerConnectionResult as DeleteBrokerConnectionResult
-from finatic_server.models.disconnect_company_from_broker_connection_result import DisconnectCompanyFromBrokerConnectionResult as DisconnectCompanyFromBrokerConnectionResult
 from finatic_server.models.ea_configuration_payload import EaConfigurationPayload as EaConfigurationPayload
-from finatic_server.models.etoro_order_cancel_query_params import EtoroOrderCancelQueryParams as EtoroOrderCancelQueryParams
-from finatic_server.models.etoro_order_cancel_request import EtoroOrderCancelRequest as EtoroOrderCancelRequest
-from finatic_server.models.etoro_order_place_query_params import EtoroOrderPlaceQueryParams as EtoroOrderPlaceQueryParams
-from finatic_server.models.etoro_order_place_request import EtoroOrderPlaceRequest as EtoroOrderPlaceRequest
 from finatic_server.models.fdx_account_grant import FDXAccountGrant as FDXAccountGrant
 from finatic_server.models.fdx_account_grant_update import FDXAccountGrantUpdate as FDXAccountGrantUpdate
 from finatic_server.models.fdx_account_status import FDXAccountStatus as FDXAccountStatus
 from finatic_server.models.fdx_account_type import FDXAccountType as FDXAccountType
-from finatic_server.models.fdx_asset_type import FDXAssetType as FDXAssetType
 from finatic_server.models.fdx_balance_type import FDXBalanceType as FDXBalanceType
 from finatic_server.models.fdx_consent_grant import FDXConsentGrant as FDXConsentGrant
 from finatic_server.models.fdx_consent_grant_create import FDXConsentGrantCreate as FDXConsentGrantCreate
-from finatic_server.models.fdx_order_class import FDXOrderClass as FDXOrderClass
-from finatic_server.models.fdx_order_event_type import FDXOrderEventType as FDXOrderEventType
-from finatic_server.models.fdx_order_group_order import FDXOrderGroupOrder as FDXOrderGroupOrder
-from finatic_server.models.fdx_order_group_type import FDXOrderGroupType as FDXOrderGroupType
-from finatic_server.models.fdx_order_leg import FDXOrderLeg as FDXOrderLeg
-from finatic_server.models.fdx_order_side import FDXOrderSide as FDXOrderSide
-from finatic_server.models.fdx_order_status import FDXOrderStatus as FDXOrderStatus
-from finatic_server.models.fdx_order_type import FDXOrderType as FDXOrderType
-from finatic_server.models.fdx_position_side import FDXPositionSide as FDXPositionSide
-from finatic_server.models.fdx_position_status import FDXPositionStatus as FDXPositionStatus
-from finatic_server.models.fdx_security_id_type import FDXSecurityIdType as FDXSecurityIdType
-from finatic_server.models.fdx_time_in_force import FDXTimeInForce as FDXTimeInForce
 from finatic_server.models.fdx_webhook_event_definition import FDXWebhookEventDefinition as FDXWebhookEventDefinition
 from finatic_server.models.fdx_webhook_subscription import FDXWebhookSubscription as FDXWebhookSubscription
 from finatic_server.models.fdx_webhook_subscription_create import FDXWebhookSubscriptionCreate as FDXWebhookSubscriptionCreate
 from finatic_server.models.fdx_webhook_subscription_update import FDXWebhookSubscriptionUpdate as FDXWebhookSubscriptionUpdate
-from finatic_server.models.foktif import FOKTIF as FOKTIF
-from finatic_server.models.filledquantity import Filledquantity as Filledquantity
 from finatic_server.models.finatic_api_error_response import FinaticAPIErrorResponse as FinaticAPIErrorResponse
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_portal_session_response1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1 as FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_portal_session_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse2 as FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse2
@@ -571,61 +252,41 @@ from finatic_server.models.finatic_environment import FinaticEnvironment as Fina
 from finatic_server.models.finatic_response_accounts import FinaticResponseAccounts as FinaticResponseAccounts
 from finatic_server.models.finatic_response_any import FinaticResponseAny as FinaticResponseAny
 from finatic_server.models.finatic_response_auth_attempt import FinaticResponseAuthAttempt as FinaticResponseAuthAttempt
+from finatic_server.models.finatic_response_beta_broker_shim_response import FinaticResponseBetaBrokerShimResponse as FinaticResponseBetaBrokerShimResponse
 from finatic_server.models.finatic_response_bool import FinaticResponseBool as FinaticResponseBool
-from finatic_server.models.finatic_response_broker_data_user_broker_connections import FinaticResponseBrokerDataUserBrokerConnections as FinaticResponseBrokerDataUserBrokerConnections
 from finatic_server.models.finatic_response_complete_session_response import FinaticResponseCompleteSessionResponse as FinaticResponseCompleteSessionResponse
-from finatic_server.models.finatic_response_delete_broker_connection_result import FinaticResponseDeleteBrokerConnectionResult as FinaticResponseDeleteBrokerConnectionResult
 from finatic_server.models.finatic_response_dict import FinaticResponseDict as FinaticResponseDict
 from finatic_server.models.finatic_response_dict_str_any import FinaticResponseDictStrAny as FinaticResponseDictStrAny
-from finatic_server.models.finatic_response_dict_str_bool import FinaticResponseDictStrBool as FinaticResponseDictStrBool
 from finatic_server.models.finatic_response_dict_str_object import FinaticResponseDictStrObject as FinaticResponseDictStrObject
 from finatic_server.models.finatic_response_dict_str_str import FinaticResponseDictStrStr as FinaticResponseDictStrStr
-from finatic_server.models.finatic_response_dict_str_union_int_none_type import FinaticResponseDictStrUnionIntNoneType as FinaticResponseDictStrUnionIntNoneType
 from finatic_server.models.finatic_response_dict_str_union_str_none_type import FinaticResponseDictStrUnionStrNoneType as FinaticResponseDictStrUnionStrNoneType
-from finatic_server.models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult as FinaticResponseDisconnectCompanyFromBrokerConnectionResult
 from finatic_server.models.finatic_response_fdx_account_grant import FinaticResponseFDXAccountGrant as FinaticResponseFDXAccountGrant
 from finatic_server.models.finatic_response_fdx_consent_grant import FinaticResponseFDXConsentGrant as FinaticResponseFDXConsentGrant
 from finatic_server.models.finatic_response_fdx_webhook_subscription import FinaticResponseFDXWebhookSubscription as FinaticResponseFDXWebhookSubscription
 from finatic_server.models.finatic_response_link_user_to_mcp_session_response import FinaticResponseLinkUserToMCPSessionResponse as FinaticResponseLinkUserToMCPSessionResponse
 from finatic_server.models.finatic_response_link_user_to_session_response import FinaticResponseLinkUserToSessionResponse as FinaticResponseLinkUserToSessionResponse
-from finatic_server.models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo as FinaticResponseListBrokerInfo
 from finatic_server.models.finatic_response_list_connector_list_item import FinaticResponseListConnectorListItem as FinaticResponseListConnectorListItem
 from finatic_server.models.finatic_response_list_dict_str_any import FinaticResponseListDictStrAny as FinaticResponseListDictStrAny
 from finatic_server.models.finatic_response_list_dict_str_str import FinaticResponseListDictStrStr as FinaticResponseListDictStrStr
 from finatic_server.models.finatic_response_list_fdx_account_grant import FinaticResponseListFDXAccountGrant as FinaticResponseListFDXAccountGrant
 from finatic_server.models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount as FinaticResponseListFDXBrokerAccount
 from finatic_server.models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance as FinaticResponseListFDXBrokerBalance
-from finatic_server.models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder as FinaticResponseListFDXBrokerOrder
-from finatic_server.models.finatic_response_list_fdx_broker_order_event import FinaticResponseListFDXBrokerOrderEvent as FinaticResponseListFDXBrokerOrderEvent
-from finatic_server.models.finatic_response_list_fdx_broker_order_fill import FinaticResponseListFDXBrokerOrderFill as FinaticResponseListFDXBrokerOrderFill
-from finatic_server.models.finatic_response_list_fdx_broker_order_group import FinaticResponseListFDXBrokerOrderGroup as FinaticResponseListFDXBrokerOrderGroup
-from finatic_server.models.finatic_response_list_fdx_broker_position import FinaticResponseListFDXBrokerPosition as FinaticResponseListFDXBrokerPosition
-from finatic_server.models.finatic_response_list_fdx_broker_position_lot import FinaticResponseListFDXBrokerPositionLot as FinaticResponseListFDXBrokerPositionLot
-from finatic_server.models.finatic_response_list_fdx_broker_position_lot_fill import FinaticResponseListFDXBrokerPositionLotFill as FinaticResponseListFDXBrokerPositionLotFill
-from finatic_server.models.finatic_response_list_fdx_broker_transaction import FinaticResponseListFDXBrokerTransaction as FinaticResponseListFDXBrokerTransaction
 from finatic_server.models.finatic_response_list_fdx_consent_grant import FinaticResponseListFDXConsentGrant as FinaticResponseListFDXConsentGrant
 from finatic_server.models.finatic_response_list_fdx_webhook_event_definition import FinaticResponseListFDXWebhookEventDefinition as FinaticResponseListFDXWebhookEventDefinition
 from finatic_server.models.finatic_response_list_fdx_webhook_subscription import FinaticResponseListFDXWebhookSubscription as FinaticResponseListFDXWebhookSubscription
-from finatic_server.models.finatic_response_list_legacy_broker_account import FinaticResponseListLegacyBrokerAccount as FinaticResponseListLegacyBrokerAccount
-from finatic_server.models.finatic_response_list_legacy_broker_balance import FinaticResponseListLegacyBrokerBalance as FinaticResponseListLegacyBrokerBalance
-from finatic_server.models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions as FinaticResponseListUserBrokerConnectionWithPermissions
 from finatic_server.models.finatic_response_mcp_bootstrap_response_data import FinaticResponseMCPBootstrapResponseData as FinaticResponseMCPBootstrapResponseData
 from finatic_server.models.finatic_response_mt_connect_response_data import FinaticResponseMTConnectResponseData as FinaticResponseMTConnectResponseData
 from finatic_server.models.finatic_response_o_auth_completion_response import FinaticResponseOAuthCompletionResponse as FinaticResponseOAuthCompletionResponse
-from finatic_server.models.finatic_response_order_action_result import FinaticResponseOrderActionResult as FinaticResponseOrderActionResult
 from finatic_server.models.finatic_response_owner_portal_bootstrap_response import FinaticResponseOwnerPortalBootstrapResponse as FinaticResponseOwnerPortalBootstrapResponse
 from finatic_server.models.finatic_response_owner_portal_revoke_all_companies_result import FinaticResponseOwnerPortalRevokeAllCompaniesResult as FinaticResponseOwnerPortalRevokeAllCompaniesResult
 from finatic_server.models.finatic_response_portal_session_validation_response import FinaticResponsePortalSessionValidationResponse as FinaticResponsePortalSessionValidationResponse
 from finatic_server.models.finatic_response_portal_url_response import FinaticResponsePortalUrlResponse as FinaticResponsePortalUrlResponse
-from finatic_server.models.finatic_response_reauth_notification_opt_out_result import FinaticResponseReauthNotificationOptOutResult as FinaticResponseReauthNotificationOptOutResult
 from finatic_server.models.finatic_response_reauth_notification_preference import FinaticResponseReauthNotificationPreference as FinaticResponseReauthNotificationPreference
 from finatic_server.models.finatic_response_rotate_secret_response import FinaticResponseRotateSecretResponse as FinaticResponseRotateSecretResponse
-from finatic_server.models.finatic_response_sandbox_order_simulate_result import FinaticResponseSandboxOrderSimulateResult as FinaticResponseSandboxOrderSimulateResult
 from finatic_server.models.finatic_response_session_response_data import FinaticResponseSessionResponseData as FinaticResponseSessionResponseData
 from finatic_server.models.finatic_response_session_sync_status_response import FinaticResponseSessionSyncStatusResponse as FinaticResponseSessionSyncStatusResponse
 from finatic_server.models.finatic_response_session_user_response import FinaticResponseSessionUserResponse as FinaticResponseSessionUserResponse
 from finatic_server.models.finatic_response_token_response_data import FinaticResponseTokenResponseData as FinaticResponseTokenResponseData
-from finatic_server.models.finatic_response_union_dict_str_any_broker_data_user_broker_connections_sandbox_user_broker_connections_multi_step_auth_response import FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse as FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse
 from finatic_server.models.finatic_v1_account_sync_status import FinaticV1AccountSyncStatus as FinaticV1AccountSyncStatus
 from finatic_server.models.finatic_v1_error import FinaticV1Error as FinaticV1Error
 from finatic_server.models.finatic_v1_error_category import FinaticV1ErrorCategory as FinaticV1ErrorCategory
@@ -635,16 +296,8 @@ from finatic_server.models.finatic_v1_response_envelope import FinaticV1Response
 from finatic_server.models.finatic_v1_warning import FinaticV1Warning as FinaticV1Warning
 from finatic_server.models.finaticapi_api_beta_routers_portal_portal_router_portal_session_response import FinaticapiApiBetaRoutersPortalPortalRouterPortalSessionResponse as FinaticapiApiBetaRoutersPortalPortalRouterPortalSessionResponse
 from finatic_server.models.finaticapi_api_v1_routers_portal_portal_router_portal_session_response import FinaticapiApiV1RoutersPortalPortalRouterPortalSessionResponse as FinaticapiApiV1RoutersPortalPortalRouterPortalSessionResponse
-from finatic_server.models.futureunderlyingassettype import Futureunderlyingassettype as Futureunderlyingassettype
-from finatic_server.models.gtctif import GTCTIF as GTCTIF
-from finatic_server.models.gtdtif import GTDTIF as GTDTIF
 from finatic_server.models.http_validation_error import HTTPValidationError as HTTPValidationError
-from finatic_server.models.ioctif import IOCTIF as IOCTIF
-from finatic_server.models.initialmargin import Initialmargin as Initialmargin
 from finatic_server.models.lastsyncedat import Lastsyncedat as Lastsyncedat
-from finatic_server.models.legacy_broker_account import LegacyBrokerAccount as LegacyBrokerAccount
-from finatic_server.models.legacy_broker_balance import LegacyBrokerBalance as LegacyBrokerBalance
-from finatic_server.models.limitprice import Limitprice as Limitprice
 from finatic_server.models.link_user_to_mcp_session_request import LinkUserToMCPSessionRequest as LinkUserToMCPSessionRequest
 from finatic_server.models.link_user_to_mcp_session_response import LinkUserToMCPSessionResponse as LinkUserToMCPSessionResponse
 from finatic_server.models.link_user_to_session_response import LinkUserToSessionResponse as LinkUserToSessionResponse
@@ -653,96 +306,21 @@ from finatic_server.models.mcp_bootstrap_request import MCPBootstrapRequest as M
 from finatic_server.models.mcp_bootstrap_response_data import MCPBootstrapResponseData as MCPBootstrapResponseData
 from finatic_server.models.mt_connect_request import MTConnectRequest as MTConnectRequest
 from finatic_server.models.mt_connect_response_data import MTConnectResponseData as MTConnectResponseData
-from finatic_server.models.maintenancemargin import Maintenancemargin as Maintenancemargin
-from finatic_server.models.multi_step_auth_response import MultiStepAuthResponse as MultiStepAuthResponse
-from finatic_server.models.netliquidationvalue import Netliquidationvalue as Netliquidationvalue
-from finatic_server.models.ninja_trader_future_limit_order_place_query_params import NinjaTraderFutureLimitOrderPlaceQueryParams as NinjaTraderFutureLimitOrderPlaceQueryParams
-from finatic_server.models.ninja_trader_future_market_order_place_query_params import NinjaTraderFutureMarketOrderPlaceQueryParams as NinjaTraderFutureMarketOrderPlaceQueryParams
-from finatic_server.models.ninja_trader_future_stop_limit_order_place_query_params import NinjaTraderFutureStopLimitOrderPlaceQueryParams as NinjaTraderFutureStopLimitOrderPlaceQueryParams
-from finatic_server.models.ninja_trader_future_stop_order_place_query_params import NinjaTraderFutureStopOrderPlaceQueryParams as NinjaTraderFutureStopOrderPlaceQueryParams
-from finatic_server.models.ninja_trader_future_trailing_stop_order_place_query_params import NinjaTraderFutureTrailingStopOrderPlaceQueryParams as NinjaTraderFutureTrailingStopOrderPlaceQueryParams
-from finatic_server.models.ninja_trader_order_cancel_query_params import NinjaTraderOrderCancelQueryParams as NinjaTraderOrderCancelQueryParams
-from finatic_server.models.ninja_trader_order_cancel_request import NinjaTraderOrderCancelRequest as NinjaTraderOrderCancelRequest
-from finatic_server.models.ninja_trader_order_modify_request import NinjaTraderOrderModifyRequest as NinjaTraderOrderModifyRequest
-from finatic_server.models.ninja_trader_order_place_request import NinjaTraderOrderPlaceRequest as NinjaTraderOrderPlaceRequest
-from finatic_server.models.notional import Notional as Notional
-from finatic_server.models.notional1 import Notional1 as Notional1
-from finatic_server.models.notional2 import Notional2 as Notional2
 from finatic_server.models.o_auth_completion_response import OAuthCompletionResponse as OAuthCompletionResponse
-from finatic_server.models.order import Order as Order
-from finatic_server.models.order1 import Order1 as Order1
-from finatic_server.models.order2 import Order2 as Order2
-from finatic_server.models.order2_any_of import Order2AnyOf as Order2AnyOf
-from finatic_server.models.order2_any_of1 import Order2AnyOf1 as Order2AnyOf1
-from finatic_server.models.order2_any_of2 import Order2AnyOf2 as Order2AnyOf2
-from finatic_server.models.order3 import Order3 as Order3
-from finatic_server.models.order3_one_of import Order3OneOf as Order3OneOf
-from finatic_server.models.order3_one_of1 import Order3OneOf1 as Order3OneOf1
-from finatic_server.models.order4 import Order4 as Order4
-from finatic_server.models.order4_one_of import Order4OneOf as Order4OneOf
-from finatic_server.models.order4_one_of1 import Order4OneOf1 as Order4OneOf1
-from finatic_server.models.order4_one_of2 import Order4OneOf2 as Order4OneOf2
-from finatic_server.models.order5 import Order5 as Order5
-from finatic_server.models.order6 import Order6 as Order6
-from finatic_server.models.order7 import Order7 as Order7
-from finatic_server.models.order7_one_of import Order7OneOf as Order7OneOf
-from finatic_server.models.order7_one_of1 import Order7OneOf1 as Order7OneOf1
-from finatic_server.models.order_action_result import OrderActionResult as OrderActionResult
-from finatic_server.models.order_modify_query_params_base import OrderModifyQueryParamsBase as OrderModifyQueryParamsBase
-from finatic_server.models.order_modify_query_params_base_time_in_force import OrderModifyQueryParamsBaseTimeInForce as OrderModifyQueryParamsBaseTimeInForce
-from finatic_server.models.order_one_of import OrderOneOf as OrderOneOf
-from finatic_server.models.order_one_of1 import OrderOneOf1 as OrderOneOf1
-from finatic_server.models.order_one_of2 import OrderOneOf2 as OrderOneOf2
-from finatic_server.models.order_request import OrderRequest as OrderRequest
-from finatic_server.models.orderqty import Orderqty as Orderqty
-from finatic_server.models.orderqty1 import Orderqty1 as Orderqty1
-from finatic_server.models.orderqty2 import Orderqty2 as Orderqty2
-from finatic_server.models.orderqty3 import Orderqty3 as Orderqty3
-from finatic_server.models.orderqty4 import Orderqty4 as Orderqty4
 from finatic_server.models.owner_portal_bootstrap_response import OwnerPortalBootstrapResponse as OwnerPortalBootstrapResponse
 from finatic_server.models.owner_portal_company_grant import OwnerPortalCompanyGrant as OwnerPortalCompanyGrant
 from finatic_server.models.owner_portal_company_permissions_update import OwnerPortalCompanyPermissionsUpdate as OwnerPortalCompanyPermissionsUpdate
 from finatic_server.models.owner_portal_connection import OwnerPortalConnection as OwnerPortalConnection
 from finatic_server.models.owner_portal_known_company import OwnerPortalKnownCompany as OwnerPortalKnownCompany
 from finatic_server.models.owner_portal_revoke_all_companies_result import OwnerPortalRevokeAllCompaniesResult as OwnerPortalRevokeAllCompaniesResult
-from finatic_server.models.pendingbalance import Pendingbalance as Pendingbalance
-from finatic_server.models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest as PlaceOrderApiBetaBrokersOrdersPostRequest
 from finatic_server.models.portal_account_grant_request import PortalAccountGrantRequest as PortalAccountGrantRequest
 from finatic_server.models.portal_auth_attempt_request import PortalAuthAttemptRequest as PortalAuthAttemptRequest
 from finatic_server.models.portal_session_validation_response import PortalSessionValidationResponse as PortalSessionValidationResponse
 from finatic_server.models.portal_url_response import PortalUrlResponse as PortalUrlResponse
 from finatic_server.models.portal_user_link_request import PortalUserLinkRequest as PortalUserLinkRequest
-from finatic_server.models.quantity import Quantity as Quantity
-from finatic_server.models.reauth_notification_opt_out_request import ReauthNotificationOptOutRequest as ReauthNotificationOptOutRequest
-from finatic_server.models.reauth_notification_opt_out_result import ReauthNotificationOptOutResult as ReauthNotificationOptOutResult
 from finatic_server.models.reauth_notification_preference import ReauthNotificationPreference as ReauthNotificationPreference
 from finatic_server.models.reauth_notification_preference_update_request import ReauthNotificationPreferenceUpdateRequest as ReauthNotificationPreferenceUpdateRequest
-from finatic_server.models.remainingquantity import Remainingquantity as Remainingquantity
-from finatic_server.models.robinhood_crypto_limit_order_place_query_params import RobinhoodCryptoLimitOrderPlaceQueryParams as RobinhoodCryptoLimitOrderPlaceQueryParams
-from finatic_server.models.robinhood_crypto_market_order_place_query_params import RobinhoodCryptoMarketOrderPlaceQueryParams as RobinhoodCryptoMarketOrderPlaceQueryParams
-from finatic_server.models.robinhood_crypto_stop_limit_order_place_query_params import RobinhoodCryptoStopLimitOrderPlaceQueryParams as RobinhoodCryptoStopLimitOrderPlaceQueryParams
-from finatic_server.models.robinhood_crypto_stop_order_place_query_params import RobinhoodCryptoStopOrderPlaceQueryParams as RobinhoodCryptoStopOrderPlaceQueryParams
-from finatic_server.models.robinhood_crypto_trailing_stop_order_place_query_params import RobinhoodCryptoTrailingStopOrderPlaceQueryParams as RobinhoodCryptoTrailingStopOrderPlaceQueryParams
-from finatic_server.models.robinhood_equity_limit_order_place_query_params import RobinhoodEquityLimitOrderPlaceQueryParams as RobinhoodEquityLimitOrderPlaceQueryParams
-from finatic_server.models.robinhood_equity_market_order_place_query_params import RobinhoodEquityMarketOrderPlaceQueryParams as RobinhoodEquityMarketOrderPlaceQueryParams
-from finatic_server.models.robinhood_equity_stop_limit_order_place_query_params import RobinhoodEquityStopLimitOrderPlaceQueryParams as RobinhoodEquityStopLimitOrderPlaceQueryParams
-from finatic_server.models.robinhood_equity_stop_order_place_query_params import RobinhoodEquityStopOrderPlaceQueryParams as RobinhoodEquityStopOrderPlaceQueryParams
-from finatic_server.models.robinhood_equity_trailing_stop_order_place_query_params import RobinhoodEquityTrailingStopOrderPlaceQueryParams as RobinhoodEquityTrailingStopOrderPlaceQueryParams
-from finatic_server.models.robinhood_option_limit_order_place_query_params import RobinhoodOptionLimitOrderPlaceQueryParams as RobinhoodOptionLimitOrderPlaceQueryParams
-from finatic_server.models.robinhood_option_market_order_place_query_params import RobinhoodOptionMarketOrderPlaceQueryParams as RobinhoodOptionMarketOrderPlaceQueryParams
-from finatic_server.models.robinhood_option_spread_leg import RobinhoodOptionSpreadLeg as RobinhoodOptionSpreadLeg
-from finatic_server.models.robinhood_option_stop_limit_order_place_query_params import RobinhoodOptionStopLimitOrderPlaceQueryParams as RobinhoodOptionStopLimitOrderPlaceQueryParams
-from finatic_server.models.robinhood_option_stop_order_place_query_params import RobinhoodOptionStopOrderPlaceQueryParams as RobinhoodOptionStopOrderPlaceQueryParams
-from finatic_server.models.robinhood_option_trailing_stop_order_place_query_params import RobinhoodOptionTrailingStopOrderPlaceQueryParams as RobinhoodOptionTrailingStopOrderPlaceQueryParams
-from finatic_server.models.robinhood_order_cancel_query_params import RobinhoodOrderCancelQueryParams as RobinhoodOrderCancelQueryParams
-from finatic_server.models.robinhood_order_cancel_request import RobinhoodOrderCancelRequest as RobinhoodOrderCancelRequest
-from finatic_server.models.robinhood_order_modify_request import RobinhoodOrderModifyRequest as RobinhoodOrderModifyRequest
-from finatic_server.models.robinhood_order_place_request import RobinhoodOrderPlaceRequest as RobinhoodOrderPlaceRequest
 from finatic_server.models.rotate_secret_response import RotateSecretResponse as RotateSecretResponse
-from finatic_server.models.sandbox_order_simulate_request_body import SandboxOrderSimulateRequestBody as SandboxOrderSimulateRequestBody
-from finatic_server.models.sandbox_order_simulate_result import SandboxOrderSimulateResult as SandboxOrderSimulateResult
-from finatic_server.models.sandbox_user_broker_connections import SandboxUserBrokerConnections as SandboxUserBrokerConnections
-from finatic_server.models.securityidtype import Securityidtype as Securityidtype
 from finatic_server.models.session_link_request import SessionLinkRequest as SessionLinkRequest
 from finatic_server.models.session_response_data import SessionResponseData as SessionResponseData
 from finatic_server.models.session_start_request import SessionStartRequest as SessionStartRequest
@@ -750,130 +328,44 @@ from finatic_server.models.session_status import SessionStatus as SessionStatus
 from finatic_server.models.session_sync_account_status import SessionSyncAccountStatus as SessionSyncAccountStatus
 from finatic_server.models.session_sync_status_response import SessionSyncStatusResponse as SessionSyncStatusResponse
 from finatic_server.models.session_user_response import SessionUserResponse as SessionUserResponse
-from finatic_server.models.side import Side as Side
-from finatic_server.models.stopprice import Stopprice as Stopprice
-from finatic_server.models.strikeprice import Strikeprice as Strikeprice
-from finatic_server.models.strikeprice1 import Strikeprice1 as Strikeprice1
 from finatic_server.models.success_payload_accounts import SuccessPayloadAccounts as SuccessPayloadAccounts
 from finatic_server.models.success_payload_any import SuccessPayloadAny as SuccessPayloadAny
 from finatic_server.models.success_payload_auth_attempt import SuccessPayloadAuthAttempt as SuccessPayloadAuthAttempt
+from finatic_server.models.success_payload_beta_broker_shim_response import SuccessPayloadBetaBrokerShimResponse as SuccessPayloadBetaBrokerShimResponse
 from finatic_server.models.success_payload_bool import SuccessPayloadBool as SuccessPayloadBool
-from finatic_server.models.success_payload_broker_data_user_broker_connections import SuccessPayloadBrokerDataUserBrokerConnections as SuccessPayloadBrokerDataUserBrokerConnections
 from finatic_server.models.success_payload_complete_session_response import SuccessPayloadCompleteSessionResponse as SuccessPayloadCompleteSessionResponse
-from finatic_server.models.success_payload_delete_broker_connection_result import SuccessPayloadDeleteBrokerConnectionResult as SuccessPayloadDeleteBrokerConnectionResult
 from finatic_server.models.success_payload_dict import SuccessPayloadDict as SuccessPayloadDict
 from finatic_server.models.success_payload_dict_str_any import SuccessPayloadDictStrAny as SuccessPayloadDictStrAny
-from finatic_server.models.success_payload_dict_str_bool import SuccessPayloadDictStrBool as SuccessPayloadDictStrBool
 from finatic_server.models.success_payload_dict_str_object import SuccessPayloadDictStrObject as SuccessPayloadDictStrObject
 from finatic_server.models.success_payload_dict_str_str import SuccessPayloadDictStrStr as SuccessPayloadDictStrStr
-from finatic_server.models.success_payload_dict_str_union_int_none_type import SuccessPayloadDictStrUnionIntNoneType as SuccessPayloadDictStrUnionIntNoneType
-from finatic_server.models.success_payload_dict_str_union_int_none_type_data_value import SuccessPayloadDictStrUnionIntNoneTypeDataValue as SuccessPayloadDictStrUnionIntNoneTypeDataValue
 from finatic_server.models.success_payload_dict_str_union_str_none_type import SuccessPayloadDictStrUnionStrNoneType as SuccessPayloadDictStrUnionStrNoneType
 from finatic_server.models.success_payload_dict_str_union_str_none_type_data_value import SuccessPayloadDictStrUnionStrNoneTypeDataValue as SuccessPayloadDictStrUnionStrNoneTypeDataValue
-from finatic_server.models.success_payload_disconnect_company_from_broker_connection_result import SuccessPayloadDisconnectCompanyFromBrokerConnectionResult as SuccessPayloadDisconnectCompanyFromBrokerConnectionResult
 from finatic_server.models.success_payload_fdx_account_grant import SuccessPayloadFDXAccountGrant as SuccessPayloadFDXAccountGrant
 from finatic_server.models.success_payload_fdx_consent_grant import SuccessPayloadFDXConsentGrant as SuccessPayloadFDXConsentGrant
 from finatic_server.models.success_payload_fdx_webhook_subscription import SuccessPayloadFDXWebhookSubscription as SuccessPayloadFDXWebhookSubscription
 from finatic_server.models.success_payload_link_user_to_mcp_session_response import SuccessPayloadLinkUserToMCPSessionResponse as SuccessPayloadLinkUserToMCPSessionResponse
 from finatic_server.models.success_payload_link_user_to_session_response import SuccessPayloadLinkUserToSessionResponse as SuccessPayloadLinkUserToSessionResponse
-from finatic_server.models.success_payload_list_broker_info import SuccessPayloadListBrokerInfo as SuccessPayloadListBrokerInfo
 from finatic_server.models.success_payload_list_connector_list_item import SuccessPayloadListConnectorListItem as SuccessPayloadListConnectorListItem
 from finatic_server.models.success_payload_list_dict_str_any import SuccessPayloadListDictStrAny as SuccessPayloadListDictStrAny
 from finatic_server.models.success_payload_list_dict_str_str import SuccessPayloadListDictStrStr as SuccessPayloadListDictStrStr
 from finatic_server.models.success_payload_list_fdx_account_grant import SuccessPayloadListFDXAccountGrant as SuccessPayloadListFDXAccountGrant
 from finatic_server.models.success_payload_list_fdx_broker_account import SuccessPayloadListFDXBrokerAccount as SuccessPayloadListFDXBrokerAccount
 from finatic_server.models.success_payload_list_fdx_broker_balance import SuccessPayloadListFDXBrokerBalance as SuccessPayloadListFDXBrokerBalance
-from finatic_server.models.success_payload_list_fdx_broker_order import SuccessPayloadListFDXBrokerOrder as SuccessPayloadListFDXBrokerOrder
-from finatic_server.models.success_payload_list_fdx_broker_order_event import SuccessPayloadListFDXBrokerOrderEvent as SuccessPayloadListFDXBrokerOrderEvent
-from finatic_server.models.success_payload_list_fdx_broker_order_fill import SuccessPayloadListFDXBrokerOrderFill as SuccessPayloadListFDXBrokerOrderFill
-from finatic_server.models.success_payload_list_fdx_broker_order_group import SuccessPayloadListFDXBrokerOrderGroup as SuccessPayloadListFDXBrokerOrderGroup
-from finatic_server.models.success_payload_list_fdx_broker_position import SuccessPayloadListFDXBrokerPosition as SuccessPayloadListFDXBrokerPosition
-from finatic_server.models.success_payload_list_fdx_broker_position_lot import SuccessPayloadListFDXBrokerPositionLot as SuccessPayloadListFDXBrokerPositionLot
-from finatic_server.models.success_payload_list_fdx_broker_position_lot_fill import SuccessPayloadListFDXBrokerPositionLotFill as SuccessPayloadListFDXBrokerPositionLotFill
-from finatic_server.models.success_payload_list_fdx_broker_transaction import SuccessPayloadListFDXBrokerTransaction as SuccessPayloadListFDXBrokerTransaction
 from finatic_server.models.success_payload_list_fdx_consent_grant import SuccessPayloadListFDXConsentGrant as SuccessPayloadListFDXConsentGrant
 from finatic_server.models.success_payload_list_fdx_webhook_event_definition import SuccessPayloadListFDXWebhookEventDefinition as SuccessPayloadListFDXWebhookEventDefinition
 from finatic_server.models.success_payload_list_fdx_webhook_subscription import SuccessPayloadListFDXWebhookSubscription as SuccessPayloadListFDXWebhookSubscription
-from finatic_server.models.success_payload_list_legacy_broker_account import SuccessPayloadListLegacyBrokerAccount as SuccessPayloadListLegacyBrokerAccount
-from finatic_server.models.success_payload_list_legacy_broker_balance import SuccessPayloadListLegacyBrokerBalance as SuccessPayloadListLegacyBrokerBalance
-from finatic_server.models.success_payload_list_user_broker_connection_with_permissions import SuccessPayloadListUserBrokerConnectionWithPermissions as SuccessPayloadListUserBrokerConnectionWithPermissions
 from finatic_server.models.success_payload_mcp_bootstrap_response_data import SuccessPayloadMCPBootstrapResponseData as SuccessPayloadMCPBootstrapResponseData
 from finatic_server.models.success_payload_mt_connect_response_data import SuccessPayloadMTConnectResponseData as SuccessPayloadMTConnectResponseData
 from finatic_server.models.success_payload_o_auth_completion_response import SuccessPayloadOAuthCompletionResponse as SuccessPayloadOAuthCompletionResponse
-from finatic_server.models.success_payload_order_action_result import SuccessPayloadOrderActionResult as SuccessPayloadOrderActionResult
 from finatic_server.models.success_payload_owner_portal_bootstrap_response import SuccessPayloadOwnerPortalBootstrapResponse as SuccessPayloadOwnerPortalBootstrapResponse
 from finatic_server.models.success_payload_owner_portal_revoke_all_companies_result import SuccessPayloadOwnerPortalRevokeAllCompaniesResult as SuccessPayloadOwnerPortalRevokeAllCompaniesResult
 from finatic_server.models.success_payload_portal_session_validation_response import SuccessPayloadPortalSessionValidationResponse as SuccessPayloadPortalSessionValidationResponse
 from finatic_server.models.success_payload_portal_url_response import SuccessPayloadPortalUrlResponse as SuccessPayloadPortalUrlResponse
-from finatic_server.models.success_payload_reauth_notification_opt_out_result import SuccessPayloadReauthNotificationOptOutResult as SuccessPayloadReauthNotificationOptOutResult
 from finatic_server.models.success_payload_reauth_notification_preference import SuccessPayloadReauthNotificationPreference as SuccessPayloadReauthNotificationPreference
 from finatic_server.models.success_payload_rotate_secret_response import SuccessPayloadRotateSecretResponse as SuccessPayloadRotateSecretResponse
-from finatic_server.models.success_payload_sandbox_order_simulate_result import SuccessPayloadSandboxOrderSimulateResult as SuccessPayloadSandboxOrderSimulateResult
 from finatic_server.models.success_payload_session_response_data import SuccessPayloadSessionResponseData as SuccessPayloadSessionResponseData
 from finatic_server.models.success_payload_session_sync_status_response import SuccessPayloadSessionSyncStatusResponse as SuccessPayloadSessionSyncStatusResponse
 from finatic_server.models.success_payload_session_user_response import SuccessPayloadSessionUserResponse as SuccessPayloadSessionUserResponse
 from finatic_server.models.success_payload_token_response_data import SuccessPayloadTokenResponseData as SuccessPayloadTokenResponseData
-from finatic_server.models.success_payload_union_dict_str_any_broker_data_user_broker_connections_sandbox_user_broker_connections_multi_step_auth_response import SuccessPayloadUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse as SuccessPayloadUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse
-from finatic_server.models.sync_orders_request import SyncOrdersRequest as SyncOrdersRequest
-from finatic_server.models.tasty_trade_equity_limit_order_place_query_params import TastyTradeEquityLimitOrderPlaceQueryParams as TastyTradeEquityLimitOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_equity_market_order_place_query_params import TastyTradeEquityMarketOrderPlaceQueryParams as TastyTradeEquityMarketOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_equity_stop_order_place_query_params import TastyTradeEquityStopOrderPlaceQueryParams as TastyTradeEquityStopOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_equity_trailing_stop_order_place_query_params import TastyTradeEquityTrailingStopOrderPlaceQueryParams as TastyTradeEquityTrailingStopOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_option_limit_order_place_query_params import TastyTradeOptionLimitOrderPlaceQueryParams as TastyTradeOptionLimitOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_option_market_order_place_query_params import TastyTradeOptionMarketOrderPlaceQueryParams as TastyTradeOptionMarketOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_option_stop_order_place_query_params import TastyTradeOptionStopOrderPlaceQueryParams as TastyTradeOptionStopOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_option_trailing_stop_order_place_query_params import TastyTradeOptionTrailingStopOrderPlaceQueryParams as TastyTradeOptionTrailingStopOrderPlaceQueryParams
-from finatic_server.models.tasty_trade_order_cancel_query_params import TastyTradeOrderCancelQueryParams as TastyTradeOrderCancelQueryParams
-from finatic_server.models.tasty_trade_order_cancel_request import TastyTradeOrderCancelRequest as TastyTradeOrderCancelRequest
-from finatic_server.models.tasty_trade_order_modify_request import TastyTradeOrderModifyRequest as TastyTradeOrderModifyRequest
-from finatic_server.models.tasty_trade_order_place_request import TastyTradeOrderPlaceRequest as TastyTradeOrderPlaceRequest
-from finatic_server.models.timeinforce import Timeinforce as Timeinforce
 from finatic_server.models.token_response_data import TokenResponseData as TokenResponseData
-from finatic_server.models.totalcashvalue import Totalcashvalue as Totalcashvalue
-from finatic_server.models.totalrealizedpnl import Totalrealizedpnl as Totalrealizedpnl
-from finatic_server.models.tradestation_equity_limit_order_place_query_params import TradestationEquityLimitOrderPlaceQueryParams as TradestationEquityLimitOrderPlaceQueryParams
-from finatic_server.models.tradestation_equity_market_order_place_query_params import TradestationEquityMarketOrderPlaceQueryParams as TradestationEquityMarketOrderPlaceQueryParams
-from finatic_server.models.tradestation_equity_stop_limit_order_place_query_params import TradestationEquityStopLimitOrderPlaceQueryParams as TradestationEquityStopLimitOrderPlaceQueryParams
-from finatic_server.models.tradestation_equity_stop_order_place_query_params import TradestationEquityStopOrderPlaceQueryParams as TradestationEquityStopOrderPlaceQueryParams
-from finatic_server.models.tradestation_equity_trailing_stop_order_place_query_params import TradestationEquityTrailingStopOrderPlaceQueryParams as TradestationEquityTrailingStopOrderPlaceQueryParams
-from finatic_server.models.tradestation_future_limit_order_place_query_params import TradestationFutureLimitOrderPlaceQueryParams as TradestationFutureLimitOrderPlaceQueryParams
-from finatic_server.models.tradestation_future_market_order_place_query_params import TradestationFutureMarketOrderPlaceQueryParams as TradestationFutureMarketOrderPlaceQueryParams
-from finatic_server.models.tradestation_future_stop_limit_order_place_query_params import TradestationFutureStopLimitOrderPlaceQueryParams as TradestationFutureStopLimitOrderPlaceQueryParams
-from finatic_server.models.tradestation_future_stop_order_place_query_params import TradestationFutureStopOrderPlaceQueryParams as TradestationFutureStopOrderPlaceQueryParams
-from finatic_server.models.tradestation_future_trailing_stop_order_place_query_params import TradestationFutureTrailingStopOrderPlaceQueryParams as TradestationFutureTrailingStopOrderPlaceQueryParams
-from finatic_server.models.tradestation_option_limit_order_place_query_params import TradestationOptionLimitOrderPlaceQueryParams as TradestationOptionLimitOrderPlaceQueryParams
-from finatic_server.models.tradestation_option_market_order_place_query_params import TradestationOptionMarketOrderPlaceQueryParams as TradestationOptionMarketOrderPlaceQueryParams
-from finatic_server.models.tradestation_option_stop_limit_order_place_query_params import TradestationOptionStopLimitOrderPlaceQueryParams as TradestationOptionStopLimitOrderPlaceQueryParams
-from finatic_server.models.tradestation_option_stop_order_place_query_params import TradestationOptionStopOrderPlaceQueryParams as TradestationOptionStopOrderPlaceQueryParams
-from finatic_server.models.tradestation_option_trailing_stop_order_place_query_params import TradestationOptionTrailingStopOrderPlaceQueryParams as TradestationOptionTrailingStopOrderPlaceQueryParams
-from finatic_server.models.tradestation_order_cancel_query_params import TradestationOrderCancelQueryParams as TradestationOrderCancelQueryParams
-from finatic_server.models.tradestation_order_cancel_request import TradestationOrderCancelRequest as TradestationOrderCancelRequest
-from finatic_server.models.tradestation_order_place_request import TradestationOrderPlaceRequest as TradestationOrderPlaceRequest
-from finatic_server.models.trading212_limit_order_place_query_params import Trading212LimitOrderPlaceQueryParams as Trading212LimitOrderPlaceQueryParams
-from finatic_server.models.trading212_market_order_place_query_params import Trading212MarketOrderPlaceQueryParams as Trading212MarketOrderPlaceQueryParams
-from finatic_server.models.trading212_order_cancel_query_params import Trading212OrderCancelQueryParams as Trading212OrderCancelQueryParams
-from finatic_server.models.trading212_order_cancel_request import Trading212OrderCancelRequest as Trading212OrderCancelRequest
-from finatic_server.models.trading212_order_modify_request import Trading212OrderModifyRequest as Trading212OrderModifyRequest
-from finatic_server.models.trading212_order_place_request import Trading212OrderPlaceRequest as Trading212OrderPlaceRequest
-from finatic_server.models.trading212_stop_limit_order_place_query_params import Trading212StopLimitOrderPlaceQueryParams as Trading212StopLimitOrderPlaceQueryParams
-from finatic_server.models.trading212_stop_order_place_query_params import Trading212StopOrderPlaceQueryParams as Trading212StopOrderPlaceQueryParams
-from finatic_server.models.trail_percent import TrailPercent as TrailPercent
-from finatic_server.models.trail_price import TrailPrice as TrailPrice
-from finatic_server.models.user_broker_connection_with_permissions import UserBrokerConnectionWithPermissions as UserBrokerConnectionWithPermissions
 from finatic_server.models.validation_error import ValidationError as ValidationError
-from finatic_server.models.webull_equity_limit_order_place_query_params import WebullEquityLimitOrderPlaceQueryParams as WebullEquityLimitOrderPlaceQueryParams
-from finatic_server.models.webull_equity_market_order_place_query_params import WebullEquityMarketOrderPlaceQueryParams as WebullEquityMarketOrderPlaceQueryParams
-from finatic_server.models.webull_equity_stop_limit_order_place_query_params import WebullEquityStopLimitOrderPlaceQueryParams as WebullEquityStopLimitOrderPlaceQueryParams
-from finatic_server.models.webull_equity_stop_order_place_query_params import WebullEquityStopOrderPlaceQueryParams as WebullEquityStopOrderPlaceQueryParams
-from finatic_server.models.webull_equity_trailing_stop_order_place_query_params import WebullEquityTrailingStopOrderPlaceQueryParams as WebullEquityTrailingStopOrderPlaceQueryParams
-from finatic_server.models.webull_limit_order_modify_query_params import WebullLimitOrderModifyQueryParams as WebullLimitOrderModifyQueryParams
-from finatic_server.models.webull_market_order_modify_query_params import WebullMarketOrderModifyQueryParams as WebullMarketOrderModifyQueryParams
-from finatic_server.models.webull_option_limit_order_place_query_params import WebullOptionLimitOrderPlaceQueryParams as WebullOptionLimitOrderPlaceQueryParams
-from finatic_server.models.webull_option_market_order_place_query_params import WebullOptionMarketOrderPlaceQueryParams as WebullOptionMarketOrderPlaceQueryParams
-from finatic_server.models.webull_option_stop_order_place_query_params import WebullOptionStopOrderPlaceQueryParams as WebullOptionStopOrderPlaceQueryParams
-from finatic_server.models.webull_order_cancel_query_params import WebullOrderCancelQueryParams as WebullOrderCancelQueryParams
-from finatic_server.models.webull_order_cancel_request import WebullOrderCancelRequest as WebullOrderCancelRequest
-from finatic_server.models.webull_order_modify_request import WebullOrderModifyRequest as WebullOrderModifyRequest
-from finatic_server.models.webull_order_place_request import WebullOrderPlaceRequest as WebullOrderPlaceRequest
-from finatic_server.models.webull_stop_order_modify_query_params import WebullStopOrderModifyQueryParams as WebullStopOrderModifyQueryParams
-from finatic_server.models.webull_trailing_stop_order_modify_query_params import WebullTrailingStopOrderModifyQueryParams as WebullTrailingStopOrderModifyQueryParams

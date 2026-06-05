@@ -15,45 +15,13 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from datetime import datetime
 from pydantic import Field, StrictBool, StrictStr
-from typing import Any, Optional
+from typing import Any, Dict, Optional
 from typing_extensions import Annotated
 from uuid import UUID
-from finatic_server.models.broker_connection_request import BrokerConnectionRequest
-from finatic_server.models.broker_connection_update_request import BrokerConnectionUpdateRequest
-from finatic_server.models.cancel_order_api_beta_brokers_orders_order_id_delete_request import CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
-from finatic_server.models.finatic_response_broker_data_user_broker_connections import FinaticResponseBrokerDataUserBrokerConnections
-from finatic_server.models.finatic_response_delete_broker_connection_result import FinaticResponseDeleteBrokerConnectionResult
-from finatic_server.models.finatic_response_dict_str_bool import FinaticResponseDictStrBool
-from finatic_server.models.finatic_response_dict_str_union_int_none_type import FinaticResponseDictStrUnionIntNoneType
-from finatic_server.models.finatic_response_disconnect_company_from_broker_connection_result import FinaticResponseDisconnectCompanyFromBrokerConnectionResult
-from finatic_server.models.finatic_response_list_broker_info import FinaticResponseListBrokerInfo
+from finatic_server.models.finatic_response_beta_broker_shim_response import FinaticResponseBetaBrokerShimResponse
 from finatic_server.models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
 from finatic_server.models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
-from finatic_server.models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder
-from finatic_server.models.finatic_response_list_fdx_broker_order_event import FinaticResponseListFDXBrokerOrderEvent
-from finatic_server.models.finatic_response_list_fdx_broker_order_fill import FinaticResponseListFDXBrokerOrderFill
-from finatic_server.models.finatic_response_list_fdx_broker_order_group import FinaticResponseListFDXBrokerOrderGroup
-from finatic_server.models.finatic_response_list_fdx_broker_position import FinaticResponseListFDXBrokerPosition
-from finatic_server.models.finatic_response_list_fdx_broker_position_lot import FinaticResponseListFDXBrokerPositionLot
-from finatic_server.models.finatic_response_list_fdx_broker_position_lot_fill import FinaticResponseListFDXBrokerPositionLotFill
-from finatic_server.models.finatic_response_list_fdx_broker_transaction import FinaticResponseListFDXBrokerTransaction
-from finatic_server.models.finatic_response_list_legacy_broker_account import FinaticResponseListLegacyBrokerAccount
-from finatic_server.models.finatic_response_list_legacy_broker_balance import FinaticResponseListLegacyBrokerBalance
-from finatic_server.models.finatic_response_list_user_broker_connection_with_permissions import FinaticResponseListUserBrokerConnectionWithPermissions
-from finatic_server.models.finatic_response_order_action_result import FinaticResponseOrderActionResult
-from finatic_server.models.finatic_response_reauth_notification_opt_out_result import FinaticResponseReauthNotificationOptOutResult
-from finatic_server.models.finatic_response_reauth_notification_preference import FinaticResponseReauthNotificationPreference
-from finatic_server.models.finatic_response_rotate_secret_response import FinaticResponseRotateSecretResponse
-from finatic_server.models.finatic_response_sandbox_order_simulate_result import FinaticResponseSandboxOrderSimulateResult
-from finatic_server.models.finatic_response_union_dict_str_any_broker_data_user_broker_connections_sandbox_user_broker_connections_multi_step_auth_response import FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse
-from finatic_server.models.order_request import OrderRequest
-from finatic_server.models.place_order_api_beta_brokers_orders_post_request import PlaceOrderApiBetaBrokersOrdersPostRequest
-from finatic_server.models.reauth_notification_opt_out_request import ReauthNotificationOptOutRequest
-from finatic_server.models.reauth_notification_preference_update_request import ReauthNotificationPreferenceUpdateRequest
-from finatic_server.models.sandbox_order_simulate_request_body import SandboxOrderSimulateRequestBody
-from finatic_server.models.sync_orders_request import SyncOrdersRequest
 
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
@@ -74,313 +42,9 @@ class BrokersApi:
 
 
     @validate_call
-    def apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post(
-        self,
-        reauth_notification_opt_out_request: ReauthNotificationOptOutRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseReauthNotificationOptOutResult:
-        """(Deprecated) Apply Reauth Notification Opt Out
-
-        Apply an email opt-out token through the API service boundary.
-
-        :param reauth_notification_opt_out_request: (required)
-        :type reauth_notification_opt_out_request: ReauthNotificationOptOutRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/reauth-notification-opt-out is deprecated.", DeprecationWarning)
-
-        _param = self._apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post_serialize(
-            reauth_notification_opt_out_request=reauth_notification_opt_out_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationOptOutResult",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post_with_http_info(
-        self,
-        reauth_notification_opt_out_request: ReauthNotificationOptOutRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseReauthNotificationOptOutResult]:
-        """(Deprecated) Apply Reauth Notification Opt Out
-
-        Apply an email opt-out token through the API service boundary.
-
-        :param reauth_notification_opt_out_request: (required)
-        :type reauth_notification_opt_out_request: ReauthNotificationOptOutRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/reauth-notification-opt-out is deprecated.", DeprecationWarning)
-
-        _param = self._apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post_serialize(
-            reauth_notification_opt_out_request=reauth_notification_opt_out_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationOptOutResult",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post_without_preload_content(
-        self,
-        reauth_notification_opt_out_request: ReauthNotificationOptOutRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Apply Reauth Notification Opt Out
-
-        Apply an email opt-out token through the API service boundary.
-
-        :param reauth_notification_opt_out_request: (required)
-        :type reauth_notification_opt_out_request: ReauthNotificationOptOutRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/reauth-notification-opt-out is deprecated.", DeprecationWarning)
-
-        _param = self._apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post_serialize(
-            reauth_notification_opt_out_request=reauth_notification_opt_out_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationOptOutResult",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _apply_reauth_notification_opt_out_api_beta_brokers_reauth_notification_opt_out_post_serialize(
-        self,
-        reauth_notification_opt_out_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if reauth_notification_opt_out_request is not None:
-            _body_params = reauth_notification_opt_out_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/api/beta/brokers/reauth-notification-opt-out',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
     def cancel_order_api_beta_brokers_orders_order_id_delete(
         self,
-        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
-        cancel_order_api_beta_brokers_orders_order_id_delete_request: Optional[CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest] = None,
+        order_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -393,15 +57,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseOrderActionResult:
+    ) -> FinaticResponseBetaBrokerShimResponse:
         """(Deprecated) Cancel Order
 
-        Cancel an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number.
+        Map beta order cancellation to account-scoped v1 trading.
 
-        :param order_id: Broker-provided order ID to cancel (required)
+        :param order_id: (required)
         :type order_id: str
-        :param cancel_order_api_beta_brokers_orders_order_id_delete_request:
-        :type cancel_order_api_beta_brokers_orders_order_id_delete_request: CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -427,7 +89,6 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
-            cancel_order_api_beta_brokers_orders_order_id_delete_request=cancel_order_api_beta_brokers_orders_order_id_delete_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -435,7 +96,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -460,8 +121,7 @@ class BrokersApi:
     @validate_call
     def cancel_order_api_beta_brokers_orders_order_id_delete_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
-        cancel_order_api_beta_brokers_orders_order_id_delete_request: Optional[CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest] = None,
+        order_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -474,15 +134,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseOrderActionResult]:
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
         """(Deprecated) Cancel Order
 
-        Cancel an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number.
+        Map beta order cancellation to account-scoped v1 trading.
 
-        :param order_id: Broker-provided order ID to cancel (required)
+        :param order_id: (required)
         :type order_id: str
-        :param cancel_order_api_beta_brokers_orders_order_id_delete_request:
-        :type cancel_order_api_beta_brokers_orders_order_id_delete_request: CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -508,7 +166,6 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
-            cancel_order_api_beta_brokers_orders_order_id_delete_request=cancel_order_api_beta_brokers_orders_order_id_delete_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -516,7 +173,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -541,8 +198,7 @@ class BrokersApi:
     @validate_call
     def cancel_order_api_beta_brokers_orders_order_id_delete_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to cancel")],
-        cancel_order_api_beta_brokers_orders_order_id_delete_request: Optional[CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest] = None,
+        order_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -558,12 +214,10 @@ class BrokersApi:
     ) -> RESTResponseType:
         """(Deprecated) Cancel Order
 
-        Cancel an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number.
+        Map beta order cancellation to account-scoped v1 trading.
 
-        :param order_id: Broker-provided order ID to cancel (required)
+        :param order_id: (required)
         :type order_id: str
-        :param cancel_order_api_beta_brokers_orders_order_id_delete_request:
-        :type cancel_order_api_beta_brokers_orders_order_id_delete_request: CancelOrderApiBetaBrokersOrdersOrderIdDeleteRequest
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -589,7 +243,6 @@ class BrokersApi:
 
         _param = self._cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
             order_id=order_id,
-            cancel_order_api_beta_brokers_orders_order_id_delete_request=cancel_order_api_beta_brokers_orders_order_id_delete_request,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -597,7 +250,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -618,7 +271,6 @@ class BrokersApi:
     def _cancel_order_api_beta_brokers_orders_order_id_delete_serialize(
         self,
         order_id,
-        cancel_order_api_beta_brokers_orders_order_id_delete_request,
         _request_auth,
         _content_type,
         _headers,
@@ -646,8 +298,6 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if cancel_order_api_beta_brokers_orders_order_id_delete_request is not None:
-            _body_params = cancel_order_api_beta_brokers_orders_order_id_delete_request
 
 
         # set the HTTP header `Accept`
@@ -658,19 +308,6 @@ class BrokersApi:
                 ]
             )
 
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
 
         # authentication setting
         _auth_settings: List[str] = [
@@ -697,7 +334,7 @@ class BrokersApi:
     @validate_call
     def connect_broker_api_beta_brokers_connect_post(
         self,
-        broker_connection_request: BrokerConnectionRequest,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -710,13 +347,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse:
+    ) -> FinaticResponseBetaBrokerShimResponse:
         """(Deprecated) Connect Broker
 
-        Connect to a broker or reconnect to an existing connection.  This endpoint handles both new connections and reconnections: - New connections: Provide broker_id, credentials, and permissions - Reconnections: Provide connection_id, broker_id, credentials, and permissions  For reconnections, the connection must be in \"needs_reauth\" status.
+        Map beta broker connect to the v1 portal auth-attempt flow.
 
-        :param broker_connection_request: (required)
-        :type broker_connection_request: BrokerConnectionRequest
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -741,7 +378,7 @@ class BrokersApi:
         warnings.warn("POST /api/beta/brokers/connect is deprecated.", DeprecationWarning)
 
         _param = self._connect_broker_api_beta_brokers_connect_post_serialize(
-            broker_connection_request=broker_connection_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -749,7 +386,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -774,7 +411,7 @@ class BrokersApi:
     @validate_call
     def connect_broker_api_beta_brokers_connect_post_with_http_info(
         self,
-        broker_connection_request: BrokerConnectionRequest,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -787,13 +424,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse]:
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
         """(Deprecated) Connect Broker
 
-        Connect to a broker or reconnect to an existing connection.  This endpoint handles both new connections and reconnections: - New connections: Provide broker_id, credentials, and permissions - Reconnections: Provide connection_id, broker_id, credentials, and permissions  For reconnections, the connection must be in \"needs_reauth\" status.
+        Map beta broker connect to the v1 portal auth-attempt flow.
 
-        :param broker_connection_request: (required)
-        :type broker_connection_request: BrokerConnectionRequest
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -818,7 +455,7 @@ class BrokersApi:
         warnings.warn("POST /api/beta/brokers/connect is deprecated.", DeprecationWarning)
 
         _param = self._connect_broker_api_beta_brokers_connect_post_serialize(
-            broker_connection_request=broker_connection_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -826,7 +463,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -851,7 +488,7 @@ class BrokersApi:
     @validate_call
     def connect_broker_api_beta_brokers_connect_post_without_preload_content(
         self,
-        broker_connection_request: BrokerConnectionRequest,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -867,10 +504,10 @@ class BrokersApi:
     ) -> RESTResponseType:
         """(Deprecated) Connect Broker
 
-        Connect to a broker or reconnect to an existing connection.  This endpoint handles both new connections and reconnections: - New connections: Provide broker_id, credentials, and permissions - Reconnections: Provide connection_id, broker_id, credentials, and permissions  For reconnections, the connection must be in \"needs_reauth\" status.
+        Map beta broker connect to the v1 portal auth-attempt flow.
 
-        :param broker_connection_request: (required)
-        :type broker_connection_request: BrokerConnectionRequest
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -895,7 +532,7 @@ class BrokersApi:
         warnings.warn("POST /api/beta/brokers/connect is deprecated.", DeprecationWarning)
 
         _param = self._connect_broker_api_beta_brokers_connect_post_serialize(
-            broker_connection_request=broker_connection_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -903,7 +540,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseUnionDictStrAnyBrokerDataUserBrokerConnectionsSandboxUserBrokerConnectionsMultiStepAuthResponse",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -923,7 +560,7 @@ class BrokersApi:
 
     def _connect_broker_api_beta_brokers_connect_post_serialize(
         self,
-        broker_connection_request,
+        request_body,
         _request_auth,
         _content_type,
         _headers,
@@ -949,8 +586,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if broker_connection_request is not None:
-            _body_params = broker_connection_request
+        if request_body is not None:
+            _body_params = request_body
 
 
         # set the HTTP header `Accept`
@@ -977,7 +614,6 @@ class BrokersApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'HTTPBearer'
         ]
 
         return self.api_client.param_serialize(
@@ -1001,7 +637,7 @@ class BrokersApi:
     @validate_call
     def delete_connection_api_beta_brokers_connections_connection_id_delete(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1014,13 +650,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDeleteBrokerConnectionResult:
+    ) -> FinaticResponseBetaBrokerShimResponse:
         """(Deprecated) Delete Connection
 
-        Remove current company access or queue async deletion for last holder.
+        Map beta connection deletion to v1 grant revocation.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
+        :param connection_id: (required)
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1053,7 +689,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDeleteBrokerConnectionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1078,7 +714,7 @@ class BrokersApi:
     @validate_call
     def delete_connection_api_beta_brokers_connections_connection_id_delete_with_http_info(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1091,13 +727,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDeleteBrokerConnectionResult]:
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
         """(Deprecated) Delete Connection
 
-        Remove current company access or queue async deletion for last holder.
+        Map beta connection deletion to v1 grant revocation.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
+        :param connection_id: (required)
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1130,7 +766,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDeleteBrokerConnectionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1155,7 +791,7 @@ class BrokersApi:
     @validate_call
     def delete_connection_api_beta_brokers_connections_connection_id_delete_without_preload_content(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1171,10 +807,10 @@ class BrokersApi:
     ) -> RESTResponseType:
         """(Deprecated) Delete Connection
 
-        Remove current company access or queue async deletion for last holder.
+        Map beta connection deletion to v1 grant revocation.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
+        :param connection_id: (required)
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1207,7 +843,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDeleteBrokerConnectionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1268,7 +904,6 @@ class BrokersApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'HTTPBearer'
         ]
 
         return self.api_client.param_serialize(
@@ -1290,9 +925,9 @@ class BrokersApi:
 
 
     @validate_call
-    def disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete(
+    def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1305,13 +940,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDisconnectCompanyFromBrokerConnectionResult:
-        """(Deprecated) Disconnect Company From Broker
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) Disconnect Company
 
-        Remove a company's access to a broker connection.  When other companies still have access, only the calling company's access is removed. When the calling company is the last access holder, the connection is marked ``deletion_pending`` for asynchronous purge and this endpoint returns immediately.
+        Map company disconnect to v1 account-grant revocation.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
+        :param connection_id: (required)
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1335,7 +970,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("DELETE /api/beta/brokers/disconnect-company/{connection_id} is deprecated.", DeprecationWarning)
 
-        _param = self._disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
+        _param = self._disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1344,7 +979,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1367,9 +1002,9 @@ class BrokersApi:
 
 
     @validate_call
-    def disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_with_http_info(
+    def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_with_http_info(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1382,13 +1017,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDisconnectCompanyFromBrokerConnectionResult]:
-        """(Deprecated) Disconnect Company From Broker
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) Disconnect Company
 
-        Remove a company's access to a broker connection.  When other companies still have access, only the calling company's access is removed. When the calling company is the last access holder, the connection is marked ``deletion_pending`` for asynchronous purge and this endpoint returns immediately.
+        Map company disconnect to v1 account-grant revocation.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
+        :param connection_id: (required)
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1412,7 +1047,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("DELETE /api/beta/brokers/disconnect-company/{connection_id} is deprecated.", DeprecationWarning)
 
-        _param = self._disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
+        _param = self._disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1421,7 +1056,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1444,9 +1079,9 @@ class BrokersApi:
 
 
     @validate_call
-    def disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_without_preload_content(
+    def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_without_preload_content(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1460,12 +1095,12 @@ class BrokersApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Disconnect Company From Broker
+        """(Deprecated) Disconnect Company
 
-        Remove a company's access to a broker connection.  When other companies still have access, only the calling company's access is removed. When the calling company is the last access holder, the connection is marked ``deletion_pending`` for asynchronous purge and this endpoint returns immediately.
+        Map company disconnect to v1 account-grant revocation.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
+        :param connection_id: (required)
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1489,7 +1124,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("DELETE /api/beta/brokers/disconnect-company/{connection_id} is deprecated.", DeprecationWarning)
 
-        _param = self._disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
+        _param = self._disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1498,7 +1133,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDisconnectCompanyFromBrokerConnectionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1516,7 +1151,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _disconnect_company_from_broker_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
+    def _disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_serialize(
         self,
         connection_id,
         _request_auth,
@@ -1564,400 +1199,6 @@ class BrokersApi:
         return self.api_client.param_serialize(
             method='DELETE',
             resource_path='/api/beta/brokers/disconnect-company/{connection_id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_accounts_api_beta_brokers_data_accounts_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListLegacyBrokerAccount:
-        """(Deprecated) Get Accounts
-
-        Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: BrokerDataAccountTypeEnum
-        :param currency: Filter by currency (e.g., 'USD', 'EUR')
-        :type currency: str
-        :param limit: Maximum number of accounts to return
-        :type limit: int
-        :param offset: Number of accounts to skip for pagination
-        :type offset: int
-        :param include_metadata: Include connection metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/accounts is deprecated.", DeprecationWarning)
-
-        _param = self._get_accounts_api_beta_brokers_data_accounts_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_type=account_type,
-            currency=currency,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListLegacyBrokerAccount",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_accounts_api_beta_brokers_data_accounts_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListLegacyBrokerAccount]:
-        """(Deprecated) Get Accounts
-
-        Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: BrokerDataAccountTypeEnum
-        :param currency: Filter by currency (e.g., 'USD', 'EUR')
-        :type currency: str
-        :param limit: Maximum number of accounts to return
-        :type limit: int
-        :param offset: Number of accounts to skip for pagination
-        :type offset: int
-        :param include_metadata: Include connection metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/accounts is deprecated.", DeprecationWarning)
-
-        _param = self._get_accounts_api_beta_brokers_data_accounts_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_type=account_type,
-            currency=currency,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListLegacyBrokerAccount",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_accounts_api_beta_brokers_data_accounts_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include connection metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Accounts
-
-        Get accounts for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns accounts from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
-        :type account_type: BrokerDataAccountTypeEnum
-        :param currency: Filter by currency (e.g., 'USD', 'EUR')
-        :type currency: str
-        :param limit: Maximum number of accounts to return
-        :type limit: int
-        :param offset: Number of accounts to skip for pagination
-        :type offset: int
-        :param include_metadata: Include connection metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/accounts is deprecated.", DeprecationWarning)
-
-        _param = self._get_accounts_api_beta_brokers_data_accounts_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_type=account_type,
-            currency=currency,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListLegacyBrokerAccount",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_accounts_api_beta_brokers_data_accounts_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        account_type,
-        currency,
-        limit,
-        offset,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if account_type is not None:
-
-            _query_params.append(('account_type', account_type.value))
-
-        if currency is not None:
-
-            _query_params.append(('currency', currency))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/accounts',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -2349,417 +1590,6 @@ class BrokersApi:
         return self.api_client.param_serialize(
             method='GET',
             resource_path='/api/v1/brokers/data/accounts',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_balances_api_beta_brokers_data_balances_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of balances to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListLegacyBrokerBalance:
-        """(Deprecated) Get Balances
-
-        Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-        :type unit_code: str
-        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-        :type currency: str
-        :param limit: Maximum number of balances to return
-        :type limit: int
-        :param offset: Number of balances to skip for pagination
-        :type offset: int
-        :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/balances is deprecated.", DeprecationWarning)
-
-        _param = self._get_balances_api_beta_brokers_data_balances_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            unit_code=unit_code,
-            currency=currency,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListLegacyBrokerBalance",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_balances_api_beta_brokers_data_balances_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of balances to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListLegacyBrokerBalance]:
-        """(Deprecated) Get Balances
-
-        Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-        :type unit_code: str
-        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-        :type currency: str
-        :param limit: Maximum number of balances to return
-        :type limit: int
-        :param offset: Number of balances to skip for pagination
-        :type offset: int
-        :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/balances is deprecated.", DeprecationWarning)
-
-        _param = self._get_balances_api_beta_brokers_data_balances_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            unit_code=unit_code,
-            currency=currency,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListLegacyBrokerBalance",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_balances_api_beta_brokers_data_balances_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of balances to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of balances to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include balance metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Balances
-
-        Get current unit-based balances for all authorized broker connections.  Returns array of current balances (one per unit_code per account). This endpoint is accessible from the portal and uses session-only authentication. Returns balances from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-        :type unit_code: str
-        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-        :type currency: str
-        :param limit: Maximum number of balances to return
-        :type limit: int
-        :param offset: Number of balances to skip for pagination
-        :type offset: int
-        :param include_metadata: Include balance metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/balances is deprecated.", DeprecationWarning)
-
-        _param = self._get_balances_api_beta_brokers_data_balances_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            unit_code=unit_code,
-            currency=currency,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListLegacyBrokerBalance",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_balances_api_beta_brokers_data_balances_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        account_id,
-        unit_code,
-        currency,
-        limit,
-        offset,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if account_id is not None:
-
-            _query_params.append(('account_id', account_id))
-
-        if unit_code is not None:
-
-            _query_params.append(('unit_code', unit_code))
-
-        if currency is not None:
-
-            _query_params.append(('currency', currency))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/balances',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -3184,8 +2014,10 @@ class BrokersApi:
 
 
     @validate_call
-    def get_brokers_api_beta_brokers_get(
+    def list_account_resource_api_beta_brokers_data_resource_get(
         self,
+        resource: StrictStr,
+        account_id: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3198,11 +2030,15 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListBrokerInfo:
-        """(Deprecated) Get Brokers
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Account Resource
 
-        Get all available brokers.  This is a fast operation that returns a cached list of available brokers. The list is loaded once at startup and never changes during runtime.  Returns ------- FinaticResponse[list[BrokerInfo]]     list of available brokers with their metadata.
+        Map beta account data reads to account-scoped v1 resource paths.
 
+        :param resource: (required)
+        :type resource: str
+        :param account_id:
+        :type account_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3224,9 +2060,11 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/ is deprecated.", DeprecationWarning)
+        warnings.warn("GET /api/beta/brokers/data/{resource} is deprecated.", DeprecationWarning)
 
-        _param = self._get_brokers_api_beta_brokers_get_serialize(
+        _param = self._list_account_resource_api_beta_brokers_data_resource_get_serialize(
+            resource=resource,
+            account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3234,7 +2072,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListBrokerInfo",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -3257,8 +2095,10 @@ class BrokersApi:
 
 
     @validate_call
-    def get_brokers_api_beta_brokers_get_with_http_info(
+    def list_account_resource_api_beta_brokers_data_resource_get_with_http_info(
         self,
+        resource: StrictStr,
+        account_id: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -3271,11 +2111,15 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListBrokerInfo]:
-        """(Deprecated) Get Brokers
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Account Resource
 
-        Get all available brokers.  This is a fast operation that returns a cached list of available brokers. The list is loaded once at startup and never changes during runtime.  Returns ------- FinaticResponse[list[BrokerInfo]]     list of available brokers with their metadata.
+        Map beta account data reads to account-scoped v1 resource paths.
 
+        :param resource: (required)
+        :type resource: str
+        :param account_id:
+        :type account_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -3297,9 +2141,11 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/ is deprecated.", DeprecationWarning)
+        warnings.warn("GET /api/beta/brokers/data/{resource} is deprecated.", DeprecationWarning)
 
-        _param = self._get_brokers_api_beta_brokers_get_serialize(
+        _param = self._list_account_resource_api_beta_brokers_data_resource_get_serialize(
+            resource=resource,
+            account_id=account_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3307,7 +2153,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListBrokerInfo",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -3330,7 +2176,298 @@ class BrokersApi:
 
 
     @validate_call
-    def get_brokers_api_beta_brokers_get_without_preload_content(
+    def list_account_resource_api_beta_brokers_data_resource_get_without_preload_content(
+        self,
+        resource: StrictStr,
+        account_id: Optional[StrictStr] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) List Account Resource
+
+        Map beta account data reads to account-scoped v1 resource paths.
+
+        :param resource: (required)
+        :type resource: str
+        :param account_id:
+        :type account_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/{resource} is deprecated.", DeprecationWarning)
+
+        _param = self._list_account_resource_api_beta_brokers_data_resource_get_serialize(
+            resource=resource,
+            account_id=account_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_account_resource_api_beta_brokers_data_resource_get_serialize(
+        self,
+        resource,
+        account_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if resource is not None:
+            _path_params['resource'] = resource
+        # process the query parameters
+        if account_id is not None:
+
+            _query_params.append(('account_id', account_id))
+
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/beta/brokers/data/{resource}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_accounts_api_beta_brokers_data_accounts_get(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Accounts
+
+        Map beta account data listing to v1 accounts.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/accounts is deprecated.", DeprecationWarning)
+
+        _param = self._list_accounts_api_beta_brokers_data_accounts_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_accounts_api_beta_brokers_data_accounts_get_with_http_info(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Accounts
+
+        Map beta account data listing to v1 accounts.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/accounts is deprecated.", DeprecationWarning)
+
+        _param = self._list_accounts_api_beta_brokers_data_accounts_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_accounts_api_beta_brokers_data_accounts_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -3345,9 +2482,413 @@ class BrokersApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Get Brokers
+        """(Deprecated) List Accounts
 
-        Get all available brokers.  This is a fast operation that returns a cached list of available brokers. The list is loaded once at startup and never changes during runtime.  Returns ------- FinaticResponse[list[BrokerInfo]]     list of available brokers with their metadata.
+        Map beta account data listing to v1 accounts.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/accounts is deprecated.", DeprecationWarning)
+
+        _param = self._list_accounts_api_beta_brokers_data_accounts_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_accounts_api_beta_brokers_data_accounts_get_serialize(
+        self,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/beta/brokers/data/accounts',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_brokers_api_beta_brokers_get(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Brokers
+
+        Map beta broker discovery to the v1 portal institution route.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers is deprecated.", DeprecationWarning)
+
+        _param = self._list_brokers_api_beta_brokers_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_brokers_api_beta_brokers_get_with_http_info(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Brokers
+
+        Map beta broker discovery to the v1 portal institution route.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers is deprecated.", DeprecationWarning)
+
+        _param = self._list_brokers_api_beta_brokers_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_brokers_api_beta_brokers_get_without_preload_content(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) List Brokers
+
+        Map beta broker discovery to the v1 portal institution route.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers is deprecated.", DeprecationWarning)
+
+        _param = self._list_brokers_api_beta_brokers_get_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_brokers_api_beta_brokers_get_serialize(
+        self,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/beta/brokers',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_brokers_api_beta_brokers_get_0(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Brokers
+
+        Map beta broker discovery to the v1 portal institution route.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -3372,7 +2913,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("GET /api/beta/brokers/ is deprecated.", DeprecationWarning)
 
-        _param = self._get_brokers_api_beta_brokers_get_serialize(
+        _param = self._list_brokers_api_beta_brokers_get_0_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -3380,7 +2921,153 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListBrokerInfo",
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_brokers_api_beta_brokers_get_0_with_http_info(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Brokers
+
+        Map beta broker discovery to the v1 portal institution route.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/ is deprecated.", DeprecationWarning)
+
+        _param = self._list_brokers_api_beta_brokers_get_0_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_brokers_api_beta_brokers_get_0_without_preload_content(
+        self,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) List Brokers
+
+        Map beta broker discovery to the v1 portal institution route.
+
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/ is deprecated.", DeprecationWarning)
+
+        _param = self._list_brokers_api_beta_brokers_get_0_serialize(
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -3398,7 +3085,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _get_brokers_api_beta_brokers_get_serialize(
+    def _list_brokers_api_beta_brokers_get_0_serialize(
         self,
         _request_auth,
         _content_type,
@@ -3459,3677 +3146,7 @@ class BrokersApi:
 
 
     @validate_call
-    def get_order_events_api_beta_brokers_data_orders_order_id_events_get(
-        self,
-        order_id: Annotated[UUID, Field(description="Order ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of events to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of events to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include event metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerOrderEvent:
-        """(Deprecated) Get Order Events
-
-        Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
-
-        :param order_id: Order ID (required)
-        :type order_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of events to return
-        :type limit: int
-        :param offset: Number of events to skip for pagination
-        :type offset: int
-        :param include_metadata: Include event metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/events is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
-            order_id=order_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderEvent",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_order_events_api_beta_brokers_data_orders_order_id_events_get_with_http_info(
-        self,
-        order_id: Annotated[UUID, Field(description="Order ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of events to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of events to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include event metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderEvent]:
-        """(Deprecated) Get Order Events
-
-        Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
-
-        :param order_id: Order ID (required)
-        :type order_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of events to return
-        :type limit: int
-        :param offset: Number of events to skip for pagination
-        :type offset: int
-        :param include_metadata: Include event metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/events is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
-            order_id=order_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderEvent",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_order_events_api_beta_brokers_data_orders_order_id_events_get_without_preload_content(
-        self,
-        order_id: Annotated[UUID, Field(description="Order ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of events to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of events to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include event metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Order Events
-
-        Get order events for a specific order.  This endpoint returns all lifecycle events for the specified order.
-
-        :param order_id: Order ID (required)
-        :type order_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of events to return
-        :type limit: int
-        :param offset: Number of events to skip for pagination
-        :type offset: int
-        :param include_metadata: Include event metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/events is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
-            order_id=order_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderEvent",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
-        self,
-        order_id,
-        connection_id,
-        limit,
-        offset,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if order_id is not None:
-            _path_params['order_id'] = order_id
-        # process the query parameters
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/orders/{order_id}/events',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_order_fills_api_beta_brokers_data_orders_order_id_fills_get(
-        self,
-        order_id: Annotated[UUID, Field(description="Order ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include fill metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerOrderFill:
-        """(Deprecated) Get Order Fills
-
-        Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
-
-        :param order_id: Order ID (required)
-        :type order_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of fills to return
-        :type limit: int
-        :param offset: Number of fills to skip for pagination
-        :type offset: int
-        :param include_metadata: Include fill metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/fills is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
-            order_id=order_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderFill",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_with_http_info(
-        self,
-        order_id: Annotated[UUID, Field(description="Order ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include fill metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderFill]:
-        """(Deprecated) Get Order Fills
-
-        Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
-
-        :param order_id: Order ID (required)
-        :type order_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of fills to return
-        :type limit: int
-        :param offset: Number of fills to skip for pagination
-        :type offset: int
-        :param include_metadata: Include fill metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/fills is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
-            order_id=order_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderFill",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_without_preload_content(
-        self,
-        order_id: Annotated[UUID, Field(description="Order ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include fill metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Order Fills
-
-        Get order fills for a specific order.  This endpoint returns all execution fills for the specified order.
-
-        :param order_id: Order ID (required)
-        :type order_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of fills to return
-        :type limit: int
-        :param offset: Number of fills to skip for pagination
-        :type offset: int
-        :param include_metadata: Include fill metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/fills is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
-            order_id=order_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderFill",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
-        self,
-        order_id,
-        connection_id,
-        limit,
-        offset,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if order_id is not None:
-            _path_params['order_id'] = order_id
-        # process the query parameters
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/orders/{order_id}/fills',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_order_groups_api_beta_brokers_data_orders_groups_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of order groups to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of order groups to skip for pagination")] = None,
-        created_after: Annotated[Optional[datetime], Field(description="Filter order groups created after this timestamp")] = None,
-        created_before: Annotated[Optional[datetime], Field(description="Filter order groups created before this timestamp")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include group metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerOrderGroup:
-        """(Deprecated) Get Order Groups
-
-        Get order groups.  This endpoint returns order groups that contain multiple orders.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of order groups to return
-        :type limit: int
-        :param offset: Number of order groups to skip for pagination
-        :type offset: int
-        :param created_after: Filter order groups created after this timestamp
-        :type created_after: datetime
-        :param created_before: Filter order groups created before this timestamp
-        :type created_before: datetime
-        :param include_metadata: Include group metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/groups is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            created_after=created_after,
-            created_before=created_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderGroup",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_order_groups_api_beta_brokers_data_orders_groups_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of order groups to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of order groups to skip for pagination")] = None,
-        created_after: Annotated[Optional[datetime], Field(description="Filter order groups created after this timestamp")] = None,
-        created_before: Annotated[Optional[datetime], Field(description="Filter order groups created before this timestamp")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include group metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderGroup]:
-        """(Deprecated) Get Order Groups
-
-        Get order groups.  This endpoint returns order groups that contain multiple orders.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of order groups to return
-        :type limit: int
-        :param offset: Number of order groups to skip for pagination
-        :type offset: int
-        :param created_after: Filter order groups created after this timestamp
-        :type created_after: datetime
-        :param created_before: Filter order groups created before this timestamp
-        :type created_before: datetime
-        :param include_metadata: Include group metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/groups is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            created_after=created_after,
-            created_before=created_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderGroup",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_order_groups_api_beta_brokers_data_orders_groups_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of order groups to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of order groups to skip for pagination")] = None,
-        created_after: Annotated[Optional[datetime], Field(description="Filter order groups created after this timestamp")] = None,
-        created_before: Annotated[Optional[datetime], Field(description="Filter order groups created before this timestamp")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include group metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Order Groups
-
-        Get order groups.  This endpoint returns order groups that contain multiple orders.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of order groups to return
-        :type limit: int
-        :param offset: Number of order groups to skip for pagination
-        :type offset: int
-        :param created_after: Filter order groups created after this timestamp
-        :type created_after: datetime
-        :param created_before: Filter order groups created before this timestamp
-        :type created_before: datetime
-        :param include_metadata: Include group metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders/groups is deprecated.", DeprecationWarning)
-
-        _param = self._get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            created_after=created_after,
-            created_before=created_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrderGroup",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_order_groups_api_beta_brokers_data_orders_groups_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        limit,
-        offset,
-        created_after,
-        created_before,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if created_after is not None:
-            if isinstance(created_after, datetime):
-                _query_params.append(
-                    (
-                        'created_after',
-                        created_after.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('created_after', created_after))
-
-        if created_before is not None:
-            if isinstance(created_before, datetime):
-                _query_params.append(
-                    (
-                        'created_before',
-                        created_before.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('created_before', created_before))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/orders/groups',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_orders_api_beta_brokers_data_orders_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[Any], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
-        created_after: Annotated[Optional[datetime], Field(description="Filter orders by effective creation time after this timestamp (broker order_created_at when set, otherwise row created_at)")] = None,
-        created_before: Annotated[Optional[datetime], Field(description="Filter orders by effective creation time before this timestamp (broker order_created_at when set, otherwise row created_at)")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerOrder:
-        """(Deprecated) Get Orders
-
-        Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: str
-        :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: BrokerDataOrderSideEnum
-        :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: BrokerDataAssetTypeEnum
-        :param limit: Maximum number of orders to return
-        :type limit: int
-        :param offset: Number of orders to skip for pagination
-        :type offset: int
-        :param created_after: Filter orders by effective creation time after this timestamp (broker order_created_at when set, otherwise row created_at)
-        :type created_after: datetime
-        :param created_before: Filter orders by effective creation time before this timestamp (broker order_created_at when set, otherwise row created_at)
-        :type created_before: datetime
-        :param include_metadata: Include order metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders is deprecated.", DeprecationWarning)
-
-        _param = self._get_orders_api_beta_brokers_data_orders_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            order_status=order_status,
-            side=side,
-            asset_type=asset_type,
-            limit=limit,
-            offset=offset,
-            created_after=created_after,
-            created_before=created_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrder",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_orders_api_beta_brokers_data_orders_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[Any], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
-        created_after: Annotated[Optional[datetime], Field(description="Filter orders by effective creation time after this timestamp (broker order_created_at when set, otherwise row created_at)")] = None,
-        created_before: Annotated[Optional[datetime], Field(description="Filter orders by effective creation time before this timestamp (broker order_created_at when set, otherwise row created_at)")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerOrder]:
-        """(Deprecated) Get Orders
-
-        Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: str
-        :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: BrokerDataOrderSideEnum
-        :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: BrokerDataAssetTypeEnum
-        :param limit: Maximum number of orders to return
-        :type limit: int
-        :param offset: Number of orders to skip for pagination
-        :type offset: int
-        :param created_after: Filter orders by effective creation time after this timestamp (broker order_created_at when set, otherwise row created_at)
-        :type created_after: datetime
-        :param created_before: Filter orders by effective creation time before this timestamp (broker order_created_at when set, otherwise row created_at)
-        :type created_before: datetime
-        :param include_metadata: Include order metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders is deprecated.", DeprecationWarning)
-
-        _param = self._get_orders_api_beta_brokers_data_orders_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            order_status=order_status,
-            side=side,
-            asset_type=asset_type,
-            limit=limit,
-            offset=offset,
-            created_after=created_after,
-            created_before=created_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrder",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_orders_api_beta_brokers_data_orders_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        order_status: Annotated[Optional[StrictStr], Field(description="Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')")] = None,
-        side: Annotated[Optional[Any], Field(description="Filter by order side (e.g., 'buy', 'sell')")] = None,
-        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of orders to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of orders to skip for pagination")] = None,
-        created_after: Annotated[Optional[datetime], Field(description="Filter orders by effective creation time after this timestamp (broker order_created_at when set, otherwise row created_at)")] = None,
-        created_before: Annotated[Optional[datetime], Field(description="Filter orders by effective creation time before this timestamp (broker order_created_at when set, otherwise row created_at)")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include order metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Orders
-
-        Get orders for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns orders from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param order_status: Filter by order status (e.g., 'filled', 'pending_new', 'cancelled')
-        :type order_status: str
-        :param side: Filter by order side (e.g., 'buy', 'sell')
-        :type side: BrokerDataOrderSideEnum
-        :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: BrokerDataAssetTypeEnum
-        :param limit: Maximum number of orders to return
-        :type limit: int
-        :param offset: Number of orders to skip for pagination
-        :type offset: int
-        :param created_after: Filter orders by effective creation time after this timestamp (broker order_created_at when set, otherwise row created_at)
-        :type created_after: datetime
-        :param created_before: Filter orders by effective creation time before this timestamp (broker order_created_at when set, otherwise row created_at)
-        :type created_before: datetime
-        :param include_metadata: Include order metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/orders is deprecated.", DeprecationWarning)
-
-        _param = self._get_orders_api_beta_brokers_data_orders_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            order_status=order_status,
-            side=side,
-            asset_type=asset_type,
-            limit=limit,
-            offset=offset,
-            created_after=created_after,
-            created_before=created_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerOrder",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_orders_api_beta_brokers_data_orders_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        account_id,
-        symbol,
-        order_status,
-        side,
-        asset_type,
-        limit,
-        offset,
-        created_after,
-        created_before,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if account_id is not None:
-
-            _query_params.append(('account_id', account_id))
-
-        if symbol is not None:
-
-            _query_params.append(('symbol', symbol))
-
-        if order_status is not None:
-
-            _query_params.append(('order_status', order_status))
-
-        if side is not None:
-
-            _query_params.append(('side', side.value))
-
-        if asset_type is not None:
-
-            _query_params.append(('asset_type', asset_type.value))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if created_after is not None:
-            if isinstance(created_after, datetime):
-                _query_params.append(
-                    (
-                        'created_after',
-                        created_after.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('created_after', created_after))
-
-        if created_before is not None:
-            if isinstance(created_before, datetime):
-                _query_params.append(
-                    (
-                        'created_before',
-                        created_before.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('created_before', created_before))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/orders',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(
-        self,
-        lot_id: Annotated[UUID, Field(description="Position lot ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerPositionLotFill:
-        """(Deprecated) Get Position Lot Fills
-
-        Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
-
-        :param lot_id: Position lot ID (required)
-        :type lot_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of fills to return
-        :type limit: int
-        :param offset: Number of fills to skip for pagination
-        :type offset: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions/lots/{lot_id}/fills is deprecated.", DeprecationWarning)
-
-        _param = self._get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
-            lot_id=lot_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPositionLotFill",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_with_http_info(
-        self,
-        lot_id: Annotated[UUID, Field(description="Position lot ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerPositionLotFill]:
-        """(Deprecated) Get Position Lot Fills
-
-        Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
-
-        :param lot_id: Position lot ID (required)
-        :type lot_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of fills to return
-        :type limit: int
-        :param offset: Number of fills to skip for pagination
-        :type offset: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions/lots/{lot_id}/fills is deprecated.", DeprecationWarning)
-
-        _param = self._get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
-            lot_id=lot_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPositionLotFill",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_without_preload_content(
-        self,
-        lot_id: Annotated[UUID, Field(description="Position lot ID")],
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of fills to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of fills to skip for pagination")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Position Lot Fills
-
-        Get position lot fills for a specific lot.  This endpoint returns all fills associated with a specific position lot.
-
-        :param lot_id: Position lot ID (required)
-        :type lot_id: UUID
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param limit: Maximum number of fills to return
-        :type limit: int
-        :param offset: Number of fills to skip for pagination
-        :type offset: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions/lots/{lot_id}/fills is deprecated.", DeprecationWarning)
-
-        _param = self._get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
-            lot_id=lot_id,
-            connection_id=connection_id,
-            limit=limit,
-            offset=offset,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPositionLotFill",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
-        self,
-        lot_id,
-        connection_id,
-        limit,
-        offset,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if lot_id is not None:
-            _path_params['lot_id'] = lot_id
-        # process the query parameters
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/positions/lots/{lot_id}/fills',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_position_lots_api_beta_brokers_data_positions_lots_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        position_id: Annotated[Optional[UUID], Field(description="Filter by position ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of position lots to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of position lots to skip for pagination")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerPositionLot:
-        """(Deprecated) Get Position Lots
-
-        Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param position_id: Filter by position ID
-        :type position_id: UUID
-        :param limit: Maximum number of position lots to return
-        :type limit: int
-        :param offset: Number of position lots to skip for pagination
-        :type offset: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions/lots is deprecated.", DeprecationWarning)
-
-        _param = self._get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            position_id=position_id,
-            limit=limit,
-            offset=offset,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPositionLot",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_position_lots_api_beta_brokers_data_positions_lots_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        position_id: Annotated[Optional[UUID], Field(description="Filter by position ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of position lots to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of position lots to skip for pagination")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerPositionLot]:
-        """(Deprecated) Get Position Lots
-
-        Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param position_id: Filter by position ID
-        :type position_id: UUID
-        :param limit: Maximum number of position lots to return
-        :type limit: int
-        :param offset: Number of position lots to skip for pagination
-        :type offset: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions/lots is deprecated.", DeprecationWarning)
-
-        _param = self._get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            position_id=position_id,
-            limit=limit,
-            offset=offset,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPositionLot",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_position_lots_api_beta_brokers_data_positions_lots_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        position_id: Annotated[Optional[UUID], Field(description="Filter by position ID")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of position lots to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of position lots to skip for pagination")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Position Lots
-
-        Get position lots (tax lots for positions).  This endpoint returns tax lots for positions, which are used for tax reporting. Each lot tracks when a position was opened/closed and at what prices.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param position_id: Filter by position ID
-        :type position_id: UUID
-        :param limit: Maximum number of position lots to return
-        :type limit: int
-        :param offset: Number of position lots to skip for pagination
-        :type offset: int
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions/lots is deprecated.", DeprecationWarning)
-
-        _param = self._get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            position_id=position_id,
-            limit=limit,
-            offset=offset,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPositionLot",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_position_lots_api_beta_brokers_data_positions_lots_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        account_id,
-        symbol,
-        position_id,
-        limit,
-        offset,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if account_id is not None:
-
-            _query_params.append(('account_id', account_id))
-
-        if symbol is not None:
-
-            _query_params.append(('symbol', symbol))
-
-        if position_id is not None:
-
-            _query_params.append(('position_id', position_id))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/positions/lots',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_positions_api_beta_brokers_data_positions_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[Any], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[Any], Field(description="Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
-        updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
-        updated_before: Annotated[Optional[datetime], Field(description="Filter positions updated before this timestamp")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerPosition:
-        """(Deprecated) Get Positions
-
-        Get positions for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns positions from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: BrokerDataOrderSideEnum
-        :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: BrokerDataAssetTypeEnum
-        :param position_status: Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
-        :type position_status: BrokerDataPositionStatusEnum
-        :param limit: Maximum number of positions to return
-        :type limit: int
-        :param offset: Number of positions to skip for pagination
-        :type offset: int
-        :param updated_after: Filter positions updated after this timestamp
-        :type updated_after: datetime
-        :param updated_before: Filter positions updated before this timestamp
-        :type updated_before: datetime
-        :param include_metadata: Include position metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions is deprecated.", DeprecationWarning)
-
-        _param = self._get_positions_api_beta_brokers_data_positions_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            side=side,
-            asset_type=asset_type,
-            position_status=position_status,
-            limit=limit,
-            offset=offset,
-            updated_after=updated_after,
-            updated_before=updated_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPosition",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_positions_api_beta_brokers_data_positions_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[Any], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[Any], Field(description="Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
-        updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
-        updated_before: Annotated[Optional[datetime], Field(description="Filter positions updated before this timestamp")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerPosition]:
-        """(Deprecated) Get Positions
-
-        Get positions for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns positions from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: BrokerDataOrderSideEnum
-        :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: BrokerDataAssetTypeEnum
-        :param position_status: Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
-        :type position_status: BrokerDataPositionStatusEnum
-        :param limit: Maximum number of positions to return
-        :type limit: int
-        :param offset: Number of positions to skip for pagination
-        :type offset: int
-        :param updated_after: Filter positions updated after this timestamp
-        :type updated_after: datetime
-        :param updated_before: Filter positions updated before this timestamp
-        :type updated_before: datetime
-        :param include_metadata: Include position metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions is deprecated.", DeprecationWarning)
-
-        _param = self._get_positions_api_beta_brokers_data_positions_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            side=side,
-            asset_type=asset_type,
-            position_status=position_status,
-            limit=limit,
-            offset=offset,
-            updated_after=updated_after,
-            updated_before=updated_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPosition",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_positions_api_beta_brokers_data_positions_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        symbol: Annotated[Optional[StrictStr], Field(description="Filter by symbol")] = None,
-        side: Annotated[Optional[Any], Field(description="Filter by position side (e.g., 'long', 'short')")] = None,
-        asset_type: Annotated[Optional[Any], Field(description="Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')")] = None,
-        position_status: Annotated[Optional[Any], Field(description="Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of positions to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of positions to skip for pagination")] = None,
-        updated_after: Annotated[Optional[datetime], Field(description="Filter positions updated after this timestamp")] = None,
-        updated_before: Annotated[Optional[datetime], Field(description="Filter positions updated before this timestamp")] = None,
-        include_metadata: Annotated[Optional[StrictBool], Field(description="Include position metadata in response (excluded by default for FDX compliance)")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Positions
-
-        Get positions for all authorized broker connections.  This endpoint is accessible from the portal and uses session-only authentication. Returns positions from connections the company has read access to.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param symbol: Filter by symbol
-        :type symbol: str
-        :param side: Filter by position side (e.g., 'long', 'short')
-        :type side: BrokerDataOrderSideEnum
-        :param asset_type: Filter by asset type (e.g., 'stock', 'option', 'crypto', 'future')
-        :type asset_type: BrokerDataAssetTypeEnum
-        :param position_status: Filter by position status: 'active' (open positions) or 'closed' (closed positions). Use 'all' or omit to get both.
-        :type position_status: BrokerDataPositionStatusEnum
-        :param limit: Maximum number of positions to return
-        :type limit: int
-        :param offset: Number of positions to skip for pagination
-        :type offset: int
-        :param updated_after: Filter positions updated after this timestamp
-        :type updated_after: datetime
-        :param updated_before: Filter positions updated before this timestamp
-        :type updated_before: datetime
-        :param include_metadata: Include position metadata in response (excluded by default for FDX compliance)
-        :type include_metadata: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/positions is deprecated.", DeprecationWarning)
-
-        _param = self._get_positions_api_beta_brokers_data_positions_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            symbol=symbol,
-            side=side,
-            asset_type=asset_type,
-            position_status=position_status,
-            limit=limit,
-            offset=offset,
-            updated_after=updated_after,
-            updated_before=updated_before,
-            include_metadata=include_metadata,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerPosition",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_positions_api_beta_brokers_data_positions_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        account_id,
-        symbol,
-        side,
-        asset_type,
-        position_status,
-        limit,
-        offset,
-        updated_after,
-        updated_before,
-        include_metadata,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if account_id is not None:
-
-            _query_params.append(('account_id', account_id))
-
-        if symbol is not None:
-
-            _query_params.append(('symbol', symbol))
-
-        if side is not None:
-
-            _query_params.append(('side', side.value))
-
-        if asset_type is not None:
-
-            _query_params.append(('asset_type', asset_type.value))
-
-        if position_status is not None:
-
-            _query_params.append(('position_status', position_status.value))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if updated_after is not None:
-            if isinstance(updated_after, datetime):
-                _query_params.append(
-                    (
-                        'updated_after',
-                        updated_after.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('updated_after', updated_after))
-
-        if updated_before is not None:
-            if isinstance(updated_before, datetime):
-                _query_params.append(
-                    (
-                        'updated_before',
-                        updated_before.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('updated_before', updated_before))
-
-        if include_metadata is not None:
-
-            _query_params.append(('include_metadata', include_metadata))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/positions',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseReauthNotificationPreference:
-        """(Deprecated) Get Reauth Notification Preference
-
-        Read the current reauth email notification preference.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/connections/{connection_id}/reauth-notification-preference is deprecated.", DeprecationWarning)
-
-        _param = self._get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationPreference",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get_with_http_info(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseReauthNotificationPreference]:
-        """(Deprecated) Get Reauth Notification Preference
-
-        Read the current reauth email notification preference.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/connections/{connection_id}/reauth-notification-preference is deprecated.", DeprecationWarning)
-
-        _param = self._get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationPreference",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get_without_preload_content(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Reauth Notification Preference
-
-        Read the current reauth email notification preference.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/connections/{connection_id}/reauth-notification-preference is deprecated.", DeprecationWarning)
-
-        _param = self._get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationPreference",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_get_serialize(
-        self,
-        connection_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if connection_id is not None:
-            _path_params['connection_id'] = connection_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/connections/{connection_id}/reauth-notification-preference',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def get_transactions_api_beta_brokers_data_transactions_get(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
-        transaction_type: Annotated[Optional[StrictStr], Field(description="Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')")] = None,
-        start_date: Annotated[Optional[datetime], Field(description="Filter transactions from this date (ISO 8601)")] = None,
-        end_date: Annotated[Optional[datetime], Field(description="Filter transactions until this date (ISO 8601)")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of transactions to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of transactions to skip for pagination")] = None,
-        before_transaction_date: Annotated[Optional[datetime], Field(description="Keyset pagination: `transaction_date` of the **last** row from the previous page. Must be sent with `before_transaction_id`. When set, `offset` must be `0`.")] = None,
-        before_transaction_id: Annotated[Optional[UUID], Field(description="Keyset pagination: internal transaction `id` (UUID) of the **last** row from the previous page. Must be sent with `before_transaction_date`.")] = None,
-        include_raw_payload: Annotated[Optional[StrictBool], Field(description="Load `raw_payload` JSONB from the database (slower). Default false for list performance.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListFDXBrokerTransaction:
-        """(Deprecated) Get Transactions
-
-        Get transactions for all authorized broker connections.  Returns transactions from connections the company has read access to. This endpoint is accessible from the portal and uses session-only authentication.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-        :type unit_code: str
-        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-        :type currency: str
-        :param transaction_type: Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
-        :type transaction_type: str
-        :param start_date: Filter transactions from this date (ISO 8601)
-        :type start_date: datetime
-        :param end_date: Filter transactions until this date (ISO 8601)
-        :type end_date: datetime
-        :param limit: Maximum number of transactions to return
-        :type limit: int
-        :param offset: Number of transactions to skip for pagination
-        :type offset: int
-        :param before_transaction_date: Keyset pagination: `transaction_date` of the **last** row from the previous page. Must be sent with `before_transaction_id`. When set, `offset` must be `0`.
-        :type before_transaction_date: datetime
-        :param before_transaction_id: Keyset pagination: internal transaction `id` (UUID) of the **last** row from the previous page. Must be sent with `before_transaction_date`.
-        :type before_transaction_id: UUID
-        :param include_raw_payload: Load `raw_payload` JSONB from the database (slower). Default false for list performance.
-        :type include_raw_payload: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/transactions is deprecated.", DeprecationWarning)
-
-        _param = self._get_transactions_api_beta_brokers_data_transactions_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            unit_code=unit_code,
-            currency=currency,
-            transaction_type=transaction_type,
-            start_date=start_date,
-            end_date=end_date,
-            limit=limit,
-            offset=offset,
-            before_transaction_date=before_transaction_date,
-            before_transaction_id=before_transaction_id,
-            include_raw_payload=include_raw_payload,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerTransaction",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def get_transactions_api_beta_brokers_data_transactions_get_with_http_info(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
-        transaction_type: Annotated[Optional[StrictStr], Field(description="Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')")] = None,
-        start_date: Annotated[Optional[datetime], Field(description="Filter transactions from this date (ISO 8601)")] = None,
-        end_date: Annotated[Optional[datetime], Field(description="Filter transactions until this date (ISO 8601)")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of transactions to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of transactions to skip for pagination")] = None,
-        before_transaction_date: Annotated[Optional[datetime], Field(description="Keyset pagination: `transaction_date` of the **last** row from the previous page. Must be sent with `before_transaction_id`. When set, `offset` must be `0`.")] = None,
-        before_transaction_id: Annotated[Optional[UUID], Field(description="Keyset pagination: internal transaction `id` (UUID) of the **last** row from the previous page. Must be sent with `before_transaction_date`.")] = None,
-        include_raw_payload: Annotated[Optional[StrictBool], Field(description="Load `raw_payload` JSONB from the database (slower). Default false for list performance.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListFDXBrokerTransaction]:
-        """(Deprecated) Get Transactions
-
-        Get transactions for all authorized broker connections.  Returns transactions from connections the company has read access to. This endpoint is accessible from the portal and uses session-only authentication.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-        :type unit_code: str
-        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-        :type currency: str
-        :param transaction_type: Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
-        :type transaction_type: str
-        :param start_date: Filter transactions from this date (ISO 8601)
-        :type start_date: datetime
-        :param end_date: Filter transactions until this date (ISO 8601)
-        :type end_date: datetime
-        :param limit: Maximum number of transactions to return
-        :type limit: int
-        :param offset: Number of transactions to skip for pagination
-        :type offset: int
-        :param before_transaction_date: Keyset pagination: `transaction_date` of the **last** row from the previous page. Must be sent with `before_transaction_id`. When set, `offset` must be `0`.
-        :type before_transaction_date: datetime
-        :param before_transaction_id: Keyset pagination: internal transaction `id` (UUID) of the **last** row from the previous page. Must be sent with `before_transaction_date`.
-        :type before_transaction_id: UUID
-        :param include_raw_payload: Load `raw_payload` JSONB from the database (slower). Default false for list performance.
-        :type include_raw_payload: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/transactions is deprecated.", DeprecationWarning)
-
-        _param = self._get_transactions_api_beta_brokers_data_transactions_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            unit_code=unit_code,
-            currency=currency,
-            transaction_type=transaction_type,
-            start_date=start_date,
-            end_date=end_date,
-            limit=limit,
-            offset=offset,
-            before_transaction_date=before_transaction_date,
-            before_transaction_id=before_transaction_id,
-            include_raw_payload=include_raw_payload,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerTransaction",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def get_transactions_api_beta_brokers_data_transactions_get_without_preload_content(
-        self,
-        broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
-        unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
-        currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
-        transaction_type: Annotated[Optional[StrictStr], Field(description="Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')")] = None,
-        start_date: Annotated[Optional[datetime], Field(description="Filter transactions from this date (ISO 8601)")] = None,
-        end_date: Annotated[Optional[datetime], Field(description="Filter transactions until this date (ISO 8601)")] = None,
-        limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of transactions to return")] = None,
-        offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of transactions to skip for pagination")] = None,
-        before_transaction_date: Annotated[Optional[datetime], Field(description="Keyset pagination: `transaction_date` of the **last** row from the previous page. Must be sent with `before_transaction_id`. When set, `offset` must be `0`.")] = None,
-        before_transaction_id: Annotated[Optional[UUID], Field(description="Keyset pagination: internal transaction `id` (UUID) of the **last** row from the previous page. Must be sent with `before_transaction_date`.")] = None,
-        include_raw_payload: Annotated[Optional[StrictBool], Field(description="Load `raw_payload` JSONB from the database (slower). Default false for list performance.")] = None,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Get Transactions
-
-        Get transactions for all authorized broker connections.  Returns transactions from connections the company has read access to. This endpoint is accessible from the portal and uses session-only authentication.
-
-        :param broker_id: Filter by broker ID
-        :type broker_id: str
-        :param connection_id: Filter by connection ID
-        :type connection_id: UUID
-        :param account_id: Filter by broker provided account ID or internal account UUID
-        :type account_id: str
-        :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
-        :type unit_code: str
-        :param currency: Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')
-        :type currency: str
-        :param transaction_type: Filter by transaction type (e.g., 'DEPOSIT', 'WITHDRAWAL', 'DIVIDEND')
-        :type transaction_type: str
-        :param start_date: Filter transactions from this date (ISO 8601)
-        :type start_date: datetime
-        :param end_date: Filter transactions until this date (ISO 8601)
-        :type end_date: datetime
-        :param limit: Maximum number of transactions to return
-        :type limit: int
-        :param offset: Number of transactions to skip for pagination
-        :type offset: int
-        :param before_transaction_date: Keyset pagination: `transaction_date` of the **last** row from the previous page. Must be sent with `before_transaction_id`. When set, `offset` must be `0`.
-        :type before_transaction_date: datetime
-        :param before_transaction_id: Keyset pagination: internal transaction `id` (UUID) of the **last** row from the previous page. Must be sent with `before_transaction_date`.
-        :type before_transaction_id: UUID
-        :param include_raw_payload: Load `raw_payload` JSONB from the database (slower). Default false for list performance.
-        :type include_raw_payload: bool
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("GET /api/beta/brokers/data/transactions is deprecated.", DeprecationWarning)
-
-        _param = self._get_transactions_api_beta_brokers_data_transactions_get_serialize(
-            broker_id=broker_id,
-            connection_id=connection_id,
-            account_id=account_id,
-            unit_code=unit_code,
-            currency=currency,
-            transaction_type=transaction_type,
-            start_date=start_date,
-            end_date=end_date,
-            limit=limit,
-            offset=offset,
-            before_transaction_date=before_transaction_date,
-            before_transaction_id=before_transaction_id,
-            include_raw_payload=include_raw_payload,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListFDXBrokerTransaction",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _get_transactions_api_beta_brokers_data_transactions_get_serialize(
-        self,
-        broker_id,
-        connection_id,
-        account_id,
-        unit_code,
-        currency,
-        transaction_type,
-        start_date,
-        end_date,
-        limit,
-        offset,
-        before_transaction_date,
-        before_transaction_id,
-        include_raw_payload,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        if broker_id is not None:
-
-            _query_params.append(('broker_id', broker_id))
-
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
-        if account_id is not None:
-
-            _query_params.append(('account_id', account_id))
-
-        if unit_code is not None:
-
-            _query_params.append(('unit_code', unit_code))
-
-        if currency is not None:
-
-            _query_params.append(('currency', currency))
-
-        if transaction_type is not None:
-
-            _query_params.append(('transaction_type', transaction_type))
-
-        if start_date is not None:
-            if isinstance(start_date, datetime):
-                _query_params.append(
-                    (
-                        'start_date',
-                        start_date.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('start_date', start_date))
-
-        if end_date is not None:
-            if isinstance(end_date, datetime):
-                _query_params.append(
-                    (
-                        'end_date',
-                        end_date.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('end_date', end_date))
-
-        if limit is not None:
-
-            _query_params.append(('limit', limit))
-
-        if offset is not None:
-
-            _query_params.append(('offset', offset))
-
-        if before_transaction_date is not None:
-            if isinstance(before_transaction_date, datetime):
-                _query_params.append(
-                    (
-                        'before_transaction_date',
-                        before_transaction_date.strftime(
-                            self.api_client.configuration.datetime_format
-                        )
-                    )
-                )
-            else:
-                _query_params.append(('before_transaction_date', before_transaction_date))
-
-        if before_transaction_id is not None:
-
-            _query_params.append(('before_transaction_id', before_transaction_id))
-
-        if include_raw_payload is not None:
-
-            _query_params.append(('include_raw_payload', include_raw_payload))
-
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='GET',
-            resource_path='/api/beta/brokers/data/transactions',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def list_broker_connections_api_beta_brokers_connections_get(
+    def list_connections_api_beta_brokers_connections_get(
         self,
         _request_timeout: Union[
             None,
@@ -7143,10 +3160,10 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListUserBrokerConnectionWithPermissions:
-        """(Deprecated) List Broker Connections
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Connections
 
-        List all broker connections for the current user with permissions.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for, including the current company's permissions (read/write) for each connection.
+        Map beta connection listing to account-first v1 resources.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7171,7 +3188,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("GET /api/beta/brokers/connections is deprecated.", DeprecationWarning)
 
-        _param = self._list_broker_connections_api_beta_brokers_connections_get_serialize(
+        _param = self._list_connections_api_beta_brokers_connections_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7179,7 +3196,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -7202,7 +3219,7 @@ class BrokersApi:
 
 
     @validate_call
-    def list_broker_connections_api_beta_brokers_connections_get_with_http_info(
+    def list_connections_api_beta_brokers_connections_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -7216,10 +3233,10 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListUserBrokerConnectionWithPermissions]:
-        """(Deprecated) List Broker Connections
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Connections
 
-        List all broker connections for the current user with permissions.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for, including the current company's permissions (read/write) for each connection.
+        Map beta connection listing to account-first v1 resources.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7244,7 +3261,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("GET /api/beta/brokers/connections is deprecated.", DeprecationWarning)
 
-        _param = self._list_broker_connections_api_beta_brokers_connections_get_serialize(
+        _param = self._list_connections_api_beta_brokers_connections_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7252,7 +3269,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -7275,7 +3292,7 @@ class BrokersApi:
 
 
     @validate_call
-    def list_broker_connections_api_beta_brokers_connections_get_without_preload_content(
+    def list_connections_api_beta_brokers_connections_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -7290,9 +3307,9 @@ class BrokersApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) List Broker Connections
+        """(Deprecated) List Connections
 
-        List all broker connections for the current user with permissions.  This endpoint is accessible from the portal and uses session-only authentication. Returns connections that the user has any permissions for, including the current company's permissions (read/write) for each connection.
+        Map beta connection listing to account-first v1 resources.
 
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
@@ -7317,7 +3334,7 @@ class BrokersApi:
         """ # noqa: E501
         warnings.warn("GET /api/beta/brokers/connections is deprecated.", DeprecationWarning)
 
-        _param = self._list_broker_connections_api_beta_brokers_connections_get_serialize(
+        _param = self._list_connections_api_beta_brokers_connections_get_serialize(
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7325,7 +3342,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListUserBrokerConnectionWithPermissions",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -7343,7 +3360,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _list_broker_connections_api_beta_brokers_connections_get_serialize(
+    def _list_connections_api_beta_brokers_connections_get_serialize(
         self,
         _request_auth,
         _content_type,
@@ -7404,11 +3421,9 @@ class BrokersApi:
 
 
     @validate_call
-    def modify_order_api_beta_brokers_orders_order_id_patch(
+    def list_order_events_api_beta_brokers_data_orders_order_id_events_get(
         self,
-        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
-        order_request: OrderRequest,
-        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        order_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7421,17 +3436,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseOrderActionResult:
-        """(Deprecated) Modify Order
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Order Events
 
-        Modify an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number. The order object is a partial update.
+        Map beta order events to account-scoped v1 order events.
 
-        :param order_id: Broker-provided order ID to modify (required)
+        :param order_id: (required)
         :type order_id: str
-        :param order_request: (required)
-        :type order_request: OrderRequest
-        :param connection_id: Temporary bypass for testing: specify connection ID directly
-        :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7453,12 +3464,10 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("PATCH /api/beta/brokers/orders/{order_id} is deprecated.", DeprecationWarning)
+        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/events is deprecated.", DeprecationWarning)
 
-        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+        _param = self._list_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
             order_id=order_id,
-            order_request=order_request,
-            connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7466,7 +3475,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -7489,11 +3498,9 @@ class BrokersApi:
 
 
     @validate_call
-    def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
+    def list_order_events_api_beta_brokers_data_orders_order_id_events_get_with_http_info(
         self,
-        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
-        order_request: OrderRequest,
-        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        order_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7506,17 +3513,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseOrderActionResult]:
-        """(Deprecated) Modify Order
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Order Events
 
-        Modify an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number. The order object is a partial update.
+        Map beta order events to account-scoped v1 order events.
 
-        :param order_id: Broker-provided order ID to modify (required)
+        :param order_id: (required)
         :type order_id: str
-        :param order_request: (required)
-        :type order_request: OrderRequest
-        :param connection_id: Temporary bypass for testing: specify connection ID directly
-        :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7538,12 +3541,10 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("PATCH /api/beta/brokers/orders/{order_id} is deprecated.", DeprecationWarning)
+        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/events is deprecated.", DeprecationWarning)
 
-        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+        _param = self._list_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
             order_id=order_id,
-            order_request=order_request,
-            connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7551,7 +3552,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -7574,11 +3575,9 @@ class BrokersApi:
 
 
     @validate_call
-    def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
+    def list_order_events_api_beta_brokers_data_orders_order_id_events_get_without_preload_content(
         self,
-        order_id: Annotated[StrictStr, Field(description="Broker-provided order ID to modify")],
-        order_request: OrderRequest,
-        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
+        order_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -7592,16 +3591,12 @@ class BrokersApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Modify Order
+        """(Deprecated) List Order Events
 
-        Modify an existing order.  Request must include broker and account_number in the body; order_id is in the path. Connection is resolved by broker and account_number. The order object is a partial update.
+        Map beta order events to account-scoped v1 order events.
 
-        :param order_id: Broker-provided order ID to modify (required)
+        :param order_id: (required)
         :type order_id: str
-        :param order_request: (required)
-        :type order_request: OrderRequest
-        :param connection_id: Temporary bypass for testing: specify connection ID directly
-        :type connection_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -7623,12 +3618,10 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("PATCH /api/beta/brokers/orders/{order_id} is deprecated.", DeprecationWarning)
+        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/events is deprecated.", DeprecationWarning)
 
-        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+        _param = self._list_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
             order_id=order_id,
-            order_request=order_request,
-            connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -7636,7 +3629,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -7654,11 +3647,9 @@ class BrokersApi:
         return response_data.response
 
 
-    def _modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+    def _list_order_events_api_beta_brokers_data_orders_order_id_events_get_serialize(
         self,
         order_id,
-        order_request,
-        connection_id,
         _request_auth,
         _content_type,
         _headers,
@@ -7683,15 +3674,894 @@ class BrokersApi:
         if order_id is not None:
             _path_params['order_id'] = order_id
         # process the query parameters
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if order_request is not None:
-            _body_params = order_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/beta/brokers/data/orders/{order_id}/events',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get(
+        self,
+        order_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Order Fills
+
+        Map beta order fills to account-scoped v1 order fills.
+
+        :param order_id: (required)
+        :type order_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/fills is deprecated.", DeprecationWarning)
+
+        _param = self._list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
+            order_id=order_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_with_http_info(
+        self,
+        order_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Order Fills
+
+        Map beta order fills to account-scoped v1 order fills.
+
+        :param order_id: (required)
+        :type order_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/fills is deprecated.", DeprecationWarning)
+
+        _param = self._list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
+            order_id=order_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_without_preload_content(
+        self,
+        order_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) List Order Fills
+
+        Map beta order fills to account-scoped v1 order fills.
+
+        :param order_id: (required)
+        :type order_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/orders/{order_id}/fills is deprecated.", DeprecationWarning)
+
+        _param = self._list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
+            order_id=order_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_serialize(
+        self,
+        order_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if order_id is not None:
+            _path_params['order_id'] = order_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/beta/brokers/data/orders/{order_id}/fills',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(
+        self,
+        lot_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) List Position Lot Fills
+
+        Map beta lot fills to account-scoped v1 lot fills.
+
+        :param lot_id: (required)
+        :type lot_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/positions/lots/{lot_id}/fills is deprecated.", DeprecationWarning)
+
+        _param = self._list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
+            lot_id=lot_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_with_http_info(
+        self,
+        lot_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) List Position Lot Fills
+
+        Map beta lot fills to account-scoped v1 lot fills.
+
+        :param lot_id: (required)
+        :type lot_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/positions/lots/{lot_id}/fills is deprecated.", DeprecationWarning)
+
+        _param = self._list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
+            lot_id=lot_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_without_preload_content(
+        self,
+        lot_id: StrictStr,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) List Position Lot Fills
+
+        Map beta lot fills to account-scoped v1 lot fills.
+
+        :param lot_id: (required)
+        :type lot_id: str
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("GET /api/beta/brokers/data/positions/lots/{lot_id}/fills is deprecated.", DeprecationWarning)
+
+        _param = self._list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
+            lot_id=lot_id,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_serialize(
+        self,
+        lot_id,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if lot_id is not None:
+            _path_params['lot_id'] = lot_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+
+        # authentication setting
+        _auth_settings: List[str] = [
+        ]
+
+        return self.api_client.param_serialize(
+            method='GET',
+            resource_path='/api/beta/brokers/data/positions/lots/{lot_id}/fills',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def modify_order_api_beta_brokers_orders_order_id_patch(
+        self,
+        order_id: StrictStr,
+        request_body: Optional[Dict[str, Any]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) Modify Order
+
+        Map beta order modification to account-scoped v1 trading.
+
+        :param order_id: (required)
+        :type order_id: str
+        :param request_body:
+        :type request_body: Dict[str, object]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("PATCH /api/beta/brokers/orders/{order_id} is deprecated.", DeprecationWarning)
+
+        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+            order_id=order_id,
+            request_body=request_body,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
+        self,
+        order_id: StrictStr,
+        request_body: Optional[Dict[str, Any]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) Modify Order
+
+        Map beta order modification to account-scoped v1 trading.
+
+        :param order_id: (required)
+        :type order_id: str
+        :param request_body:
+        :type request_body: Dict[str, object]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("PATCH /api/beta/brokers/orders/{order_id} is deprecated.", DeprecationWarning)
+
+        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+            order_id=order_id,
+            request_body=request_body,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
+        self,
+        order_id: StrictStr,
+        request_body: Optional[Dict[str, Any]] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """(Deprecated) Modify Order
+
+        Map beta order modification to account-scoped v1 trading.
+
+        :param order_id: (required)
+        :type order_id: str
+        :param request_body:
+        :type request_body: Dict[str, object]
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+        warnings.warn("PATCH /api/beta/brokers/orders/{order_id} is deprecated.", DeprecationWarning)
+
+        _param = self._modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+            order_id=order_id,
+            request_body=request_body,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "FinaticResponseBetaBrokerShimResponse",
+            '400': "FinaticAPIErrorResponse",
+            '401': "FinaticAPIErrorResponse",
+            '403': "FinaticAPIErrorResponse",
+            '404': "FinaticAPIErrorResponse",
+            '409': "FinaticAPIErrorResponse",
+            '422': "FinaticAPIErrorResponse",
+            '429': "FinaticAPIErrorResponse",
+            '500': "FinaticAPIErrorResponse",
+            '502': "FinaticAPIErrorResponse",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _modify_order_api_beta_brokers_orders_order_id_patch_serialize(
+        self,
+        order_id,
+        request_body,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[
+            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
+        ] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if order_id is not None:
+            _path_params['order_id'] = order_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if request_body is not None:
+            _body_params = request_body
 
 
         # set the HTTP header `Accept`
@@ -8004,8 +4874,7 @@ class BrokersApi:
     @validate_call
     def place_order_api_beta_brokers_orders_post(
         self,
-        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        place_order_api_beta_brokers_orders_post_request: Optional[PlaceOrderApiBetaBrokersOrdersPostRequest] = None,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8018,15 +4887,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseOrderActionResult:
+    ) -> FinaticResponseBetaBrokerShimResponse:
         """(Deprecated) Place Order
 
-        Place a new order through the specified broker.  Creates an order using the broker connection associated with your account. Request uses top-level broker, account_number, and order. The order object includes common fields (symbol, quantity, order type, etc.) shared across brokers plus broker-specific fields—see the broker-specific tabs for details.
+        Map beta order placement to account-scoped v1 trading.
 
-        :param connection_id: Temporary bypass for testing: specify connection ID directly
-        :type connection_id: UUID
-        :param place_order_api_beta_brokers_orders_post_request:
-        :type place_order_api_beta_brokers_orders_post_request: PlaceOrderApiBetaBrokersOrdersPostRequest
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8051,8 +4918,7 @@ class BrokersApi:
         warnings.warn("POST /api/beta/brokers/orders is deprecated.", DeprecationWarning)
 
         _param = self._place_order_api_beta_brokers_orders_post_serialize(
-            connection_id=connection_id,
-            place_order_api_beta_brokers_orders_post_request=place_order_api_beta_brokers_orders_post_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8060,7 +4926,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -8085,8 +4951,7 @@ class BrokersApi:
     @validate_call
     def place_order_api_beta_brokers_orders_post_with_http_info(
         self,
-        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        place_order_api_beta_brokers_orders_post_request: Optional[PlaceOrderApiBetaBrokersOrdersPostRequest] = None,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8099,15 +4964,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseOrderActionResult]:
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
         """(Deprecated) Place Order
 
-        Place a new order through the specified broker.  Creates an order using the broker connection associated with your account. Request uses top-level broker, account_number, and order. The order object includes common fields (symbol, quantity, order type, etc.) shared across brokers plus broker-specific fields—see the broker-specific tabs for details.
+        Map beta order placement to account-scoped v1 trading.
 
-        :param connection_id: Temporary bypass for testing: specify connection ID directly
-        :type connection_id: UUID
-        :param place_order_api_beta_brokers_orders_post_request:
-        :type place_order_api_beta_brokers_orders_post_request: PlaceOrderApiBetaBrokersOrdersPostRequest
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8132,8 +4995,7 @@ class BrokersApi:
         warnings.warn("POST /api/beta/brokers/orders is deprecated.", DeprecationWarning)
 
         _param = self._place_order_api_beta_brokers_orders_post_serialize(
-            connection_id=connection_id,
-            place_order_api_beta_brokers_orders_post_request=place_order_api_beta_brokers_orders_post_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8141,7 +5003,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -8166,8 +5028,7 @@ class BrokersApi:
     @validate_call
     def place_order_api_beta_brokers_orders_post_without_preload_content(
         self,
-        connection_id: Annotated[Optional[UUID], Field(description="Temporary bypass for testing: specify connection ID directly")] = None,
-        place_order_api_beta_brokers_orders_post_request: Optional[PlaceOrderApiBetaBrokersOrdersPostRequest] = None,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8183,12 +5044,10 @@ class BrokersApi:
     ) -> RESTResponseType:
         """(Deprecated) Place Order
 
-        Place a new order through the specified broker.  Creates an order using the broker connection associated with your account. Request uses top-level broker, account_number, and order. The order object includes common fields (symbol, quantity, order type, etc.) shared across brokers plus broker-specific fields—see the broker-specific tabs for details.
+        Map beta order placement to account-scoped v1 trading.
 
-        :param connection_id: Temporary bypass for testing: specify connection ID directly
-        :type connection_id: UUID
-        :param place_order_api_beta_brokers_orders_post_request:
-        :type place_order_api_beta_brokers_orders_post_request: PlaceOrderApiBetaBrokersOrdersPostRequest
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8213,8 +5072,7 @@ class BrokersApi:
         warnings.warn("POST /api/beta/brokers/orders is deprecated.", DeprecationWarning)
 
         _param = self._place_order_api_beta_brokers_orders_post_serialize(
-            connection_id=connection_id,
-            place_order_api_beta_brokers_orders_post_request=place_order_api_beta_brokers_orders_post_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -8222,7 +5080,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseOrderActionResult",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -8242,8 +5100,7 @@ class BrokersApi:
 
     def _place_order_api_beta_brokers_orders_post_serialize(
         self,
-        connection_id,
-        place_order_api_beta_brokers_orders_post_request,
+        request_body,
         _request_auth,
         _content_type,
         _headers,
@@ -8266,15 +5123,11 @@ class BrokersApi:
 
         # process the path parameters
         # process the query parameters
-        if connection_id is not None:
-
-            _query_params.append(('connection_id', connection_id))
-
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if place_order_api_beta_brokers_orders_post_request is not None:
-            _body_params = place_order_api_beta_brokers_orders_post_request
+        if request_body is not None:
+            _body_params = request_body
 
 
         # set the HTTP header `Accept`
@@ -8322,9 +5175,9 @@ class BrokersApi:
 
 
     @validate_call
-    def revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post(
+    def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8337,13 +5190,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDictStrBool:
-        """(Deprecated) Revoke Push Agent Connector
+    ) -> FinaticResponseBetaBrokerShimResponse:
+        """(Deprecated) Refresh Connection
 
-        Revoke MT connector credentials for a push-agent broker connection.
+        Map beta manual refresh to internal v1 sync-job enqueueing.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8365,9 +5218,9 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/agent/revoke is deprecated.", DeprecationWarning)
+        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/refresh is deprecated.", DeprecationWarning)
 
-        _param = self._revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post_serialize(
+        _param = self._refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8376,7 +5229,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrBool",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -8399,9 +5252,9 @@ class BrokersApi:
 
 
     @validate_call
-    def revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post_with_http_info(
+    def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_with_http_info(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8414,13 +5267,13 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDictStrBool]:
-        """(Deprecated) Revoke Push Agent Connector
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
+        """(Deprecated) Refresh Connection
 
-        Revoke MT connector credentials for a push-agent broker connection.
+        Map beta manual refresh to internal v1 sync-job enqueueing.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8442,9 +5295,9 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/agent/revoke is deprecated.", DeprecationWarning)
+        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/refresh is deprecated.", DeprecationWarning)
 
-        _param = self._revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post_serialize(
+        _param = self._refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8453,7 +5306,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrBool",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -8476,9 +5329,9 @@ class BrokersApi:
 
 
     @validate_call
-    def revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post_without_preload_content(
+    def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_without_preload_content(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -8492,12 +5345,12 @@ class BrokersApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """(Deprecated) Revoke Push Agent Connector
+        """(Deprecated) Refresh Connection
 
-        Revoke MT connector credentials for a push-agent broker connection.
+        Map beta manual refresh to internal v1 sync-job enqueueing.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -8519,9 +5372,9 @@ class BrokersApi:
         :type _host_index: int, optional
         :return: Returns the result object.
         """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/agent/revoke is deprecated.", DeprecationWarning)
+        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/refresh is deprecated.", DeprecationWarning)
 
-        _param = self._revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post_serialize(
+        _param = self._refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_serialize(
             connection_id=connection_id,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -8530,7 +5383,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrBool",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -8548,7 +5401,7 @@ class BrokersApi:
         return response_data.response
 
 
-    def _revoke_push_agent_connector_api_beta_brokers_connections_connection_id_agent_revoke_post_serialize(
+    def _refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_serialize(
         self,
         connection_id,
         _request_auth,
@@ -8595,918 +5448,7 @@ class BrokersApi:
 
         return self.api_client.param_serialize(
             method='POST',
-            resource_path='/api/beta/brokers/connections/{connection_id}/agent/revoke',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseRotateSecretResponse:
-        """(Deprecated) Rotate Push Agent Connector Secret
-
-        Rotate MT connector secret for a push-agent broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/agent/rotate-secret is deprecated.", DeprecationWarning)
-
-        _param = self._rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseRotateSecretResponse",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post_with_http_info(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseRotateSecretResponse]:
-        """(Deprecated) Rotate Push Agent Connector Secret
-
-        Rotate MT connector secret for a push-agent broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/agent/rotate-secret is deprecated.", DeprecationWarning)
-
-        _param = self._rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseRotateSecretResponse",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post_without_preload_content(
-        self,
-        connection_id: UUID,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Rotate Push Agent Connector Secret
-
-        Rotate MT connector secret for a push-agent broker connection.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/connections/{connection_id}/agent/rotate-secret is deprecated.", DeprecationWarning)
-
-        _param = self._rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post_serialize(
-            connection_id=connection_id,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseRotateSecretResponse",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _rotate_push_agent_connector_secret_api_beta_brokers_connections_connection_id_agent_rotate_secret_post_serialize(
-        self,
-        connection_id,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if connection_id is not None:
-            _path_params['connection_id'] = connection_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/api/beta/brokers/connections/{connection_id}/agent/rotate-secret',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post(
-        self,
-        order_id: Annotated[StrictStr, Field(description="Sandbox order identifier: primary key (UUID) of sandbox.sandbox_orders.id, or broker_provided_order_id string.")],
-        sandbox_order_simulate_request_body: SandboxOrderSimulateRequestBody,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseSandboxOrderSimulateResult:
-        """(Deprecated) Simulate Sandbox Order Lifecycle
-
-        Advance or set sandbox order lifecycle status by sandbox table lookup.  Updates ``sandbox.sandbox_orders``, appends ``sandbox_order_events``, and creates ``sandbox_order_fills`` when moving to filled / partially_filled. ``cancelled`` reuses the same cancellation persistence as broker cancel.
-
-        :param order_id: Sandbox order identifier: primary key (UUID) of sandbox.sandbox_orders.id, or broker_provided_order_id string. (required)
-        :type order_id: str
-        :param sandbox_order_simulate_request_body: (required)
-        :type sandbox_order_simulate_request_body: SandboxOrderSimulateRequestBody
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/orders/{order_id}/simulate is deprecated.", DeprecationWarning)
-
-        _param = self._simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post_serialize(
-            order_id=order_id,
-            sandbox_order_simulate_request_body=sandbox_order_simulate_request_body,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSandboxOrderSimulateResult",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post_with_http_info(
-        self,
-        order_id: Annotated[StrictStr, Field(description="Sandbox order identifier: primary key (UUID) of sandbox.sandbox_orders.id, or broker_provided_order_id string.")],
-        sandbox_order_simulate_request_body: SandboxOrderSimulateRequestBody,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseSandboxOrderSimulateResult]:
-        """(Deprecated) Simulate Sandbox Order Lifecycle
-
-        Advance or set sandbox order lifecycle status by sandbox table lookup.  Updates ``sandbox.sandbox_orders``, appends ``sandbox_order_events``, and creates ``sandbox_order_fills`` when moving to filled / partially_filled. ``cancelled`` reuses the same cancellation persistence as broker cancel.
-
-        :param order_id: Sandbox order identifier: primary key (UUID) of sandbox.sandbox_orders.id, or broker_provided_order_id string. (required)
-        :type order_id: str
-        :param sandbox_order_simulate_request_body: (required)
-        :type sandbox_order_simulate_request_body: SandboxOrderSimulateRequestBody
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/orders/{order_id}/simulate is deprecated.", DeprecationWarning)
-
-        _param = self._simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post_serialize(
-            order_id=order_id,
-            sandbox_order_simulate_request_body=sandbox_order_simulate_request_body,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSandboxOrderSimulateResult",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post_without_preload_content(
-        self,
-        order_id: Annotated[StrictStr, Field(description="Sandbox order identifier: primary key (UUID) of sandbox.sandbox_orders.id, or broker_provided_order_id string.")],
-        sandbox_order_simulate_request_body: SandboxOrderSimulateRequestBody,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Simulate Sandbox Order Lifecycle
-
-        Advance or set sandbox order lifecycle status by sandbox table lookup.  Updates ``sandbox.sandbox_orders``, appends ``sandbox_order_events``, and creates ``sandbox_order_fills`` when moving to filled / partially_filled. ``cancelled`` reuses the same cancellation persistence as broker cancel.
-
-        :param order_id: Sandbox order identifier: primary key (UUID) of sandbox.sandbox_orders.id, or broker_provided_order_id string. (required)
-        :type order_id: str
-        :param sandbox_order_simulate_request_body: (required)
-        :type sandbox_order_simulate_request_body: SandboxOrderSimulateRequestBody
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/orders/{order_id}/simulate is deprecated.", DeprecationWarning)
-
-        _param = self._simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post_serialize(
-            order_id=order_id,
-            sandbox_order_simulate_request_body=sandbox_order_simulate_request_body,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSandboxOrderSimulateResult",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _simulate_sandbox_order_lifecycle_api_beta_brokers_orders_order_id_simulate_post_serialize(
-        self,
-        order_id,
-        sandbox_order_simulate_request_body,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if order_id is not None:
-            _path_params['order_id'] = order_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if sandbox_order_simulate_request_body is not None:
-            _body_params = sandbox_order_simulate_request_body
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/api/beta/brokers/orders/{order_id}/simulate',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def sync_orders_dev_api_beta_brokers_actions_sync_orders_post(
-        self,
-        sync_orders_request: SyncOrdersRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDictStrUnionIntNoneType:
-        """(Deprecated) Sync Orders Dev
-
-        Dev-only: force a broker orders sync for a connection.  This triggers the broker factory `broker.get_orders(connection_id)` path, which is the same path used during initial connection data initialization.
-
-        :param sync_orders_request: (required)
-        :type sync_orders_request: SyncOrdersRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/actions/sync/orders is deprecated.", DeprecationWarning)
-
-        _param = self._sync_orders_dev_api_beta_brokers_actions_sync_orders_post_serialize(
-            sync_orders_request=sync_orders_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrUnionIntNoneType",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def sync_orders_dev_api_beta_brokers_actions_sync_orders_post_with_http_info(
-        self,
-        sync_orders_request: SyncOrdersRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDictStrUnionIntNoneType]:
-        """(Deprecated) Sync Orders Dev
-
-        Dev-only: force a broker orders sync for a connection.  This triggers the broker factory `broker.get_orders(connection_id)` path, which is the same path used during initial connection data initialization.
-
-        :param sync_orders_request: (required)
-        :type sync_orders_request: SyncOrdersRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/actions/sync/orders is deprecated.", DeprecationWarning)
-
-        _param = self._sync_orders_dev_api_beta_brokers_actions_sync_orders_post_serialize(
-            sync_orders_request=sync_orders_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrUnionIntNoneType",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def sync_orders_dev_api_beta_brokers_actions_sync_orders_post_without_preload_content(
-        self,
-        sync_orders_request: SyncOrdersRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Sync Orders Dev
-
-        Dev-only: force a broker orders sync for a connection.  This triggers the broker factory `broker.get_orders(connection_id)` path, which is the same path used during initial connection data initialization.
-
-        :param sync_orders_request: (required)
-        :type sync_orders_request: SyncOrdersRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("POST /api/beta/brokers/actions/sync/orders is deprecated.", DeprecationWarning)
-
-        _param = self._sync_orders_dev_api_beta_brokers_actions_sync_orders_post_serialize(
-            sync_orders_request=sync_orders_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrUnionIntNoneType",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _sync_orders_dev_api_beta_brokers_actions_sync_orders_post_serialize(
-        self,
-        sync_orders_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if sync_orders_request is not None:
-            _body_params = sync_orders_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='POST',
-            resource_path='/api/beta/brokers/actions/sync/orders',
+            resource_path='/api/beta/brokers/connections/{connection_id}/refresh',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
@@ -9525,8 +5467,8 @@ class BrokersApi:
     @validate_call
     def update_connection_api_beta_brokers_connections_connection_id_put(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
-        broker_connection_update_request: BrokerConnectionUpdateRequest,
+        connection_id: StrictStr,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -9539,15 +5481,15 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseBrokerDataUserBrokerConnections:
+    ) -> FinaticResponseBetaBrokerShimResponse:
         """(Deprecated) Update Connection
 
-        Update a broker connection's permissions.
+        Map beta connection updates to v1 account-grant updates.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
-        :param broker_connection_update_request: (required)
-        :type broker_connection_update_request: BrokerConnectionUpdateRequest
+        :param connection_id: (required)
+        :type connection_id: str
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -9573,7 +5515,7 @@ class BrokersApi:
 
         _param = self._update_connection_api_beta_brokers_connections_connection_id_put_serialize(
             connection_id=connection_id,
-            broker_connection_update_request=broker_connection_update_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -9581,7 +5523,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseBrokerDataUserBrokerConnections",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -9606,8 +5548,8 @@ class BrokersApi:
     @validate_call
     def update_connection_api_beta_brokers_connections_connection_id_put_with_http_info(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
-        broker_connection_update_request: BrokerConnectionUpdateRequest,
+        connection_id: StrictStr,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -9620,15 +5562,15 @@ class BrokersApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseBrokerDataUserBrokerConnections]:
+    ) -> ApiResponse[FinaticResponseBetaBrokerShimResponse]:
         """(Deprecated) Update Connection
 
-        Update a broker connection's permissions.
+        Map beta connection updates to v1 account-grant updates.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
-        :param broker_connection_update_request: (required)
-        :type broker_connection_update_request: BrokerConnectionUpdateRequest
+        :param connection_id: (required)
+        :type connection_id: str
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -9654,7 +5596,7 @@ class BrokersApi:
 
         _param = self._update_connection_api_beta_brokers_connections_connection_id_put_serialize(
             connection_id=connection_id,
-            broker_connection_update_request=broker_connection_update_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -9662,7 +5604,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseBrokerDataUserBrokerConnections",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -9687,8 +5629,8 @@ class BrokersApi:
     @validate_call
     def update_connection_api_beta_brokers_connections_connection_id_put_without_preload_content(
         self,
-        connection_id: Annotated[UUID, Field(description="Connection ID")],
-        broker_connection_update_request: BrokerConnectionUpdateRequest,
+        connection_id: StrictStr,
+        request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -9704,12 +5646,12 @@ class BrokersApi:
     ) -> RESTResponseType:
         """(Deprecated) Update Connection
 
-        Update a broker connection's permissions.
+        Map beta connection updates to v1 account-grant updates.
 
-        :param connection_id: Connection ID (required)
-        :type connection_id: UUID
-        :param broker_connection_update_request: (required)
-        :type broker_connection_update_request: BrokerConnectionUpdateRequest
+        :param connection_id: (required)
+        :type connection_id: str
+        :param request_body:
+        :type request_body: Dict[str, object]
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -9735,7 +5677,7 @@ class BrokersApi:
 
         _param = self._update_connection_api_beta_brokers_connections_connection_id_put_serialize(
             connection_id=connection_id,
-            broker_connection_update_request=broker_connection_update_request,
+            request_body=request_body,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -9743,7 +5685,7 @@ class BrokersApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseBrokerDataUserBrokerConnections",
+            '200': "FinaticResponseBetaBrokerShimResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -9764,7 +5706,7 @@ class BrokersApi:
     def _update_connection_api_beta_brokers_connections_connection_id_put_serialize(
         self,
         connection_id,
-        broker_connection_update_request,
+        request_body,
         _request_auth,
         _content_type,
         _headers,
@@ -9792,8 +5734,8 @@ class BrokersApi:
         # process the header parameters
         # process the form parameters
         # process the body parameter
-        if broker_connection_update_request is not None:
-            _body_params = broker_connection_update_request
+        if request_body is not None:
+            _body_params = request_body
 
 
         # set the HTTP header `Accept`
@@ -9820,330 +5762,11 @@ class BrokersApi:
 
         # authentication setting
         _auth_settings: List[str] = [
-            'HTTPBearer'
         ]
 
         return self.api_client.param_serialize(
             method='PUT',
             resource_path='/api/beta/brokers/connections/{connection_id}',
-            path_params=_path_params,
-            query_params=_query_params,
-            header_params=_header_params,
-            body=_body_params,
-            post_params=_form_params,
-            files=_files,
-            auth_settings=_auth_settings,
-            collection_formats=_collection_formats,
-            _host=_host,
-            _request_auth=_request_auth
-        )
-
-
-
-
-    @validate_call
-    def update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put(
-        self,
-        connection_id: UUID,
-        reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseReauthNotificationPreference:
-        """(Deprecated) Update Reauth Notification Preference
-
-        Persist a user reauth email notification preference.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param reauth_notification_preference_update_request: (required)
-        :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("PUT /api/beta/brokers/connections/{connection_id}/reauth-notification-preference is deprecated.", DeprecationWarning)
-
-        _param = self._update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put_serialize(
-            connection_id=connection_id,
-            reauth_notification_preference_update_request=reauth_notification_preference_update_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationPreference",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        ).data
-
-
-    @validate_call
-    def update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put_with_http_info(
-        self,
-        connection_id: UUID,
-        reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseReauthNotificationPreference]:
-        """(Deprecated) Update Reauth Notification Preference
-
-        Persist a user reauth email notification preference.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param reauth_notification_preference_update_request: (required)
-        :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("PUT /api/beta/brokers/connections/{connection_id}/reauth-notification-preference is deprecated.", DeprecationWarning)
-
-        _param = self._update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put_serialize(
-            connection_id=connection_id,
-            reauth_notification_preference_update_request=reauth_notification_preference_update_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationPreference",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        response_data.read()
-        return self.api_client.response_deserialize(
-            response_data=response_data,
-            response_types_map=_response_types_map,
-        )
-
-
-    @validate_call
-    def update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put_without_preload_content(
-        self,
-        connection_id: UUID,
-        reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
-        _request_timeout: Union[
-            None,
-            Annotated[StrictFloat, Field(gt=0)],
-            Tuple[
-                Annotated[StrictFloat, Field(gt=0)],
-                Annotated[StrictFloat, Field(gt=0)]
-            ]
-        ] = None,
-        _request_auth: Optional[Dict[StrictStr, Any]] = None,
-        _content_type: Optional[StrictStr] = None,
-        _headers: Optional[Dict[StrictStr, Any]] = None,
-        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> RESTResponseType:
-        """(Deprecated) Update Reauth Notification Preference
-
-        Persist a user reauth email notification preference.
-
-        :param connection_id: (required)
-        :type connection_id: UUID
-        :param reauth_notification_preference_update_request: (required)
-        :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
-        :param _request_timeout: timeout setting for this request. If one
-                                 number provided, it will be total request
-                                 timeout. It can also be a pair (tuple) of
-                                 (connection, read) timeouts.
-        :type _request_timeout: int, tuple(int, int), optional
-        :param _request_auth: set to override the auth_settings for an a single
-                              request; this effectively ignores the
-                              authentication in the spec for a single request.
-        :type _request_auth: dict, optional
-        :param _content_type: force content-type for the request.
-        :type _content_type: str, Optional
-        :param _headers: set to override the headers for a single
-                         request; this effectively ignores the headers
-                         in the spec for a single request.
-        :type _headers: dict, optional
-        :param _host_index: set to override the host_index for a single
-                            request; this effectively ignores the host_index
-                            in the spec for a single request.
-        :type _host_index: int, optional
-        :return: Returns the result object.
-        """ # noqa: E501
-        warnings.warn("PUT /api/beta/brokers/connections/{connection_id}/reauth-notification-preference is deprecated.", DeprecationWarning)
-
-        _param = self._update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put_serialize(
-            connection_id=connection_id,
-            reauth_notification_preference_update_request=reauth_notification_preference_update_request,
-            _request_auth=_request_auth,
-            _content_type=_content_type,
-            _headers=_headers,
-            _host_index=_host_index
-        )
-
-        _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseReauthNotificationPreference",
-            '400': "FinaticAPIErrorResponse",
-            '401': "FinaticAPIErrorResponse",
-            '403': "FinaticAPIErrorResponse",
-            '404': "FinaticAPIErrorResponse",
-            '409': "FinaticAPIErrorResponse",
-            '422': "FinaticAPIErrorResponse",
-            '429': "FinaticAPIErrorResponse",
-            '500': "FinaticAPIErrorResponse",
-            '502': "FinaticAPIErrorResponse",
-        }
-        response_data = self.api_client.call_api(
-            *_param,
-            _request_timeout=_request_timeout
-        )
-        return response_data.response
-
-
-    def _update_reauth_notification_preference_api_beta_brokers_connections_connection_id_reauth_notification_preference_put_serialize(
-        self,
-        connection_id,
-        reauth_notification_preference_update_request,
-        _request_auth,
-        _content_type,
-        _headers,
-        _host_index,
-    ) -> RequestSerialized:
-
-        _host = None
-
-        _collection_formats: Dict[str, str] = {
-        }
-
-        _path_params: Dict[str, str] = {}
-        _query_params: List[Tuple[str, str]] = []
-        _header_params: Dict[str, Optional[str]] = _headers or {}
-        _form_params: List[Tuple[str, str]] = []
-        _files: Dict[
-            str, Union[str, bytes, List[str], List[bytes], List[Tuple[str, bytes]]]
-        ] = {}
-        _body_params: Optional[bytes] = None
-
-        # process the path parameters
-        if connection_id is not None:
-            _path_params['connection_id'] = connection_id
-        # process the query parameters
-        # process the header parameters
-        # process the form parameters
-        # process the body parameter
-        if reauth_notification_preference_update_request is not None:
-            _body_params = reauth_notification_preference_update_request
-
-
-        # set the HTTP header `Accept`
-        if 'Accept' not in _header_params:
-            _header_params['Accept'] = self.api_client.select_header_accept(
-                [
-                    'application/json'
-                ]
-            )
-
-        # set the HTTP header `Content-Type`
-        if _content_type:
-            _header_params['Content-Type'] = _content_type
-        else:
-            _default_content_type = (
-                self.api_client.select_header_content_type(
-                    [
-                        'application/json'
-                    ]
-                )
-            )
-            if _default_content_type is not None:
-                _header_params['Content-Type'] = _default_content_type
-
-        # authentication setting
-        _auth_settings: List[str] = [
-        ]
-
-        return self.api_client.param_serialize(
-            method='PUT',
-            resource_path='/api/beta/brokers/connections/{connection_id}/reauth-notification-preference',
             path_params=_path_params,
             query_params=_query_params,
             header_params=_header_params,
