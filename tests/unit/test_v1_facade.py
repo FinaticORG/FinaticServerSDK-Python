@@ -432,6 +432,27 @@ async def test_v1_order_commands_send_idempotency_key() -> None:
 
 
 @pytest.mark.asyncio
+async def test_v1_cancel_account_order_sends_no_body() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    await sdk.v1.cancel_account_order(
+        "account-1",
+        "order-1",
+        idempotency_key="cancel-key-1",
+    )
+
+    call = fake_api_client.calls[0]
+    assert call["method"] == "DELETE"
+    assert call["url"] == "https://api.test/api/v1/accounts/account-1/orders/order-1"
+    assert call["headers"]["Idempotency-Key"] == "cancel-key-1"
+    assert call["body"] is None
+
+
+@pytest.mark.asyncio
 async def test_v1_order_commands_require_idempotency_key() -> None:
     sdk = FinaticServer(
         api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}

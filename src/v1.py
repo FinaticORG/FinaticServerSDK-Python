@@ -380,7 +380,7 @@ class V1Client:
         return await self._account_order_request(
             "DELETE",
             f"/api/v1/accounts/{account_id}/orders/{order_id}",
-            {"orderId": order_id},
+            None,
             idempotency_key,
         )
 
@@ -450,13 +450,14 @@ class V1Client:
         self,
         method: str,
         path: str,
-        order: dict[str, Any],
+        order: dict[str, Any] | None,
         idempotency_key: str,
     ) -> FinaticResponse:
         if not idempotency_key:
             raise ValueError("idempotency_key is required for account order commands")
         headers = {"Idempotency-Key": idempotency_key}
-        return await self._request(method, path, body={"order": order}, headers=headers)
+        body = {"order": order} if order is not None else None
+        return await self._request(method, path, body=body, headers=headers)
 
     async def _request(
         self,
