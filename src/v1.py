@@ -349,7 +349,7 @@ class V1Client:
         account_id: str,
         order: dict[str, Any],
         *,
-        idempotency_key: str | None = None,
+        idempotency_key: str,
     ) -> FinaticResponse:
         return await self._account_order_request(
             "POST", f"/api/v1/accounts/{account_id}/orders", order, idempotency_key
@@ -361,7 +361,7 @@ class V1Client:
         order_id: str,
         order: dict[str, Any],
         *,
-        idempotency_key: str | None = None,
+        idempotency_key: str,
     ) -> FinaticResponse:
         return await self._account_order_request(
             "PATCH",
@@ -375,7 +375,7 @@ class V1Client:
         account_id: str,
         order_id: str,
         *,
-        idempotency_key: str | None = None,
+        idempotency_key: str,
     ) -> FinaticResponse:
         return await self._account_order_request(
             "DELETE",
@@ -451,9 +451,11 @@ class V1Client:
         method: str,
         path: str,
         order: dict[str, Any],
-        idempotency_key: str | None,
+        idempotency_key: str,
     ) -> FinaticResponse:
-        headers = {"Idempotency-Key": idempotency_key} if idempotency_key else None
+        if not idempotency_key:
+            raise ValueError("idempotency_key is required for account order commands")
+        headers = {"Idempotency-Key": idempotency_key}
         return await self._request(method, path, body={"order": order}, headers=headers)
 
     async def _request(

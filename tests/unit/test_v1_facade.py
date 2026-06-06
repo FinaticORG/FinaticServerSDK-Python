@@ -432,6 +432,18 @@ async def test_v1_order_commands_send_idempotency_key() -> None:
 
 
 @pytest.mark.asyncio
+async def test_v1_order_commands_require_idempotency_key() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+
+    with pytest.raises(ValueError, match="idempotency_key is required"):
+        await sdk.v1.create_account_order(
+            "account-1", {"symbol": "AAPL", "quantity": 1}, idempotency_key=""
+        )
+
+
+@pytest.mark.asyncio
 async def test_v1_create_consent_uses_openapi_route() -> None:
     sdk = FinaticServer(
         api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
