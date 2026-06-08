@@ -43,7 +43,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_get_consents(
+    async def finatic_v1_get_consents(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -107,11 +107,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -119,7 +119,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_get_consents_with_http_info(
+    async def finatic_v1_get_consents_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -183,11 +183,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -195,7 +195,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_get_consents_without_preload_content(
+    async def finatic_v1_get_consents_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -259,7 +259,7 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -330,7 +330,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_get_consents_consent_id(
+    async def finatic_v1_get_consents_consent_id(
         self,
         consent_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -398,11 +398,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -410,7 +410,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_get_consents_consent_id_with_http_info(
+    async def finatic_v1_get_consents_consent_id_with_http_info(
         self,
         consent_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -478,11 +478,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -490,7 +490,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_get_consents_consent_id_without_preload_content(
+    async def finatic_v1_get_consents_consent_id_without_preload_content(
         self,
         consent_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -558,7 +558,7 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -632,7 +632,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_post_consents(
+    async def finatic_v1_post_consents(
         self,
         fdx_consent_grant_create: FDXConsentGrantCreate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -700,11 +700,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -712,7 +712,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_post_consents_with_http_info(
+    async def finatic_v1_post_consents_with_http_info(
         self,
         fdx_consent_grant_create: FDXConsentGrantCreate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -780,11 +780,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -792,7 +792,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_post_consents_without_preload_content(
+    async def finatic_v1_post_consents_without_preload_content(
         self,
         fdx_consent_grant_create: FDXConsentGrantCreate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -860,7 +860,7 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -947,7 +947,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_post_consents_consent_id_revoke(
+    async def finatic_v1_post_consents_consent_id_revoke(
         self,
         consent_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1015,11 +1015,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1027,7 +1027,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_post_consents_consent_id_revoke_with_http_info(
+    async def finatic_v1_post_consents_consent_id_revoke_with_http_info(
         self,
         consent_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1095,11 +1095,11 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1107,7 +1107,7 @@ class ConsentsApi:
 
 
     @validate_call
-    def finatic_v1_post_consents_consent_id_revoke_without_preload_content(
+    async def finatic_v1_post_consents_consent_id_revoke_without_preload_content(
         self,
         consent_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1175,7 +1175,7 @@ class ConsentsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

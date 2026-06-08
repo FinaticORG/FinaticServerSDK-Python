@@ -41,7 +41,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def create_mt_connector_api_v1_mt_connect_post(
+    async def create_mt_connector_api_v1_mt_connect_post(
         self,
         mt_connect_request: MTConnectRequest,
         _request_timeout: Union[
@@ -106,11 +106,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -118,7 +118,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def create_mt_connector_api_v1_mt_connect_post_with_http_info(
+    async def create_mt_connector_api_v1_mt_connect_post_with_http_info(
         self,
         mt_connect_request: MTConnectRequest,
         _request_timeout: Union[
@@ -183,11 +183,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -195,7 +195,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def create_mt_connector_api_v1_mt_connect_post_without_preload_content(
+    async def create_mt_connector_api_v1_mt_connect_post_without_preload_content(
         self,
         mt_connect_request: MTConnectRequest,
         _request_timeout: Union[
@@ -260,7 +260,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -344,7 +344,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def disconnect_mt_connector_api_v1_mt_disconnect_post(
+    async def disconnect_mt_connector_api_v1_mt_disconnect_post(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -409,11 +409,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -421,7 +421,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def disconnect_mt_connector_api_v1_mt_disconnect_post_with_http_info(
+    async def disconnect_mt_connector_api_v1_mt_disconnect_post_with_http_info(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -486,11 +486,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -498,7 +498,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def disconnect_mt_connector_api_v1_mt_disconnect_post_without_preload_content(
+    async def disconnect_mt_connector_api_v1_mt_disconnect_post_without_preload_content(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -563,7 +563,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -636,7 +636,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def list_mt_connectors_api_v1_mt_connections_get(
+    async def list_mt_connectors_api_v1_mt_connections_get(
         self,
         _request_timeout: Union[
             None,
@@ -697,11 +697,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -709,7 +709,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def list_mt_connectors_api_v1_mt_connections_get_with_http_info(
+    async def list_mt_connectors_api_v1_mt_connections_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -770,11 +770,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -782,7 +782,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def list_mt_connectors_api_v1_mt_connections_get_without_preload_content(
+    async def list_mt_connectors_api_v1_mt_connections_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -843,7 +843,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -911,7 +911,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post(
+    async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -976,11 +976,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -988,7 +988,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_with_http_info(
+    async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_with_http_info(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -1053,11 +1053,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1065,7 +1065,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_without_preload_content(
+    async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_without_preload_content(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -1130,7 +1130,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1201,7 +1201,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post(
+    async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -1266,11 +1266,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1278,7 +1278,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_with_http_info(
+    async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_with_http_info(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -1343,11 +1343,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1355,7 +1355,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_without_preload_content(
+    async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_without_preload_content(
         self,
         connector_id: UUID,
         _request_timeout: Union[
@@ -1420,7 +1420,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

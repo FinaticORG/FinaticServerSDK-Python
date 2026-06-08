@@ -37,7 +37,7 @@ class McpApi:
 
 
     @validate_call
-    def mcp_transport_get_mcp_get(
+    async def mcp_transport_get_mcp_get(
         self,
         _request_timeout: Union[
             None,
@@ -88,11 +88,11 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -100,7 +100,7 @@ class McpApi:
 
 
     @validate_call
-    def mcp_transport_get_mcp_get_with_http_info(
+    async def mcp_transport_get_mcp_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -151,11 +151,11 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -163,7 +163,7 @@ class McpApi:
 
 
     @validate_call
-    def mcp_transport_get_mcp_get_without_preload_content(
+    async def mcp_transport_get_mcp_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -214,7 +214,7 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -282,7 +282,7 @@ class McpApi:
 
 
     @validate_call
-    def mcp_transport_mcp_post(
+    async def mcp_transport_mcp_post(
         self,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -337,11 +337,11 @@ class McpApi:
             '200': "object",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -349,7 +349,7 @@ class McpApi:
 
 
     @validate_call
-    def mcp_transport_mcp_post_with_http_info(
+    async def mcp_transport_mcp_post_with_http_info(
         self,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -404,11 +404,11 @@ class McpApi:
             '200': "object",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -416,7 +416,7 @@ class McpApi:
 
 
     @validate_call
-    def mcp_transport_mcp_post_without_preload_content(
+    async def mcp_transport_mcp_post_without_preload_content(
         self,
         x_api_key: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -471,7 +471,7 @@ class McpApi:
             '200': "object",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -542,7 +542,7 @@ class McpApi:
 
 
     @validate_call
-    def oauth_authorization_server_metadata_well_known_oauth_authorization_server_get(
+    async def oauth_authorization_server_metadata_well_known_oauth_authorization_server_get(
         self,
         _request_timeout: Union[
             None,
@@ -593,11 +593,11 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -605,7 +605,7 @@ class McpApi:
 
 
     @validate_call
-    def oauth_authorization_server_metadata_well_known_oauth_authorization_server_get_with_http_info(
+    async def oauth_authorization_server_metadata_well_known_oauth_authorization_server_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -656,11 +656,11 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -668,7 +668,7 @@ class McpApi:
 
 
     @validate_call
-    def oauth_authorization_server_metadata_well_known_oauth_authorization_server_get_without_preload_content(
+    async def oauth_authorization_server_metadata_well_known_oauth_authorization_server_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -719,7 +719,7 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -787,7 +787,7 @@ class McpApi:
 
 
     @validate_call
-    def oauth_protected_resource_metadata_well_known_oauth_protected_resource_get(
+    async def oauth_protected_resource_metadata_well_known_oauth_protected_resource_get(
         self,
         _request_timeout: Union[
             None,
@@ -837,11 +837,11 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -849,7 +849,7 @@ class McpApi:
 
 
     @validate_call
-    def oauth_protected_resource_metadata_well_known_oauth_protected_resource_get_with_http_info(
+    async def oauth_protected_resource_metadata_well_known_oauth_protected_resource_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -899,11 +899,11 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -911,7 +911,7 @@ class McpApi:
 
 
     @validate_call
-    def oauth_protected_resource_metadata_well_known_oauth_protected_resource_get_without_preload_content(
+    async def oauth_protected_resource_metadata_well_known_oauth_protected_resource_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -961,7 +961,7 @@ class McpApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

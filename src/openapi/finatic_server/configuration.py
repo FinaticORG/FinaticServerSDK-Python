@@ -10,16 +10,16 @@
 """  # noqa: E501
 
 
+import aiohttp_retry
+import base64
 import copy
 import http.client as httplib
 import logging
 from logging import FileHandler
-import multiprocessing
 import sys
 from typing import Any, ClassVar, Dict, List, Literal, Optional, TypedDict, Union
 from typing_extensions import NotRequired, Self
 
-import urllib3
 
 
 JSON_SCHEMA_VALIDATION_KEYWORDS = {
@@ -160,7 +160,7 @@ class Configuration:
       when calling API from https server.
     :param ssl_ca_cert: str - the path to a file of concatenated CA certificates
       in PEM format.
-    :param retries: int | urllib3.util.retry.Retry - Retry configuration.
+    :param retries: int | aiohttp_retry.RetryOptionsBase - Retry configuration.
     :param ca_cert_data: verify the peer using concatenated CA certificate data
       in PEM (str) or DER (bytes) format.
     :param cert_file: the path to a client certificate file, for mTLS.
@@ -195,7 +195,7 @@ class Configuration:
         server_operation_variables: Optional[Dict[int, ServerVariablesT]]=None,
         ignore_operation_servers: bool=False,
         ssl_ca_cert: Optional[str]=None,
-        retries: Optional[Union[int, urllib3.util.retry.Retry]] = None,
+        retries: Optional[Union[int, aiohttp_retry.RetryOptionsBase]] = None,
         ca_cert_data: Optional[Union[str, bytes]] = None,
         cert_file: Optional[str]=None,
         key_file: Optional[str]=None,
@@ -259,7 +259,6 @@ class Configuration:
         """Logging Settings
         """
         self.logger["package_logger"] = logging.getLogger("finatic_server")
-        self.logger["urllib3_logger"] = logging.getLogger("urllib3")
         self.logger_format = '%(asctime)s %(levelname)s %(message)s'
         """Log format
         """
@@ -305,9 +304,9 @@ class Configuration:
            Set this to the SNI value expected by the server.
         """
 
-        self.connection_pool_maxsize = connection_pool_maxsize if connection_pool_maxsize is not None else multiprocessing.cpu_count() * 5
-        """urllib3 connection pool's maximum number of connections saved
-           per pool. None in the constructor is coerced to cpu_count * 5.
+        self.connection_pool_maxsize = connection_pool_maxsize if connection_pool_maxsize is not None else 100
+        """This value is passed to the aiohttp to limit simultaneous connections.
+           None in the constructor is coerced to default 100.
         """
 
         self.proxy = proxy
@@ -505,9 +504,9 @@ class Configuration:
         if self.password is not None:
             password = self.password
 
-        return urllib3.util.make_headers(
-            basic_auth=username + ':' + password
-        ).get('authorization')
+        return "Basic " + base64.b64encode(
+            (username + ":" + password).encode('utf-8')
+        ).decode('utf-8')
 
     def auth_settings(self)-> AuthSettings:
         """Gets Auth Settings dict for api client.

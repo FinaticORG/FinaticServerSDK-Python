@@ -43,7 +43,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_delete_accounts_account_id_orders_order_id(
+    async def finatic_v1_delete_accounts_account_id_orders_order_id(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -119,11 +119,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -131,7 +131,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_delete_accounts_account_id_orders_order_id_with_http_info(
+    async def finatic_v1_delete_accounts_account_id_orders_order_id_with_http_info(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -207,11 +207,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -219,7 +219,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_delete_accounts_account_id_orders_order_id_without_preload_content(
+    async def finatic_v1_delete_accounts_account_id_orders_order_id_without_preload_content(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -295,7 +295,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -375,7 +375,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts(
+    async def finatic_v1_get_accounts(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -439,11 +439,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -451,7 +451,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_with_http_info(
+    async def finatic_v1_get_accounts_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -515,11 +515,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -527,7 +527,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_without_preload_content(
+    async def finatic_v1_get_accounts_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -591,7 +591,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -662,7 +662,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id(
+    async def finatic_v1_get_accounts_account_id(
         self,
         account_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -730,11 +730,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -742,7 +742,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_with_http_info(
+    async def finatic_v1_get_accounts_account_id_with_http_info(
         self,
         account_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -810,11 +810,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -822,7 +822,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_without_preload_content(
         self,
         account_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -890,7 +890,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -964,7 +964,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_balances(
+    async def finatic_v1_get_accounts_account_id_balances(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -1040,11 +1040,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1052,7 +1052,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_balances_with_http_info(
+    async def finatic_v1_get_accounts_account_id_balances_with_http_info(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -1128,11 +1128,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1140,7 +1140,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_balances_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_balances_without_preload_content(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -1216,7 +1216,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1300,7 +1300,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders(
+    async def finatic_v1_get_accounts_account_id_orders(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -1376,11 +1376,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1388,7 +1388,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_with_http_info(
+    async def finatic_v1_get_accounts_account_id_orders_with_http_info(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -1464,11 +1464,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1476,7 +1476,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_orders_without_preload_content(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -1552,7 +1552,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1636,7 +1636,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id(
+    async def finatic_v1_get_accounts_account_id_orders_order_id(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -1708,11 +1708,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1720,7 +1720,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_with_http_info(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_with_http_info(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -1792,11 +1792,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1804,7 +1804,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_without_preload_content(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -1876,7 +1876,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1953,7 +1953,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_events(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_events(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -2025,11 +2025,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2037,7 +2037,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_events_with_http_info(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_events_with_http_info(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -2109,11 +2109,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2121,7 +2121,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_events_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_events_without_preload_content(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -2193,7 +2193,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2270,7 +2270,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_fills(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_fills(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -2342,11 +2342,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2354,7 +2354,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_fills_with_http_info(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_fills_with_http_info(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -2426,11 +2426,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2438,7 +2438,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_orders_order_id_fills_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_orders_order_id_fills_without_preload_content(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -2510,7 +2510,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2587,7 +2587,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_position_lots(
+    async def finatic_v1_get_accounts_account_id_position_lots(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -2663,11 +2663,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2675,7 +2675,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_position_lots_with_http_info(
+    async def finatic_v1_get_accounts_account_id_position_lots_with_http_info(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -2751,11 +2751,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2763,7 +2763,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_position_lots_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_position_lots_without_preload_content(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -2839,7 +2839,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2923,7 +2923,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills(
+    async def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills(
         self,
         account_id: UUID,
         lot_id: StrictStr,
@@ -2995,11 +2995,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3007,7 +3007,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_with_http_info(
+    async def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_with_http_info(
         self,
         account_id: UUID,
         lot_id: StrictStr,
@@ -3079,11 +3079,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3091,7 +3091,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_without_preload_content(
         self,
         account_id: UUID,
         lot_id: StrictStr,
@@ -3163,7 +3163,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3240,7 +3240,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_positions(
+    async def finatic_v1_get_accounts_account_id_positions(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -3316,11 +3316,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3328,7 +3328,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_positions_with_http_info(
+    async def finatic_v1_get_accounts_account_id_positions_with_http_info(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -3404,11 +3404,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3416,7 +3416,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_positions_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_positions_without_preload_content(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -3492,7 +3492,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3576,7 +3576,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_resource(
+    async def finatic_v1_get_accounts_account_id_resource(
         self,
         account_id: UUID,
         resource: StrictStr,
@@ -3656,11 +3656,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3668,7 +3668,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_resource_with_http_info(
+    async def finatic_v1_get_accounts_account_id_resource_with_http_info(
         self,
         account_id: UUID,
         resource: StrictStr,
@@ -3748,11 +3748,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3760,7 +3760,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_resource_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_resource_without_preload_content(
         self,
         account_id: UUID,
         resource: StrictStr,
@@ -3840,7 +3840,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3927,7 +3927,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_transactions(
+    async def finatic_v1_get_accounts_account_id_transactions(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -4003,11 +4003,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4015,7 +4015,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_transactions_with_http_info(
+    async def finatic_v1_get_accounts_account_id_transactions_with_http_info(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -4091,11 +4091,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4103,7 +4103,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_get_accounts_account_id_transactions_without_preload_content(
+    async def finatic_v1_get_accounts_account_id_transactions_without_preload_content(
         self,
         account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
@@ -4179,7 +4179,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4263,7 +4263,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_patch_accounts_account_id_orders_order_id(
+    async def finatic_v1_patch_accounts_account_id_orders_order_id(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -4343,11 +4343,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4355,7 +4355,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_patch_accounts_account_id_orders_order_id_with_http_info(
+    async def finatic_v1_patch_accounts_account_id_orders_order_id_with_http_info(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -4435,11 +4435,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4447,7 +4447,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_patch_accounts_account_id_orders_order_id_without_preload_content(
+    async def finatic_v1_patch_accounts_account_id_orders_order_id_without_preload_content(
         self,
         account_id: UUID,
         order_id: StrictStr,
@@ -4527,7 +4527,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4623,7 +4623,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_post_accounts_account_id_orders(
+    async def finatic_v1_post_accounts_account_id_orders(
         self,
         account_id: UUID,
         idempotency_key: StrictStr,
@@ -4699,11 +4699,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4711,7 +4711,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_post_accounts_account_id_orders_with_http_info(
+    async def finatic_v1_post_accounts_account_id_orders_with_http_info(
         self,
         account_id: UUID,
         idempotency_key: StrictStr,
@@ -4787,11 +4787,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4799,7 +4799,7 @@ class AccountsApi:
 
 
     @validate_call
-    def finatic_v1_post_accounts_account_id_orders_without_preload_content(
+    async def finatic_v1_post_accounts_account_id_orders_without_preload_content(
         self,
         account_id: UUID,
         idempotency_key: StrictStr,
@@ -4875,7 +4875,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

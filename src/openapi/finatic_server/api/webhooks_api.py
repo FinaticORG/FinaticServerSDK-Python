@@ -46,7 +46,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_catalog(
+    async def finatic_v1_get_webhooks_catalog(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -110,11 +110,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -122,7 +122,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_catalog_with_http_info(
+    async def finatic_v1_get_webhooks_catalog_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -186,11 +186,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -198,7 +198,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_catalog_without_preload_content(
+    async def finatic_v1_get_webhooks_catalog_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -262,7 +262,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -333,7 +333,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_payload_schema(
+    async def finatic_v1_get_webhooks_payload_schema(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -397,11 +397,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -409,7 +409,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_payload_schema_with_http_info(
+    async def finatic_v1_get_webhooks_payload_schema_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -473,11 +473,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -485,7 +485,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_payload_schema_without_preload_content(
+    async def finatic_v1_get_webhooks_payload_schema_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -549,7 +549,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -620,7 +620,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_subscriptions(
+    async def finatic_v1_get_webhooks_subscriptions(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -684,11 +684,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -696,7 +696,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_subscriptions_with_http_info(
+    async def finatic_v1_get_webhooks_subscriptions_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -760,11 +760,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -772,7 +772,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_subscriptions_without_preload_content(
+    async def finatic_v1_get_webhooks_subscriptions_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -836,7 +836,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -907,7 +907,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_patch_webhooks_subscriptions_subscription_id(
+    async def finatic_v1_patch_webhooks_subscriptions_subscription_id(
         self,
         subscription_id: UUID,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
@@ -979,11 +979,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -991,7 +991,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_patch_webhooks_subscriptions_subscription_id_with_http_info(
+    async def finatic_v1_patch_webhooks_subscriptions_subscription_id_with_http_info(
         self,
         subscription_id: UUID,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
@@ -1063,11 +1063,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1075,7 +1075,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_patch_webhooks_subscriptions_subscription_id_without_preload_content(
+    async def finatic_v1_patch_webhooks_subscriptions_subscription_id_without_preload_content(
         self,
         subscription_id: UUID,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
@@ -1147,7 +1147,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1237,7 +1237,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions(
+    async def finatic_v1_post_webhooks_subscriptions(
         self,
         fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1305,11 +1305,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1317,7 +1317,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_with_http_info(
+    async def finatic_v1_post_webhooks_subscriptions_with_http_info(
         self,
         fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1385,11 +1385,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1397,7 +1397,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_without_preload_content(
+    async def finatic_v1_post_webhooks_subscriptions_without_preload_content(
         self,
         fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1465,7 +1465,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1552,7 +1552,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke(
+    async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke(
         self,
         subscription_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1620,11 +1620,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1632,7 +1632,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_with_http_info(
+    async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_with_http_info(
         self,
         subscription_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1700,11 +1700,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1712,7 +1712,7 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_without_preload_content(
+    async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_without_preload_content(
         self,
         subscription_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1780,7 +1780,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

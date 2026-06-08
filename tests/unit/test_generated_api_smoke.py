@@ -171,7 +171,7 @@ def test_generated_api_smoke_invokes_many_endpoints() -> None:
     api_client = ApiClient(configuration)
 
     # Stub the underlying HTTP transport: execute request-building code, but avoid real network.
-    def _stub_request(
+    async def _stub_request(
         method: str,
         url: str,
         headers: Any = None,

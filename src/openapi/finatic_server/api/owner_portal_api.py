@@ -44,7 +44,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def get_owner_portal_bootstrap_api_beta_owner_portal_bootstrap_get(
+    async def get_owner_portal_bootstrap_api_beta_owner_portal_bootstrap_get(
         self,
         _request_timeout: Union[
             None,
@@ -96,11 +96,11 @@ class OwnerPortalApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseOwnerPortalBootstrapResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -108,7 +108,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def get_owner_portal_bootstrap_api_beta_owner_portal_bootstrap_get_with_http_info(
+    async def get_owner_portal_bootstrap_api_beta_owner_portal_bootstrap_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -160,11 +160,11 @@ class OwnerPortalApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseOwnerPortalBootstrapResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -172,7 +172,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def get_owner_portal_bootstrap_api_beta_owner_portal_bootstrap_get_without_preload_content(
+    async def get_owner_portal_bootstrap_api_beta_owner_portal_bootstrap_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -224,7 +224,7 @@ class OwnerPortalApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseOwnerPortalBootstrapResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -293,7 +293,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get(
+    async def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -350,11 +350,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseReauthNotificationPreference",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -362,7 +362,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get_with_http_info(
+    async def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get_with_http_info(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -419,11 +419,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseReauthNotificationPreference",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -431,7 +431,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get_without_preload_content(
+    async def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get_without_preload_content(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -488,7 +488,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseReauthNotificationPreference",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -560,7 +560,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def owner_portal_connect_broker_api_beta_owner_portal_brokers_connect_post(
+    async def owner_portal_connect_broker_api_beta_owner_portal_brokers_connect_post(
         self,
         broker_connection_request: BrokerConnectionRequest,
         _request_timeout: Union[
@@ -617,11 +617,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseAny",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -629,7 +629,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def owner_portal_connect_broker_api_beta_owner_portal_brokers_connect_post_with_http_info(
+    async def owner_portal_connect_broker_api_beta_owner_portal_brokers_connect_post_with_http_info(
         self,
         broker_connection_request: BrokerConnectionRequest,
         _request_timeout: Union[
@@ -686,11 +686,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseAny",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -698,7 +698,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def owner_portal_connect_broker_api_beta_owner_portal_brokers_connect_post_without_preload_content(
+    async def owner_portal_connect_broker_api_beta_owner_portal_brokers_connect_post_without_preload_content(
         self,
         broker_connection_request: BrokerConnectionRequest,
         _request_timeout: Union[
@@ -755,7 +755,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseAny",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -840,7 +840,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete(
+    async def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -897,11 +897,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -909,7 +909,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete_with_http_info(
+    async def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete_with_http_info(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -966,11 +966,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -978,7 +978,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete_without_preload_content(
+    async def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete_without_preload_content(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -1035,7 +1035,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1107,7 +1107,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete(
+    async def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -1164,11 +1164,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1176,7 +1176,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete_with_http_info(
+    async def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete_with_http_info(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -1233,11 +1233,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1245,7 +1245,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete_without_preload_content(
+    async def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete_without_preload_content(
         self,
         connection_id: UUID,
         _request_timeout: Union[
@@ -1302,7 +1302,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1374,7 +1374,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete(
+    async def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete(
         self,
         connection_id: UUID,
         company_id: UUID,
@@ -1435,11 +1435,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1447,7 +1447,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete_with_http_info(
+    async def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete_with_http_info(
         self,
         connection_id: UUID,
         company_id: UUID,
@@ -1508,11 +1508,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1520,7 +1520,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete_without_preload_content(
+    async def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete_without_preload_content(
         self,
         connection_id: UUID,
         company_id: UUID,
@@ -1581,7 +1581,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1656,7 +1656,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch(
+    async def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch(
         self,
         connection_id: UUID,
         company_id: UUID,
@@ -1721,11 +1721,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1733,7 +1733,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch_with_http_info(
+    async def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch_with_http_info(
         self,
         connection_id: UUID,
         company_id: UUID,
@@ -1798,11 +1798,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1810,7 +1810,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch_without_preload_content(
+    async def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch_without_preload_content(
         self,
         connection_id: UUID,
         company_id: UUID,
@@ -1875,7 +1875,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1966,7 +1966,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch(
+    async def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch(
         self,
         connection_id: UUID,
         reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
@@ -2027,11 +2027,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseReauthNotificationPreference",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2039,7 +2039,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch_with_http_info(
+    async def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch_with_http_info(
         self,
         connection_id: UUID,
         reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
@@ -2100,11 +2100,11 @@ class OwnerPortalApi:
             '200': "FinaticResponseReauthNotificationPreference",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2112,7 +2112,7 @@ class OwnerPortalApi:
 
 
     @validate_call
-    def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch_without_preload_content(
+    async def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch_without_preload_content(
         self,
         connection_id: UUID,
         reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
@@ -2173,7 +2173,7 @@ class OwnerPortalApi:
             '200': "FinaticResponseReauthNotificationPreference",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

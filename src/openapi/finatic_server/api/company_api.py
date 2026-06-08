@@ -39,7 +39,7 @@ class CompanyApi:
 
 
     @validate_call
-    def get_company_api_beta_company_company_id_get(
+    async def get_company_api_beta_company_company_id_get(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -96,11 +96,11 @@ class CompanyApi:
             '200': "FinaticResponseAccounts",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -108,7 +108,7 @@ class CompanyApi:
 
 
     @validate_call
-    def get_company_api_beta_company_company_id_get_with_http_info(
+    async def get_company_api_beta_company_company_id_get_with_http_info(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -165,11 +165,11 @@ class CompanyApi:
             '200': "FinaticResponseAccounts",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -177,7 +177,7 @@ class CompanyApi:
 
 
     @validate_call
-    def get_company_api_beta_company_company_id_get_without_preload_content(
+    async def get_company_api_beta_company_company_id_get_without_preload_content(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -234,7 +234,7 @@ class CompanyApi:
             '200': "FinaticResponseAccounts",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -305,7 +305,7 @@ class CompanyApi:
 
 
     @validate_call
-    def get_company_api_v1_company_company_id_get(
+    async def get_company_api_v1_company_company_id_get(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -361,11 +361,11 @@ class CompanyApi:
             '200': "FinaticResponseAccounts",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -373,7 +373,7 @@ class CompanyApi:
 
 
     @validate_call
-    def get_company_api_v1_company_company_id_get_with_http_info(
+    async def get_company_api_v1_company_company_id_get_with_http_info(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -429,11 +429,11 @@ class CompanyApi:
             '200': "FinaticResponseAccounts",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -441,7 +441,7 @@ class CompanyApi:
 
 
     @validate_call
-    def get_company_api_v1_company_company_id_get_without_preload_content(
+    async def get_company_api_v1_company_company_id_get_without_preload_content(
         self,
         company_id: Annotated[UUID, Field(description="Company ID")],
         _request_timeout: Union[
@@ -497,7 +497,7 @@ class CompanyApi:
             '200': "FinaticResponseAccounts",
             '422': "HTTPValidationError",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
