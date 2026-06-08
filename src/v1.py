@@ -127,8 +127,15 @@ class V1Client:
             headers={"One-Time-Token": one_time_token},
         )
 
-    async def get_legacy_portal_url(self) -> FinaticResponse:
-        return await self._request("GET", "/api/v1/session/portal")
+    async def get_legacy_portal_url(
+        self, session_id: str | None = None
+    ) -> FinaticResponse:
+        resolved_session_id = session_id or self._require_session_id()
+        return await self._request(
+            "GET",
+            "/api/v1/session/portal",
+            headers={"session-id": resolved_session_id},
+        )
 
     async def get_legacy_session_user(
         self, session_id: str | None = None

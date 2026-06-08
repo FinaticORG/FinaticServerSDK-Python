@@ -354,6 +354,7 @@ async def test_v1_session_compatibility_routes_match_sdk_openapi() -> None:
         "link_context_id": "mcp-link-context-1",
     }
     assert fake_api_client.calls[4]["url"] == "https://api.test/api/v1/session/portal"
+    assert fake_api_client.calls[4]["headers"]["session-id"] == "session-1"
     assert (
         fake_api_client.calls[5]["url"]
         == "https://api.test/api/v1/session/session-1/user"
