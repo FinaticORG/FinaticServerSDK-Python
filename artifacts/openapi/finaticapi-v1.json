@@ -15754,7 +15754,7 @@
     },
     "/api/v1/portal/{sessionId}/auth-attempts": {
       "post": {
-        "description": "Create a portal auth attempt marker.",
+        "description": "Create a portal auth attempt and bind accounts from live discovery.",
         "operationId": "finaticV1PostPortalSessionIdAuthAttempts",
         "parameters": [
           {

@@ -70,7 +70,7 @@ is exported from the FinaticAPI account-first branch. Refresh it with:
 env PYTHONPATH=/home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/src:/home/claw/.openclaw/workspace/worktrees/FinaticBrokerFactoryPKG-pr171-openapi/src /home/claw/.openclaw/workspace/repos/FinaticAPI/.venv/bin/python /home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/scripts/export_openapi.py --output /home/claw/.openclaw/workspace/repos/FinaticServerSDK-Python/artifacts/openapi/finaticapi-v1.json
 ```
 
-PR #25 currently uses FinaticAPI PR #174 head `bf5143e` and finaticCore PR
+PR #25 currently uses FinaticAPI PR #174 head `308bb97` and finaticCore PR
 #171 head `268d89a` as branch-ready dependency inputs. The package version is
 prepared as `1.0.0` for the API v1 semver lane, but the coordinated FDX
 account-consent operator hold still controls merge and release timing.
