@@ -4453,7 +4453,7 @@
           },
           "provided_user_id_rejected": {
             "default": false,
-            "description": "True when a provisional user_id was supplied on start but was not applied (invalid UUID or no active broker connection for this company).",
+            "description": "True when a provisional user_id was supplied on start but was not applied (invalid UUID or no broker connection with company access for this company).",
             "title": "Provided User Id Rejected",
             "type": "boolean"
           },
