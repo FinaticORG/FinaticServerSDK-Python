@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,13 +11,12 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from uuid import UUID
+from pydantic import StrictStr
 from finatic_server.models.finatic_response_dict import FinaticResponseDict
 from finatic_server.models.finatic_response_list_connector_list_item import FinaticResponseListConnectorListItem
 from finatic_server.models.finatic_response_mt_connect_response_data import FinaticResponseMTConnectResponseData
@@ -346,7 +347,7 @@ class MtConnectorsApi:
     @validate_call
     async def disconnect_mt_connector_api_v1_mt_disconnect_post(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -365,7 +366,7 @@ class MtConnectorsApi:
         Revoke connector as disconnect operation.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -423,7 +424,7 @@ class MtConnectorsApi:
     @validate_call
     async def disconnect_mt_connector_api_v1_mt_disconnect_post_with_http_info(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -442,7 +443,7 @@ class MtConnectorsApi:
         Revoke connector as disconnect operation.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -500,7 +501,7 @@ class MtConnectorsApi:
     @validate_call
     async def disconnect_mt_connector_api_v1_mt_disconnect_post_without_preload_content(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -519,7 +520,7 @@ class MtConnectorsApi:
         Revoke connector as disconnect operation.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -913,7 +914,7 @@ class MtConnectorsApi:
     @validate_call
     async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -932,7 +933,7 @@ class MtConnectorsApi:
         Revoke connector for current account.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -990,7 +991,7 @@ class MtConnectorsApi:
     @validate_call
     async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_with_http_info(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1009,7 +1010,7 @@ class MtConnectorsApi:
         Revoke connector for current account.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1067,7 +1068,7 @@ class MtConnectorsApi:
     @validate_call
     async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_without_preload_content(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1086,7 +1087,7 @@ class MtConnectorsApi:
         Revoke connector for current account.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1203,7 +1204,7 @@ class MtConnectorsApi:
     @validate_call
     async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1222,7 +1223,7 @@ class MtConnectorsApi:
         Rotate connector secret and return one-time secret.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1280,7 +1281,7 @@ class MtConnectorsApi:
     @validate_call
     async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_with_http_info(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1299,7 +1300,7 @@ class MtConnectorsApi:
         Rotate connector secret and return one-time secret.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1357,7 +1358,7 @@ class MtConnectorsApi:
     @validate_call
     async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_without_preload_content(
         self,
-        connector_id: UUID,
+        connector_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1376,7 +1377,7 @@ class MtConnectorsApi:
         Rotate connector secret and return one-time secret.
 
         :param connector_id: (required)
-        :type connector_id: UUID
+        :type connector_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

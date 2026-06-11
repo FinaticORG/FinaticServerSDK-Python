@@ -23,7 +23,6 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.session_status import SessionStatus
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class SessionResponseData(BaseModel):
     """
@@ -32,15 +31,14 @@ class SessionResponseData(BaseModel):
     company_id: StrictStr = Field(description="Company ID")
     expires_at: datetime = Field(description="Session expiration time")
     portal_connection_management_pending: Optional[StrictBool] = Field(default=False, description="True when a valid provisional user_id was applied: trading/data may proceed, but portal connection-management still requires link-user / OTP step-up.")
-    provided_user_id_rejected: Optional[StrictBool] = Field(default=False, description="True when a provisional user_id was supplied on start but was not applied (invalid UUID or no active broker connection for this company).")
+    provided_user_id_rejected: Optional[StrictBool] = Field(default=False, description="True when a provisional user_id was supplied on start but was not applied (invalid UUID or no broker connection with company access for this company).")
     session_id: StrictStr = Field(description="Session ID")
     status: SessionStatus = Field(description="Session status")
-    user_id: Optional[StrictStr] = Field(default=None, description="User ID if authenticated")
+    user_id: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["company_id", "expires_at", "portal_connection_management_pending", "provided_user_id_rejected", "session_id", "status", "user_id"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -52,7 +50,8 @@ class SessionResponseData(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

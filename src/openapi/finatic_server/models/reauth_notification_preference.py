@@ -20,10 +20,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class ReauthNotificationPreference(BaseModel):
     """
@@ -31,17 +29,16 @@ class ReauthNotificationPreference(BaseModel):
     """ # noqa: E501
     email_enabled: StrictBool = Field(description="Effective email notification preference for reauth events.")
     is_default: StrictBool = Field(description="True when no explicit preference row has been saved.")
-    last_delivery_at: Optional[datetime] = Field(default=None, description="Most recent reauth notification delivery row timestamp.")
-    last_delivery_status: Optional[StrictStr] = Field(default=None, description="Most recent delivery status recorded by Background.")
-    last_notified_at: Optional[datetime] = Field(default=None, description="Most recent reauth notification timestamp.")
-    opted_out_at: Optional[datetime] = Field(default=None, description="Timestamp when email notification was opted out.")
+    last_delivery_at: Optional[datetime] = None
+    last_delivery_status: Optional[StrictStr] = None
+    last_notified_at: Optional[datetime] = None
+    opted_out_at: Optional[datetime] = None
     preference_source: StrictStr = Field(description="Source of the current preference value.")
-    user_broker_connection_id: UUID
+    user_broker_connection_id: StrictStr
     __properties: ClassVar[List[str]] = ["email_enabled", "is_default", "last_delivery_at", "last_delivery_status", "last_notified_at", "opted_out_at", "preference_source", "user_broker_connection_id"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -53,7 +50,8 @@ class ReauthNotificationPreference(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

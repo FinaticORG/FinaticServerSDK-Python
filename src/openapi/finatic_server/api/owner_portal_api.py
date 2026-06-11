@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,13 +11,12 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from uuid import UUID
+from pydantic import StrictStr
 from finatic_server.models.broker_connection_request import BrokerConnectionRequest
 from finatic_server.models.finatic_response_any import FinaticResponseAny
 from finatic_server.models.finatic_response_dict_str_str import FinaticResponseDictStrStr
@@ -295,7 +296,7 @@ class OwnerPortalApi:
     @validate_call
     async def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -314,7 +315,7 @@ class OwnerPortalApi:
         Read reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -364,7 +365,7 @@ class OwnerPortalApi:
     @validate_call
     async def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get_with_http_info(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -383,7 +384,7 @@ class OwnerPortalApi:
         Read reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -433,7 +434,7 @@ class OwnerPortalApi:
     @validate_call
     async def get_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_get_without_preload_content(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -452,7 +453,7 @@ class OwnerPortalApi:
         Read reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -842,7 +843,7 @@ class OwnerPortalApi:
     @validate_call
     async def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -861,7 +862,7 @@ class OwnerPortalApi:
         Disconnect a user-owned broker connection (personal or after revoking company access).
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -911,7 +912,7 @@ class OwnerPortalApi:
     @validate_call
     async def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete_with_http_info(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -930,7 +931,7 @@ class OwnerPortalApi:
         Disconnect a user-owned broker connection (personal or after revoking company access).
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -980,7 +981,7 @@ class OwnerPortalApi:
     @validate_call
     async def owner_portal_delete_connection_api_beta_owner_portal_connections_connection_id_delete_without_preload_content(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -999,7 +1000,7 @@ class OwnerPortalApi:
         Disconnect a user-owned broker connection (personal or after revoking company access).
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1109,7 +1110,7 @@ class OwnerPortalApi:
     @validate_call
     async def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1128,7 +1129,7 @@ class OwnerPortalApi:
         Remove every company_access row for a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1178,7 +1179,7 @@ class OwnerPortalApi:
     @validate_call
     async def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete_with_http_info(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1197,7 +1198,7 @@ class OwnerPortalApi:
         Remove every company_access row for a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1247,7 +1248,7 @@ class OwnerPortalApi:
     @validate_call
     async def revoke_all_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_delete_without_preload_content(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1266,7 +1267,7 @@ class OwnerPortalApi:
         Remove every company_access row for a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1376,8 +1377,8 @@ class OwnerPortalApi:
     @validate_call
     async def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete(
         self,
-        connection_id: UUID,
-        company_id: UUID,
+        connection_id: StrictStr,
+        company_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1396,9 +1397,9 @@ class OwnerPortalApi:
         Remove one company's access to a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1449,8 +1450,8 @@ class OwnerPortalApi:
     @validate_call
     async def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete_with_http_info(
         self,
-        connection_id: UUID,
-        company_id: UUID,
+        connection_id: StrictStr,
+        company_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1469,9 +1470,9 @@ class OwnerPortalApi:
         Remove one company's access to a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1522,8 +1523,8 @@ class OwnerPortalApi:
     @validate_call
     async def revoke_owner_connection_company_access_api_beta_owner_portal_connections_connection_id_companies_company_id_delete_without_preload_content(
         self,
-        connection_id: UUID,
-        company_id: UUID,
+        connection_id: StrictStr,
+        company_id: StrictStr,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1542,9 +1543,9 @@ class OwnerPortalApi:
         Remove one company's access to a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1658,8 +1659,8 @@ class OwnerPortalApi:
     @validate_call
     async def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch(
         self,
-        connection_id: UUID,
-        company_id: UUID,
+        connection_id: StrictStr,
+        company_id: StrictStr,
         owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate,
         _request_timeout: Union[
             None,
@@ -1679,9 +1680,9 @@ class OwnerPortalApi:
         Create or update company_access for one company on a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param owner_portal_company_permissions_update: (required)
         :type owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate
         :param _request_timeout: timeout setting for this request. If one
@@ -1735,8 +1736,8 @@ class OwnerPortalApi:
     @validate_call
     async def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch_with_http_info(
         self,
-        connection_id: UUID,
-        company_id: UUID,
+        connection_id: StrictStr,
+        company_id: StrictStr,
         owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate,
         _request_timeout: Union[
             None,
@@ -1756,9 +1757,9 @@ class OwnerPortalApi:
         Create or update company_access for one company on a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param owner_portal_company_permissions_update: (required)
         :type owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate
         :param _request_timeout: timeout setting for this request. If one
@@ -1812,8 +1813,8 @@ class OwnerPortalApi:
     @validate_call
     async def update_owner_connection_company_permissions_api_beta_owner_portal_connections_connection_id_companies_company_id_permissions_patch_without_preload_content(
         self,
-        connection_id: UUID,
-        company_id: UUID,
+        connection_id: StrictStr,
+        company_id: StrictStr,
         owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate,
         _request_timeout: Union[
             None,
@@ -1833,9 +1834,9 @@ class OwnerPortalApi:
         Create or update company_access for one company on a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param owner_portal_company_permissions_update: (required)
         :type owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate
         :param _request_timeout: timeout setting for this request. If one
@@ -1968,7 +1969,7 @@ class OwnerPortalApi:
     @validate_call
     async def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
         _request_timeout: Union[
             None,
@@ -1988,7 +1989,7 @@ class OwnerPortalApi:
         Persist reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param reauth_notification_preference_update_request: (required)
         :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -2041,7 +2042,7 @@ class OwnerPortalApi:
     @validate_call
     async def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch_with_http_info(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
         _request_timeout: Union[
             None,
@@ -2061,7 +2062,7 @@ class OwnerPortalApi:
         Persist reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param reauth_notification_preference_update_request: (required)
         :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -2114,7 +2115,7 @@ class OwnerPortalApi:
     @validate_call
     async def update_owner_reauth_notification_preference_api_beta_owner_portal_connections_connection_id_reauth_notification_preference_patch_without_preload_content(
         self,
-        connection_id: UUID,
+        connection_id: StrictStr,
         reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest,
         _request_timeout: Union[
             None,
@@ -2134,7 +2135,7 @@ class OwnerPortalApi:
         Persist reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param reauth_notification_preference_update_request: (required)
         :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
         :param _request_timeout: timeout setting for this request. If one

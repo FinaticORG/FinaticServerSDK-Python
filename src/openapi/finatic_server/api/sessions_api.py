@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,11 +20,11 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from finatic_server.models.create_session_request import CreateSessionRequest
+from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_session_response_data1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1
+from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_token_response_data1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1
 from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_dict_str_union_str_none_type import FinaticResponseDictStrUnionStrNoneType
-from finatic_server.models.finatic_response_session_response_data import FinaticResponseSessionResponseData
 from finatic_server.models.finatic_response_session_sync_status_response import FinaticResponseSessionSyncStatusResponse
-from finatic_server.models.finatic_response_token_response_data import FinaticResponseTokenResponseData
 
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
@@ -61,7 +62,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseSessionResponseData:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1:
         """Get Session
 
         Get a v1 session by id.
@@ -105,7 +106,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -145,7 +146,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseSessionResponseData]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1]:
         """Get Session
 
         Get a v1 session by id.
@@ -189,7 +190,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -273,7 +274,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1012,7 +1013,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseSessionResponseData:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1:
         """Create Session
 
         Create an account-first v1 session from a company API key.
@@ -1056,7 +1057,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1096,7 +1097,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseSessionResponseData]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1]:
         """Create Session
 
         Create an account-first v1 session from a company API key.
@@ -1140,7 +1141,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1224,7 +1225,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseSessionResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1342,7 +1343,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseTokenResponseData:
+    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1:
         """Create Portal Link
 
         Create a one-time portal link token for a v1 session.
@@ -1386,7 +1387,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1426,7 +1427,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseTokenResponseData]:
+    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1]:
         """Create Portal Link
 
         Create a one-time portal link token for a v1 session.
@@ -1470,7 +1471,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1554,7 +1555,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseTokenResponseData",
+            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",

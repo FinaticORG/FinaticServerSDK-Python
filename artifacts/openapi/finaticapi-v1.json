@@ -810,54 +810,6 @@
         "title": "FDXAccountGrantUpdate",
         "type": "object"
       },
-      "FDXAccountStatus": {
-        "description": "FDX broker account status.",
-        "enum": [
-          "ACTIVE",
-          "INACTIVE",
-          "CLOSED",
-          "RESTRICTED",
-          "PENDING"
-        ],
-        "title": "FDXAccountStatus",
-        "type": "string"
-      },
-      "FDXAccountType": {
-        "description": "FDX broker account types.",
-        "enum": [
-          "CASH",
-          "MARGIN",
-          "IRA",
-          "ROTH_IRA",
-          "TRADITIONAL_IRA",
-          "SEP_IRA",
-          "SIMPLE_IRA",
-          "TRUST",
-          "JOINT",
-          "CORPORATE",
-          "SIMULATION"
-        ],
-        "title": "FDXAccountType",
-        "type": "string"
-      },
-      "FDXBalanceType": {
-        "description": "FDX broker balance types.",
-        "enum": [
-          "AVAILABLE",
-          "CURRENT",
-          "PENDING",
-          "BUYING_POWER",
-          "CASH",
-          "MARGIN",
-          "NET_LIQUIDATION",
-          "INITIAL_MARGIN",
-          "MAINTENANCE_MARGIN",
-          "TOTAL_CASH",
-          "AVAILABLE_TO_WITHDRAW"
-        ],
-        "title": "FDXBalanceType",
-        "type": "string"
-      },
       "FDXBrokerAccount": {},
       "FDXBrokerBalance": {},
       "FDXConsentGrant": {
@@ -1622,58 +1574,6 @@
         "title": "FinaticResponse[BetaBrokerShimResponse]",
         "type": "object"
       },
-      "FinaticResponse_CompleteSessionResponse_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_CompleteSessionResponse_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[CompleteSessionResponse]",
-        "type": "object"
-      },
       "FinaticResponse_FDXAccountGrant_": {
         "properties": {
           "error": {
@@ -1880,110 +1780,6 @@
           }
         },
         "title": "FinaticResponse[LinkUserToMCPSessionResponse]",
-        "type": "object"
-      },
-      "FinaticResponse_LinkUserToSessionResponse_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_LinkUserToSessionResponse_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[LinkUserToSessionResponse]",
-        "type": "object"
-      },
-      "FinaticResponse_MCPBootstrapResponseData_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_MCPBootstrapResponseData_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[MCPBootstrapResponseData]",
         "type": "object"
       },
       "FinaticResponse_MTConnectResponseData_": {
@@ -2246,58 +2042,6 @@
         "title": "FinaticResponse[PortalSessionValidationResponse]",
         "type": "object"
       },
-      "FinaticResponse_PortalUrlResponse_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_PortalUrlResponse_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[PortalUrlResponse]",
-        "type": "object"
-      },
       "FinaticResponse_ReauthNotificationPreference_": {
         "properties": {
           "error": {
@@ -2402,58 +2146,6 @@
         "title": "FinaticResponse[RotateSecretResponse]",
         "type": "object"
       },
-      "FinaticResponse_SessionResponseData_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_SessionResponseData_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[SessionResponseData]",
-        "type": "object"
-      },
       "FinaticResponse_SessionSyncStatusResponse_": {
         "properties": {
           "error": {
@@ -2504,110 +2196,6 @@
           }
         },
         "title": "FinaticResponse[SessionSyncStatusResponse]",
-        "type": "object"
-      },
-      "FinaticResponse_SessionUserResponse_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_SessionUserResponse_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[SessionUserResponse]",
-        "type": "object"
-      },
-      "FinaticResponse_TokenResponseData_": {
-        "properties": {
-          "error": {
-            "anyOf": [
-              {
-                "additionalProperties": true,
-                "type": "object"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional error object with message, code, status, and details",
-            "title": "Error"
-          },
-          "success": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/SuccessPayload_TokenResponseData_"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Success payload containing data and optional meta. None when error is present."
-          },
-          "trace_id": {
-            "default": "",
-            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
-            "title": "Trace Id",
-            "type": "string"
-          },
-          "warning": {
-            "anyOf": [
-              {
-                "items": {
-                  "additionalProperties": true,
-                  "type": "object"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "description": "Optional array of warning objects",
-            "title": "Warning"
-          }
-        },
-        "title": "FinaticResponse[TokenResponseData]",
         "type": "object"
       },
       "FinaticResponse_bool_": {
@@ -6008,13 +5596,6 @@
       },
       "ValidationError": {
         "properties": {
-          "ctx": {
-            "title": "Context",
-            "type": "object"
-          },
-          "input": {
-            "title": "Input"
-          },
           "loc": {
             "items": {
               "anyOf": [
@@ -6044,6 +5625,318 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_CompleteSessionResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[CompleteSessionResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_CompleteSessionResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[CompleteSessionResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_LinkUserToSessionResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[LinkUserToSessionResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_LinkUserToSessionResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[LinkUserToSessionResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_MCPBootstrapResponseData_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[MCPBootstrapResponseData]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_MCPBootstrapResponseData_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[MCPBootstrapResponseData]",
         "type": "object"
       },
       "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___1": {
@@ -6148,6 +6041,422 @@
           }
         },
         "title": "FinaticResponse[PortalSessionResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_PortalUrlResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[PortalUrlResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_PortalUrlResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[PortalUrlResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_SessionResponseData_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[SessionResponseData]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_SessionResponseData_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[SessionResponseData]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_SessionUserResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[SessionUserResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_SessionUserResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[SessionUserResponse]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_TokenResponseData_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[TokenResponseData]",
+        "type": "object"
+      },
+      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___2": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_TokenResponseData_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[TokenResponseData]",
         "type": "object"
       },
       "finatic_broker_factory__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___1": {
@@ -9359,7 +9668,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_CompleteSessionResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___2"
                 }
               }
             },
@@ -9498,7 +9807,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_TokenResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___2"
                 }
               }
             },
@@ -9650,7 +9959,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_LinkUserToSessionResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___2"
                 }
               }
             },
@@ -9794,7 +10103,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_MCPBootstrapResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___2"
                 }
               }
             },
@@ -9933,7 +10242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_PortalUrlResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___2"
                 }
               }
             },
@@ -10090,7 +10399,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_SessionResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___2"
                 }
               }
             },
@@ -10243,7 +10552,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_SessionUserResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___2"
                 }
               }
             },
@@ -15947,7 +16256,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_CompleteSessionResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___1"
                 }
               }
             },
@@ -16357,7 +16666,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_TokenResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1"
                 }
               }
             },
@@ -16502,7 +16811,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_LinkUserToSessionResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___1"
                 }
               }
             },
@@ -16639,7 +16948,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_MCPBootstrapResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___1"
                 }
               }
             },
@@ -16896,7 +17205,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_PortalUrlResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___1"
                 }
               }
             },
@@ -17046,7 +17355,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_SessionResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
                 }
               }
             },
@@ -17192,7 +17501,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_SessionUserResponse_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___1"
                 }
               }
             },
@@ -17349,7 +17658,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_SessionResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
                 }
               }
             },
@@ -17514,7 +17823,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_SessionResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
                 }
               }
             },
@@ -17679,7 +17988,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_TokenResponseData_"
+                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1"
                 }
               }
             },

@@ -19,25 +19,22 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List
-from uuid import UUID
 from finatic_server.models.ea_configuration_payload import EaConfigurationPayload
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class MTConnectResponseData(BaseModel):
     """
     Create connector response payload.
     """ # noqa: E501
     configuration: EaConfigurationPayload
-    connection_id: UUID
+    connection_id: StrictStr
     platform: StrictStr
     push_mode: StrictStr
     __properties: ClassVar[List[str]] = ["configuration", "connection_id", "platform", "push_mode"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -49,7 +46,8 @@ class MTConnectResponseData(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

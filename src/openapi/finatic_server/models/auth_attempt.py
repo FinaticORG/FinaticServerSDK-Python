@@ -20,10 +20,8 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class AuthAttempt(BaseModel):
     """
@@ -31,16 +29,15 @@ class AuthAttempt(BaseModel):
     """ # noqa: E501
     broker_id: StrictStr
     created_at: Optional[datetime] = None
-    discovered_account_ids: Optional[List[UUID]] = None
-    id: Optional[UUID] = None
+    discovered_account_ids: Optional[List[StrictStr]] = None
+    id: Optional[StrictStr] = None
     session_id: StrictStr
     status: Optional[StrictStr] = 'pending'
     updated_at: Optional[datetime] = None
     __properties: ClassVar[List[str]] = ["broker_id", "created_at", "discovered_account_ids", "id", "session_id", "status", "updated_at"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -52,7 +49,8 @@ class AuthAttempt(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

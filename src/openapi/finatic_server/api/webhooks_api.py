@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,16 +11,14 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field
+from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from uuid import UUID
 from finatic_server.models.fdx_webhook_subscription_create import FDXWebhookSubscriptionCreate
 from finatic_server.models.fdx_webhook_subscription_update import FDXWebhookSubscriptionUpdate
 from finatic_server.models.finatic_environment import FinaticEnvironment
@@ -909,7 +909,7 @@ class WebhooksApi:
     @validate_call
     async def finatic_v1_patch_webhooks_subscriptions_subscription_id(
         self,
-        subscription_id: UUID,
+        subscription_id: StrictStr,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -930,7 +930,7 @@ class WebhooksApi:
         Update a webhook subscription for the current company account.
 
         :param subscription_id: (required)
-        :type subscription_id: UUID
+        :type subscription_id: str
         :param fdx_webhook_subscription_update: (required)
         :type fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -993,7 +993,7 @@ class WebhooksApi:
     @validate_call
     async def finatic_v1_patch_webhooks_subscriptions_subscription_id_with_http_info(
         self,
-        subscription_id: UUID,
+        subscription_id: StrictStr,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -1014,7 +1014,7 @@ class WebhooksApi:
         Update a webhook subscription for the current company account.
 
         :param subscription_id: (required)
-        :type subscription_id: UUID
+        :type subscription_id: str
         :param fdx_webhook_subscription_update: (required)
         :type fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -1077,7 +1077,7 @@ class WebhooksApi:
     @validate_call
     async def finatic_v1_patch_webhooks_subscriptions_subscription_id_without_preload_content(
         self,
-        subscription_id: UUID,
+        subscription_id: StrictStr,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -1098,7 +1098,7 @@ class WebhooksApi:
         Update a webhook subscription for the current company account.
 
         :param subscription_id: (required)
-        :type subscription_id: UUID
+        :type subscription_id: str
         :param fdx_webhook_subscription_update: (required)
         :type fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -1554,7 +1554,7 @@ class WebhooksApi:
     @validate_call
     async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke(
         self,
-        subscription_id: UUID,
+        subscription_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1574,7 +1574,7 @@ class WebhooksApi:
         Revoke a webhook subscription for the current company account.
 
         :param subscription_id: (required)
-        :type subscription_id: UUID
+        :type subscription_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1634,7 +1634,7 @@ class WebhooksApi:
     @validate_call
     async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_with_http_info(
         self,
-        subscription_id: UUID,
+        subscription_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1654,7 +1654,7 @@ class WebhooksApi:
         Revoke a webhook subscription for the current company account.
 
         :param subscription_id: (required)
-        :type subscription_id: UUID
+        :type subscription_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1714,7 +1714,7 @@ class WebhooksApi:
     @validate_call
     async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_without_preload_content(
         self,
-        subscription_id: UUID,
+        subscription_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1734,7 +1734,7 @@ class WebhooksApi:
         Revoke a webhook subscription for the current company account.
 
         :param subscription_id: (required)
-        :type subscription_id: UUID
+        :type subscription_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one

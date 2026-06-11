@@ -22,21 +22,19 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.success_payload_accounts import SuccessPayloadAccounts
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FinaticResponseAccounts(BaseModel):
     """
     FinaticResponseAccounts
     """ # noqa: E501
-    error: Optional[Dict[str, Any]] = Field(default=None, description="Optional error object with message, code, status, and details")
-    success: Optional[SuccessPayloadAccounts] = Field(default=None, description="Success payload containing data and optional meta. None when error is present.")
+    error: Optional[Dict[str, Any]] = None
+    success: Optional[SuccessPayloadAccounts] = None
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
-    warning: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional array of warning objects")
+    warning: Optional[List[Dict[str, Any]]] = None
     __properties: ClassVar[List[str]] = ["error", "success", "trace_id", "warning"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -48,7 +46,8 @@ class FinaticResponseAccounts(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

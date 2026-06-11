@@ -20,17 +20,15 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
 from finatic_server.models.ea_configuration_payload import EaConfigurationPayload
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class RotateSecretResponse(BaseModel):
     """
     Rotate secret response payload.  ``ea_configuration`` is the same block returned by the connect endpoint so portal clients can render the credentials popup without reconstructing transport fields locally. When older callers (V1 router) do not have enough context to build the full block, the field is omitted.
     """ # noqa: E501
-    connector_id: UUID
+    connector_id: StrictStr
     connector_secret: StrictStr
     ea_configuration: Optional[EaConfigurationPayload] = None
     rotated_at: datetime
@@ -38,8 +36,7 @@ class RotateSecretResponse(BaseModel):
     __properties: ClassVar[List[str]] = ["connector_id", "connector_secret", "ea_configuration", "rotated_at", "secret_version"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -51,7 +48,8 @@ class RotateSecretResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

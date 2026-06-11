@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,15 +11,13 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field
+from pydantic import Field, StrictStr
 from typing_extensions import Annotated
-from uuid import UUID
 from finatic_server.models.finatic_response_accounts import FinaticResponseAccounts
 
 from finatic_server.api_client import ApiClient, RequestSerialized
@@ -41,7 +41,7 @@ class CompanyApi:
     @validate_call
     async def get_company_api_beta_company_company_id_get(
         self,
-        company_id: Annotated[UUID, Field(description="Company ID")],
+        company_id: Annotated[StrictStr, Field(description="Company ID")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -60,7 +60,7 @@ class CompanyApi:
         Get public company details by ID (no user check, no sensitive data).
 
         :param company_id: Company ID (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -110,7 +110,7 @@ class CompanyApi:
     @validate_call
     async def get_company_api_beta_company_company_id_get_with_http_info(
         self,
-        company_id: Annotated[UUID, Field(description="Company ID")],
+        company_id: Annotated[StrictStr, Field(description="Company ID")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -129,7 +129,7 @@ class CompanyApi:
         Get public company details by ID (no user check, no sensitive data).
 
         :param company_id: Company ID (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -179,7 +179,7 @@ class CompanyApi:
     @validate_call
     async def get_company_api_beta_company_company_id_get_without_preload_content(
         self,
-        company_id: Annotated[UUID, Field(description="Company ID")],
+        company_id: Annotated[StrictStr, Field(description="Company ID")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -198,7 +198,7 @@ class CompanyApi:
         Get public company details by ID (no user check, no sensitive data).
 
         :param company_id: Company ID (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -307,7 +307,7 @@ class CompanyApi:
     @validate_call
     async def get_company_api_v1_company_company_id_get(
         self,
-        company_id: Annotated[UUID, Field(description="Company ID")],
+        company_id: Annotated[StrictStr, Field(description="Company ID")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -326,7 +326,7 @@ class CompanyApi:
         Get public company details by ID (no user check, no sensitive data).
 
         :param company_id: Company ID (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -375,7 +375,7 @@ class CompanyApi:
     @validate_call
     async def get_company_api_v1_company_company_id_get_with_http_info(
         self,
-        company_id: Annotated[UUID, Field(description="Company ID")],
+        company_id: Annotated[StrictStr, Field(description="Company ID")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -394,7 +394,7 @@ class CompanyApi:
         Get public company details by ID (no user check, no sensitive data).
 
         :param company_id: Company ID (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -443,7 +443,7 @@ class CompanyApi:
     @validate_call
     async def get_company_api_v1_company_company_id_get_without_preload_content(
         self,
-        company_id: Annotated[UUID, Field(description="Company ID")],
+        company_id: Annotated[StrictStr, Field(description="Company ID")],
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -462,7 +462,7 @@ class CompanyApi:
         Get public company details by ID (no user check, no sensitive data).
 
         :param company_id: Company ID (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of

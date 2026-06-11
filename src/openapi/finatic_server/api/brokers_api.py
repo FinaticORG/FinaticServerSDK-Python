@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,7 +11,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -18,7 +19,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBool, StrictStr
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
-from uuid import UUID
+from finatic_server.models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
 from finatic_server.models.finatic_response_beta_broker_shim_response import FinaticResponseBetaBrokerShimResponse
 from finatic_server.models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
 from finatic_server.models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
@@ -1218,8 +1219,8 @@ class BrokersApi:
     async def get_accounts_api_v1_brokers_data_accounts_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
+        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1244,7 +1245,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: UUID
+        :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -1318,8 +1319,8 @@ class BrokersApi:
     async def get_accounts_api_v1_brokers_data_accounts_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
+        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1344,7 +1345,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: UUID
+        :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -1418,8 +1419,8 @@ class BrokersApi:
     async def get_accounts_api_v1_brokers_data_accounts_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
+        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1444,7 +1445,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: UUID
+        :type connection_id: str
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -1609,7 +1610,7 @@ class BrokersApi:
     async def get_balances_api_v1_brokers_data_balances_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
@@ -1636,7 +1637,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: UUID
+        :type connection_id: str
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
@@ -1713,7 +1714,7 @@ class BrokersApi:
     async def get_balances_api_v1_brokers_data_balances_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
@@ -1740,7 +1741,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: UUID
+        :type connection_id: str
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
@@ -1817,7 +1818,7 @@ class BrokersApi:
     async def get_balances_api_v1_brokers_data_balances_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
@@ -1844,7 +1845,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: UUID
+        :type connection_id: str
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')

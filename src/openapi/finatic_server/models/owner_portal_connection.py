@@ -20,11 +20,9 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from uuid import UUID
 from finatic_server.models.owner_portal_company_grant import OwnerPortalCompanyGrant
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class OwnerPortalConnection(BaseModel):
     """
@@ -34,7 +32,7 @@ class OwnerPortalConnection(BaseModel):
     company_grants: Optional[List[OwnerPortalCompanyGrant]] = None
     connection_metadata: Optional[Dict[str, Any]] = None
     created_at: Optional[datetime] = None
-    id: UUID
+    id: StrictStr
     last_synced_at: Optional[datetime] = None
     needs_reauth: Optional[StrictBool] = False
     push_agent_connector_state: Optional[StrictStr] = None
@@ -42,12 +40,11 @@ class OwnerPortalConnection(BaseModel):
     requires_customer_agent: Optional[StrictBool] = False
     status: Optional[StrictStr] = None
     updated_at: Optional[datetime] = None
-    user_id: UUID
+    user_id: StrictStr
     __properties: ClassVar[List[str]] = ["broker_id", "company_grants", "connection_metadata", "created_at", "id", "last_synced_at", "needs_reauth", "push_agent_connector_state", "push_agent_last_heartbeat_at", "requires_customer_agent", "status", "updated_at", "user_id"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -59,7 +56,8 @@ class OwnerPortalConnection(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

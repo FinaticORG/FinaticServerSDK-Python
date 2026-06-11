@@ -20,10 +20,8 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class MTConnectRequest(BaseModel):
     """
@@ -31,7 +29,7 @@ class MTConnectRequest(BaseModel):
     """ # noqa: E501
     broker_label: Optional[StrictStr] = None
     broker_server_label: Optional[StrictStr] = None
-    connection_id: UUID
+    connection_id: StrictStr
     platform: Annotated[str, Field(strict=True)]
     push_mode: Optional[StrictStr] = 'webhook'
     __properties: ClassVar[List[str]] = ["broker_label", "broker_server_label", "connection_id", "platform", "push_mode"]
@@ -39,16 +37,12 @@ class MTConnectRequest(BaseModel):
     @field_validator('platform')
     def platform_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if not isinstance(value, str):
-            value = str(value)
-
         if not re.match(r"^(mt4|mt5)$", value):
             raise ValueError(r"must validate the regular expression /^(mt4|mt5)$/")
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -60,7 +54,8 @@ class MTConnectRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

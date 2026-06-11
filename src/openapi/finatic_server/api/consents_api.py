@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,16 +11,14 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field
+from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
-from uuid import UUID
 from finatic_server.models.fdx_consent_grant_create import FDXConsentGrantCreate
 from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_fdx_consent_grant import FinaticResponseFDXConsentGrant
@@ -332,7 +332,7 @@ class ConsentsApi:
     @validate_call
     async def finatic_v1_get_consents_consent_id(
         self,
-        consent_id: UUID,
+        consent_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -352,7 +352,7 @@ class ConsentsApi:
         Get one FDX consent grant for the current company account.
 
         :param consent_id: (required)
-        :type consent_id: UUID
+        :type consent_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -412,7 +412,7 @@ class ConsentsApi:
     @validate_call
     async def finatic_v1_get_consents_consent_id_with_http_info(
         self,
-        consent_id: UUID,
+        consent_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -432,7 +432,7 @@ class ConsentsApi:
         Get one FDX consent grant for the current company account.
 
         :param consent_id: (required)
-        :type consent_id: UUID
+        :type consent_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -492,7 +492,7 @@ class ConsentsApi:
     @validate_call
     async def finatic_v1_get_consents_consent_id_without_preload_content(
         self,
-        consent_id: UUID,
+        consent_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -512,7 +512,7 @@ class ConsentsApi:
         Get one FDX consent grant for the current company account.
 
         :param consent_id: (required)
-        :type consent_id: UUID
+        :type consent_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -949,7 +949,7 @@ class ConsentsApi:
     @validate_call
     async def finatic_v1_post_consents_consent_id_revoke(
         self,
-        consent_id: UUID,
+        consent_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -969,7 +969,7 @@ class ConsentsApi:
         Revoke one FDX consent grant for the current company account.
 
         :param consent_id: (required)
-        :type consent_id: UUID
+        :type consent_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1029,7 +1029,7 @@ class ConsentsApi:
     @validate_call
     async def finatic_v1_post_consents_consent_id_revoke_with_http_info(
         self,
-        consent_id: UUID,
+        consent_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1049,7 +1049,7 @@ class ConsentsApi:
         Revoke one FDX consent grant for the current company account.
 
         :param consent_id: (required)
-        :type consent_id: UUID
+        :type consent_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1109,7 +1109,7 @@ class ConsentsApi:
     @validate_call
     async def finatic_v1_post_consents_consent_id_revoke_without_preload_content(
         self,
-        consent_id: UUID,
+        consent_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1129,7 +1129,7 @@ class ConsentsApi:
         Revoke one FDX consent grant for the current company account.
 
         :param consent_id: (required)
-        :type consent_id: UUID
+        :type consent_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
