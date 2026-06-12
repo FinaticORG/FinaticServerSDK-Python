@@ -526,7 +526,7 @@ class V1Client:
     def _deserialize_response(self, response: Any) -> FinaticResponse:
         status = getattr(response, "status", None)
         data = getattr(response, "data", None)
-        headers = getattr(response, "headers", None)
+        headers = self._response_headers(response)
         if isinstance(data, bytes):
             payload: Any = json.loads(data.decode("utf-8")) if data else {}
         elif isinstance(data, str):
@@ -671,6 +671,15 @@ class V1Client:
                 value = headers.get(name) if hasattr(headers, "get") else None
                 if isinstance(value, str):
                     return value
+        return None
+
+    def _response_headers(self, response: Any) -> Any:
+        headers = getattr(response, "headers", None)
+        if headers is not None:
+            return headers
+        getheaders = getattr(response, "getheaders", None)
+        if callable(getheaders):
+            return getheaders()
         return None
 
     def _extract_data(self, response: FinaticResponse) -> Any:

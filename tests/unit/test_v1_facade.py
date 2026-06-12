@@ -21,6 +21,14 @@ class FakeResponse:
         return self.data
 
 
+class FakeGeneratedResponse:
+    status = 200
+    data = b'{"data": {"ok": true}, "warnings": [], "errors": []}'
+
+    def getheaders(self) -> dict[str, str]:
+        return {"x-trace-id": "trace-from-generated-response"}
+
+
 class FakeApiClient:
     def __init__(self) -> None:
         self.calls: list[dict[str, Any]] = []
@@ -545,3 +553,12 @@ def test_v1_preserves_current_public_envelope_shape() -> None:
         "warnings": [],
         "errors": [],
     }
+
+
+def test_v1_reads_trace_header_from_generated_response() -> None:
+    sdk = FinaticServer(api_key="fntc_live_key")
+
+    response = sdk.v1._deserialize_response(FakeGeneratedResponse())
+
+    assert response["traceId"] == "trace-from-generated-response"
+    assert response["data"] == {"ok": True}
