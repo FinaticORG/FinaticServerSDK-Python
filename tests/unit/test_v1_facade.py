@@ -499,6 +499,15 @@ def test_v1_rejects_invalid_environment_and_resource() -> None:
         sdk.v1._validate_resource("connections")
 
 
+@pytest.mark.asyncio
+async def test_v1_discovered_accounts_requires_auth_attempt_id() -> None:
+    sdk = FinaticServer(api_key="fntc_live_key")
+    sdk.v1.set_session_context("session-1", "company-1")
+
+    with pytest.raises(TypeError, match="auth_attempt_id"):
+        await sdk.v1.list_discovered_accounts()  # type: ignore[call-arg]
+
+
 def test_v1_normalizes_success_envelope_trace_and_warning_alias() -> None:
     sdk = FinaticServer(api_key="fntc_live_key")
     response = sdk.v1._deserialize_response(

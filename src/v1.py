@@ -235,13 +235,13 @@ class V1Client:
         self,
         session_id: str | None = None,
         *,
-        auth_attempt_id: str | None = None,
+        auth_attempt_id: str,
     ) -> FinaticResponse:
         resolved_session_id = session_id or self._require_session_id()
         return await self._request(
             "GET",
             f"/api/v1/portal/{resolved_session_id}/discovered-accounts",
-            query=self._compact_query({"authAttemptId": auth_attempt_id}),
+            query={"authAttemptId": auth_attempt_id},
         )
 
     async def create_portal_account_grant(
