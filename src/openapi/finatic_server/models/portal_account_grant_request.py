@@ -19,24 +19,26 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class PortalAccountGrantRequest(BaseModel):
     """
     Portal account grant creation request.
     """ # noqa: E501
-    account_id: StrictStr = Field(alias="accountId")
-    auth_attempt_id: StrictStr = Field(alias="authAttemptId")
+    account_id: UUID = Field(alias="accountId")
+    auth_attempt_id: UUID = Field(alias="authAttemptId")
     can_read: Optional[StrictBool] = Field(default=True, alias="canRead")
     can_trade: Optional[StrictBool] = Field(default=False, alias="canTrade")
-    consent_id: Optional[StrictStr] = Field(default=None, alias="consentId")
+    consent_id: Optional[UUID] = Field(default=None, alias="consentId")
     data_clusters: Optional[List[StrictStr]] = Field(default=None, alias="dataClusters")
-    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["accountId", "authAttemptId", "canRead", "canTrade", "consentId", "dataClusters"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -48,8 +50,7 @@ class PortalAccountGrantRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -65,10 +66,8 @@ class PortalAccountGrantRequest(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -76,11 +75,6 @@ class PortalAccountGrantRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         # set to None if consent_id (nullable) is None
         # and model_fields_set contains the field
         if self.consent_id is None and "consent_id" in self.model_fields_set:
@@ -105,9 +99,4 @@ class PortalAccountGrantRequest(BaseModel):
             "consentId": obj.get("consentId"),
             "dataClusters": obj.get("dataClusters")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj

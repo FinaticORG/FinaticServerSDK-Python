@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -11,6 +9,7 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,6 +18,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from finatic_server.models.account_order_request import AccountOrderRequest
 from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_dict_str_any import FinaticResponseDictStrAny
@@ -43,9 +43,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_delete_accounts_account_id_orders_order_id(
+    def finatic_v1_delete_accounts_account_id_orders_order_id(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         idempotency_key: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -67,7 +67,7 @@ class AccountsApi:
         Cancel an account-scoped order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param idempotency_key: (required)
@@ -119,11 +119,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -131,9 +131,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_delete_accounts_account_id_orders_order_id_with_http_info(
+    def finatic_v1_delete_accounts_account_id_orders_order_id_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         idempotency_key: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -155,7 +155,7 @@ class AccountsApi:
         Cancel an account-scoped order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param idempotency_key: (required)
@@ -207,11 +207,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -219,9 +219,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_delete_accounts_account_id_orders_order_id_without_preload_content(
+    def finatic_v1_delete_accounts_account_id_orders_order_id_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         idempotency_key: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -243,7 +243,7 @@ class AccountsApi:
         Cancel an account-scoped order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param idempotency_key: (required)
@@ -295,7 +295,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -375,7 +375,7 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts(
+    def finatic_v1_get_accounts(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -439,11 +439,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -451,7 +451,7 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_with_http_info(
+    def finatic_v1_get_accounts_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -515,11 +515,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -527,7 +527,7 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_without_preload_content(
+    def finatic_v1_get_accounts_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -591,7 +591,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -662,9 +662,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id(
+    def finatic_v1_get_accounts_account_id(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -684,7 +684,7 @@ class AccountsApi:
         Get one broker account visible through an active account grant.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -730,11 +730,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -742,9 +742,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_with_http_info(
+    def finatic_v1_get_accounts_account_id_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -764,7 +764,7 @@ class AccountsApi:
         Get one broker account visible through an active account grant.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -810,11 +810,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -822,9 +822,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_without_preload_content(
+    def finatic_v1_get_accounts_account_id_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -844,7 +844,7 @@ class AccountsApi:
         Get one broker account visible through an active account grant.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -890,7 +890,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -964,9 +964,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_balances(
+    def finatic_v1_get_accounts_account_id_balances(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -988,7 +988,7 @@ class AccountsApi:
         List account-scoped balances.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -1040,11 +1040,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1052,9 +1052,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_balances_with_http_info(
+    def finatic_v1_get_accounts_account_id_balances_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1076,7 +1076,7 @@ class AccountsApi:
         List account-scoped balances.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -1128,11 +1128,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1140,9 +1140,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_balances_without_preload_content(
+    def finatic_v1_get_accounts_account_id_balances_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1164,7 +1164,7 @@ class AccountsApi:
         List account-scoped balances.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -1216,7 +1216,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1300,9 +1300,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders(
+    def finatic_v1_get_accounts_account_id_orders(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1324,7 +1324,7 @@ class AccountsApi:
         List account-scoped orders.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -1376,11 +1376,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1388,9 +1388,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_with_http_info(
+    def finatic_v1_get_accounts_account_id_orders_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1412,7 +1412,7 @@ class AccountsApi:
         List account-scoped orders.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -1464,11 +1464,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1476,9 +1476,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_without_preload_content(
+    def finatic_v1_get_accounts_account_id_orders_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1500,7 +1500,7 @@ class AccountsApi:
         List account-scoped orders.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -1552,7 +1552,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1636,9 +1636,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id(
+    def finatic_v1_get_accounts_account_id_orders_order_id(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -1659,7 +1659,7 @@ class AccountsApi:
         Get one order after account-grant authorization.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -1708,11 +1708,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1720,9 +1720,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_with_http_info(
+    def finatic_v1_get_accounts_account_id_orders_order_id_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -1743,7 +1743,7 @@ class AccountsApi:
         Get one order after account-grant authorization.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -1792,11 +1792,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1804,9 +1804,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_without_preload_content(
+    def finatic_v1_get_accounts_account_id_orders_order_id_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -1827,7 +1827,7 @@ class AccountsApi:
         Get one order after account-grant authorization.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -1876,7 +1876,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1953,9 +1953,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_events(
+    def finatic_v1_get_accounts_account_id_orders_order_id_events(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -1976,7 +1976,7 @@ class AccountsApi:
         List events for an account order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2025,11 +2025,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2037,9 +2037,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_events_with_http_info(
+    def finatic_v1_get_accounts_account_id_orders_order_id_events_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -2060,7 +2060,7 @@ class AccountsApi:
         List events for an account order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2109,11 +2109,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2121,9 +2121,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_events_without_preload_content(
+    def finatic_v1_get_accounts_account_id_orders_order_id_events_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -2144,7 +2144,7 @@ class AccountsApi:
         List events for an account order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2193,7 +2193,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2270,9 +2270,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_fills(
+    def finatic_v1_get_accounts_account_id_orders_order_id_fills(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -2293,7 +2293,7 @@ class AccountsApi:
         List fills for an account order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2342,11 +2342,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2354,9 +2354,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_fills_with_http_info(
+    def finatic_v1_get_accounts_account_id_orders_order_id_fills_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -2377,7 +2377,7 @@ class AccountsApi:
         List fills for an account order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2426,11 +2426,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2438,9 +2438,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_orders_order_id_fills_without_preload_content(
+    def finatic_v1_get_accounts_account_id_orders_order_id_fills_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -2461,7 +2461,7 @@ class AccountsApi:
         List fills for an account order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2510,7 +2510,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2587,9 +2587,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_position_lots(
+    def finatic_v1_get_accounts_account_id_position_lots(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -2611,7 +2611,7 @@ class AccountsApi:
         List account-scoped position lots.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -2663,11 +2663,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2675,9 +2675,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_position_lots_with_http_info(
+    def finatic_v1_get_accounts_account_id_position_lots_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -2699,7 +2699,7 @@ class AccountsApi:
         List account-scoped position lots.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -2751,11 +2751,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2763,9 +2763,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_position_lots_without_preload_content(
+    def finatic_v1_get_accounts_account_id_position_lots_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -2787,7 +2787,7 @@ class AccountsApi:
         List account-scoped position lots.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -2839,7 +2839,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2923,9 +2923,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills(
+    def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         lot_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -2946,7 +2946,7 @@ class AccountsApi:
         List fills for an account position lot.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param lot_id: (required)
         :type lot_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -2995,11 +2995,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3007,9 +3007,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_with_http_info(
+    def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         lot_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -3030,7 +3030,7 @@ class AccountsApi:
         List fills for an account position lot.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param lot_id: (required)
         :type lot_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -3079,11 +3079,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3091,9 +3091,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_without_preload_content(
+    def finatic_v1_get_accounts_account_id_position_lots_lot_id_fills_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         lot_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -3114,7 +3114,7 @@ class AccountsApi:
         List fills for an account position lot.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param lot_id: (required)
         :type lot_id: str
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -3163,7 +3163,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3240,9 +3240,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_positions(
+    def finatic_v1_get_accounts_account_id_positions(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -3264,7 +3264,7 @@ class AccountsApi:
         List account-scoped positions.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -3316,11 +3316,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3328,9 +3328,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_positions_with_http_info(
+    def finatic_v1_get_accounts_account_id_positions_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -3352,7 +3352,7 @@ class AccountsApi:
         List account-scoped positions.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -3404,11 +3404,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3416,9 +3416,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_positions_without_preload_content(
+    def finatic_v1_get_accounts_account_id_positions_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -3440,7 +3440,7 @@ class AccountsApi:
         List account-scoped positions.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -3492,7 +3492,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3576,9 +3576,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_resource(
+    def finatic_v1_get_accounts_account_id_resource(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         resource: StrictStr,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
@@ -3601,7 +3601,7 @@ class AccountsApi:
         List account-scoped balances, positions, transactions, orders, or lots.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param resource: (required)
         :type resource: str
         :param limit:
@@ -3656,11 +3656,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3668,9 +3668,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_resource_with_http_info(
+    def finatic_v1_get_accounts_account_id_resource_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         resource: StrictStr,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
@@ -3693,7 +3693,7 @@ class AccountsApi:
         List account-scoped balances, positions, transactions, orders, or lots.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param resource: (required)
         :type resource: str
         :param limit:
@@ -3748,11 +3748,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3760,9 +3760,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_resource_without_preload_content(
+    def finatic_v1_get_accounts_account_id_resource_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         resource: StrictStr,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
@@ -3785,7 +3785,7 @@ class AccountsApi:
         List account-scoped balances, positions, transactions, orders, or lots.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param resource: (required)
         :type resource: str
         :param limit:
@@ -3840,7 +3840,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3927,9 +3927,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_transactions(
+    def finatic_v1_get_accounts_account_id_transactions(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -3951,7 +3951,7 @@ class AccountsApi:
         List account-scoped transactions.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -4003,11 +4003,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4015,9 +4015,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_transactions_with_http_info(
+    def finatic_v1_get_accounts_account_id_transactions_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -4039,7 +4039,7 @@ class AccountsApi:
         List account-scoped transactions.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -4091,11 +4091,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4103,9 +4103,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_get_accounts_account_id_transactions_without_preload_content(
+    def finatic_v1_get_accounts_account_id_transactions_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -4127,7 +4127,7 @@ class AccountsApi:
         List account-scoped transactions.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param limit:
         :type limit: int
         :param offset:
@@ -4179,7 +4179,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4263,9 +4263,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_patch_accounts_account_id_orders_order_id(
+    def finatic_v1_patch_accounts_account_id_orders_order_id(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         idempotency_key: StrictStr,
         account_order_request: AccountOrderRequest,
@@ -4288,7 +4288,7 @@ class AccountsApi:
         Modify an account-scoped order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param idempotency_key: (required)
@@ -4343,11 +4343,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4355,9 +4355,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_patch_accounts_account_id_orders_order_id_with_http_info(
+    def finatic_v1_patch_accounts_account_id_orders_order_id_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         idempotency_key: StrictStr,
         account_order_request: AccountOrderRequest,
@@ -4380,7 +4380,7 @@ class AccountsApi:
         Modify an account-scoped order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param idempotency_key: (required)
@@ -4435,11 +4435,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4447,9 +4447,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_patch_accounts_account_id_orders_order_id_without_preload_content(
+    def finatic_v1_patch_accounts_account_id_orders_order_id_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         order_id: StrictStr,
         idempotency_key: StrictStr,
         account_order_request: AccountOrderRequest,
@@ -4472,7 +4472,7 @@ class AccountsApi:
         Modify an account-scoped order.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
         :param idempotency_key: (required)
@@ -4527,7 +4527,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4623,9 +4623,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_post_accounts_account_id_orders(
+    def finatic_v1_post_accounts_account_id_orders(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         idempotency_key: StrictStr,
         account_order_request: AccountOrderRequest,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -4647,7 +4647,7 @@ class AccountsApi:
         Create an account-scoped order with grant and idempotency checks.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param idempotency_key: (required)
         :type idempotency_key: str
         :param account_order_request: (required)
@@ -4699,11 +4699,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4711,9 +4711,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_post_accounts_account_id_orders_with_http_info(
+    def finatic_v1_post_accounts_account_id_orders_with_http_info(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         idempotency_key: StrictStr,
         account_order_request: AccountOrderRequest,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -4735,7 +4735,7 @@ class AccountsApi:
         Create an account-scoped order with grant and idempotency checks.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param idempotency_key: (required)
         :type idempotency_key: str
         :param account_order_request: (required)
@@ -4787,11 +4787,11 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4799,9 +4799,9 @@ class AccountsApi:
 
 
     @validate_call
-    async def finatic_v1_post_accounts_account_id_orders_without_preload_content(
+    def finatic_v1_post_accounts_account_id_orders_without_preload_content(
         self,
-        account_id: StrictStr,
+        account_id: UUID,
         idempotency_key: StrictStr,
         account_order_request: AccountOrderRequest,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -4823,7 +4823,7 @@ class AccountsApi:
         Create an account-scoped order with grant and idempotency checks.
 
         :param account_id: (required)
-        :type account_id: str
+        :type account_id: UUID
         :param idempotency_key: (required)
         :type idempotency_key: str
         :param account_order_request: (required)
@@ -4875,7 +4875,7 @@ class AccountsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

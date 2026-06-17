@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -10,6 +8,7 @@
 
     Do not edit the class manually.
 """  # noqa: E501
+
 
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
@@ -38,7 +37,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def forward_portal_logs_api_beta_telemetry_logs_post(
+    def forward_portal_logs_api_beta_telemetry_logs_post(
         self,
         _request_timeout: Union[
             None,
@@ -90,11 +89,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -102,7 +101,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def forward_portal_logs_api_beta_telemetry_logs_post_with_http_info(
+    def forward_portal_logs_api_beta_telemetry_logs_post_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -154,11 +153,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -166,7 +165,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def forward_portal_logs_api_beta_telemetry_logs_post_without_preload_content(
+    def forward_portal_logs_api_beta_telemetry_logs_post_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -218,7 +217,7 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -286,7 +285,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def forward_portal_logs_api_v1_telemetry_logs_post(
+    def forward_portal_logs_api_v1_telemetry_logs_post(
         self,
         _request_timeout: Union[
             None,
@@ -337,11 +336,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -349,7 +348,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def forward_portal_logs_api_v1_telemetry_logs_post_with_http_info(
+    def forward_portal_logs_api_v1_telemetry_logs_post_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -400,11 +399,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -412,7 +411,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def forward_portal_logs_api_v1_telemetry_logs_post_without_preload_content(
+    def forward_portal_logs_api_v1_telemetry_logs_post_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -463,7 +462,7 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -531,7 +530,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def proxy_otlp_traces_api_beta_telemetry_v1_traces_post(
+    def proxy_otlp_traces_api_beta_telemetry_v1_traces_post(
         self,
         _request_timeout: Union[
             None,
@@ -583,11 +582,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -595,7 +594,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def proxy_otlp_traces_api_beta_telemetry_v1_traces_post_with_http_info(
+    def proxy_otlp_traces_api_beta_telemetry_v1_traces_post_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -647,11 +646,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -659,7 +658,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def proxy_otlp_traces_api_beta_telemetry_v1_traces_post_without_preload_content(
+    def proxy_otlp_traces_api_beta_telemetry_v1_traces_post_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -711,7 +710,7 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -779,7 +778,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def proxy_otlp_traces_api_v1_telemetry_v1_traces_post(
+    def proxy_otlp_traces_api_v1_telemetry_v1_traces_post(
         self,
         _request_timeout: Union[
             None,
@@ -830,11 +829,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -842,7 +841,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def proxy_otlp_traces_api_v1_telemetry_v1_traces_post_with_http_info(
+    def proxy_otlp_traces_api_v1_telemetry_v1_traces_post_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -893,11 +892,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -905,7 +904,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def proxy_otlp_traces_api_v1_telemetry_v1_traces_post_without_preload_content(
+    def proxy_otlp_traces_api_v1_telemetry_v1_traces_post_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -956,7 +955,7 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "object",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1024,7 +1023,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def telemetry_test_api_beta_telemetry_test_get(
+    def telemetry_test_api_beta_telemetry_test_get(
         self,
         _request_timeout: Union[
             None,
@@ -1076,11 +1075,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Dict[str, Optional[str]]",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1088,7 +1087,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def telemetry_test_api_beta_telemetry_test_get_with_http_info(
+    def telemetry_test_api_beta_telemetry_test_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -1140,11 +1139,11 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Dict[str, Optional[str]]",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1152,7 +1151,7 @@ class TelemetryApi:
 
 
     @validate_call
-    async def telemetry_test_api_beta_telemetry_test_get_without_preload_content(
+    def telemetry_test_api_beta_telemetry_test_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -1204,7 +1203,7 @@ class TelemetryApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "Dict[str, Optional[str]]",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

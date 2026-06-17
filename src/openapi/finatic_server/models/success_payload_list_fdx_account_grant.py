@@ -22,18 +22,20 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.fdx_account_grant import FDXAccountGrant
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class SuccessPayloadListFDXAccountGrant(BaseModel):
     """
     SuccessPayloadListFDXAccountGrant
     """ # noqa: E501
     id: Optional[StrictStr] = Field(default=None, alias="_id")
-    data: Optional[List[FDXAccountGrant]] = None
-    meta: Optional[Dict[str, Any]] = None
+    data: Optional[List[FDXAccountGrant]] = Field(default=None, description="The response data (None when error is present)")
+    meta: Optional[Dict[str, Any]] = Field(default=None, description="Optional metadata (pagination, etc.)")
     __properties: ClassVar[List[str]] = ["_id", "data", "meta"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -45,8 +47,7 @@ class SuccessPayloadListFDXAccountGrant(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

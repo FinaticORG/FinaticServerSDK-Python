@@ -12,7 +12,6 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 # import models into model package
 from finatic_server.models.account_order_request import AccountOrderRequest
 from finatic_server.models.accounts import Accounts
@@ -27,6 +26,9 @@ from finatic_server.models.create_session_request import CreateSessionRequest
 from finatic_server.models.ea_configuration_payload import EaConfigurationPayload
 from finatic_server.models.fdx_account_grant import FDXAccountGrant
 from finatic_server.models.fdx_account_grant_update import FDXAccountGrantUpdate
+from finatic_server.models.fdx_account_status import FDXAccountStatus
+from finatic_server.models.fdx_account_type import FDXAccountType
+from finatic_server.models.fdx_balance_type import FDXBalanceType
 from finatic_server.models.fdx_consent_grant import FDXConsentGrant
 from finatic_server.models.fdx_consent_grant_create import FDXConsentGrantCreate
 from finatic_server.models.fdx_webhook_event_definition import FDXWebhookEventDefinition
@@ -98,6 +100,7 @@ from finatic_server.models.lastsyncedat import Lastsyncedat
 from finatic_server.models.link_user_to_mcp_session_request import LinkUserToMCPSessionRequest
 from finatic_server.models.link_user_to_mcp_session_response import LinkUserToMCPSessionResponse
 from finatic_server.models.link_user_to_session_response import LinkUserToSessionResponse
+from finatic_server.models.location_inner import LocationInner
 from finatic_server.models.mcp_bootstrap_request import MCPBootstrapRequest
 from finatic_server.models.mcp_bootstrap_response_data import MCPBootstrapResponseData
 from finatic_server.models.mt_connect_request import MTConnectRequest
@@ -165,4 +168,3 @@ from finatic_server.models.success_payload_session_user_response import SuccessP
 from finatic_server.models.success_payload_token_response_data import SuccessPayloadTokenResponseData
 from finatic_server.models.token_response_data import TokenResponseData
 from finatic_server.models.validation_error import ValidationError
-from finatic_server.models.validation_error_loc_inner import ValidationErrorLocInner

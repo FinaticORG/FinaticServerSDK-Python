@@ -23,20 +23,22 @@ from finatic_server.models.finatic_v1_error import FinaticV1Error
 from finatic_server.models.finatic_v1_warning import FinaticV1Warning
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class FinaticV1ResponseEnvelope(BaseModel):
     """
     FinaticV1ResponseEnvelope
     """ # noqa: E501
-    data: Optional[Any] = Field(description="Successful response payload. The concrete operation schema defines the payload shape.")
+    data: Optional[Any]
     errors: List[FinaticV1Error]
-    trace_id: Optional[StrictStr] = Field(alias="traceId")
+    trace_id: Optional[StrictStr] = Field(description="Filter by broker ID", alias="traceId")
     warnings: List[FinaticV1Warning]
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["data", "errors", "traceId", "warnings"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -48,8 +50,7 @@ class FinaticV1ResponseEnvelope(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

@@ -55,6 +55,9 @@ __all__ = [
     "EaConfigurationPayload",
     "FDXAccountGrant",
     "FDXAccountGrantUpdate",
+    "FDXAccountStatus",
+    "FDXAccountType",
+    "FDXBalanceType",
     "FDXConsentGrant",
     "FDXConsentGrantCreate",
     "FDXWebhookEventDefinition",
@@ -126,6 +129,7 @@ __all__ = [
     "LinkUserToMCPSessionRequest",
     "LinkUserToMCPSessionResponse",
     "LinkUserToSessionResponse",
+    "LocationInner",
     "MCPBootstrapRequest",
     "MCPBootstrapResponseData",
     "MTConnectRequest",
@@ -193,7 +197,6 @@ __all__ = [
     "SuccessPayloadTokenResponseData",
     "TokenResponseData",
     "ValidationError",
-    "ValidationErrorLocInner",
 ]
 
 # import apis into sdk package
@@ -238,6 +241,9 @@ from finatic_server.models.create_session_request import CreateSessionRequest as
 from finatic_server.models.ea_configuration_payload import EaConfigurationPayload as EaConfigurationPayload
 from finatic_server.models.fdx_account_grant import FDXAccountGrant as FDXAccountGrant
 from finatic_server.models.fdx_account_grant_update import FDXAccountGrantUpdate as FDXAccountGrantUpdate
+from finatic_server.models.fdx_account_status import FDXAccountStatus as FDXAccountStatus
+from finatic_server.models.fdx_account_type import FDXAccountType as FDXAccountType
+from finatic_server.models.fdx_balance_type import FDXBalanceType as FDXBalanceType
 from finatic_server.models.fdx_consent_grant import FDXConsentGrant as FDXConsentGrant
 from finatic_server.models.fdx_consent_grant_create import FDXConsentGrantCreate as FDXConsentGrantCreate
 from finatic_server.models.fdx_webhook_event_definition import FDXWebhookEventDefinition as FDXWebhookEventDefinition
@@ -309,6 +315,7 @@ from finatic_server.models.lastsyncedat import Lastsyncedat as Lastsyncedat
 from finatic_server.models.link_user_to_mcp_session_request import LinkUserToMCPSessionRequest as LinkUserToMCPSessionRequest
 from finatic_server.models.link_user_to_mcp_session_response import LinkUserToMCPSessionResponse as LinkUserToMCPSessionResponse
 from finatic_server.models.link_user_to_session_response import LinkUserToSessionResponse as LinkUserToSessionResponse
+from finatic_server.models.location_inner import LocationInner as LocationInner
 from finatic_server.models.mcp_bootstrap_request import MCPBootstrapRequest as MCPBootstrapRequest
 from finatic_server.models.mcp_bootstrap_response_data import MCPBootstrapResponseData as MCPBootstrapResponseData
 from finatic_server.models.mt_connect_request import MTConnectRequest as MTConnectRequest
@@ -376,4 +383,3 @@ from finatic_server.models.success_payload_session_user_response import SuccessP
 from finatic_server.models.success_payload_token_response_data import SuccessPayloadTokenResponseData as SuccessPayloadTokenResponseData
 from finatic_server.models.token_response_data import TokenResponseData as TokenResponseData
 from finatic_server.models.validation_error import ValidationError as ValidationError
-from finatic_server.models.validation_error_loc_inner import ValidationErrorLocInner as ValidationErrorLocInner

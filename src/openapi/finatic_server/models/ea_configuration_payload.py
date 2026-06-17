@@ -19,14 +19,16 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class EaConfigurationPayload(BaseModel):
     """
     One-time connector bootstrap payload.
     """ # noqa: E501
-    connector_id: StrictStr
+    connector_id: UUID
     connector_secret: StrictStr
     ingest_url: StrictStr
     secret_version: Optional[StrictInt] = 1
@@ -36,7 +38,8 @@ class EaConfigurationPayload(BaseModel):
     __properties: ClassVar[List[str]] = ["connector_id", "connector_secret", "ingest_url", "secret_version", "signing_scheme_version", "snapshot_required", "timestamp_skew_seconds"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -48,8 +51,7 @@ class EaConfigurationPayload(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

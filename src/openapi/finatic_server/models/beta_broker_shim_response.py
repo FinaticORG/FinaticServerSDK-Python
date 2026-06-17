@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class BetaBrokerShimResponse(BaseModel):
     """
@@ -32,11 +33,11 @@ class BetaBrokerShimResponse(BaseModel):
     replacement_method: StrictStr = Field(alias="replacementMethod")
     replacement_path: StrictStr = Field(alias="replacementPath")
     requires_account_id: Optional[StrictBool] = Field(default=False, alias="requiresAccountId")
-    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["betaPath", "migrationStatus", "notes", "replacementMethod", "replacementPath", "requiresAccountId"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -48,8 +49,7 @@ class BetaBrokerShimResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -65,10 +65,8 @@ class BetaBrokerShimResponse(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -76,11 +74,6 @@ class BetaBrokerShimResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         return _dict
 
     @classmethod
@@ -100,9 +93,4 @@ class BetaBrokerShimResponse(BaseModel):
             "replacementPath": obj.get("replacementPath"),
             "requiresAccountId": obj.get("requiresAccountId") if obj.get("requiresAccountId") is not None else False
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj

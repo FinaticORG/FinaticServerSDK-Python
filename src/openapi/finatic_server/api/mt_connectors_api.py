@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -11,12 +9,13 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import StrictStr
+from uuid import UUID
 from finatic_server.models.finatic_response_dict import FinaticResponseDict
 from finatic_server.models.finatic_response_list_connector_list_item import FinaticResponseListConnectorListItem
 from finatic_server.models.finatic_response_mt_connect_response_data import FinaticResponseMTConnectResponseData
@@ -42,7 +41,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def create_mt_connector_api_v1_mt_connect_post(
+    def create_mt_connector_api_v1_mt_connect_post(
         self,
         mt_connect_request: MTConnectRequest,
         _request_timeout: Union[
@@ -107,11 +106,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -119,7 +118,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def create_mt_connector_api_v1_mt_connect_post_with_http_info(
+    def create_mt_connector_api_v1_mt_connect_post_with_http_info(
         self,
         mt_connect_request: MTConnectRequest,
         _request_timeout: Union[
@@ -184,11 +183,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -196,7 +195,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def create_mt_connector_api_v1_mt_connect_post_without_preload_content(
+    def create_mt_connector_api_v1_mt_connect_post_without_preload_content(
         self,
         mt_connect_request: MTConnectRequest,
         _request_timeout: Union[
@@ -261,7 +260,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -345,9 +344,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def disconnect_mt_connector_api_v1_mt_disconnect_post(
+    def disconnect_mt_connector_api_v1_mt_disconnect_post(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -366,7 +365,7 @@ class MtConnectorsApi:
         Revoke connector as disconnect operation.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -410,11 +409,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -422,9 +421,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def disconnect_mt_connector_api_v1_mt_disconnect_post_with_http_info(
+    def disconnect_mt_connector_api_v1_mt_disconnect_post_with_http_info(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -443,7 +442,7 @@ class MtConnectorsApi:
         Revoke connector as disconnect operation.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -487,11 +486,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -499,9 +498,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def disconnect_mt_connector_api_v1_mt_disconnect_post_without_preload_content(
+    def disconnect_mt_connector_api_v1_mt_disconnect_post_without_preload_content(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -520,7 +519,7 @@ class MtConnectorsApi:
         Revoke connector as disconnect operation.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -564,7 +563,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -637,7 +636,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def list_mt_connectors_api_v1_mt_connections_get(
+    def list_mt_connectors_api_v1_mt_connections_get(
         self,
         _request_timeout: Union[
             None,
@@ -698,11 +697,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -710,7 +709,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def list_mt_connectors_api_v1_mt_connections_get_with_http_info(
+    def list_mt_connectors_api_v1_mt_connections_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -771,11 +770,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -783,7 +782,7 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def list_mt_connectors_api_v1_mt_connections_get_without_preload_content(
+    def list_mt_connectors_api_v1_mt_connections_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -844,7 +843,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -912,9 +911,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post(
+    def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -933,7 +932,7 @@ class MtConnectorsApi:
         Revoke connector for current account.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -977,11 +976,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -989,9 +988,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_with_http_info(
+    def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_with_http_info(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1010,7 +1009,7 @@ class MtConnectorsApi:
         Revoke connector for current account.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1054,11 +1053,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1066,9 +1065,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_without_preload_content(
+    def revoke_mt_connector_api_v1_mt_connectors_connector_id_revoke_post_without_preload_content(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1087,7 +1086,7 @@ class MtConnectorsApi:
         Revoke connector for current account.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1131,7 +1130,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1202,9 +1201,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post(
+    def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1223,7 +1222,7 @@ class MtConnectorsApi:
         Rotate connector secret and return one-time secret.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1267,11 +1266,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1279,9 +1278,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_with_http_info(
+    def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_with_http_info(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1300,7 +1299,7 @@ class MtConnectorsApi:
         Rotate connector secret and return one-time secret.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1344,11 +1343,11 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1356,9 +1355,9 @@ class MtConnectorsApi:
 
 
     @validate_call
-    async def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_without_preload_content(
+    def rotate_mt_connector_secret_api_v1_mt_connectors_connector_id_rotate_secret_post_without_preload_content(
         self,
-        connector_id: StrictStr,
+        connector_id: UUID,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1377,7 +1376,7 @@ class MtConnectorsApi:
         Rotate connector secret and return one-time secret.
 
         :param connector_id: (required)
-        :type connector_id: str
+        :type connector_id: UUID
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1421,7 +1420,7 @@ class MtConnectorsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

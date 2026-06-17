@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -10,6 +8,7 @@
 
     Do not edit the class manually.
 """  # noqa: E501
+
 
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
@@ -40,7 +39,7 @@ class CoreApi:
 
 
     @validate_call
-    async def flush_redis_api_beta_flush_redis_get(
+    def flush_redis_api_beta_flush_redis_get(
         self,
         token: Annotated[StrictStr, Field(description="Secret API token for flushing Redis")],
         fastapi_cache_only: Annotated[Optional[StrictBool], Field(description="If true, ONLY flush the FastAPI cache. This removes all keys with the 'finaticAPI-cache:' prefix.")] = None,
@@ -101,11 +100,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -113,7 +112,7 @@ class CoreApi:
 
 
     @validate_call
-    async def flush_redis_api_beta_flush_redis_get_with_http_info(
+    def flush_redis_api_beta_flush_redis_get_with_http_info(
         self,
         token: Annotated[StrictStr, Field(description="Secret API token for flushing Redis")],
         fastapi_cache_only: Annotated[Optional[StrictBool], Field(description="If true, ONLY flush the FastAPI cache. This removes all keys with the 'finaticAPI-cache:' prefix.")] = None,
@@ -174,11 +173,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -186,7 +185,7 @@ class CoreApi:
 
 
     @validate_call
-    async def flush_redis_api_beta_flush_redis_get_without_preload_content(
+    def flush_redis_api_beta_flush_redis_get_without_preload_content(
         self,
         token: Annotated[StrictStr, Field(description="Secret API token for flushing Redis")],
         fastapi_cache_only: Annotated[Optional[StrictBool], Field(description="If true, ONLY flush the FastAPI cache. This removes all keys with the 'finaticAPI-cache:' prefix.")] = None,
@@ -247,7 +246,7 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -325,7 +324,7 @@ class CoreApi:
 
 
     @validate_call
-    async def flush_redis_api_v1_flush_redis_get(
+    def flush_redis_api_v1_flush_redis_get(
         self,
         token: Annotated[StrictStr, Field(description="Secret API token for flushing Redis")],
         fastapi_cache_only: Annotated[Optional[StrictBool], Field(description="If true, ONLY flush the FastAPI cache. This removes all keys with the 'finaticAPI-cache:' prefix.")] = None,
@@ -385,11 +384,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -397,7 +396,7 @@ class CoreApi:
 
 
     @validate_call
-    async def flush_redis_api_v1_flush_redis_get_with_http_info(
+    def flush_redis_api_v1_flush_redis_get_with_http_info(
         self,
         token: Annotated[StrictStr, Field(description="Secret API token for flushing Redis")],
         fastapi_cache_only: Annotated[Optional[StrictBool], Field(description="If true, ONLY flush the FastAPI cache. This removes all keys with the 'finaticAPI-cache:' prefix.")] = None,
@@ -457,11 +456,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -469,7 +468,7 @@ class CoreApi:
 
 
     @validate_call
-    async def flush_redis_api_v1_flush_redis_get_without_preload_content(
+    def flush_redis_api_v1_flush_redis_get_without_preload_content(
         self,
         token: Annotated[StrictStr, Field(description="Secret API token for flushing Redis")],
         fastapi_cache_only: Annotated[Optional[StrictBool], Field(description="If true, ONLY flush the FastAPI cache. This removes all keys with the 'finaticAPI-cache:' prefix.")] = None,
@@ -529,7 +528,7 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -607,7 +606,7 @@ class CoreApi:
 
 
     @validate_call
-    async def health_check_api_beta_health_get(
+    def health_check_api_beta_health_get(
         self,
         _request_timeout: Union[
             None,
@@ -659,11 +658,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -671,7 +670,7 @@ class CoreApi:
 
 
     @validate_call
-    async def health_check_api_beta_health_get_with_http_info(
+    def health_check_api_beta_health_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -723,11 +722,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -735,7 +734,7 @@ class CoreApi:
 
 
     @validate_call
-    async def health_check_api_beta_health_get_without_preload_content(
+    def health_check_api_beta_health_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -787,7 +786,7 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -855,7 +854,7 @@ class CoreApi:
 
 
     @validate_call
-    async def health_check_api_v1_health_get(
+    def health_check_api_v1_health_get(
         self,
         _request_timeout: Union[
             None,
@@ -906,11 +905,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -918,7 +917,7 @@ class CoreApi:
 
 
     @validate_call
-    async def health_check_api_v1_health_get_with_http_info(
+    def health_check_api_v1_health_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -969,11 +968,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -981,7 +980,7 @@ class CoreApi:
 
 
     @validate_call
-    async def health_check_api_v1_health_get_without_preload_content(
+    def health_check_api_v1_health_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -1032,7 +1031,7 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1100,7 +1099,7 @@ class CoreApi:
 
 
     @validate_call
-    async def read_root_api_beta_get(
+    def read_root_api_beta_get(
         self,
         test_error: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1157,11 +1156,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1169,7 +1168,7 @@ class CoreApi:
 
 
     @validate_call
-    async def read_root_api_beta_get_with_http_info(
+    def read_root_api_beta_get_with_http_info(
         self,
         test_error: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1226,11 +1225,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1238,7 +1237,7 @@ class CoreApi:
 
 
     @validate_call
-    async def read_root_api_beta_get_without_preload_content(
+    def read_root_api_beta_get_without_preload_content(
         self,
         test_error: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1295,7 +1294,7 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1368,7 +1367,7 @@ class CoreApi:
 
 
     @validate_call
-    async def read_root_api_v1_get(
+    def read_root_api_v1_get(
         self,
         test_error: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1424,11 +1423,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1436,7 +1435,7 @@ class CoreApi:
 
 
     @validate_call
-    async def read_root_api_v1_get_with_http_info(
+    def read_root_api_v1_get_with_http_info(
         self,
         test_error: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1492,11 +1491,11 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1504,7 +1503,7 @@ class CoreApi:
 
 
     @validate_call
-    async def read_root_api_v1_get_without_preload_content(
+    def read_root_api_v1_get_without_preload_content(
         self,
         test_error: Optional[StrictBool] = None,
         _request_timeout: Union[
@@ -1560,7 +1559,7 @@ class CoreApi:
             '200': "FinaticResponseDict",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1633,7 +1632,7 @@ class CoreApi:
 
 
     @validate_call
-    async def redis_health_check_api_beta_redis_health_get(
+    def redis_health_check_api_beta_redis_health_get(
         self,
         _request_timeout: Union[
             None,
@@ -1685,11 +1684,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1697,7 +1696,7 @@ class CoreApi:
 
 
     @validate_call
-    async def redis_health_check_api_beta_redis_health_get_with_http_info(
+    def redis_health_check_api_beta_redis_health_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -1749,11 +1748,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1761,7 +1760,7 @@ class CoreApi:
 
 
     @validate_call
-    async def redis_health_check_api_beta_redis_health_get_without_preload_content(
+    def redis_health_check_api_beta_redis_health_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -1813,7 +1812,7 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1881,7 +1880,7 @@ class CoreApi:
 
 
     @validate_call
-    async def redis_health_check_api_v1_redis_health_get(
+    def redis_health_check_api_v1_redis_health_get(
         self,
         _request_timeout: Union[
             None,
@@ -1932,11 +1931,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1944,7 +1943,7 @@ class CoreApi:
 
 
     @validate_call
-    async def redis_health_check_api_v1_redis_health_get_with_http_info(
+    def redis_health_check_api_v1_redis_health_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -1995,11 +1994,11 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2007,7 +2006,7 @@ class CoreApi:
 
 
     @validate_call
-    async def redis_health_check_api_v1_redis_health_get_without_preload_content(
+    def redis_health_check_api_v1_redis_health_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -2058,7 +2057,7 @@ class CoreApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "FinaticResponseDict",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

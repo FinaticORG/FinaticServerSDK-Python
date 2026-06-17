@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -11,6 +9,7 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,6 +18,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_complete_session_response1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse1
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_complete_session_response2 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse2
 from finatic_server.models.finatic_broker_factory_core_standard_models_abstract_responses_finatic_response_portal_session_response1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1
@@ -53,7 +53,7 @@ class PortalApi:
 
 
     @validate_call
-    async def complete_session_api_beta_portal_session_id_complete_post(
+    def complete_session_api_beta_portal_session_id_complete_post(
         self,
         session_id: StrictStr,
         _request_timeout: Union[
@@ -110,11 +110,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse2",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -122,7 +122,7 @@ class PortalApi:
 
 
     @validate_call
-    async def complete_session_api_beta_portal_session_id_complete_post_with_http_info(
+    def complete_session_api_beta_portal_session_id_complete_post_with_http_info(
         self,
         session_id: StrictStr,
         _request_timeout: Union[
@@ -179,11 +179,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse2",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -191,7 +191,7 @@ class PortalApi:
 
 
     @validate_call
-    async def complete_session_api_beta_portal_session_id_complete_post_without_preload_content(
+    def complete_session_api_beta_portal_session_id_complete_post_without_preload_content(
         self,
         session_id: StrictStr,
         _request_timeout: Union[
@@ -248,7 +248,7 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse2",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -319,7 +319,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_oauth_completion_token(
+    def finatic_v1_get_portal_oauth_completion_token(
         self,
         token: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -379,11 +379,11 @@ class PortalApi:
             '200': "FinaticResponseOAuthCompletionResponse",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -391,7 +391,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_oauth_completion_token_with_http_info(
+    def finatic_v1_get_portal_oauth_completion_token_with_http_info(
         self,
         token: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -451,11 +451,11 @@ class PortalApi:
             '200': "FinaticResponseOAuthCompletionResponse",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -463,7 +463,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_oauth_completion_token_without_preload_content(
+    def finatic_v1_get_portal_oauth_completion_token_without_preload_content(
         self,
         token: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -523,7 +523,7 @@ class PortalApi:
             '200': "FinaticResponseOAuthCompletionResponse",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -597,10 +597,10 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_auth_attempts_auth_attempt_id(
+    def finatic_v1_get_portal_session_id_auth_attempts_auth_attempt_id(
         self,
         session_id: StrictStr,
-        auth_attempt_id: StrictStr,
+        auth_attempt_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -622,7 +622,7 @@ class PortalApi:
         :param session_id: (required)
         :type session_id: str
         :param auth_attempt_id: (required)
-        :type auth_attempt_id: str
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -661,11 +661,11 @@ class PortalApi:
             '200': "FinaticResponseAuthAttempt",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -673,10 +673,10 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_auth_attempts_auth_attempt_id_with_http_info(
+    def finatic_v1_get_portal_session_id_auth_attempts_auth_attempt_id_with_http_info(
         self,
         session_id: StrictStr,
-        auth_attempt_id: StrictStr,
+        auth_attempt_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -698,7 +698,7 @@ class PortalApi:
         :param session_id: (required)
         :type session_id: str
         :param auth_attempt_id: (required)
-        :type auth_attempt_id: str
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -737,11 +737,11 @@ class PortalApi:
             '200': "FinaticResponseAuthAttempt",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -749,10 +749,10 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_auth_attempts_auth_attempt_id_without_preload_content(
+    def finatic_v1_get_portal_session_id_auth_attempts_auth_attempt_id_without_preload_content(
         self,
         session_id: StrictStr,
-        auth_attempt_id: StrictStr,
+        auth_attempt_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -774,7 +774,7 @@ class PortalApi:
         :param session_id: (required)
         :type session_id: str
         :param auth_attempt_id: (required)
-        :type auth_attempt_id: str
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -813,7 +813,7 @@ class PortalApi:
             '200': "FinaticResponseAuthAttempt",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -890,10 +890,10 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_discovered_accounts(
+    def finatic_v1_get_portal_session_id_discovered_accounts(
         self,
         session_id: StrictStr,
-        auth_attempt_id: Optional[StrictStr] = None,
+        auth_attempt_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -914,8 +914,8 @@ class PortalApi:
 
         :param session_id: (required)
         :type session_id: str
-        :param auth_attempt_id:
-        :type auth_attempt_id: str
+        :param auth_attempt_id: (required)
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -954,11 +954,11 @@ class PortalApi:
             '200': "FinaticResponseListDictStrAny",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -966,10 +966,10 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_discovered_accounts_with_http_info(
+    def finatic_v1_get_portal_session_id_discovered_accounts_with_http_info(
         self,
         session_id: StrictStr,
-        auth_attempt_id: Optional[StrictStr] = None,
+        auth_attempt_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -990,8 +990,8 @@ class PortalApi:
 
         :param session_id: (required)
         :type session_id: str
-        :param auth_attempt_id:
-        :type auth_attempt_id: str
+        :param auth_attempt_id: (required)
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1030,11 +1030,11 @@ class PortalApi:
             '200': "FinaticResponseListDictStrAny",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1042,10 +1042,10 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_discovered_accounts_without_preload_content(
+    def finatic_v1_get_portal_session_id_discovered_accounts_without_preload_content(
         self,
         session_id: StrictStr,
-        auth_attempt_id: Optional[StrictStr] = None,
+        auth_attempt_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1066,8 +1066,8 @@ class PortalApi:
 
         :param session_id: (required)
         :type session_id: str
-        :param auth_attempt_id:
-        :type auth_attempt_id: str
+        :param auth_attempt_id: (required)
+        :type auth_attempt_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1106,7 +1106,7 @@ class PortalApi:
             '200': "FinaticResponseListDictStrAny",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1185,7 +1185,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_institutions(
+    def finatic_v1_get_portal_session_id_institutions(
         self,
         session_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1245,11 +1245,11 @@ class PortalApi:
             '200': "FinaticResponseListDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1257,7 +1257,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_institutions_with_http_info(
+    def finatic_v1_get_portal_session_id_institutions_with_http_info(
         self,
         session_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1317,11 +1317,11 @@ class PortalApi:
             '200': "FinaticResponseListDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1329,7 +1329,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_session_id_institutions_without_preload_content(
+    def finatic_v1_get_portal_session_id_institutions_without_preload_content(
         self,
         session_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1389,7 +1389,7 @@ class PortalApi:
             '200': "FinaticResponseListDictStrStr",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1463,7 +1463,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_token(
+    def finatic_v1_get_portal_token(
         self,
         token: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1523,11 +1523,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1535,7 +1535,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_token_with_http_info(
+    def finatic_v1_get_portal_token_with_http_info(
         self,
         token: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1595,11 +1595,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1607,7 +1607,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_get_portal_token_without_preload_content(
+    def finatic_v1_get_portal_token_without_preload_content(
         self,
         token: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1667,7 +1667,7 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse1",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1741,7 +1741,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_account_grants(
+    def finatic_v1_post_portal_session_id_account_grants(
         self,
         session_id: StrictStr,
         portal_account_grant_request: PortalAccountGrantRequest,
@@ -1805,11 +1805,11 @@ class PortalApi:
             '200': "FinaticResponseFDXAccountGrant",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1817,7 +1817,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_account_grants_with_http_info(
+    def finatic_v1_post_portal_session_id_account_grants_with_http_info(
         self,
         session_id: StrictStr,
         portal_account_grant_request: PortalAccountGrantRequest,
@@ -1881,11 +1881,11 @@ class PortalApi:
             '200': "FinaticResponseFDXAccountGrant",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1893,7 +1893,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_account_grants_without_preload_content(
+    def finatic_v1_post_portal_session_id_account_grants_without_preload_content(
         self,
         session_id: StrictStr,
         portal_account_grant_request: PortalAccountGrantRequest,
@@ -1957,7 +1957,7 @@ class PortalApi:
             '200': "FinaticResponseFDXAccountGrant",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2047,7 +2047,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_auth_attempts(
+    def finatic_v1_post_portal_session_id_auth_attempts(
         self,
         session_id: StrictStr,
         portal_auth_attempt_request: PortalAuthAttemptRequest,
@@ -2067,7 +2067,7 @@ class PortalApi:
     ) -> FinaticResponseAuthAttempt:
         """Create Portal Auth Attempt
 
-        Create a portal auth attempt and bind accounts from live discovery.
+        Start portal auth and bind accounts when a connection already exists.
 
         :param session_id: (required)
         :type session_id: str
@@ -2111,11 +2111,11 @@ class PortalApi:
             '200': "FinaticResponseAuthAttempt",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2123,7 +2123,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_auth_attempts_with_http_info(
+    def finatic_v1_post_portal_session_id_auth_attempts_with_http_info(
         self,
         session_id: StrictStr,
         portal_auth_attempt_request: PortalAuthAttemptRequest,
@@ -2143,7 +2143,7 @@ class PortalApi:
     ) -> ApiResponse[FinaticResponseAuthAttempt]:
         """Create Portal Auth Attempt
 
-        Create a portal auth attempt and bind accounts from live discovery.
+        Start portal auth and bind accounts when a connection already exists.
 
         :param session_id: (required)
         :type session_id: str
@@ -2187,11 +2187,11 @@ class PortalApi:
             '200': "FinaticResponseAuthAttempt",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2199,7 +2199,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_auth_attempts_without_preload_content(
+    def finatic_v1_post_portal_session_id_auth_attempts_without_preload_content(
         self,
         session_id: StrictStr,
         portal_auth_attempt_request: PortalAuthAttemptRequest,
@@ -2219,7 +2219,7 @@ class PortalApi:
     ) -> RESTResponseType:
         """Create Portal Auth Attempt
 
-        Create a portal auth attempt and bind accounts from live discovery.
+        Start portal auth and bind accounts when a connection already exists.
 
         :param session_id: (required)
         :type session_id: str
@@ -2263,7 +2263,7 @@ class PortalApi:
             '200': "FinaticResponseAuthAttempt",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2353,7 +2353,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_complete(
+    def finatic_v1_post_portal_session_id_complete(
         self,
         session_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -2413,11 +2413,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse1",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2425,7 +2425,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_complete_with_http_info(
+    def finatic_v1_post_portal_session_id_complete_with_http_info(
         self,
         session_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -2485,11 +2485,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse1",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2497,7 +2497,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_complete_without_preload_content(
+    def finatic_v1_post_portal_session_id_complete_without_preload_content(
         self,
         session_id: StrictStr,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -2557,7 +2557,7 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseCompleteSessionResponse1",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2631,7 +2631,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_user_link(
+    def finatic_v1_post_portal_session_id_user_link(
         self,
         session_id: StrictStr,
         portal_user_link_request: PortalUserLinkRequest,
@@ -2695,11 +2695,11 @@ class PortalApi:
             '200': "FinaticResponsePortalSessionValidationResponse",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2707,7 +2707,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_user_link_with_http_info(
+    def finatic_v1_post_portal_session_id_user_link_with_http_info(
         self,
         session_id: StrictStr,
         portal_user_link_request: PortalUserLinkRequest,
@@ -2771,11 +2771,11 @@ class PortalApi:
             '200': "FinaticResponsePortalSessionValidationResponse",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2783,7 +2783,7 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_session_id_user_link_without_preload_content(
+    def finatic_v1_post_portal_session_id_user_link_without_preload_content(
         self,
         session_id: StrictStr,
         portal_user_link_request: PortalUserLinkRequest,
@@ -2847,7 +2847,7 @@ class PortalApi:
             '200': "FinaticResponsePortalSessionValidationResponse",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2937,7 +2937,7 @@ class PortalApi:
 
 
     @validate_call
-    async def portal_root_api_beta_portal_token_get(
+    def portal_root_api_beta_portal_token_get(
         self,
         token: StrictStr,
         _request_timeout: Union[
@@ -2994,11 +2994,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse2",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3006,7 +3006,7 @@ class PortalApi:
 
 
     @validate_call
-    async def portal_root_api_beta_portal_token_get_with_http_info(
+    def portal_root_api_beta_portal_token_get_with_http_info(
         self,
         token: StrictStr,
         _request_timeout: Union[
@@ -3063,11 +3063,11 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse2",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3075,7 +3075,7 @@ class PortalApi:
 
 
     @validate_call
-    async def portal_root_api_beta_portal_token_get_without_preload_content(
+    def portal_root_api_beta_portal_token_get_without_preload_content(
         self,
         token: StrictStr,
         _request_timeout: Union[
@@ -3132,7 +3132,7 @@ class PortalApi:
             '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponsePortalSessionResponse2",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

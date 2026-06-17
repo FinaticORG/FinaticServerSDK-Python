@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -11,6 +9,7 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -19,7 +18,7 @@ from typing_extensions import Annotated
 from pydantic import Field, StrictBool, StrictStr
 from typing import Any, Dict, Optional
 from typing_extensions import Annotated
-from finatic_server.models.broker_data_account_type_enum import BrokerDataAccountTypeEnum
+from uuid import UUID
 from finatic_server.models.finatic_response_beta_broker_shim_response import FinaticResponseBetaBrokerShimResponse
 from finatic_server.models.finatic_response_list_fdx_broker_account import FinaticResponseListFDXBrokerAccount
 from finatic_server.models.finatic_response_list_fdx_broker_balance import FinaticResponseListFDXBrokerBalance
@@ -43,7 +42,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def cancel_order_api_beta_brokers_orders_order_id_delete(
+    def cancel_order_api_beta_brokers_orders_order_id_delete(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -108,11 +107,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -120,7 +119,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def cancel_order_api_beta_brokers_orders_order_id_delete_with_http_info(
+    def cancel_order_api_beta_brokers_orders_order_id_delete_with_http_info(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -185,11 +184,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -197,7 +196,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def cancel_order_api_beta_brokers_orders_order_id_delete_without_preload_content(
+    def cancel_order_api_beta_brokers_orders_order_id_delete_without_preload_content(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -262,7 +261,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -333,7 +332,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def connect_broker_api_beta_brokers_connect_post(
+    def connect_broker_api_beta_brokers_connect_post(
         self,
         request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
@@ -398,11 +397,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -410,7 +409,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def connect_broker_api_beta_brokers_connect_post_with_http_info(
+    def connect_broker_api_beta_brokers_connect_post_with_http_info(
         self,
         request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
@@ -475,11 +474,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -487,7 +486,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def connect_broker_api_beta_brokers_connect_post_without_preload_content(
+    def connect_broker_api_beta_brokers_connect_post_without_preload_content(
         self,
         request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
@@ -552,7 +551,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -636,7 +635,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def delete_connection_api_beta_brokers_connections_connection_id_delete(
+    def delete_connection_api_beta_brokers_connections_connection_id_delete(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -701,11 +700,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -713,7 +712,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def delete_connection_api_beta_brokers_connections_connection_id_delete_with_http_info(
+    def delete_connection_api_beta_brokers_connections_connection_id_delete_with_http_info(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -778,11 +777,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -790,7 +789,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def delete_connection_api_beta_brokers_connections_connection_id_delete_without_preload_content(
+    def delete_connection_api_beta_brokers_connections_connection_id_delete_without_preload_content(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -855,7 +854,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -926,7 +925,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete(
+    def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -991,11 +990,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1003,7 +1002,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_with_http_info(
+    def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_with_http_info(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -1068,11 +1067,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1080,7 +1079,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_without_preload_content(
+    def disconnect_company_api_beta_brokers_disconnect_company_connection_id_delete_without_preload_content(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -1145,7 +1144,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1216,11 +1215,11 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_accounts_api_v1_brokers_data_accounts_get(
+    def get_accounts_api_v1_brokers_data_accounts_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1245,7 +1244,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -1304,11 +1303,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1316,11 +1315,11 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_accounts_api_v1_brokers_data_accounts_get_with_http_info(
+    def get_accounts_api_v1_brokers_data_accounts_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1345,7 +1344,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -1404,11 +1403,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1416,11 +1415,11 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_accounts_api_v1_brokers_data_accounts_get_without_preload_content(
+    def get_accounts_api_v1_brokers_data_accounts_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
-        account_type: Annotated[Optional[BrokerDataAccountTypeEnum], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
+        account_type: Annotated[Optional[Any], Field(description="Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (e.g., 'USD', 'EUR')")] = None,
         limit: Annotated[Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]], Field(description="Maximum number of accounts to return")] = None,
         offset: Annotated[Optional[Annotated[int, Field(strict=True, ge=0)]], Field(description="Number of accounts to skip for pagination")] = None,
@@ -1445,7 +1444,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_type: Filter by account type (e.g., 'margin', 'cash', 'crypto_wallet', 'live', 'sim')
         :type account_type: BrokerDataAccountTypeEnum
         :param currency: Filter by currency (e.g., 'USD', 'EUR')
@@ -1504,7 +1503,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1607,10 +1606,10 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_balances_api_v1_brokers_data_balances_get(
+    def get_balances_api_v1_brokers_data_balances_get(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
@@ -1637,7 +1636,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
@@ -1699,11 +1698,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1711,10 +1710,10 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_balances_api_v1_brokers_data_balances_get_with_http_info(
+    def get_balances_api_v1_brokers_data_balances_get_with_http_info(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
@@ -1741,7 +1740,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
@@ -1803,11 +1802,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1815,10 +1814,10 @@ class BrokersApi:
 
 
     @validate_call
-    async def get_balances_api_v1_brokers_data_balances_get_without_preload_content(
+    def get_balances_api_v1_brokers_data_balances_get_without_preload_content(
         self,
         broker_id: Annotated[Optional[StrictStr], Field(description="Filter by broker ID")] = None,
-        connection_id: Annotated[Optional[StrictStr], Field(description="Filter by connection ID")] = None,
+        connection_id: Annotated[Optional[UUID], Field(description="Filter by connection ID")] = None,
         account_id: Annotated[Optional[StrictStr], Field(description="Filter by broker provided account ID or internal account UUID")] = None,
         unit_code: Annotated[Optional[StrictStr], Field(description="Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')")] = None,
         currency: Annotated[Optional[StrictStr], Field(description="Filter by currency (for FDX fiat filtering only, e.g., 'USD', 'EUR')")] = None,
@@ -1845,7 +1844,7 @@ class BrokersApi:
         :param broker_id: Filter by broker ID
         :type broker_id: str
         :param connection_id: Filter by connection ID
-        :type connection_id: str
+        :type connection_id: UUID
         :param account_id: Filter by broker provided account ID or internal account UUID
         :type account_id: str
         :param unit_code: Filter by unit code (preferred, e.g., 'USD', 'BTC', 'ETH')
@@ -1907,7 +1906,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2015,7 +2014,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_account_resource_api_beta_brokers_data_resource_get(
+    def list_account_resource_api_beta_brokers_data_resource_get(
         self,
         resource: StrictStr,
         account_id: Optional[StrictStr] = None,
@@ -2084,11 +2083,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2096,7 +2095,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_account_resource_api_beta_brokers_data_resource_get_with_http_info(
+    def list_account_resource_api_beta_brokers_data_resource_get_with_http_info(
         self,
         resource: StrictStr,
         account_id: Optional[StrictStr] = None,
@@ -2165,11 +2164,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2177,7 +2176,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_account_resource_api_beta_brokers_data_resource_get_without_preload_content(
+    def list_account_resource_api_beta_brokers_data_resource_get_without_preload_content(
         self,
         resource: StrictStr,
         account_id: Optional[StrictStr] = None,
@@ -2246,7 +2245,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2322,7 +2321,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_accounts_api_beta_brokers_data_accounts_get(
+    def list_accounts_api_beta_brokers_data_accounts_get(
         self,
         _request_timeout: Union[
             None,
@@ -2383,11 +2382,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2395,7 +2394,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_accounts_api_beta_brokers_data_accounts_get_with_http_info(
+    def list_accounts_api_beta_brokers_data_accounts_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -2456,11 +2455,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2468,7 +2467,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_accounts_api_beta_brokers_data_accounts_get_without_preload_content(
+    def list_accounts_api_beta_brokers_data_accounts_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -2529,7 +2528,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2597,7 +2596,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_brokers_api_beta_brokers_get(
+    def list_brokers_api_beta_brokers_get(
         self,
         _request_timeout: Union[
             None,
@@ -2658,11 +2657,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2670,7 +2669,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_brokers_api_beta_brokers_get_with_http_info(
+    def list_brokers_api_beta_brokers_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -2731,11 +2730,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2743,7 +2742,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_brokers_api_beta_brokers_get_without_preload_content(
+    def list_brokers_api_beta_brokers_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -2804,7 +2803,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -2872,7 +2871,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_brokers_api_beta_brokers_get_0(
+    def list_brokers_api_beta_brokers_get_0(
         self,
         _request_timeout: Union[
             None,
@@ -2933,11 +2932,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -2945,7 +2944,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_brokers_api_beta_brokers_get_0_with_http_info(
+    def list_brokers_api_beta_brokers_get_0_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -3006,11 +3005,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3018,7 +3017,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_brokers_api_beta_brokers_get_0_without_preload_content(
+    def list_brokers_api_beta_brokers_get_0_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -3079,7 +3078,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3147,7 +3146,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_connections_api_beta_brokers_connections_get(
+    def list_connections_api_beta_brokers_connections_get(
         self,
         _request_timeout: Union[
             None,
@@ -3208,11 +3207,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3220,7 +3219,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_connections_api_beta_brokers_connections_get_with_http_info(
+    def list_connections_api_beta_brokers_connections_get_with_http_info(
         self,
         _request_timeout: Union[
             None,
@@ -3281,11 +3280,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3293,7 +3292,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_connections_api_beta_brokers_connections_get_without_preload_content(
+    def list_connections_api_beta_brokers_connections_get_without_preload_content(
         self,
         _request_timeout: Union[
             None,
@@ -3354,7 +3353,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3422,7 +3421,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_order_events_api_beta_brokers_data_orders_order_id_events_get(
+    def list_order_events_api_beta_brokers_data_orders_order_id_events_get(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -3487,11 +3486,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3499,7 +3498,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_order_events_api_beta_brokers_data_orders_order_id_events_get_with_http_info(
+    def list_order_events_api_beta_brokers_data_orders_order_id_events_get_with_http_info(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -3564,11 +3563,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3576,7 +3575,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_order_events_api_beta_brokers_data_orders_order_id_events_get_without_preload_content(
+    def list_order_events_api_beta_brokers_data_orders_order_id_events_get_without_preload_content(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -3641,7 +3640,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -3712,7 +3711,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get(
+    def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -3777,11 +3776,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3789,7 +3788,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_with_http_info(
+    def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_with_http_info(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -3854,11 +3853,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -3866,7 +3865,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_without_preload_content(
+    def list_order_fills_api_beta_brokers_data_orders_order_id_fills_get_without_preload_content(
         self,
         order_id: StrictStr,
         _request_timeout: Union[
@@ -3931,7 +3930,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4002,7 +4001,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(
+    def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get(
         self,
         lot_id: StrictStr,
         _request_timeout: Union[
@@ -4067,11 +4066,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4079,7 +4078,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_with_http_info(
+    def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_with_http_info(
         self,
         lot_id: StrictStr,
         _request_timeout: Union[
@@ -4144,11 +4143,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4156,7 +4155,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_without_preload_content(
+    def list_position_lot_fills_api_beta_brokers_data_positions_lots_lot_id_fills_get_without_preload_content(
         self,
         lot_id: StrictStr,
         _request_timeout: Union[
@@ -4221,7 +4220,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4292,7 +4291,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def modify_order_api_beta_brokers_orders_order_id_patch(
+    def modify_order_api_beta_brokers_orders_order_id_patch(
         self,
         order_id: StrictStr,
         request_body: Optional[Dict[str, Any]] = None,
@@ -4361,11 +4360,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4373,7 +4372,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
+    def modify_order_api_beta_brokers_orders_order_id_patch_with_http_info(
         self,
         order_id: StrictStr,
         request_body: Optional[Dict[str, Any]] = None,
@@ -4442,11 +4441,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4454,7 +4453,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
+    def modify_order_api_beta_brokers_orders_order_id_patch_without_preload_content(
         self,
         order_id: StrictStr,
         request_body: Optional[Dict[str, Any]] = None,
@@ -4523,7 +4522,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4610,7 +4609,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def oauth_callback_api_v1_brokers_callback_broker_id_get(
+    def oauth_callback_api_v1_brokers_callback_broker_id_get(
         self,
         broker_id: StrictStr,
         _request_timeout: Union[
@@ -4666,11 +4665,11 @@ class BrokersApi:
             '200': "object",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4678,7 +4677,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def oauth_callback_api_v1_brokers_callback_broker_id_get_with_http_info(
+    def oauth_callback_api_v1_brokers_callback_broker_id_get_with_http_info(
         self,
         broker_id: StrictStr,
         _request_timeout: Union[
@@ -4734,11 +4733,11 @@ class BrokersApi:
             '200': "object",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4746,7 +4745,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def oauth_callback_api_v1_brokers_callback_broker_id_get_without_preload_content(
+    def oauth_callback_api_v1_brokers_callback_broker_id_get_without_preload_content(
         self,
         broker_id: StrictStr,
         _request_timeout: Union[
@@ -4802,7 +4801,7 @@ class BrokersApi:
             '200': "object",
             '422': "HTTPValidationError",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -4873,7 +4872,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def place_order_api_beta_brokers_orders_post(
+    def place_order_api_beta_brokers_orders_post(
         self,
         request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
@@ -4938,11 +4937,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -4950,7 +4949,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def place_order_api_beta_brokers_orders_post_with_http_info(
+    def place_order_api_beta_brokers_orders_post_with_http_info(
         self,
         request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
@@ -5015,11 +5014,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -5027,7 +5026,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def place_order_api_beta_brokers_orders_post_without_preload_content(
+    def place_order_api_beta_brokers_orders_post_without_preload_content(
         self,
         request_body: Optional[Dict[str, Any]] = None,
         _request_timeout: Union[
@@ -5092,7 +5091,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -5176,7 +5175,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post(
+    def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -5241,11 +5240,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -5253,7 +5252,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_with_http_info(
+    def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_with_http_info(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -5318,11 +5317,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -5330,7 +5329,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_without_preload_content(
+    def refresh_connection_api_beta_brokers_connections_connection_id_refresh_post_without_preload_content(
         self,
         connection_id: StrictStr,
         _request_timeout: Union[
@@ -5395,7 +5394,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -5466,7 +5465,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def update_connection_api_beta_brokers_connections_connection_id_put(
+    def update_connection_api_beta_brokers_connections_connection_id_put(
         self,
         connection_id: StrictStr,
         request_body: Optional[Dict[str, Any]] = None,
@@ -5535,11 +5534,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -5547,7 +5546,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def update_connection_api_beta_brokers_connections_connection_id_put_with_http_info(
+    def update_connection_api_beta_brokers_connections_connection_id_put_with_http_info(
         self,
         connection_id: StrictStr,
         request_body: Optional[Dict[str, Any]] = None,
@@ -5616,11 +5615,11 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -5628,7 +5627,7 @@ class BrokersApi:
 
 
     @validate_call
-    async def update_connection_api_beta_brokers_connections_connection_id_put_without_preload_content(
+    def update_connection_api_beta_brokers_connections_connection_id_put_without_preload_content(
         self,
         connection_id: StrictStr,
         request_body: Optional[Dict[str, Any]] = None,
@@ -5697,7 +5696,7 @@ class BrokersApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

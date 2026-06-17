@@ -1,5 +1,3 @@
-# coding: utf-8
-
 """
     Finatic FastAPI Backend
 
@@ -11,14 +9,16 @@
     Do not edit the class manually.
 """  # noqa: E501
 
+
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field
 from typing import Optional
 from typing_extensions import Annotated
+from uuid import UUID
 from finatic_server.models.fdx_account_grant_update import FDXAccountGrantUpdate
 from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_fdx_account_grant import FinaticResponseFDXAccountGrant
@@ -43,7 +43,7 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_get_account_grants(
+    def finatic_v1_get_account_grants(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -107,11 +107,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -119,7 +119,7 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_get_account_grants_with_http_info(
+    def finatic_v1_get_account_grants_with_http_info(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -183,11 +183,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -195,7 +195,7 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_get_account_grants_without_preload_content(
+    def finatic_v1_get_account_grants_without_preload_content(
         self,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -259,7 +259,7 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -330,9 +330,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_get_account_grants_grant_id(
+    def finatic_v1_get_account_grants_grant_id(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -352,7 +352,7 @@ class AccountGrantsApi:
         Get one account grant for the current company account.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -398,11 +398,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -410,9 +410,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_get_account_grants_grant_id_with_http_info(
+    def finatic_v1_get_account_grants_grant_id_with_http_info(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -432,7 +432,7 @@ class AccountGrantsApi:
         Get one account grant for the current company account.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -478,11 +478,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -490,9 +490,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_get_account_grants_grant_id_without_preload_content(
+    def finatic_v1_get_account_grants_grant_id_without_preload_content(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -512,7 +512,7 @@ class AccountGrantsApi:
         Get one account grant for the current company account.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -558,7 +558,7 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -632,9 +632,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_patch_account_grants_grant_id(
+    def finatic_v1_patch_account_grants_grant_id(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         fdx_account_grant_update: FDXAccountGrantUpdate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -655,7 +655,7 @@ class AccountGrantsApi:
         Update mutable account grant fields.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param fdx_account_grant_update: (required)
         :type fdx_account_grant_update: FDXAccountGrantUpdate
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -704,11 +704,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -716,9 +716,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_patch_account_grants_grant_id_with_http_info(
+    def finatic_v1_patch_account_grants_grant_id_with_http_info(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         fdx_account_grant_update: FDXAccountGrantUpdate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -739,7 +739,7 @@ class AccountGrantsApi:
         Update mutable account grant fields.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param fdx_account_grant_update: (required)
         :type fdx_account_grant_update: FDXAccountGrantUpdate
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -788,11 +788,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -800,9 +800,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_patch_account_grants_grant_id_without_preload_content(
+    def finatic_v1_patch_account_grants_grant_id_without_preload_content(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         fdx_account_grant_update: FDXAccountGrantUpdate,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
@@ -823,7 +823,7 @@ class AccountGrantsApi:
         Update mutable account grant fields.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param fdx_account_grant_update: (required)
         :type fdx_account_grant_update: FDXAccountGrantUpdate
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
@@ -872,7 +872,7 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -962,9 +962,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_post_account_grants_grant_id_revoke(
+    def finatic_v1_post_account_grants_grant_id_revoke(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -984,7 +984,7 @@ class AccountGrantsApi:
         Revoke one account grant for the current company account.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1030,11 +1030,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1042,9 +1042,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_post_account_grants_grant_id_revoke_with_http_info(
+    def finatic_v1_post_account_grants_grant_id_revoke_with_http_info(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1064,7 +1064,7 @@ class AccountGrantsApi:
         Revoke one account grant for the current company account.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1110,11 +1110,11 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        await response_data.read()
+        response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1122,9 +1122,9 @@ class AccountGrantsApi:
 
 
     @validate_call
-    async def finatic_v1_post_account_grants_grant_id_revoke_without_preload_content(
+    def finatic_v1_post_account_grants_grant_id_revoke_without_preload_content(
         self,
-        grant_id: StrictStr,
+        grant_id: UUID,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1144,7 +1144,7 @@ class AccountGrantsApi:
         Revoke one account grant for the current company account.
 
         :param grant_id: (required)
-        :type grant_id: str
+        :type grant_id: UUID
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1190,7 +1190,7 @@ class AccountGrantsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = await self.api_client.call_api(
+        response_data = self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )

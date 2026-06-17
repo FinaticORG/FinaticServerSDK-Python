@@ -328,6 +328,17 @@
             "title": "Broker Id",
             "type": "string"
           },
+          "callbackState": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Callbackstate"
+          },
           "created_at": {
             "format": "date-time",
             "title": "Created At",
@@ -346,6 +357,22 @@
             "title": "Id",
             "type": "string"
           },
+          "redirectRequired": {
+            "default": false,
+            "title": "Redirectrequired",
+            "type": "boolean"
+          },
+          "redirectUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Redirecturl"
+          },
           "session_id": {
             "title": "Session Id",
             "type": "string"
@@ -354,6 +381,28 @@
             "default": "pending",
             "title": "Status",
             "type": "string"
+          },
+          "stepAction": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stepaction"
+          },
+          "stepType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Steptype"
           },
           "updated_at": {
             "format": "date-time",
@@ -809,6 +858,54 @@
         },
         "title": "FDXAccountGrantUpdate",
         "type": "object"
+      },
+      "FDXAccountStatus": {
+        "description": "FDX broker account status.",
+        "enum": [
+          "ACTIVE",
+          "INACTIVE",
+          "CLOSED",
+          "RESTRICTED",
+          "PENDING"
+        ],
+        "title": "FDXAccountStatus",
+        "type": "string"
+      },
+      "FDXAccountType": {
+        "description": "FDX broker account types.",
+        "enum": [
+          "CASH",
+          "MARGIN",
+          "IRA",
+          "ROTH_IRA",
+          "TRADITIONAL_IRA",
+          "SEP_IRA",
+          "SIMPLE_IRA",
+          "TRUST",
+          "JOINT",
+          "CORPORATE",
+          "SIMULATION"
+        ],
+        "title": "FDXAccountType",
+        "type": "string"
+      },
+      "FDXBalanceType": {
+        "description": "FDX broker balance types.",
+        "enum": [
+          "AVAILABLE",
+          "CURRENT",
+          "PENDING",
+          "BUYING_POWER",
+          "CASH",
+          "MARGIN",
+          "NET_LIQUIDATION",
+          "INITIAL_MARGIN",
+          "MAINTENANCE_MARGIN",
+          "TOTAL_CASH",
+          "AVAILABLE_TO_WITHDRAW"
+        ],
+        "title": "FDXBalanceType",
+        "type": "string"
       },
       "FDXBrokerAccount": {},
       "FDXBrokerBalance": {},
@@ -5596,6 +5693,13 @@
       },
       "ValidationError": {
         "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
           "loc": {
             "items": {
               "anyOf": [
@@ -16063,7 +16167,7 @@
     },
     "/api/v1/portal/{sessionId}/auth-attempts": {
       "post": {
-        "description": "Create a portal auth attempt and bind accounts from live discovery.",
+        "description": "Start portal auth and bind accounts when a connection already exists.",
         "operationId": "finaticV1PostPortalSessionIdAuthAttempts",
         "parameters": [
           {
@@ -16317,18 +16421,11 @@
           {
             "in": "query",
             "name": "authAttemptId",
-            "required": false,
+            "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "format": "uuid",
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Authattemptid"
+              "format": "uuid",
+              "title": "Authattemptid",
+              "type": "string"
             }
           },
           {

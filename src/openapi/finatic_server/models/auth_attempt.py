@@ -18,26 +18,34 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class AuthAttempt(BaseModel):
     """
     Portal auth-attempt state stored in Redis session metadata.
     """ # noqa: E501
     broker_id: StrictStr
+    callback_state: Optional[StrictStr] = Field(default=None, alias="callbackState")
     created_at: Optional[datetime] = None
-    discovered_account_ids: Optional[List[StrictStr]] = None
-    id: Optional[StrictStr] = None
+    discovered_account_ids: Optional[List[UUID]] = None
+    id: Optional[UUID] = None
+    redirect_required: Optional[StrictBool] = Field(default=False, alias="redirectRequired")
+    redirect_url: Optional[StrictStr] = Field(default=None, alias="redirectUrl")
     session_id: StrictStr
     status: Optional[StrictStr] = 'pending'
+    step_action: Optional[StrictStr] = Field(default=None, alias="stepAction")
+    step_type: Optional[StrictStr] = Field(default=None, alias="stepType")
     updated_at: Optional[datetime] = None
-    __properties: ClassVar[List[str]] = ["broker_id", "created_at", "discovered_account_ids", "id", "session_id", "status", "updated_at"]
+    __properties: ClassVar[List[str]] = ["broker_id", "callbackState", "created_at", "discovered_account_ids", "id", "redirectRequired", "redirectUrl", "session_id", "status", "stepAction", "stepType", "updated_at"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -49,8 +57,7 @@ class AuthAttempt(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -75,6 +82,26 @@ class AuthAttempt(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if callback_state (nullable) is None
+        # and model_fields_set contains the field
+        if self.callback_state is None and "callback_state" in self.model_fields_set:
+            _dict['callbackState'] = None
+
+        # set to None if redirect_url (nullable) is None
+        # and model_fields_set contains the field
+        if self.redirect_url is None and "redirect_url" in self.model_fields_set:
+            _dict['redirectUrl'] = None
+
+        # set to None if step_action (nullable) is None
+        # and model_fields_set contains the field
+        if self.step_action is None and "step_action" in self.model_fields_set:
+            _dict['stepAction'] = None
+
+        # set to None if step_type (nullable) is None
+        # and model_fields_set contains the field
+        if self.step_type is None and "step_type" in self.model_fields_set:
+            _dict['stepType'] = None
+
         return _dict
 
     @classmethod
@@ -88,11 +115,16 @@ class AuthAttempt(BaseModel):
 
         _obj = cls.model_validate({
             "broker_id": obj.get("broker_id"),
+            "callbackState": obj.get("callbackState"),
             "created_at": obj.get("created_at"),
             "discovered_account_ids": obj.get("discovered_account_ids"),
             "id": obj.get("id"),
+            "redirectRequired": obj.get("redirectRequired") if obj.get("redirectRequired") is not None else False,
+            "redirectUrl": obj.get("redirectUrl"),
             "session_id": obj.get("session_id"),
             "status": obj.get("status") if obj.get("status") is not None else 'pending',
+            "stepAction": obj.get("stepAction"),
+            "stepType": obj.get("stepType"),
             "updated_at": obj.get("updated_at")
         })
         return _obj

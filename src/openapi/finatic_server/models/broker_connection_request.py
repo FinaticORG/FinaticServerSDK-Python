@@ -19,22 +19,25 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from finatic_server.models.broker_permissions import BrokerPermissions
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class BrokerConnectionRequest(BaseModel):
     """
     Request model for creating a broker connection.  This model represents the request payload for creating a new broker connection or reconnecting to an existing one. Used by the POST /connections endpoint to authenticate with a broker and establish a connection that can be shared across company accounts.  The model includes broker identification, authentication credentials, optional permission settings, and an optional connection ID for reconnection scenarios.  Attributes ---------- broker_id : str     Unique identifier for the broker (e.g., \"tradestation\", \"tasty_trade\").     Must match a broker ID from the available brokers list. Determines which     broker adapter handles the connection. credentials : dict     Authentication credentials required by the broker. Structure varies by     broker and auth_type. Common formats include:     - OAuth: {\"access_token\": \"...\", \"refresh_token\": \"...\"}     - API Key: {\"api_key\": \"...\", \"api_secret\": \"...\"}     - Username/Password: {\"username\": \"...\", \"password\": \"...\"} permissions : BrokerPermissions | None     Initial permission settings for the connection. If None, defaults to     read-only access (read=True, write=False). Can be updated later via     BrokerConnectionUpdateRequest. connection_id : UUID | None     Optional connection ID for reconnection scenarios. If provided, the system     attempts to reconnect to an existing connection rather than creating a     new one. Used when refreshing expired tokens or restoring connections.     Default is None (create new connection).  Notes ----- 1. **Credential Format**: The credentials dict structure is broker-specific.    Each broker adapter validates credentials according to its requirements.  2. **Reconnection**: When connection_id is provided, the system validates    that the connection exists and belongs to the user before reconnecting.  3. **Multi-Step Auth**: Some brokers require multi-step authentication flows    (OAuth). In these cases, the initial request may return a MultiStepAuthResponse    instead of a BrokerDataUserBrokerConnections object.  4. **Company Sharing**: Once created, connections can be shared with company    accounts via the CompanyAccess table with specific permissions per company.  Examples -------- >>> # Create new connection with API key >>> request = BrokerConnectionRequest( ...     broker_id=\"tradestation\", ...     credentials={ ...         \"api_key\": \"your_api_key\", ...         \"api_secret\": \"your_api_secret\", ...     }, ...     permissions=BrokerPermissions(read=True, write=True), ... ) >>> # Reconnect to existing connection >>> reconnect_request = BrokerConnectionRequest( ...     broker_id=\"tasty_trade\", ...     credentials={\"refresh_token\": \"token_here\"}, ...     connection_id=UUID(\"123e4567-e89b-12d3-a456-426614174000\"), ... ) >>> # OAuth connection (may require multi-step flow) >>> oauth_request = BrokerConnectionRequest( ...     broker_id=\"interactive_brokers\", ...     credentials={\"code\": \"oauth_code_from_callback\"}, ... )  See Also -------- BrokerPermissions : Permission model used in this request BrokerConnectionUpdateRequest : Model for updating existing connections finaticapi.api.v1.routers.brokers.brokers_router.create_connection     : Endpoint that accepts this model finaticapi.core.services.broker_service.BrokerService.create_connection     : Service method that processes this request
     """ # noqa: E501
     broker_id: StrictStr
-    connection_id: Optional[StrictStr] = None
+    connection_id: Optional[UUID] = None
     credentials: Dict[str, Any]
     permissions: Optional[BrokerPermissions] = None
     __properties: ClassVar[List[str]] = ["broker_id", "connection_id", "credentials", "permissions"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -46,8 +49,7 @@ class BrokerConnectionRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

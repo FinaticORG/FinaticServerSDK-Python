@@ -36,7 +36,7 @@ class _FakeAiohttpLikeResponse:
             }
         ).encode("utf-8")
 
-    async def read(self) -> bytes:
+    def read(self) -> bytes:
         return self.data
 
 
@@ -171,7 +171,7 @@ def test_generated_api_smoke_invokes_many_endpoints() -> None:
     api_client = ApiClient(configuration)
 
     # Stub the underlying HTTP transport: execute request-building code, but avoid real network.
-    async def _stub_request(
+    def _stub_request(
         method: str,
         url: str,
         headers: Any = None,

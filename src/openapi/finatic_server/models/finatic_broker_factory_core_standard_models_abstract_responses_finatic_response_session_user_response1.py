@@ -22,19 +22,21 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.success_payload_session_user_response import SuccessPayloadSessionUserResponse
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse1(BaseModel):
     """
     FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionUserResponse1
     """ # noqa: E501
-    error: Optional[Dict[str, Any]] = None
-    success: Optional[SuccessPayloadSessionUserResponse] = None
+    error: Optional[Dict[str, Any]] = Field(default=None, description="Optional error object with message, code, status, and details")
+    success: Optional[SuccessPayloadSessionUserResponse] = Field(default=None, description="Success payload containing data and optional meta. None when error is present.")
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
-    warning: Optional[List[Dict[str, Any]]] = None
+    warning: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional array of warning objects")
     __properties: ClassVar[List[str]] = ["error", "success", "trace_id", "warning"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -46,8 +48,7 @@ class FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSess
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

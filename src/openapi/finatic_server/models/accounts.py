@@ -20,8 +20,10 @@ import json
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
+from pydantic_core import to_jsonable_python
 
 class Accounts(BaseModel):
     """
@@ -33,15 +35,15 @@ class Accounts(BaseModel):
     api_key_last_used_at: Optional[datetime] = None
     compliance_agreement: Optional[StrictBool] = None
     created_at: Optional[datetime]
-    created_by: Optional[StrictStr] = None
+    created_by: Optional[UUID] = None
     email: Optional[StrictStr] = None
-    id: Optional[StrictStr] = None
+    id: Optional[UUID] = None
     is_personal_account: StrictBool
     name: StrictStr
     onboarding_completed: Optional[StrictBool] = None
     onboarding_step: Optional[StrictInt] = None
     picture_url: Optional[StrictStr] = None
-    primary_owner_user_id: StrictStr
+    primary_owner_user_id: UUID
     public_data: Optional[Any]
     referral_source: Optional[StrictStr] = None
     sandbox_api_key_hash: Optional[StrictStr] = None
@@ -53,12 +55,13 @@ class Accounts(BaseModel):
     trading_enabled: Optional[StrictBool] = None
     trading_usage_description: Optional[StrictStr] = None
     updated_at: Optional[datetime]
-    updated_by: Optional[StrictStr] = None
+    updated_by: Optional[UUID] = None
     use_case_features: Optional[Any] = None
     __properties: ClassVar[List[str]] = ["api_key_created_at", "api_key_expires_at", "api_key_hash", "api_key_last_used_at", "compliance_agreement", "created_at", "created_by", "email", "id", "is_personal_account", "name", "onboarding_completed", "onboarding_step", "picture_url", "primary_owner_user_id", "public_data", "referral_source", "sandbox_api_key_hash", "sandbox_key_created_at", "sandbox_key_expires_at", "sandbox_key_last_used_at", "slug", "terms_accepted_at", "trading_enabled", "trading_usage_description", "updated_at", "updated_by", "use_case_features"]
 
     model_config = ConfigDict(
-        populate_by_name=True,
+        validate_by_name=True,
+        validate_by_alias=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -70,8 +73,7 @@ class Accounts(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
-        return json.dumps(self.to_dict())
+        return json.dumps(to_jsonable_python(self.to_dict()))
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
