@@ -255,7 +255,9 @@ async def test_v1_portal_flow_routes_match_account_first_api() -> None:
     await sdk.v1.list_portal_institutions()
     await sdk.v1.create_portal_auth_attempt("alpaca")
     await sdk.v1.get_portal_auth_attempt("attempt-1")
-    await sdk.v1.list_discovered_accounts(auth_attempt_id="attempt-1")
+    await sdk.v1.list_discovered_accounts(
+        auth_attempt_id="attempt-1", include_sync_status=True
+    )
     await sdk.v1.create_portal_account_grant(
         {
             "accountId": "22222222-2222-2222-2222-222222222222",
@@ -298,7 +300,7 @@ async def test_v1_portal_flow_routes_match_account_first_api() -> None:
     )
     assert (
         fake_api_client.calls[6]["url"]
-        == "https://api.test/api/v1/portal/session-1/discovered-accounts?authAttemptId=attempt-1"
+        == "https://api.test/api/v1/portal/session-1/discovered-accounts?authAttemptId=attempt-1&includeSyncStatus=True"
     )
     assert (
         fake_api_client.calls[7]["url"]

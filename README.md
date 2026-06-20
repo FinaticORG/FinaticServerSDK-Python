@@ -38,7 +38,8 @@ await finatic.v1.link_portal_user("user-id")
 institutions = await finatic.v1.list_portal_institutions()
 auth_attempt = await finatic.v1.create_portal_auth_attempt("alpaca")
 discovered = await finatic.v1.list_discovered_accounts(
-    auth_attempt_id=auth_attempt["data"]["id"]
+    auth_attempt_id=auth_attempt["data"]["id"],
+    include_sync_status=True,
 )
 grant = await finatic.v1.create_portal_account_grant(
     {
@@ -70,8 +71,8 @@ is exported from the FinaticAPI account-first branch. Refresh it with:
 env PYTHONPATH=/home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/src:/home/claw/.openclaw/workspace/worktrees/FinaticBrokerFactoryPKG-pr171-openapi/src /home/claw/.openclaw/workspace/repos/FinaticAPI/.venv/bin/python /home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/scripts/export_openapi.py --output /home/claw/.openclaw/workspace/repos/FinaticServerSDK-Python/artifacts/openapi/finaticapi-v1.json
 ```
 
-PR #25 currently uses FinaticAPI PR #174 head `c0982edb` and finaticCore PR
-#171 head `14f33e0` as branch-ready dependency inputs. The package version is
+PR #25 currently uses FinaticAPI PR #174 head `4ca17320` and finaticCore PR
+#171 head `0a126bed` as branch-ready dependency inputs. The package version is
 prepared as `1.0.0` for the API v1 semver lane, but the coordinated FDX
 account-consent operator hold still controls merge and release timing.
 

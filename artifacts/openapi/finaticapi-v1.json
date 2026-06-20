@@ -16429,6 +16429,16 @@
             }
           },
           {
+            "in": "query",
+            "name": "includeSyncStatus",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Includesyncstatus",
+              "type": "boolean"
+            }
+          },
+          {
             "description": "Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.",
             "in": "header",
             "name": "X-Finatic-Environment",

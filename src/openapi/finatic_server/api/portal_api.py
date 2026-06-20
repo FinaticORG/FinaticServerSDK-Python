@@ -15,7 +15,7 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBool, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from uuid import UUID
@@ -894,6 +894,7 @@ class PortalApi:
         self,
         session_id: StrictStr,
         auth_attempt_id: UUID,
+        include_sync_status: Optional[StrictBool] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -916,6 +917,8 @@ class PortalApi:
         :type session_id: str
         :param auth_attempt_id: (required)
         :type auth_attempt_id: UUID
+        :param include_sync_status:
+        :type include_sync_status: bool
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -943,6 +946,7 @@ class PortalApi:
         _param = self._finatic_v1_get_portal_session_id_discovered_accounts_serialize(
             session_id=session_id,
             auth_attempt_id=auth_attempt_id,
+            include_sync_status=include_sync_status,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -970,6 +974,7 @@ class PortalApi:
         self,
         session_id: StrictStr,
         auth_attempt_id: UUID,
+        include_sync_status: Optional[StrictBool] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -992,6 +997,8 @@ class PortalApi:
         :type session_id: str
         :param auth_attempt_id: (required)
         :type auth_attempt_id: UUID
+        :param include_sync_status:
+        :type include_sync_status: bool
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1019,6 +1026,7 @@ class PortalApi:
         _param = self._finatic_v1_get_portal_session_id_discovered_accounts_serialize(
             session_id=session_id,
             auth_attempt_id=auth_attempt_id,
+            include_sync_status=include_sync_status,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1046,6 +1054,7 @@ class PortalApi:
         self,
         session_id: StrictStr,
         auth_attempt_id: UUID,
+        include_sync_status: Optional[StrictBool] = None,
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
@@ -1068,6 +1077,8 @@ class PortalApi:
         :type session_id: str
         :param auth_attempt_id: (required)
         :type auth_attempt_id: UUID
+        :param include_sync_status:
+        :type include_sync_status: bool
         :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
         :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
@@ -1095,6 +1106,7 @@ class PortalApi:
         _param = self._finatic_v1_get_portal_session_id_discovered_accounts_serialize(
             session_id=session_id,
             auth_attempt_id=auth_attempt_id,
+            include_sync_status=include_sync_status,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1117,6 +1129,7 @@ class PortalApi:
         self,
         session_id,
         auth_attempt_id,
+        include_sync_status,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -1145,6 +1158,10 @@ class PortalApi:
         if auth_attempt_id is not None:
 
             _query_params.append(('authAttemptId', auth_attempt_id))
+
+        if include_sync_status is not None:
+
+            _query_params.append(('includeSyncStatus', include_sync_status))
 
         # process the header parameters
         if x_finatic_environment is not None:
