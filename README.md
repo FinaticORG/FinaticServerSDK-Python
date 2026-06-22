@@ -68,7 +68,7 @@ The v1 facade is validated against `artifacts/openapi/finaticapi-v1.json`, which
 is exported from the FinaticAPI account-first branch. Refresh it with:
 
 ```bash
-env PYTHONPATH=/home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/src:/home/claw/.openclaw/workspace/worktrees/FinaticBrokerFactoryPKG-pr171-openapi/src /home/claw/.openclaw/workspace/repos/FinaticAPI/.venv/bin/python /home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/scripts/export_openapi.py --output /home/claw/.openclaw/workspace/repos/FinaticServerSDK-Python/artifacts/openapi/finaticapi-v1.json
+env PYTHONPATH=/home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/src:/home/claw/.openclaw/workspace/worktrees/FinaticCore-pr171-openapi/src /home/claw/.openclaw/workspace/repos/FinaticAPI/.venv/bin/python /home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/scripts/export_openapi.py --output /home/claw/.openclaw/workspace/repos/FinaticServerSDK-Python/artifacts/openapi/finaticapi-v1.json
 ```
 
 PR #25 currently uses FinaticAPI PR #174 head `4ca17320` and finaticCore PR

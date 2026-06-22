@@ -5731,7 +5731,7 @@
         "title": "ValidationError",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -5783,7 +5783,7 @@
         "title": "FinaticResponse[CompleteSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -5835,7 +5835,7 @@
         "title": "FinaticResponse[CompleteSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -5887,7 +5887,7 @@
         "title": "FinaticResponse[LinkUserToSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -5939,7 +5939,7 @@
         "title": "FinaticResponse[LinkUserToSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -5991,7 +5991,7 @@
         "title": "FinaticResponse[MCPBootstrapResponseData]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6043,7 +6043,7 @@
         "title": "FinaticResponse[MCPBootstrapResponseData]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6061,7 +6061,7 @@
           "success": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___1"
+                "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___1"
               },
               {
                 "type": "null"
@@ -6095,7 +6095,7 @@
         "title": "FinaticResponse[PortalSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6113,7 +6113,7 @@
           "success": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___2"
+                "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___2"
               },
               {
                 "type": "null"
@@ -6147,7 +6147,7 @@
         "title": "FinaticResponse[PortalSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6199,7 +6199,7 @@
         "title": "FinaticResponse[PortalUrlResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6251,7 +6251,7 @@
         "title": "FinaticResponse[PortalUrlResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6303,7 +6303,7 @@
         "title": "FinaticResponse[SessionResponseData]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6355,7 +6355,7 @@
         "title": "FinaticResponse[SessionResponseData]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6407,7 +6407,7 @@
         "title": "FinaticResponse[SessionUserResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6459,7 +6459,7 @@
         "title": "FinaticResponse[SessionUserResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6511,7 +6511,7 @@
         "title": "FinaticResponse[TokenResponseData]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___2": {
+      "finatic_core__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___2": {
         "properties": {
           "error": {
             "anyOf": [
@@ -6563,7 +6563,7 @@
         "title": "FinaticResponse[TokenResponseData]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___1": {
+      "finatic_core__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___1": {
         "properties": {
           "_id": {
             "title": "Id",
@@ -6597,7 +6597,7 @@
         "title": "SuccessPayload[PortalSessionResponse]",
         "type": "object"
       },
-      "finatic_broker_factory__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___2": {
+      "finatic_core__core__standard_models__abstract__responses__SuccessPayload_PortalSessionResponse___2": {
         "properties": {
           "_id": {
             "title": "Id",
@@ -9772,7 +9772,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___2"
                 }
               }
             },
@@ -9825,7 +9825,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___2"
                 }
               }
             },
@@ -9911,7 +9911,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___2"
                 }
               }
             },
@@ -10063,7 +10063,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___2"
                 }
               }
             },
@@ -10207,7 +10207,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___2"
                 }
               }
             },
@@ -10346,7 +10346,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___2"
                 }
               }
             },
@@ -10503,7 +10503,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___2"
                 }
               }
             },
@@ -10656,7 +10656,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___2"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___2"
                 }
               }
             },
@@ -16360,7 +16360,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_CompleteSessionResponse___1"
                 }
               }
             },
@@ -16682,7 +16682,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalSessionResponse___1"
                 }
               }
             },
@@ -16773,7 +16773,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1"
                 }
               }
             },
@@ -16918,7 +16918,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_LinkUserToSessionResponse___1"
                 }
               }
             },
@@ -17055,7 +17055,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_MCPBootstrapResponseData___1"
                 }
               }
             },
@@ -17312,7 +17312,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_PortalUrlResponse___1"
                 }
               }
             },
@@ -17462,7 +17462,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
                 }
               }
             },
@@ -17608,7 +17608,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionUserResponse___1"
                 }
               }
             },
@@ -17765,7 +17765,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
                 }
               }
             },
@@ -17930,7 +17930,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_SessionResponseData___1"
                 }
               }
             },
@@ -18095,7 +18095,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/finatic_broker_factory__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1"
+                  "$ref": "#/components/schemas/finatic_core__core__standard_models__abstract__responses__FinaticResponse_TokenResponseData___1"
                 }
               }
             },
