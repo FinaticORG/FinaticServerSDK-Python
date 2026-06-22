@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from finatic_server.api.company_api import CompanyApi
-from finatic_server.configuration import Configuration
-from finatic_server.models.accounts import Accounts
+from finatic_server_legacy.api.company_api import CompanyApi
+from finatic_server_legacy.configuration import Configuration
+from finatic_server_legacy.models.accounts import Accounts
 
 from ..config import SdkConfig
+from ..openapi import path_bootstrap_legacy  # noqa: F401
 from ..openapi import path_bootstrap  # noqa: F401
 from ..types import FinaticResponse
 from ..utils.cache import generate_cache_key, get_cache

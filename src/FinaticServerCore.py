@@ -5,22 +5,25 @@ Hand-maintained façade over the OpenAPI-generated client in ``src/openapi/finat
 
 from __future__ import annotations
 
-from finatic_server.api.brokers_api import BrokersApi
-from finatic_server.api.company_api import CompanyApi
-from finatic_server.api.session_api import SessionApi
-from finatic_server.api_client import ApiClient
-from finatic_server.configuration import Configuration
-from finatic_server.models.accounts import Accounts
-from finatic_server.models.broker_info import BrokerInfo
-from finatic_server.models.disconnect_company_from_broker_connection_result import (
+from .openapi import path_bootstrap  # noqa: F401
+from .openapi import path_bootstrap_legacy  # noqa: F401
+
+from finatic_server_legacy.api.brokers_api import BrokersApi
+from finatic_server_legacy.api.company_api import CompanyApi
+from finatic_server_legacy.api.session_api import SessionApi
+from finatic_server_legacy.api_client import ApiClient
+from finatic_server_legacy.configuration import Configuration
+from finatic_server_legacy.models.accounts import Accounts
+from finatic_server_legacy.models.broker_info import BrokerInfo
+from finatic_server_legacy.models.disconnect_company_from_broker_connection_result import (
     DisconnectCompanyFromBrokerConnectionResult,
 )
-from finatic_server.models.legacy_broker_account import LegacyBrokerAccount
-from finatic_server.models.legacy_broker_balance import LegacyBrokerBalance
-from finatic_server.models.order_action_result import OrderActionResult
-from finatic_server.models.session_response_data import SessionResponseData
-from finatic_server.models.session_user_response import SessionUserResponse
-from finatic_server.models.user_broker_connection_with_permissions import (
+from finatic_server_legacy.models.legacy_broker_account import LegacyBrokerAccount
+from finatic_server_legacy.models.legacy_broker_balance import LegacyBrokerBalance
+from finatic_server_legacy.models.order_action_result import OrderActionResult
+from finatic_server_legacy.models.session_response_data import SessionResponseData
+from finatic_server_legacy.models.session_user_response import SessionUserResponse
+from finatic_server_legacy.models.user_broker_connection_with_permissions import (
     UserBrokerConnectionWithPermissions,
 )
 
@@ -35,7 +38,10 @@ from .finatic_fdx_types import (
     FDXBrokerPositionLotFill,
     FDXBrokerTransaction,
 )
-from .openapi import path_bootstrap  # noqa: F401
+from .openapi import (
+    path_bootstrap,  # noqa: F401
+    path_bootstrap_legacy,  # noqa: F401
+)
 from .types import FinaticResponse
 from .utils.logger import get_logger
 from .utils.pagination import PaginatedData
@@ -46,6 +52,7 @@ from .utils.url_utils import (
     append_stage_to_url,
     append_theme_to_url,
 )
+from .v1 import V1Client
 from .wrappers.brokers import (
     BrokersWrapper,
     CancelOrderParams,
@@ -67,7 +74,6 @@ from .wrappers.brokers import (
 )
 from .wrappers.company import CompanyWrapper, GetCompanyParams
 from .wrappers.session import SessionWrapper
-from .v1 import V1Client
 
 
 class FinaticServer:

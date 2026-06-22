@@ -36,6 +36,7 @@ class SessionResponseData(BaseModel):
     session_id: StrictStr = Field(description="Session ID")
     status: SessionStatus = Field(description="Session status")
     user_id: Optional[StrictStr] = Field(default=None, description="User ID if authenticated")
+    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["company_id", "expires_at", "portal_connection_management_pending", "provided_user_id_rejected", "session_id", "status", "user_id"]
 
     model_config = ConfigDict(
@@ -68,8 +69,10 @@ class SessionResponseData(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -77,6 +80,11 @@ class SessionResponseData(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         # set to None if user_id (nullable) is None
         # and model_fields_set contains the field
         if self.user_id is None and "user_id" in self.model_fields_set:
@@ -102,4 +110,11 @@ class SessionResponseData(BaseModel):
             "status": obj.get("status"),
             "user_id": obj.get("user_id")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+

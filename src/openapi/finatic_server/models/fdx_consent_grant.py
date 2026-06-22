@@ -45,6 +45,7 @@ class FDXConsentGrant(BaseModel):
     status: StrictStr
     updated_at: Optional[datetime] = Field(default=None, alias="updatedAt")
     user_id: StrictStr = Field(alias="userId")
+    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["companyAccountId", "consentedAt", "createdAt", "dataClusters", "durationDays", "expiresAt", "id", "initiator", "lookbackDays", "parties", "resources", "revocationReason", "revokedAt", "revokedBy", "status", "updatedAt", "userId"]
 
     model_config = ConfigDict(
@@ -77,8 +78,10 @@ class FDXConsentGrant(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -86,6 +89,11 @@ class FDXConsentGrant(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         # set to None if consented_at (nullable) is None
         # and model_fields_set contains the field
         if self.consented_at is None and "consented_at" in self.model_fields_set:
@@ -161,4 +169,11 @@ class FDXConsentGrant(BaseModel):
             "updatedAt": obj.get("updatedAt"),
             "userId": obj.get("userId")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+

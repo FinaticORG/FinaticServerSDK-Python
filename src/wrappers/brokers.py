@@ -5,27 +5,27 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from finatic_server.api.brokers_api import BrokersApi
-from finatic_server.configuration import Configuration
-from finatic_server.models.broker_data_account_type_enum import (
+from finatic_server_legacy.api.brokers_api import BrokersApi
+from finatic_server_legacy.configuration import Configuration
+from finatic_server_legacy.models.broker_data_account_type_enum import (
     BrokerDataAccountTypeEnum,
 )
-from finatic_server.models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
-from finatic_server.models.broker_data_order_side_enum import BrokerDataOrderSideEnum
-from finatic_server.models.broker_data_position_status_enum import (
+from finatic_server_legacy.models.broker_data_asset_type_enum import BrokerDataAssetTypeEnum
+from finatic_server_legacy.models.broker_data_order_side_enum import BrokerDataOrderSideEnum
+from finatic_server_legacy.models.broker_data_position_status_enum import (
     BrokerDataPositionStatusEnum,
 )
-from finatic_server.models.broker_info import BrokerInfo
-from finatic_server.models.disconnect_company_from_broker_connection_result import (
+from finatic_server_legacy.models.broker_info import BrokerInfo
+from finatic_server_legacy.models.disconnect_company_from_broker_connection_result import (
     DisconnectCompanyFromBrokerConnectionResult,
 )
-from finatic_server.models.legacy_broker_account import LegacyBrokerAccount
-from finatic_server.models.legacy_broker_balance import LegacyBrokerBalance
-from finatic_server.models.order_action_result import OrderActionResult
-from finatic_server.models.place_order_api_beta_brokers_orders_post_request import (
+from finatic_server_legacy.models.legacy_broker_account import LegacyBrokerAccount
+from finatic_server_legacy.models.legacy_broker_balance import LegacyBrokerBalance
+from finatic_server_legacy.models.order_action_result import OrderActionResult
+from finatic_server_legacy.models.place_order_api_beta_brokers_orders_post_request import (
     PlaceOrderApiBetaBrokersOrdersPostRequest as OrderRequest,
 )
-from finatic_server.models.user_broker_connection_with_permissions import (
+from finatic_server_legacy.models.user_broker_connection_with_permissions import (
     UserBrokerConnectionWithPermissions,
 )
 
@@ -40,6 +40,7 @@ from ..finatic_fdx_types import (
     FDXBrokerPositionLotFill,
     FDXBrokerTransaction,
 )
+from ..openapi import path_bootstrap_legacy  # noqa: F401
 from ..openapi import path_bootstrap  # noqa: F401
 from ..types import FinaticResponse
 from ..utils.cache import generate_cache_key, get_cache

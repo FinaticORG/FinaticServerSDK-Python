@@ -106,9 +106,6 @@ V1_OPENAPI_OPERATION_METHODS = {
         "/api/v1/accounts/{accountId}/transactions",
     ): "list_account_transactions",
     ("GET", "/api/v1/accounts/{accountId}/{resource}"): "list_account_resource",
-    ("GET", "/api/v1/brokers/data/accounts"): "list_fdx_accounts",
-    ("GET", "/api/v1/brokers/data/balances"): "list_fdx_balances",
-    ("GET", "/api/v1/company/{company_id}"): "get_company",
     ("GET", "/api/v1/consents"): "list_consents",
     ("POST", "/api/v1/consents"): "create_consent",
     ("GET", "/api/v1/consents/{consentId}"): "get_consent",
@@ -130,12 +127,6 @@ V1_OPENAPI_OPERATION_METHODS = {
     ("GET", "/api/v1/portal/{sessionId}/institutions"): ("list_portal_institutions"),
     ("POST", "/api/v1/portal/{sessionId}/user-link"): "link_portal_user",
     ("GET", "/api/v1/portal/{token}"): "get_portal",
-    ("POST", "/api/v1/session/init"): "init_legacy_session",
-    ("POST", "/api/v1/session/link-user"): "link_session_user",
-    ("POST", "/api/v1/session/mcp/link-user"): "link_mcp_session_user",
-    ("GET", "/api/v1/session/portal"): "get_legacy_portal_url",
-    ("POST", "/api/v1/session/start"): "start_legacy_session",
-    ("GET", "/api/v1/session/{session_id}/user"): "get_legacy_session_user",
     ("POST", "/api/v1/sessions"): "create_session",
     ("GET", "/api/v1/sessions/{sessionId}"): "get_session",
     ("POST", "/api/v1/sessions/{sessionId}/portal-links"): "create_portal_link",
@@ -178,7 +169,7 @@ def _v1_openapi_operations() -> set[tuple[str, str]]:
 def test_v1_facade_covers_openapi_sdk_and_portal_audience_operations() -> None:
     openapi_operations = _v1_openapi_operations()
 
-    assert len(openapi_operations) == 52
+    assert len(openapi_operations) == len(V1_OPENAPI_OPERATION_METHODS)
     assert set(V1_OPENAPI_OPERATION_METHODS) == openapi_operations
 
     for method_name in V1_OPENAPI_OPERATION_METHODS.values():

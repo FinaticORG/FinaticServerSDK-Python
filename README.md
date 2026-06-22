@@ -4,6 +4,15 @@ Python SDK for server-side Finatic integrations.
 
 Use this package to authenticate with Finatic from Python services, generate client tokens, and retrieve standardized broker-domain data.
 
+## Version lines (FDX v1)
+
+| Version | API surface | Use when |
+|---------|-------------|----------|
+| **1.0.0** | `/api/v1/*` via `FinaticServer.v1` | New account-grant integrations |
+| **0.9.x** | `/api/beta/*` via legacy wrappers | Existing apps until migrated |
+
+Legacy beta clients live under `src/openapi-legacy/` (`finatic_server_legacy`); v1 output is under `src/openapi/` (`finatic_server`).
+
 ## Install
 
 ```bash

@@ -11,12 +11,13 @@ from uuid import UUID
 from pydantic import BaseModel
 
 import src.openapi.path_bootstrap  # noqa: F401, E402
-from finatic_server import rest
-from finatic_server.api.brokers_api import BrokersApi
-from finatic_server.api.company_api import CompanyApi
-from finatic_server.api.session_api import SessionApi
-from finatic_server.api_client import ApiClient
-from finatic_server.configuration import Configuration
+import src.openapi.path_bootstrap_legacy  # noqa: F401, E402
+from finatic_server_legacy import rest
+from finatic_server_legacy.api.brokers_api import BrokersApi
+from finatic_server_legacy.api.company_api import CompanyApi
+from finatic_server_legacy.api.session_api import SessionApi
+from finatic_server_legacy.api_client import ApiClient
+from finatic_server_legacy.configuration import Configuration
 
 
 class _FakeAiohttpLikeResponse:
@@ -42,13 +43,13 @@ class _FakeAiohttpLikeResponse:
 
 def _minimal_valid_order_request() -> Any:
     """Smallest valid OrderRequest for generated API validate_call (Webull modify delta)."""
-    from finatic_server.models.accountnumber import Accountnumber
-    from finatic_server.models.order7 import Order7
-    from finatic_server.models.order_request import OrderRequest
-    from finatic_server.models.webull_market_order_modify_query_params import (
+    from finatic_server_legacy.models.accountnumber import Accountnumber
+    from finatic_server_legacy.models.order7 import Order7
+    from finatic_server_legacy.models.order_request import OrderRequest
+    from finatic_server_legacy.models.webull_market_order_modify_query_params import (
         WebullMarketOrderModifyQueryParams,
     )
-    from finatic_server.models.webull_order_modify_request import (
+    from finatic_server_legacy.models.webull_order_modify_request import (
         WebullOrderModifyRequest,
     )
 

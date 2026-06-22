@@ -15,13 +15,11 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field
+from pydantic import StrictStr
 from typing import Optional
-from typing_extensions import Annotated
 from uuid import UUID
 from finatic_server.models.fdx_webhook_subscription_create import FDXWebhookSubscriptionCreate
 from finatic_server.models.fdx_webhook_subscription_update import FDXWebhookSubscriptionUpdate
-from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_dict_str_object import FinaticResponseDictStrObject
 from finatic_server.models.finatic_response_fdx_webhook_subscription import FinaticResponseFDXWebhookSubscription
 from finatic_server.models.finatic_response_list_fdx_webhook_event_definition import FinaticResponseListFDXWebhookEventDefinition
@@ -46,9 +44,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_catalog(
+    async def finatic_v1_get_webhooks_catalog(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -66,8 +64,8 @@ class WebhooksApi:
 
         List supported outbound webhook event types.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -110,11 +108,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -122,9 +120,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_catalog_with_http_info(
+    async def finatic_v1_get_webhooks_catalog_with_http_info(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -142,8 +140,8 @@ class WebhooksApi:
 
         List supported outbound webhook event types.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -186,11 +184,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -198,9 +196,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_catalog_without_preload_content(
+    async def finatic_v1_get_webhooks_catalog_without_preload_content(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -218,8 +216,8 @@ class WebhooksApi:
 
         List supported outbound webhook event types.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -262,7 +260,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -333,9 +331,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_payload_schema(
+    async def finatic_v1_get_webhooks_payload_schema(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -353,8 +351,8 @@ class WebhooksApi:
 
         Return the documented outbound webhook payload JSON schema.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -397,11 +395,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -409,9 +407,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_payload_schema_with_http_info(
+    async def finatic_v1_get_webhooks_payload_schema_with_http_info(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -429,8 +427,8 @@ class WebhooksApi:
 
         Return the documented outbound webhook payload JSON schema.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -473,11 +471,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -485,9 +483,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_payload_schema_without_preload_content(
+    async def finatic_v1_get_webhooks_payload_schema_without_preload_content(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -505,8 +503,8 @@ class WebhooksApi:
 
         Return the documented outbound webhook payload JSON schema.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -549,7 +547,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -620,9 +618,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_subscriptions(
+    async def finatic_v1_get_webhooks_subscriptions(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -640,8 +638,8 @@ class WebhooksApi:
 
         List webhook subscriptions for the current company account.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -684,11 +682,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -696,9 +694,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_subscriptions_with_http_info(
+    async def finatic_v1_get_webhooks_subscriptions_with_http_info(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -716,8 +714,8 @@ class WebhooksApi:
 
         List webhook subscriptions for the current company account.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -760,11 +758,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -772,9 +770,9 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_get_webhooks_subscriptions_without_preload_content(
+    async def finatic_v1_get_webhooks_subscriptions_without_preload_content(
         self,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -792,8 +790,8 @@ class WebhooksApi:
 
         List webhook subscriptions for the current company account.
 
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -836,7 +834,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -907,11 +905,11 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_patch_webhooks_subscriptions_subscription_id(
+    async def finatic_v1_patch_webhooks_subscriptions_subscription_id(
         self,
         subscription_id: UUID,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -933,8 +931,8 @@ class WebhooksApi:
         :type subscription_id: UUID
         :param fdx_webhook_subscription_update: (required)
         :type fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -979,11 +977,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -991,11 +989,11 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_patch_webhooks_subscriptions_subscription_id_with_http_info(
+    async def finatic_v1_patch_webhooks_subscriptions_subscription_id_with_http_info(
         self,
         subscription_id: UUID,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1017,8 +1015,8 @@ class WebhooksApi:
         :type subscription_id: UUID
         :param fdx_webhook_subscription_update: (required)
         :type fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1063,11 +1061,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1075,11 +1073,11 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_patch_webhooks_subscriptions_subscription_id_without_preload_content(
+    async def finatic_v1_patch_webhooks_subscriptions_subscription_id_without_preload_content(
         self,
         subscription_id: UUID,
         fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1101,8 +1099,8 @@ class WebhooksApi:
         :type subscription_id: UUID
         :param fdx_webhook_subscription_update: (required)
         :type fdx_webhook_subscription_update: FDXWebhookSubscriptionUpdate
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1147,7 +1145,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1237,10 +1235,10 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions(
+    async def finatic_v1_post_webhooks_subscriptions(
         self,
         fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1260,8 +1258,8 @@ class WebhooksApi:
 
         :param fdx_webhook_subscription_create: (required)
         :type fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1305,11 +1303,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1317,10 +1315,10 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_with_http_info(
+    async def finatic_v1_post_webhooks_subscriptions_with_http_info(
         self,
         fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1340,8 +1338,8 @@ class WebhooksApi:
 
         :param fdx_webhook_subscription_create: (required)
         :type fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1385,11 +1383,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1397,10 +1395,10 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_without_preload_content(
+    async def finatic_v1_post_webhooks_subscriptions_without_preload_content(
         self,
         fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1420,8 +1418,8 @@ class WebhooksApi:
 
         :param fdx_webhook_subscription_create: (required)
         :type fdx_webhook_subscription_create: FDXWebhookSubscriptionCreate
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1465,7 +1463,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1552,10 +1550,10 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke(
+    async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke(
         self,
         subscription_id: UUID,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1575,8 +1573,8 @@ class WebhooksApi:
 
         :param subscription_id: (required)
         :type subscription_id: UUID
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1620,11 +1618,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1632,10 +1630,10 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_with_http_info(
+    async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_with_http_info(
         self,
         subscription_id: UUID,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1655,8 +1653,8 @@ class WebhooksApi:
 
         :param subscription_id: (required)
         :type subscription_id: UUID
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1700,11 +1698,11 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1712,10 +1710,10 @@ class WebhooksApi:
 
 
     @validate_call
-    def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_without_preload_content(
+    async def finatic_v1_post_webhooks_subscriptions_subscription_id_revoke_without_preload_content(
         self,
         subscription_id: UUID,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
+        x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -1735,8 +1733,8 @@ class WebhooksApi:
 
         :param subscription_id: (required)
         :type subscription_id: UUID
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
+        :param x_finatic_environment:
+        :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1780,7 +1778,7 @@ class WebhooksApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1849,3 +1847,5 @@ class WebhooksApi:
             _host=_host,
             _request_auth=_request_auth
         )
+
+

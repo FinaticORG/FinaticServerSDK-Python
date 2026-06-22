@@ -19,11 +19,11 @@ from pydantic import Field, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from finatic_server.models.create_session_request import CreateSessionRequest
-from finatic_server.models.finatic_core_core_standard_models_abstract_responses_finatic_response_session_response_data1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1
-from finatic_server.models.finatic_core_core_standard_models_abstract_responses_finatic_response_token_response_data1 import FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1
 from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_dict_str_union_str_none_type import FinaticResponseDictStrUnionStrNoneType
+from finatic_server.models.finatic_response_session_response_data import FinaticResponseSessionResponseData
 from finatic_server.models.finatic_response_session_sync_status_response import FinaticResponseSessionSyncStatusResponse
+from finatic_server.models.finatic_response_token_response_data import FinaticResponseTokenResponseData
 
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
@@ -44,7 +44,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id(
+    async def finatic_v1_get_sessions_session_id(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -61,7 +61,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1:
+    ) -> FinaticResponseSessionResponseData:
         """Get Session
 
         Get a v1 session by id.
@@ -105,7 +105,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
+            '200': "FinaticResponseSessionResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -116,11 +116,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -128,7 +128,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_with_http_info(
+    async def finatic_v1_get_sessions_session_id_with_http_info(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -145,7 +145,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1]:
+    ) -> ApiResponse[FinaticResponseSessionResponseData]:
         """Get Session
 
         Get a v1 session by id.
@@ -189,7 +189,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
+            '200': "FinaticResponseSessionResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -200,11 +200,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -212,7 +212,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_without_preload_content(
+    async def finatic_v1_get_sessions_session_id_without_preload_content(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -273,7 +273,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
+            '200': "FinaticResponseSessionResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -284,7 +284,7 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -361,7 +361,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_sync_status(
+    async def finatic_v1_get_sessions_session_id_sync_status(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -433,11 +433,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -445,7 +445,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_sync_status_with_http_info(
+    async def finatic_v1_get_sessions_session_id_sync_status_with_http_info(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -517,11 +517,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -529,7 +529,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_sync_status_without_preload_content(
+    async def finatic_v1_get_sessions_session_id_sync_status_without_preload_content(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -601,7 +601,7 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -678,7 +678,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_user(
+    async def finatic_v1_get_sessions_session_id_user(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -750,11 +750,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -762,7 +762,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_user_with_http_info(
+    async def finatic_v1_get_sessions_session_id_user_with_http_info(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -834,11 +834,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -846,7 +846,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_get_sessions_session_id_user_without_preload_content(
+    async def finatic_v1_get_sessions_session_id_user_without_preload_content(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -918,7 +918,7 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -995,7 +995,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_post_sessions(
+    async def finatic_v1_post_sessions(
         self,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1012,7 +1012,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1:
+    ) -> FinaticResponseSessionResponseData:
         """Create Session
 
         Create an account-first v1 session from a company API key.
@@ -1056,7 +1056,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
+            '200': "FinaticResponseSessionResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1067,11 +1067,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1079,7 +1079,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_post_sessions_with_http_info(
+    async def finatic_v1_post_sessions_with_http_info(
         self,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1096,7 +1096,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1]:
+    ) -> ApiResponse[FinaticResponseSessionResponseData]:
         """Create Session
 
         Create an account-first v1 session from a company API key.
@@ -1140,7 +1140,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
+            '200': "FinaticResponseSessionResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1151,11 +1151,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1163,7 +1163,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_post_sessions_without_preload_content(
+    async def finatic_v1_post_sessions_without_preload_content(
         self,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
         x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
@@ -1224,7 +1224,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseSessionResponseData1",
+            '200': "FinaticResponseSessionResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1235,7 +1235,7 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1325,7 +1325,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_post_sessions_session_id_portal_links(
+    async def finatic_v1_post_sessions_session_id_portal_links(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -1342,7 +1342,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1:
+    ) -> FinaticResponseTokenResponseData:
         """Create Portal Link
 
         Create a one-time portal link token for a v1 session.
@@ -1386,7 +1386,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1",
+            '200': "FinaticResponseTokenResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1397,11 +1397,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1409,7 +1409,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_post_sessions_session_id_portal_links_with_http_info(
+    async def finatic_v1_post_sessions_session_id_portal_links_with_http_info(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -1426,7 +1426,7 @@ class SessionsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1]:
+    ) -> ApiResponse[FinaticResponseTokenResponseData]:
         """Create Portal Link
 
         Create a one-time portal link token for a v1 session.
@@ -1470,7 +1470,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1",
+            '200': "FinaticResponseTokenResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1481,11 +1481,11 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
-        response_data.read()
+        await response_data.read()
         return self.api_client.response_deserialize(
             response_data=response_data,
             response_types_map=_response_types_map,
@@ -1493,7 +1493,7 @@ class SessionsApi:
 
 
     @validate_call
-    def finatic_v1_post_sessions_session_id_portal_links_without_preload_content(
+    async def finatic_v1_post_sessions_session_id_portal_links_without_preload_content(
         self,
         session_id: StrictStr,
         x_api_key: Annotated[StrictStr, Field(description="Company API key")],
@@ -1554,7 +1554,7 @@ class SessionsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticBrokerFactoryCoreStandardModelsAbstractResponsesFinaticResponseTokenResponseData1",
+            '200': "FinaticResponseTokenResponseData",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1565,7 +1565,7 @@ class SessionsApi:
             '500': "FinaticAPIErrorResponse",
             '502': "FinaticAPIErrorResponse",
         }
-        response_data = self.api_client.call_api(
+        response_data = await self.api_client.call_api(
             *_param,
             _request_timeout=_request_timeout
         )
@@ -1637,3 +1637,5 @@ class SessionsApi:
             _host=_host,
             _request_auth=_request_auth
         )
+
+

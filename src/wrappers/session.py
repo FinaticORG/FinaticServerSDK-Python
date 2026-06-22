@@ -4,23 +4,24 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from finatic_server.api.session_api import SessionApi
-from finatic_server.configuration import Configuration
-from finatic_server.models.finatic_response_portal_url_response import (
+from finatic_server_legacy.api.session_api import SessionApi
+from finatic_server_legacy.configuration import Configuration
+from finatic_server_legacy.models.finatic_response_portal_url_response import (
     FinaticResponsePortalUrlResponse,
 )
-from finatic_server.models.finatic_response_session_response_data import (
+from finatic_server_legacy.models.finatic_response_session_response_data import (
     FinaticResponseSessionResponseData,
 )
-from finatic_server.models.finatic_response_session_user_response import (
+from finatic_server_legacy.models.finatic_response_session_user_response import (
     FinaticResponseSessionUserResponse,
 )
-from finatic_server.models.finatic_response_token_response_data import (
+from finatic_server_legacy.models.finatic_response_token_response_data import (
     FinaticResponseTokenResponseData,
 )
-from finatic_server.models.session_start_request import SessionStartRequest
+from finatic_server_legacy.models.session_start_request import SessionStartRequest
 
 from ..config import SdkConfig
+from ..openapi import path_bootstrap_legacy  # noqa: F401
 from ..openapi import path_bootstrap  # noqa: F401
 from ..types import FinaticResponse
 from ..utils.cache import generate_cache_key, get_cache

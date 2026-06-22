@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from typing import Any, ClassVar, Dict, Optional
 from finatic_server.models.lastsyncedat import Lastsyncedat
 from typing import Optional, Set
 from typing_extensions import Self
@@ -118,3 +118,5 @@ class SessionSyncAccountStatus(BaseModel):
             "syncStatus": obj.get("syncStatus")
         })
         return _obj
+
+
