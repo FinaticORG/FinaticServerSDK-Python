@@ -8,16 +8,16 @@ from types import UnionType
 from typing import Annotated, Any, Union, get_args, get_origin
 from uuid import UUID
 
-from pydantic import BaseModel
-
-import src.openapi.path_bootstrap  # noqa: F401, E402
-import src.openapi.path_bootstrap_legacy  # noqa: F401, E402
 from finatic_server_legacy import rest
 from finatic_server_legacy.api.brokers_api import BrokersApi
 from finatic_server_legacy.api.company_api import CompanyApi
 from finatic_server_legacy.api.session_api import SessionApi
 from finatic_server_legacy.api_client import ApiClient
 from finatic_server_legacy.configuration import Configuration
+from pydantic import BaseModel
+
+import src.openapi.path_bootstrap  # noqa: F401, E402
+import src.openapi.path_bootstrap_legacy  # noqa: F401, E402
 
 
 class _FakeAiohttpLikeResponse:

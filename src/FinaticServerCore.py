@@ -5,9 +5,6 @@ Hand-maintained façade over the OpenAPI-generated client in ``src/openapi/finat
 
 from __future__ import annotations
 
-from .openapi import path_bootstrap  # noqa: F401
-from .openapi import path_bootstrap_legacy  # noqa: F401
-
 from finatic_server_legacy.api.brokers_api import BrokersApi
 from finatic_server_legacy.api.company_api import CompanyApi
 from finatic_server_legacy.api.session_api import SessionApi

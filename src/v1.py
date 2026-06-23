@@ -66,6 +66,7 @@ class V1Client:
         self.session_id: str | None = None
         self.company_id: str | None = None
         self.authorization: str | None = None
+        self.csrf_token: str | None = None
 
     def set_environment(self, environment: Environment) -> None:
         """Set the public v1 environment for subsequent requests."""
@@ -76,11 +77,14 @@ class V1Client:
         session_id: str,
         company_id: str | None = None,
         authorization: str | None = None,
+        csrf_token: str | None = None,
     ) -> None:
         """Set session headers used by account-first v1 routes."""
         self.session_id = session_id
         self.company_id = company_id
         self.authorization = authorization
+        if csrf_token is not None:
+            self.csrf_token = csrf_token
 
     async def create_session(
         self,
@@ -518,6 +522,8 @@ class V1Client:
             headers["X-Company-ID"] = self.company_id
         if self.authorization:
             headers["Authorization"] = self.authorization
+        if self.csrf_token:
+            headers["X-CSRF-Token"] = self.csrf_token
         if extra:
             headers.update({key: value for key, value in extra.items() if value})
         return headers

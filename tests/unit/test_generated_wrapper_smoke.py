@@ -51,6 +51,9 @@ def test_generated_wrappers_smoke_invokes_many_methods() -> None:
     async def _run() -> None:
         await brokers.get_accounts()
         await brokers.get_balances()
+        await brokers.get_orders()
+        await brokers.get_positions()
+        await brokers.get_transactions()
         await brokers.get_broker_connections()
         await brokers.get_brokers()
         await brokers.disconnect_company_from_broker(connection_id="test-id")
