@@ -194,6 +194,82 @@ class SandboxPortalSessionContext:
     user_id: str
 
 
+async def _portal_json_request(
+    *,
+    method: str,
+    api_key: str,
+    session_id: str,
+    path_suffix: str,
+    csrf_token: str,
+    body: dict | None = None,
+    base_url: str = DEFAULT_API_BASE_URL,
+) -> dict:
+    headers = {
+        "x-api-key": api_key,
+        "X-Finatic-Environment": "sandbox",
+        "X-Session-ID": session_id,
+        "x-csrf-token": csrf_token,
+        "content-type": "application/json",
+        **DEVICE_HEADERS,
+    }
+    url = f"{base_url}/api/v1/portal/{session_id}/{path_suffix}"
+    async with aiohttp.ClientSession() as session:
+        async with session.request(
+            method,
+            url,
+            headers=headers,
+            json=body,
+        ) as response:
+            payload = await response.json()
+            if response.status >= 400:
+                raise RuntimeError(f"Portal {method} {path_suffix} failed: {payload}")
+            return payload
+
+
+async def list_portal_institutions_http(
+    *,
+    api_key: str,
+    session_id: str,
+    csrf_token: str,
+    base_url: str = DEFAULT_API_BASE_URL,
+) -> dict:
+    headers = {
+        "x-api-key": api_key,
+        "X-Finatic-Environment": "sandbox",
+        "X-Session-ID": session_id,
+        "x-csrf-token": csrf_token,
+        **DEVICE_HEADERS,
+    }
+    async with aiohttp.ClientSession() as session:
+        async with session.get(
+            f"{base_url}/api/v1/portal/{session_id}/institutions",
+            headers=headers,
+        ) as response:
+            payload = await response.json()
+            if response.status != 200:
+                raise RuntimeError(f"Failed to list portal institutions: {payload}")
+            return payload
+
+
+async def link_portal_user_http(
+    *,
+    api_key: str,
+    session_id: str,
+    user_id: str,
+    csrf_token: str,
+    base_url: str = DEFAULT_API_BASE_URL,
+) -> dict:
+    return await _portal_json_request(
+        method="POST",
+        api_key=api_key,
+        session_id=session_id,
+        path_suffix="user-link",
+        csrf_token=csrf_token,
+        body={"userId": user_id},
+        base_url=base_url,
+    )
+
+
 async def create_sandbox_portal_session(
     v1_client: V1Client,
     api_key: str,
@@ -216,7 +292,13 @@ async def create_sandbox_portal_session(
     )
 
     user_id = sandbox_user_id_from_email(link_email)
-    link_response = await v1_client.link_portal_user(user_id=user_id)
+    link_response = await link_portal_user_http(
+        api_key=api_key,
+        session_id=session_id,
+        user_id=user_id,
+        csrf_token=csrf_token,
+        base_url=base_url,
+    )
     if link_response.get("errors"):
         raise RuntimeError(str(link_response["errors"]))
 
@@ -236,10 +318,22 @@ def _first_present(record: dict, *keys: str):
 
 
 async def create_sandbox_portal_auth_attempt(
-    v1_client: V1Client,
+    *,
+    api_key: str,
+    session_id: str,
+    csrf_token: str,
     provider_id: str,
+    base_url: str = DEFAULT_API_BASE_URL,
 ) -> dict:
-    response = await v1_client.create_portal_auth_attempt(broker_id=provider_id)
+    response = await _portal_json_request(
+        method="POST",
+        api_key=api_key,
+        session_id=session_id,
+        path_suffix="auth-attempts",
+        csrf_token=csrf_token,
+        body={"brokerId": provider_id},
+        base_url=base_url,
+    )
     if response.get("errors"):
         raise RuntimeError(str(response["errors"]))
     data = response.get("data")
@@ -249,8 +343,12 @@ async def create_sandbox_portal_auth_attempt(
 
 
 async def create_sandbox_portal_account_grant(
-    v1_client: V1Client,
+    *,
+    api_key: str,
+    session_id: str,
+    csrf_token: str,
     auth_attempt: dict,
+    base_url: str = DEFAULT_API_BASE_URL,
 ) -> dict:
     auth_attempt_id = str(_first_present(auth_attempt, "id", "authAttemptId") or "")
     discovered_account_ids = (
@@ -260,13 +358,19 @@ async def create_sandbox_portal_account_grant(
     if not auth_attempt_id or not discovered_account_ids:
         raise RuntimeError(f"Auth attempt missing discovered accounts: {auth_attempt}")
 
-    response = await v1_client.create_portal_account_grant(
-        {
+    response = await _portal_json_request(
+        method="POST",
+        api_key=api_key,
+        session_id=session_id,
+        path_suffix="account-grants",
+        csrf_token=csrf_token,
+        body={
             "accountId": str(discovered_account_ids[0]),
             "authAttemptId": auth_attempt_id,
             "canRead": True,
             "canTrade": False,
-        }
+        },
+        base_url=base_url,
     )
     if response.get("errors"):
         raise RuntimeError(str(response["errors"]))

@@ -110,23 +110,6 @@ V1_OPENAPI_OPERATION_METHODS = {
     ("POST", "/api/v1/consents"): "create_consent",
     ("GET", "/api/v1/consents/{consentId}"): "get_consent",
     ("POST", "/api/v1/consents/{consentId}/revoke"): "revoke_consent",
-    ("GET", "/api/v1/portal/oauth/completion/{token}"): ("get_portal_oauth_completion"),
-    ("POST", "/api/v1/portal/{sessionId}/account-grants"): (
-        "create_portal_account_grant"
-    ),
-    ("POST", "/api/v1/portal/{sessionId}/auth-attempts"): (
-        "create_portal_auth_attempt"
-    ),
-    ("GET", "/api/v1/portal/{sessionId}/auth-attempts/{authAttemptId}"): (
-        "get_portal_auth_attempt"
-    ),
-    ("POST", "/api/v1/portal/{sessionId}/complete"): "complete_portal_session",
-    ("GET", "/api/v1/portal/{sessionId}/discovered-accounts"): (
-        "list_discovered_accounts"
-    ),
-    ("GET", "/api/v1/portal/{sessionId}/institutions"): ("list_portal_institutions"),
-    ("POST", "/api/v1/portal/{sessionId}/user-link"): "link_portal_user",
-    ("GET", "/api/v1/portal/{token}"): "get_portal",
     ("POST", "/api/v1/sessions"): "create_session",
     ("GET", "/api/v1/sessions/{sessionId}"): "get_session",
     ("POST", "/api/v1/sessions/{sessionId}/portal-links"): "create_portal_link",
@@ -161,12 +144,12 @@ def _v1_openapi_operations() -> set[tuple[str, str]]:
             if not isinstance(operation, dict):
                 continue
             audiences = set(operation.get("x-sdk-audiences") or [])
-            if audiences.intersection({"sdk", "portal"}):
+            if "sdk" in audiences:
                 operations.add((method.upper(), path))
     return operations
 
 
-def test_v1_facade_covers_openapi_sdk_and_portal_audience_operations() -> None:
+def test_v1_facade_covers_openapi_sdk_audience_operations() -> None:
     openapi_operations = _v1_openapi_operations()
 
     assert len(openapi_operations) == len(V1_OPENAPI_OPERATION_METHODS)
@@ -231,7 +214,7 @@ async def test_v1_account_routes_use_session_environment_and_query() -> None:
 
 
 @pytest.mark.asyncio
-async def test_v1_portal_flow_routes_match_account_first_api() -> None:
+async def test_v1_session_routes_match_sdk_openapi() -> None:
     sdk = FinaticServer(
         api_key="fntc_live_key",
         sdk_config={"base_url": "https://api.test", "environment": "live"},
@@ -240,158 +223,17 @@ async def test_v1_portal_flow_routes_match_account_first_api() -> None:
     sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
     sdk.v1.set_session_context("session-1", "company-1")
 
-    await sdk.v1.link_portal_user("11111111-1111-1111-1111-111111111111")
-    await sdk.v1.get_portal("portal-token-1")
-    await sdk.v1.get_portal_oauth_completion("portal-token-1")
-    await sdk.v1.list_portal_institutions()
-    await sdk.v1.create_portal_auth_attempt("alpaca")
-    await sdk.v1.get_portal_auth_attempt("attempt-1")
-    await sdk.v1.list_discovered_accounts(
-        auth_attempt_id="attempt-1", include_sync_status=True
-    )
-    await sdk.v1.create_portal_account_grant(
-        {
-            "accountId": "22222222-2222-2222-2222-222222222222",
-            "authAttemptId": "44444444-4444-4444-4444-444444444444",
-            "canRead": True,
-            "canTrade": False,
-            "dataClusters": ["accounts", "balances"],
-        }
-    )
-    await sdk.v1.complete_portal_session()
+    await sdk.v1.create_portal_link()
+    await sdk.v1.get_session_sync_status()
 
     assert fake_api_client.calls[0]["method"] == "POST"
     assert (
         fake_api_client.calls[0]["url"]
-        == "https://api.test/api/v1/portal/session-1/user-link"
+        == "https://api.test/api/v1/sessions/session-1/portal-links"
     )
-    assert fake_api_client.calls[0]["body"] == {
-        "userId": "11111111-1111-1111-1111-111111111111"
-    }
     assert (
         fake_api_client.calls[1]["url"]
-        == "https://api.test/api/v1/portal/portal-token-1"
-    )
-    assert (
-        fake_api_client.calls[2]["url"]
-        == "https://api.test/api/v1/portal/oauth/completion/portal-token-1"
-    )
-    assert (
-        fake_api_client.calls[3]["url"]
-        == "https://api.test/api/v1/portal/session-1/institutions"
-    )
-    assert (
-        fake_api_client.calls[4]["url"]
-        == "https://api.test/api/v1/portal/session-1/auth-attempts"
-    )
-    assert fake_api_client.calls[4]["body"] == {"brokerId": "alpaca"}
-    assert (
-        fake_api_client.calls[5]["url"]
-        == "https://api.test/api/v1/portal/session-1/auth-attempts/attempt-1"
-    )
-    assert (
-        fake_api_client.calls[6]["url"]
-        == "https://api.test/api/v1/portal/session-1/discovered-accounts?authAttemptId=attempt-1&includeSyncStatus=True"
-    )
-    assert (
-        fake_api_client.calls[7]["url"]
-        == "https://api.test/api/v1/portal/session-1/account-grants"
-    )
-    assert fake_api_client.calls[7]["body"]["accountId"] == (
-        "22222222-2222-2222-2222-222222222222"
-    )
-    assert fake_api_client.calls[7]["body"]["authAttemptId"] == (
-        "44444444-4444-4444-4444-444444444444"
-    )
-    assert "userBrokerConnectionId" not in fake_api_client.calls[7]["body"]
-    assert "brokerId" not in fake_api_client.calls[7]["body"]
-    assert (
-        fake_api_client.calls[8]["url"]
-        == "https://api.test/api/v1/portal/session-1/complete"
-    )
-
-
-@pytest.mark.asyncio
-async def test_v1_session_compatibility_routes_match_sdk_openapi() -> None:
-    sdk = FinaticServer(
-        api_key="fntc_live_key",
-        sdk_config={"base_url": "https://api.test", "environment": "live"},
-    )
-    fake_api_client = FakeApiClient()
-    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
-    sdk.v1.set_session_context("session-1", "company-1")
-
-    await sdk.v1.init_legacy_session()
-    await sdk.v1.start_legacy_session("ott-1", user_id="user-1")
-    await sdk.v1.link_session_user(
-        "user-1", email="user@example.com", link_context_id="link-context-1"
-    )
-    await sdk.v1.link_mcp_session_user("user-1", "mcp-link-context-1")
-    await sdk.v1.get_legacy_portal_url()
-    await sdk.v1.get_legacy_session_user()
-    await sdk.v1.get_session_sync_status()
-
-    assert fake_api_client.calls[0]["method"] == "POST"
-    assert fake_api_client.calls[0]["url"] == "https://api.test/api/v1/session/init"
-    assert fake_api_client.calls[1]["method"] == "POST"
-    assert fake_api_client.calls[1]["url"] == "https://api.test/api/v1/session/start"
-    assert fake_api_client.calls[1]["headers"]["One-Time-Token"] == "ott-1"
-    assert fake_api_client.calls[1]["body"] == {"user_id": "user-1"}
-    assert (
-        fake_api_client.calls[2]["url"]
-        == "https://api.test/api/v1/session/link-user?session_id=session-1"
-    )
-    assert fake_api_client.calls[2]["body"] == {
-        "user_id": "user-1",
-        "email": "user@example.com",
-        "link_context_id": "link-context-1",
-    }
-    assert (
-        fake_api_client.calls[3]["url"]
-        == "https://api.test/api/v1/session/mcp/link-user"
-    )
-    assert fake_api_client.calls[3]["body"] == {
-        "user_id": "user-1",
-        "link_context_id": "mcp-link-context-1",
-    }
-    assert fake_api_client.calls[4]["url"] == "https://api.test/api/v1/session/portal"
-    assert fake_api_client.calls[4]["headers"]["session-id"] == "session-1"
-    assert (
-        fake_api_client.calls[5]["url"]
-        == "https://api.test/api/v1/session/session-1/user"
-    )
-    assert (
-        fake_api_client.calls[6]["url"]
         == "https://api.test/api/v1/sessions/session-1/sync-status"
-    )
-
-
-@pytest.mark.asyncio
-async def test_v1_company_and_fdx_alias_routes_match_sdk_openapi() -> None:
-    sdk = FinaticServer(
-        api_key="fntc_live_key",
-        sdk_config={"base_url": "https://api.test", "environment": "sandbox"},
-    )
-    fake_api_client = FakeApiClient()
-    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
-    sdk.v1.set_session_context("session-1", "company-1")
-
-    await sdk.v1.get_company("company-1")
-    await sdk.v1.list_fdx_balances(account_id="account-1", limit=25, offset=5)
-    await sdk.v1.list_fdx_accounts(broker_id="alpaca", include_metadata=True)
-
-    assert fake_api_client.calls[0]["method"] == "GET"
-    assert (
-        fake_api_client.calls[0]["url"] == "https://api.test/api/v1/company/company-1"
-    )
-    assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "sandbox"
-    assert fake_api_client.calls[1]["url"] == (
-        "https://api.test/api/v1/brokers/data/balances?"
-        "account_id=account-1&limit=25&offset=5"
-    )
-    assert fake_api_client.calls[2]["url"] == (
-        "https://api.test/api/v1/brokers/data/accounts?"
-        "broker_id=alpaca&include_metadata=True"
     )
 
 
@@ -490,15 +332,6 @@ def test_v1_rejects_invalid_environment_and_resource() -> None:
 
     with pytest.raises(ValueError, match="Unsupported account resource"):
         sdk.v1._validate_resource("connections")
-
-
-@pytest.mark.asyncio
-async def test_v1_discovered_accounts_requires_auth_attempt_id() -> None:
-    sdk = FinaticServer(api_key="fntc_live_key")
-    sdk.v1.set_session_context("session-1", "company-1")
-
-    with pytest.raises(TypeError, match="auth_attempt_id"):
-        await sdk.v1.list_discovered_accounts()  # type: ignore[call-arg]
 
 
 def test_v1_normalizes_success_envelope_trace_and_warning_alias() -> None:

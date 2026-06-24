@@ -29,9 +29,22 @@ token = await finatic.get_token()
 positions = await finatic.get_all_positions()
 ```
 
+## Package layout
+
+| Name | Role |
+|------|------|
+| `finatic-server-python` | PyPI package (`pip install finatic-server-python`) |
+| `finatic_server_python` | Public import path (`from finatic_server_python import FinaticServer`) |
+| `src` | Hand-written SDK (`FinaticServer`, `v1.V1Client`) |
+| `finatic_server` | Generated OpenAPI transport client (`src/openapi/finatic_server`) |
+
+Portal connect flows (institutions, auth-attempts, discovered accounts, grant UI)
+run in **FinaticConnect**, not the server SDK. The server SDK exposes session
+management, `portal-links` creation, and post-consent account/grant/webhook APIs.
+
 ## Account-First v1 Preview
 
-The v1 facade targets the account-first FinaticAPI contract and sends
+The v1 facade targets the SDK OpenAPI contract (`spec-sdk.yaml`) and sends
 `X-Finatic-Environment` on every request.
 
 ```python
@@ -43,22 +56,9 @@ finatic = FinaticServer(
 )
 
 session = await finatic.v1.create_session()
-await finatic.v1.link_portal_user("user-id")
-institutions = await finatic.v1.list_portal_institutions()
-auth_attempt = await finatic.v1.create_portal_auth_attempt("alpaca")
-discovered = await finatic.v1.list_discovered_accounts(
-    auth_attempt_id=auth_attempt["data"]["id"],
-    include_sync_status=True,
-)
-grant = await finatic.v1.create_portal_account_grant(
-    {
-        "accountId": "broker-account-id",
-        "authAttemptId": auth_attempt["data"]["id"],
-        "canRead": True,
-        "canTrade": False,
-        "dataClusters": ["accounts", "balances"],
-    }
-)
+portal_link = await finatic.v1.create_portal_link()
+# Open portal_link URL in FinaticConnect for user auth + grant consent
+
 accounts = await finatic.v1.list_accounts()
 orders = await finatic.v1.list_account_orders("broker-account-id")
 created = await finatic.v1.create_account_order(

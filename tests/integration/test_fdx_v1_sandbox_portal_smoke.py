@@ -1,4 +1,8 @@
-"""FDX v1 sandbox portal smoke — Python SDK against local finaticAPI."""
+"""FDX v1 sandbox portal smoke — portal HTTP against local finaticAPI.
+
+Portal auth flows are exercised via direct HTTP (FinaticConnect surface), not
+the server SDK v1 facade. The server SDK is used only for session creation.
+"""
 
 from __future__ import annotations
 
@@ -15,6 +19,7 @@ from tests.integration.helpers.fdx_sandbox import (
     create_sandbox_portal_auth_attempt,
     create_sandbox_portal_session,
     integration_enabled,
+    list_portal_institutions_http,
 )
 
 pytestmark = [
@@ -45,12 +50,16 @@ async def test_v1_sandbox_lists_portal_institutions() -> None:
     bootstrap, cleanup = await bootstrap_sandbox_api_key()
     v1_client = _build_v1_client(bootstrap.sandbox_api_key)
     try:
-        await create_sandbox_portal_session(
+        portal_context = await create_sandbox_portal_session(
             v1_client,
             bootstrap.sandbox_api_key,
             LINK_EMAIL,
         )
-        response = await v1_client.list_portal_institutions()
+        response = await list_portal_institutions_http(
+            api_key=bootstrap.sandbox_api_key,
+            session_id=portal_context.session_id,
+            csrf_token=portal_context.csrf_token,
+        )
         assert not response.get("errors"), response.get("errors")
         institutions = response.get("data")
         assert isinstance(institutions, list)
@@ -65,15 +74,25 @@ async def test_v1_sandbox_credential_portal_grant_fidelity() -> None:
     bootstrap, cleanup = await bootstrap_sandbox_api_key()
     v1_client = _build_v1_client(bootstrap.sandbox_api_key)
     try:
-        await create_sandbox_portal_session(
+        portal_context = await create_sandbox_portal_session(
             v1_client,
             bootstrap.sandbox_api_key,
             LINK_EMAIL,
         )
-        auth_attempt = await create_sandbox_portal_auth_attempt(v1_client, "fidelity")
+        auth_attempt = await create_sandbox_portal_auth_attempt(
+            api_key=bootstrap.sandbox_api_key,
+            session_id=portal_context.session_id,
+            csrf_token=portal_context.csrf_token,
+            provider_id="fidelity",
+        )
         assert auth_attempt.get("status") in {"discovered", "accounts_discovered"}
 
-        grant = await create_sandbox_portal_account_grant(v1_client, auth_attempt)
+        grant = await create_sandbox_portal_account_grant(
+            api_key=bootstrap.sandbox_api_key,
+            session_id=portal_context.session_id,
+            csrf_token=portal_context.csrf_token,
+            auth_attempt=auth_attempt,
+        )
         assert grant.get("status") == "active"
         assert grant.get("id") or grant.get("grantId")
     finally:
@@ -86,12 +105,17 @@ async def test_v1_sandbox_oauth_auth_attempt_alpaca() -> None:
     bootstrap, cleanup = await bootstrap_sandbox_api_key()
     v1_client = _build_v1_client(bootstrap.sandbox_api_key)
     try:
-        await create_sandbox_portal_session(
+        portal_context = await create_sandbox_portal_session(
             v1_client,
             bootstrap.sandbox_api_key,
             LINK_EMAIL,
         )
-        auth_attempt = await create_sandbox_portal_auth_attempt(v1_client, "alpaca")
+        auth_attempt = await create_sandbox_portal_auth_attempt(
+            api_key=bootstrap.sandbox_api_key,
+            session_id=portal_context.session_id,
+            csrf_token=portal_context.csrf_token,
+            provider_id="alpaca",
+        )
         assert auth_attempt.get("status") in {"auth_required", "redirect_required"}
         assert (
             auth_attempt.get("callbackState")

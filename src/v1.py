@@ -117,67 +117,6 @@ class V1Client:
             "GET", f"/api/v1/sessions/{resolved_session_id}/sync-status"
         )
 
-    async def init_legacy_session(self) -> FinaticResponse:
-        return await self._request("POST", "/api/v1/session/init")
-
-    async def start_legacy_session(
-        self, one_time_token: str, *, user_id: str | None = None
-    ) -> FinaticResponse:
-        body = {"user_id": user_id} if user_id is not None else None
-        return await self._request(
-            "POST",
-            "/api/v1/session/start",
-            body=body,
-            headers={"One-Time-Token": one_time_token},
-        )
-
-    async def get_legacy_portal_url(
-        self, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "GET",
-            "/api/v1/session/portal",
-            headers={"session-id": resolved_session_id},
-        )
-
-    async def get_legacy_session_user(
-        self, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request("GET", f"/api/v1/session/{resolved_session_id}/user")
-
-    async def link_session_user(
-        self,
-        user_id: str,
-        session_id: str | None = None,
-        *,
-        email: str | None = None,
-        link_context_id: str | None = None,
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "POST",
-            "/api/v1/session/link-user",
-            query={"session_id": resolved_session_id},
-            body=self._compact_query(
-                {
-                    "user_id": user_id,
-                    "email": email,
-                    "link_context_id": link_context_id,
-                }
-            ),
-        )
-
-    async def link_mcp_session_user(
-        self, user_id: str, link_context_id: str
-    ) -> FinaticResponse:
-        return await self._request(
-            "POST",
-            "/api/v1/session/mcp/link-user",
-            body={"user_id": user_id, "link_context_id": link_context_id},
-        )
-
     async def create_portal_link(
         self, session_id: str | None = None
     ) -> FinaticResponse:
@@ -186,96 +125,11 @@ class V1Client:
             "POST", f"/api/v1/sessions/{resolved_session_id}/portal-links"
         )
 
-    async def get_portal(self, token: str) -> FinaticResponse:
-        return await self._request("GET", f"/api/v1/portal/{token}")
-
-    async def get_portal_oauth_completion(self, token: str) -> FinaticResponse:
-        return await self._request("GET", f"/api/v1/portal/oauth/completion/{token}")
-
     async def get_session_user(self, session_id: str | None = None) -> FinaticResponse:
         resolved_session_id = session_id or self._require_session_id()
         return await self._request(
             "GET", f"/api/v1/sessions/{resolved_session_id}/user"
         )
-
-    async def link_portal_user(
-        self, user_id: str, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "POST",
-            f"/api/v1/portal/{resolved_session_id}/user-link",
-            body={"userId": user_id},
-        )
-
-    async def list_portal_institutions(
-        self, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "GET", f"/api/v1/portal/{resolved_session_id}/institutions"
-        )
-
-    async def create_portal_auth_attempt(
-        self, broker_id: str, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "POST",
-            f"/api/v1/portal/{resolved_session_id}/auth-attempts",
-            body={"brokerId": broker_id},
-        )
-
-    async def get_portal_auth_attempt(
-        self, auth_attempt_id: str, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "GET",
-            f"/api/v1/portal/{resolved_session_id}/auth-attempts/{auth_attempt_id}",
-        )
-
-    async def list_discovered_accounts(
-        self,
-        session_id: str | None = None,
-        *,
-        auth_attempt_id: str,
-        include_sync_status: bool | None = None,
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "GET",
-            f"/api/v1/portal/{resolved_session_id}/discovered-accounts",
-            query=self._compact_query(
-                {
-                    "authAttemptId": auth_attempt_id,
-                    "includeSyncStatus": include_sync_status,
-                }
-            ),
-        )
-
-    async def create_portal_account_grant(
-        self,
-        grant: dict[str, Any],
-        session_id: str | None = None,
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "POST",
-            f"/api/v1/portal/{resolved_session_id}/account-grants",
-            body=grant,
-        )
-
-    async def complete_portal_session(
-        self, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "POST", f"/api/v1/portal/{resolved_session_id}/complete"
-        )
-
-    async def get_company(self, company_id: str) -> FinaticResponse:
-        return await self._request("GET", f"/api/v1/company/{company_id}")
 
     async def list_accounts(self) -> FinaticResponse:
         return await self._request("GET", "/api/v1/accounts")
@@ -322,16 +176,6 @@ class V1Client:
         self, account_id: str, **query: Any
     ) -> FinaticResponse:
         return await self.list_account_resource(account_id, "position-lots", **query)
-
-    async def list_fdx_balances(self, **query: Any) -> FinaticResponse:
-        return await self._request(
-            "GET", "/api/v1/brokers/data/balances", query=self._compact_query(query)
-        )
-
-    async def list_fdx_accounts(self, **query: Any) -> FinaticResponse:
-        return await self._request(
-            "GET", "/api/v1/brokers/data/accounts", query=self._compact_query(query)
-        )
 
     async def get_account_order(
         self, account_id: str, order_id: str
