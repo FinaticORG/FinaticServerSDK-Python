@@ -29,15 +29,15 @@ class SessionResponseData(BaseModel):
     """
     Response data for session operations.
     """ # noqa: E501
-    company_id: StrictStr = Field(description="Company ID")
-    expires_at: datetime = Field(description="Session expiration time")
-    portal_connection_management_pending: Optional[StrictBool] = Field(default=False, description="True when a valid provisional user_id was applied: trading/data may proceed, but portal connection-management still requires link-user / OTP step-up.")
-    provided_user_id_rejected: Optional[StrictBool] = Field(default=False, description="True when a provisional user_id was supplied on start but was not applied (invalid UUID or no broker connection with company access for this company).")
     session_id: StrictStr = Field(description="Session ID")
+    company_id: StrictStr = Field(description="Company ID")
     status: SessionStatus = Field(description="Session status")
+    expires_at: datetime = Field(description="Session expiration time")
     user_id: Optional[StrictStr] = Field(default=None, description="User ID if authenticated")
+    provided_user_id_rejected: Optional[StrictBool] = Field(default=False, description="True when a provisional user_id was supplied on start but was not applied (invalid UUID or no broker connection with company access for this company).")
+    portal_connection_management_pending: Optional[StrictBool] = Field(default=False, description="True when a valid provisional user_id was applied: trading/data may proceed, but portal connection-management still requires link-user / OTP step-up.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["company_id", "expires_at", "portal_connection_management_pending", "provided_user_id_rejected", "session_id", "status", "user_id"]
+    __properties: ClassVar[List[str]] = ["session_id", "company_id", "status", "expires_at", "user_id", "provided_user_id_rejected", "portal_connection_management_pending"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -102,13 +102,13 @@ class SessionResponseData(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "company_id": obj.get("company_id"),
-            "expires_at": obj.get("expires_at"),
-            "portal_connection_management_pending": obj.get("portal_connection_management_pending") if obj.get("portal_connection_management_pending") is not None else False,
-            "provided_user_id_rejected": obj.get("provided_user_id_rejected") if obj.get("provided_user_id_rejected") is not None else False,
             "session_id": obj.get("session_id"),
+            "company_id": obj.get("company_id"),
             "status": obj.get("status"),
-            "user_id": obj.get("user_id")
+            "expires_at": obj.get("expires_at"),
+            "user_id": obj.get("user_id"),
+            "provided_user_id_rejected": obj.get("provided_user_id_rejected") if obj.get("provided_user_id_rejected") is not None else False,
+            "portal_connection_management_pending": obj.get("portal_connection_management_pending") if obj.get("portal_connection_management_pending") is not None else False
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

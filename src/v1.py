@@ -1,7 +1,6 @@
-"""Account-first v1 SDK facade over the generated transport.
+"""Hand-written v1 client (session, accounts, trading, grants, webhooks).
 
-The public method coverage is validated against the checked-in FinaticAPI v1
-OpenAPI snapshot at ``artifacts/openapi/finaticapi-v1.json``.
+All versioned public API surface lives here under ``finatic.v1``.
 """
 
 from __future__ import annotations
@@ -10,13 +9,20 @@ import asyncio
 import inspect
 import json
 from dataclasses import dataclass
-from typing import Any, cast
-from urllib.parse import urlencode
+from typing import Any, Literal, cast
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from finatic_server.api_client import ApiClient
 from finatic_server.configuration import Configuration
 
 from .types import FinaticResponse
+from .utils.url_utils import (
+    append_asset_types_to_url,
+    append_broker_filter_to_url,
+    append_kind_to_url,
+    append_stage_to_url,
+    append_theme_to_url,
+)
 
 Environment = str
 _ERROR_CODE_BY_STATUS = {
@@ -48,8 +54,25 @@ class AccountOrderCommand:
     order: dict[str, Any]
 
 
+def _read_session_field(data: dict[str, Any] | None, keys: tuple[str, ...]) -> str:
+    if not data:
+        return ""
+    for key in keys:
+        value = data.get(key)
+        if isinstance(value, str) and value:
+            return value
+    return ""
+
+
+def _append_query_param(url: str, name: str, value: str) -> str:
+    parsed = urlparse(url)
+    query_params = parse_qs(parsed.query)
+    query_params[name] = [value]
+    return urlunparse(parsed._replace(query=urlencode(query_params, doseq=True)))
+
+
 class V1Client:
-    """Thin account-first v1 client over the generated transport."""
+    """Versioned v1 client over generated transport."""
 
     def __init__(
         self,
@@ -67,6 +90,7 @@ class V1Client:
         self.company_id: str | None = None
         self.authorization: str | None = None
         self.csrf_token: str | None = None
+        self.user_id: str | None = None
 
     def set_environment(self, environment: Environment) -> None:
         """Set the public v1 environment for subsequent requests."""
@@ -86,53 +110,196 @@ class V1Client:
         if csrf_token is not None:
             self.csrf_token = csrf_token
 
-    async def create_session(
+    def get_session_id(self) -> str | None:
+        return self.session_id
+
+    def get_company_id(self) -> str | None:
+        return self.company_id
+
+    def get_user_id(self) -> str | None:
+        return self.user_id
+
+    def is_authed(self) -> bool:
+        return bool(self.user_id)
+
+    async def init_session(self, api_key: str | None = None) -> FinaticResponse:
+        return await self._request(
+            "POST",
+            "/api/v1/session/init",
+            headers={"X-API-Key": api_key or self.api_key},
+        )
+
+    async def get_token(self, api_key: str | None = None) -> str:
+        response = await self.init_session(api_key)
+        if response.get("errors"):
+            errors = response["errors"]
+            message = (
+                errors[0].get("message") if errors else "Failed to initialize session"
+            )
+            raise ValueError(str(message))
+        session_data = response.get("data")
+        token = _read_session_field(
+            session_data if isinstance(session_data, dict) else None,
+            ("one_time_token", "oneTimeToken"),
+        )
+        if not token:
+            raise ValueError("Failed to get one-time token from /api/v1/session/init")
+        return token
+
+    async def start_session(
         self,
         *,
-        device_info: dict[str, Any] | None = None,
-    ) -> FinaticResponse:
-        body: dict[str, Any] = {}
-        if device_info is not None:
-            body["deviceInfo"] = device_info
-        response = await self._request("POST", "/api/v1/sessions", body=body or None)
-        session_data = self._extract_data(response)
-        if isinstance(session_data, dict):
-            session_id = session_data.get("session_id") or session_data.get("sessionId")
-            company_id = session_data.get("company_id") or session_data.get("companyId")
-            if isinstance(session_id, str):
-                self.set_session_context(
-                    session_id=session_id,
-                    company_id=company_id if isinstance(company_id, str) else None,
-                )
-        return response
+        one_time_token: str | None = None,
+        user_id: str | None = None,
+    ) -> dict[str, Any]:
+        if not one_time_token:
+            if not self.api_key:
+                return {
+                    "success": False,
+                    "session_id": None,
+                    "company_id": None,
+                    "error": "API key is required in the constructor.",
+                }
+            try:
+                token = await self.get_token()
+                started = await self._start_session_with_token(token, user_id)
+                return {
+                    "success": True,
+                    "session_id": started["session_id"],
+                    "company_id": started["company_id"],
+                    "error": None,
+                }
+            except Exception as error:
+                return {
+                    "success": False,
+                    "session_id": None,
+                    "company_id": None,
+                    "error": str(error),
+                }
+        return await self._start_session_with_token(one_time_token, user_id)
 
-    async def get_session(self, session_id: str) -> FinaticResponse:
-        return await self._request("GET", f"/api/v1/sessions/{session_id}")
-
-    async def get_session_sync_status(
-        self, session_id: str | None = None
-    ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "GET", f"/api/v1/sessions/{resolved_session_id}/sync-status"
+    async def _start_session_with_token(
+        self,
+        one_time_token: str,
+        user_id: str | None = None,
+    ) -> dict[str, str]:
+        body = {"user_id": user_id} if user_id else None
+        response = await self._request(
+            "POST",
+            "/api/v1/session/start",
+            body=body,
+            headers={"One-Time-Token": one_time_token},
         )
+        if response.get("errors"):
+            errors = response["errors"]
+            message = errors[0].get("message") if errors else "Failed to start session"
+            raise ValueError(str(message))
 
-    async def create_portal_link(
-        self, session_id: str | None = None
+        session_data = response.get("data")
+        session_data_dict = session_data if isinstance(session_data, dict) else {}
+        session_id = _read_session_field(session_data_dict, ("session_id", "sessionId"))
+        company_id = _read_session_field(session_data_dict, ("company_id", "companyId"))
+        csrf_token = _read_session_field(session_data_dict, ("csrf_token", "csrfToken"))
+        response_user_id = _read_session_field(session_data_dict, ("user_id", "userId"))
+
+        if session_id and company_id:
+            self.set_session_context(session_id, company_id, csrf_token=csrf_token)
+
+        final_user_id = response_user_id or user_id
+        if final_user_id:
+            self.user_id = final_user_id
+
+        return {"session_id": session_id, "company_id": company_id}
+
+    async def get_portal_url(
+        self,
+        *,
+        theme: str | dict[str, Any] | None = None,
+        brokers: list[str] | None = None,
+        kind: Literal["broker", "exchange"] | None = None,
+        asset_types: list[str] | None = None,
+        stage: list[Literal["production", "beta", "alpha"]] | None = None,
+        email: str | None = None,
+        mode: Literal["light", "dark"] | None = None,
+    ) -> str:
+        if not self.session_id:
+            raise ValueError("Session not initialized. Call v1.start_session() first.")
+
+        response = await self._request("GET", "/api/v1/session/portal")
+        if response.get("errors"):
+            errors = response["errors"]
+            message = errors[0].get("message") if errors else "Failed to get portal URL"
+            raise ValueError(str(message))
+
+        portal_data = response.get("data")
+        portal_url = _read_session_field(
+            portal_data if isinstance(portal_data, dict) else None,
+            ("portal_url", "portalUrl"),
+        )
+        if not portal_url:
+            raise ValueError("Invalid portal URL response: missing portal_url")
+
+        parsed_url = urlparse(portal_url)
+        if not parsed_url.scheme or not parsed_url.netloc:
+            raise ValueError(f"Invalid portal URL received from API: {portal_url}")
+
+        if theme:
+            portal_url = append_theme_to_url(portal_url, theme)
+        if brokers:
+            portal_url = append_broker_filter_to_url(portal_url, brokers)
+        if kind:
+            portal_url = append_kind_to_url(portal_url, kind)
+        if asset_types:
+            portal_url = append_asset_types_to_url(portal_url, asset_types)
+        if stage:
+            portal_url = append_stage_to_url(portal_url, stage)
+        if email:
+            portal_url = _append_query_param(portal_url, "email", email)
+        if mode:
+            portal_url = _append_query_param(portal_url, "mode", mode)
+        return portal_url
+
+    async def get_session_user(self) -> dict[str, str]:
+        if not self.session_id:
+            raise ValueError("Session not initialized. Call v1.start_session() first.")
+
+        response = await self._request("GET", f"/api/v1/session/{self.session_id}/user")
+        if response.get("errors"):
+            errors = response["errors"]
+            message = (
+                errors[0].get("message") if errors else "Failed to get session user"
+            )
+            raise ValueError(str(message))
+
+        user_data = response.get("data")
+        user_data_dict = user_data if isinstance(user_data, dict) else {}
+        resolved_user_id = _read_session_field(user_data_dict, ("user_id", "userId"))
+        if resolved_user_id:
+            self.user_id = resolved_user_id
+
+        return {
+            "user_id": resolved_user_id,
+            "company_id": self.company_id or "",
+        }
+
+    async def list_accounts(
+        self,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        include_sync_status: bool | None = None,
     ) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
         return await self._request(
-            "POST", f"/api/v1/sessions/{resolved_session_id}/portal-links"
+            "GET",
+            "/api/v1/accounts",
+            query=self._compact_query(
+                {
+                    "limit": limit,
+                    "offset": offset,
+                    "include_sync_status": include_sync_status,
+                }
+            ),
         )
-
-    async def get_session_user(self, session_id: str | None = None) -> FinaticResponse:
-        resolved_session_id = session_id or self._require_session_id()
-        return await self._request(
-            "GET", f"/api/v1/sessions/{resolved_session_id}/user"
-        )
-
-    async def list_accounts(self) -> FinaticResponse:
-        return await self._request("GET", "/api/v1/accounts")
 
     async def get_account(self, account_id: str) -> FinaticResponse:
         return await self._request("GET", f"/api/v1/accounts/{account_id}")
@@ -152,30 +319,33 @@ class V1Client:
             query=self._compact_query({"limit": limit, "offset": offset}),
         )
 
-    async def list_account_balances(
-        self, account_id: str, **query: Any
+    async def list_balances(
+        self, account_id: str, *, limit: int | None = None, offset: int | None = None
     ) -> FinaticResponse:
-        return await self.list_account_resource(account_id, "balances", **query)
+        return await self.list_account_resource(
+            account_id, "balances", limit=limit, offset=offset
+        )
 
-    async def list_account_positions(
-        self, account_id: str, **query: Any
+    async def list_positions(
+        self, account_id: str, *, limit: int | None = None, offset: int | None = None
     ) -> FinaticResponse:
-        return await self.list_account_resource(account_id, "positions", **query)
+        return await self.list_account_resource(
+            account_id, "positions", limit=limit, offset=offset
+        )
 
-    async def list_account_transactions(
-        self, account_id: str, **query: Any
+    async def list_transactions(
+        self, account_id: str, *, limit: int | None = None, offset: int | None = None
     ) -> FinaticResponse:
-        return await self.list_account_resource(account_id, "transactions", **query)
+        return await self.list_account_resource(
+            account_id, "transactions", limit=limit, offset=offset
+        )
 
-    async def list_account_orders(
-        self, account_id: str, **query: Any
+    async def list_orders(
+        self, account_id: str, *, limit: int | None = None, offset: int | None = None
     ) -> FinaticResponse:
-        return await self.list_account_resource(account_id, "orders", **query)
-
-    async def list_account_position_lots(
-        self, account_id: str, **query: Any
-    ) -> FinaticResponse:
-        return await self.list_account_resource(account_id, "position-lots", **query)
+        return await self.list_account_resource(
+            account_id, "orders", limit=limit, offset=offset
+        )
 
     async def get_account_order(
         self, account_id: str, order_id: str
@@ -196,13 +366,6 @@ class V1Client:
     ) -> FinaticResponse:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}/events"
-        )
-
-    async def get_account_position_lot_fills(
-        self, account_id: str, lot_id: str
-    ) -> FinaticResponse:
-        return await self._request(
-            "GET", f"/api/v1/accounts/{account_id}/position-lots/{lot_id}/fills"
         )
 
     async def create_account_order(
@@ -260,18 +423,6 @@ class V1Client:
 
     async def revoke_account_grant(self, grant_id: str) -> FinaticResponse:
         return await self._request("POST", f"/api/v1/account-grants/{grant_id}/revoke")
-
-    async def list_consents(self) -> FinaticResponse:
-        return await self._request("GET", "/api/v1/consents")
-
-    async def create_consent(self, consent: dict[str, Any]) -> FinaticResponse:
-        return await self._request("POST", "/api/v1/consents", body=consent)
-
-    async def get_consent(self, consent_id: str) -> FinaticResponse:
-        return await self._request("GET", f"/api/v1/consents/{consent_id}")
-
-    async def revoke_consent(self, consent_id: str) -> FinaticResponse:
-        return await self._request("POST", f"/api/v1/consents/{consent_id}/revoke")
 
     async def get_webhook_catalog(self) -> FinaticResponse:
         return await self._request("GET", "/api/v1/webhooks/catalog")
@@ -548,7 +699,7 @@ class V1Client:
 
     def _require_session_id(self) -> str:
         if not self.session_id:
-            raise ValueError("Session not initialized. Call v1.create_session() first.")
+            raise ValueError("Session not initialized. Call v1.start_session() first.")
         return self.session_id
 
     def _compact_query(self, query: dict[str, Any]) -> dict[str, Any]:
@@ -565,7 +716,6 @@ class V1Client:
             "positions",
             "transactions",
             "orders",
-            "position-lots",
         }
         if resource not in allowed:
             raise ValueError(f"Unsupported account resource: {resource}")

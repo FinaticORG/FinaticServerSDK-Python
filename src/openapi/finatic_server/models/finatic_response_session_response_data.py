@@ -28,12 +28,12 @@ class FinaticResponseSessionResponseData(BaseModel):
     """
     FinaticResponseSessionResponseData
     """ # noqa: E501
-    error: Optional[Dict[str, Any]] = Field(default=None, description="Optional error object with message, code, status, and details")
-    success: Optional[SuccessPayloadSessionResponseData] = Field(default=None, description="Success payload containing data and optional meta. None when error is present.")
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
+    success: Optional[SuccessPayloadSessionResponseData] = Field(default=None, description="Success payload containing data and optional meta. None when error is present.")
+    error: Optional[Dict[str, Any]] = Field(default=None, description="Optional error object with message, code, status, and details")
     warning: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional array of warning objects")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error", "success", "trace_id", "warning"]
+    __properties: ClassVar[List[str]] = ["trace_id", "success", "error", "warning"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -84,15 +84,15 @@ class FinaticResponseSessionResponseData(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if error (nullable) is None
-        # and model_fields_set contains the field
-        if self.error is None and "error" in self.model_fields_set:
-            _dict['error'] = None
-
         # set to None if success (nullable) is None
         # and model_fields_set contains the field
         if self.success is None and "success" in self.model_fields_set:
             _dict['success'] = None
+
+        # set to None if error (nullable) is None
+        # and model_fields_set contains the field
+        if self.error is None and "error" in self.model_fields_set:
+            _dict['error'] = None
 
         # set to None if warning (nullable) is None
         # and model_fields_set contains the field
@@ -111,9 +111,9 @@ class FinaticResponseSessionResponseData(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": obj.get("error"),
-            "success": SuccessPayloadSessionResponseData.from_dict(obj["success"]) if obj.get("success") is not None else None,
             "trace_id": obj.get("trace_id") if obj.get("trace_id") is not None else '',
+            "success": SuccessPayloadSessionResponseData.from_dict(obj["success"]) if obj.get("success") is not None else None,
+            "error": obj.get("error"),
             "warning": obj.get("warning")
         })
         # store additional fields in additional_properties

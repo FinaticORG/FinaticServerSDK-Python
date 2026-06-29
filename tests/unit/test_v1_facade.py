@@ -48,32 +48,18 @@ class FakeApiClient:
                 "body": body,
             }
         )
-        if url.endswith("/api/v1/sessions"):
-            return FakeResponse(
-                {
-                    "success": {
-                        "data": {
-                            "session_id": "session-1",
-                            "company_id": "company-1",
-                        },
-                        "meta": None,
-                    },
-                    "error": None,
-                    "warning": None,
-                }
-            )
         return FakeResponse({"success": {"data": [], "meta": None}, "error": None})
 
 
-V1_OPENAPI_OPERATION_METHODS = {
+V1_DATA_OPERATION_METHODS = {
     ("GET", "/api/v1/account-grants"): "list_account_grants",
     ("GET", "/api/v1/account-grants/{grantId}"): "get_account_grant",
     ("PATCH", "/api/v1/account-grants/{grantId}"): "update_account_grant",
     ("POST", "/api/v1/account-grants/{grantId}/revoke"): "revoke_account_grant",
     ("GET", "/api/v1/accounts"): "list_accounts",
     ("GET", "/api/v1/accounts/{accountId}"): "get_account",
-    ("GET", "/api/v1/accounts/{accountId}/balances"): "list_account_balances",
-    ("GET", "/api/v1/accounts/{accountId}/orders"): "list_account_orders",
+    ("GET", "/api/v1/accounts/{accountId}/balances"): "list_balances",
+    ("GET", "/api/v1/accounts/{accountId}/orders"): "list_orders",
     ("POST", "/api/v1/accounts/{accountId}/orders"): "create_account_order",
     (
         "DELETE",
@@ -92,29 +78,12 @@ V1_OPENAPI_OPERATION_METHODS = {
         "GET",
         "/api/v1/accounts/{accountId}/orders/{orderId}/fills",
     ): "get_account_order_fills",
-    (
-        "GET",
-        "/api/v1/accounts/{accountId}/position-lots",
-    ): "list_account_position_lots",
-    (
-        "GET",
-        "/api/v1/accounts/{accountId}/position-lots/{lotId}/fills",
-    ): "get_account_position_lot_fills",
-    ("GET", "/api/v1/accounts/{accountId}/positions"): "list_account_positions",
+    ("GET", "/api/v1/accounts/{accountId}/positions"): "list_positions",
     (
         "GET",
         "/api/v1/accounts/{accountId}/transactions",
-    ): "list_account_transactions",
+    ): "list_transactions",
     ("GET", "/api/v1/accounts/{accountId}/{resource}"): "list_account_resource",
-    ("GET", "/api/v1/consents"): "list_consents",
-    ("POST", "/api/v1/consents"): "create_consent",
-    ("GET", "/api/v1/consents/{consentId}"): "get_consent",
-    ("POST", "/api/v1/consents/{consentId}/revoke"): "revoke_consent",
-    ("POST", "/api/v1/sessions"): "create_session",
-    ("GET", "/api/v1/sessions/{sessionId}"): "get_session",
-    ("POST", "/api/v1/sessions/{sessionId}/portal-links"): "create_portal_link",
-    ("GET", "/api/v1/sessions/{sessionId}/sync-status"): ("get_session_sync_status"),
-    ("GET", "/api/v1/sessions/{sessionId}/user"): "get_session_user",
     ("GET", "/api/v1/webhooks/catalog"): "get_webhook_catalog",
     ("GET", "/api/v1/webhooks/payload-schema"): "get_webhook_payload_schema",
     ("GET", "/api/v1/webhooks/subscriptions"): "list_webhook_subscriptions",
@@ -149,14 +118,26 @@ def _v1_openapi_operations() -> set[tuple[str, str]]:
     return operations
 
 
-def test_v1_facade_covers_openapi_sdk_audience_operations() -> None:
-    openapi_operations = _v1_openapi_operations()
+def _data_openapi_operations() -> set[tuple[str, str]]:
+    return {
+        operation
+        for operation in _v1_openapi_operations()
+        if "/session" not in operation[1]
+    }
 
-    assert len(openapi_operations) == len(V1_OPENAPI_OPERATION_METHODS)
-    assert set(V1_OPENAPI_OPERATION_METHODS) == openapi_operations
 
-    for method_name in V1_OPENAPI_OPERATION_METHODS.values():
+def test_v1_facade_covers_data_openapi_sdk_audience_operations() -> None:
+    openapi_operations = _data_openapi_operations()
+
+    assert len(openapi_operations) == len(V1_DATA_OPERATION_METHODS)
+    assert set(V1_DATA_OPERATION_METHODS) == openapi_operations
+
+    for method_name in V1_DATA_OPERATION_METHODS.values():
         assert hasattr(V1Client, method_name)
+
+    assert not hasattr(V1Client, "create_session")
+    assert hasattr(V1Client, "start_session")
+    assert hasattr(V1Client, "get_portal_url")
 
 
 def test_finatic_server_exposes_v1_facade_with_environment() -> None:
@@ -170,27 +151,6 @@ def test_finatic_server_exposes_v1_facade_with_environment() -> None:
 
 
 @pytest.mark.asyncio
-async def test_v1_create_session_sets_context_and_headers() -> None:
-    sdk = FinaticServer(
-        api_key="fntc_live_key",
-        sdk_config={"base_url": "https://api.test", "environment": "live"},
-    )
-    fake_api_client = FakeApiClient()
-    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
-
-    response = await sdk.v1.create_session(device_info={"platform": "server"})
-
-    assert response["data"]["session_id"] == "session-1"
-    assert sdk.v1.session_id == "session-1"
-    assert sdk.v1.company_id == "company-1"
-    assert fake_api_client.calls[0]["method"] == "POST"
-    assert fake_api_client.calls[0]["url"] == "https://api.test/api/v1/sessions"
-    assert fake_api_client.calls[0]["headers"]["X-API-Key"] == "fntc_live_key"
-    assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "live"
-    assert fake_api_client.calls[0]["body"] == {"deviceInfo": {"platform": "server"}}
-
-
-@pytest.mark.asyncio
 async def test_v1_account_routes_use_session_environment_and_query() -> None:
     sdk = FinaticServer(
         api_key="fntc_live_key",
@@ -200,7 +160,7 @@ async def test_v1_account_routes_use_session_environment_and_query() -> None:
     sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
     sdk.v1.set_session_context("session-1", "company-1")
 
-    await sdk.v1.list_account_transactions("account-1", limit=50, offset=10)
+    await sdk.v1.list_transactions("account-1", limit=50, offset=10)
 
     call = fake_api_client.calls[0]
     assert call["method"] == "GET"
@@ -211,30 +171,6 @@ async def test_v1_account_routes_use_session_environment_and_query() -> None:
     assert call["headers"]["X-Session-ID"] == "session-1"
     assert call["headers"]["X-Company-ID"] == "company-1"
     assert call["headers"]["X-Finatic-Environment"] == "sandbox"
-
-
-@pytest.mark.asyncio
-async def test_v1_session_routes_match_sdk_openapi() -> None:
-    sdk = FinaticServer(
-        api_key="fntc_live_key",
-        sdk_config={"base_url": "https://api.test", "environment": "live"},
-    )
-    fake_api_client = FakeApiClient()
-    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
-    sdk.v1.set_session_context("session-1", "company-1")
-
-    await sdk.v1.create_portal_link()
-    await sdk.v1.get_session_sync_status()
-
-    assert fake_api_client.calls[0]["method"] == "POST"
-    assert (
-        fake_api_client.calls[0]["url"]
-        == "https://api.test/api/v1/sessions/session-1/portal-links"
-    )
-    assert (
-        fake_api_client.calls[1]["url"]
-        == "https://api.test/api/v1/sessions/session-1/sync-status"
-    )
 
 
 @pytest.mark.asyncio
@@ -306,22 +242,6 @@ async def test_v1_order_commands_require_idempotency_key() -> None:
         await sdk.v1.create_account_order(
             "account-1", {"symbol": "AAPL", "quantity": 1}, idempotency_key=""
         )
-
-
-@pytest.mark.asyncio
-async def test_v1_create_consent_uses_openapi_route() -> None:
-    sdk = FinaticServer(
-        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
-    )
-    fake_api_client = FakeApiClient()
-    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
-
-    await sdk.v1.create_consent({"grantId": "grant-1", "scopes": ["balances"]})
-
-    call = fake_api_client.calls[0]
-    assert call["method"] == "POST"
-    assert call["url"] == "https://api.test/api/v1/consents"
-    assert call["body"] == {"grantId": "grant-1", "scopes": ["balances"]}
 
 
 def test_v1_rejects_invalid_environment_and_resource() -> None:

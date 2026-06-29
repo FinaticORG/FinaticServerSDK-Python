@@ -9,14 +9,12 @@ description = "Python SDK for Finatic Server API"
 authors = [{ name = "Finatic", email = "support@finatic.dev" }]
 license = { text = "PROPRIETARY" }
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: Other/Proprietary License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -136,9 +134,14 @@ source = [
     "src/FinaticServerCore.py",
     "src/config.py",
     "src/utils",
+    "src/internal",
     "finatic_server_python",
 ]
-omit = ["*/tests/*", "*/test_*"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "src/openapi/finatic_server/*",
+]
 
 [tool.coverage.report]
 fail_under = 50

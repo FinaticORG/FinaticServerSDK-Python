@@ -339,6 +339,23 @@
             ],
             "title": "Callbackstate"
           },
+          "connectionId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Connectionid"
+          },
+          "createNewConnection": {
+            "default": false,
+            "title": "Createnewconnection",
+            "type": "boolean"
+          },
           "created_at": {
             "format": "date-time",
             "title": "Created At",
@@ -477,6 +494,11 @@
               }
             ],
             "title": "Connection Id"
+          },
+          "create_new_connection": {
+            "default": false,
+            "title": "Create New Connection",
+            "type": "boolean"
           },
           "credentials": {
             "additionalProperties": true,
@@ -1006,71 +1028,6 @@
           "initiator"
         ],
         "title": "FDXConsentGrant",
-        "type": "object"
-      },
-      "FDXConsentGrantCreate": {
-        "description": "Company-created FDX consent request.",
-        "properties": {
-          "_id": {
-            "title": "Id",
-            "type": "string"
-          },
-          "dataClusters": {
-            "items": {
-              "type": "string"
-            },
-            "title": "Dataclusters",
-            "type": "array"
-          },
-          "durationDays": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Durationdays"
-          },
-          "initiator": {
-            "default": "company",
-            "title": "Initiator",
-            "type": "string"
-          },
-          "lookbackDays": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Lookbackdays"
-          },
-          "parties": {
-            "additionalProperties": true,
-            "title": "Parties",
-            "type": "object"
-          },
-          "resources": {
-            "items": {
-              "additionalProperties": true,
-              "type": "object"
-            },
-            "title": "Resources",
-            "type": "array"
-          },
-          "userId": {
-            "title": "Userid",
-            "type": "string"
-          }
-        },
-        "required": [
-          "userId"
-        ],
-        "title": "FDXConsentGrantCreate",
         "type": "object"
       },
       "FDXWebhookEventDefinition": {
@@ -4070,6 +4027,23 @@
           "brokerId": {
             "title": "Brokerid",
             "type": "string"
+          },
+          "connectionId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Connectionid"
+          },
+          "createNewConnection": {
+            "default": false,
+            "title": "Createnewconnection",
+            "type": "boolean"
           }
         },
         "required": [
@@ -7466,139 +7440,6 @@
         "x-sdk-migration-target": "/api/v1/accounts/{accountId}/orders/{orderId}/fills"
       }
     },
-    "/api/beta/brokers/data/positions/lots/{lot_id}/fills": {
-      "get": {
-        "deprecated": true,
-        "description": "Map beta lot fills to account-scoped v1 lot fills.",
-        "operationId": "list_position_lot_fills_api_beta_brokers_data_positions_lots__lot_id__fills_get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "lot_id",
-            "required": true,
-            "schema": {
-              "title": "Lot Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_BetaBrokerShimResponse_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
-          },
-          "429": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
-          },
-          "502": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
-          }
-        },
-        "summary": "List Position Lot Fills",
-        "tags": [
-          "brokers"
-        ],
-        "x-finatic-beta": true,
-        "x-finatic-compat-shim": "legacy-beta",
-        "x-finatic-removal-gate": "sdk-major-release",
-        "x-mcp-export": false,
-        "x-sdk-audiences": [
-          "sdk"
-        ],
-        "x-sdk-migration-status": "mapped-to-v1",
-        "x-sdk-migration-target": "/api/v1/accounts/{accountId}/position-lots/{lotId}/fills"
-      }
-    },
     "/api/beta/brokers/data/{resource}": {
       "get": {
         "deprecated": true,
@@ -9183,6 +9024,68 @@
           }
         },
         "summary": "Get Portal Auth Attempt",
+        "tags": [
+          "portal"
+        ],
+        "x-finatic-beta": true,
+        "x-finatic-compat-shim": "legacy-beta",
+        "x-finatic-removal-gate": "sdk-major-release",
+        "x-mcp-export": false,
+        "x-sdk-audiences": [
+          "portal"
+        ],
+        "x-sdk-migration-status": "deprecated-no-v1-replacement"
+      }
+    },
+    "/api/beta/portal/{session_id}/broker-connect": {
+      "post": {
+        "deprecated": true,
+        "description": "Connect or reauth a broker for an authenticated portal session.",
+        "operationId": "connect_portal_broker_api_beta_portal__session_id__broker_connect_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerConnectionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticResponse_Any_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Connect Portal Broker",
         "tags": [
           "portal"
         ],
@@ -13045,362 +12948,6 @@
         ]
       }
     },
-    "/api/v1/accounts/{accountId}/position-lots": {
-      "get": {
-        "description": "List account-scoped position lots.",
-        "operationId": "finaticV1GetAccountsAccountIdPositionLots",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "accountId",
-            "required": true,
-            "schema": {
-              "format": "uuid",
-              "title": "Account Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "limit",
-            "required": false,
-            "schema": {
-              "default": 100,
-              "maximum": 1000,
-              "minimum": 1,
-              "title": "Limit",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "default": 0,
-              "minimum": 0,
-              "title": "Offset",
-              "type": "integer"
-            }
-          },
-          {
-            "in": "header",
-            "name": "X-Finatic-Environment",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Finatic-Environment"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_list_dict_str__Any___"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
-          },
-          "429": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
-          },
-          "502": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
-          }
-        },
-        "summary": "List Account Position Lots",
-        "tags": [
-          "accounts"
-        ],
-        "x-finatic-environment-header": "X-Finatic-Environment",
-        "x-finatic-environments": [
-          "live",
-          "sandbox"
-        ],
-        "x-finatic-error-taxonomy": [
-          "AUTHENTICATION",
-          "AUTHORIZATION",
-          "VALIDATION",
-          "RATE_LIMITED",
-          "REAUTH_REQUIRED",
-          "PROVIDER_ERROR",
-          "CONFLICT",
-          "NOT_FOUND",
-          "INTERNAL"
-        ],
-        "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
-        "x-mcp-export": true,
-        "x-sdk-audiences": [
-          "sdk"
-        ]
-      }
-    },
-    "/api/v1/accounts/{accountId}/position-lots/{lotId}/fills": {
-      "get": {
-        "description": "List fills for an account position lot.",
-        "operationId": "finaticV1GetAccountsAccountIdPositionLotsLotIdFills",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "accountId",
-            "required": true,
-            "schema": {
-              "format": "uuid",
-              "title": "Account Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "path",
-            "name": "lotId",
-            "required": true,
-            "schema": {
-              "title": "Lot Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "header",
-            "name": "X-Finatic-Environment",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Finatic-Environment"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_list_dict_str__Any___"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
-          },
-          "429": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
-          },
-          "502": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
-          }
-        },
-        "summary": "Get Account Position Lot Fills",
-        "tags": [
-          "accounts"
-        ],
-        "x-finatic-environment-header": "X-Finatic-Environment",
-        "x-finatic-environments": [
-          "live",
-          "sandbox"
-        ],
-        "x-finatic-error-taxonomy": [
-          "AUTHENTICATION",
-          "AUTHORIZATION",
-          "VALIDATION",
-          "RATE_LIMITED",
-          "REAUTH_REQUIRED",
-          "PROVIDER_ERROR",
-          "CONFLICT",
-          "NOT_FOUND",
-          "INTERNAL"
-        ],
-        "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
-        "x-mcp-export": true,
-        "x-sdk-audiences": [
-          "sdk"
-        ]
-      }
-    },
     "/api/v1/accounts/{accountId}/positions": {
       "get": {
         "description": "List account-scoped positions.",
@@ -13773,7 +13320,7 @@
     },
     "/api/v1/accounts/{accountId}/{resource}": {
       "get": {
-        "description": "List account-scoped balances, positions, transactions, orders, or lots.",
+        "description": "List account-scoped balances, positions, transactions, or orders.",
         "operationId": "finaticV1GetAccountsAccountIdResource",
         "parameters": [
           {
@@ -14016,7 +13563,7 @@
     "/api/v1/consents": {
       "get": {
         "description": "List FDX consent grants for the current company account.",
-        "operationId": "finaticV1GetConsents",
+        "operationId": "list_consents_api_v1_consents_get",
         "parameters": [
           {
             "in": "header",
@@ -14141,194 +13688,18 @@
         "tags": [
           "consents"
         ],
-        "x-finatic-environment-header": "X-Finatic-Environment",
-        "x-finatic-environments": [
-          "live",
-          "sandbox"
-        ],
-        "x-finatic-error-taxonomy": [
-          "AUTHENTICATION",
-          "AUTHORIZATION",
-          "VALIDATION",
-          "RATE_LIMITED",
-          "REAUTH_REQUIRED",
-          "PROVIDER_ERROR",
-          "CONFLICT",
-          "NOT_FOUND",
-          "INTERNAL"
-        ],
         "x-finatic-extension": "fdx-consent",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
-        "x-mcp-export": true,
+        "x-finatic-internal": true,
+        "x-mcp-export": false,
         "x-sdk-audiences": [
-          "sdk"
-        ]
-      },
-      "post": {
-        "description": "Create an FDX consent grant for the current company account.",
-        "operationId": "finaticV1PostConsents",
-        "parameters": [
-          {
-            "in": "header",
-            "name": "X-Finatic-Environment",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Finatic-Environment"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FDXConsentGrantCreate"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_FDXConsentGrant_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
-          },
-          "429": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
-          },
-          "502": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
-          }
-        },
-        "summary": "Create Consent",
-        "tags": [
-          "consents"
-        ],
-        "x-finatic-environment-header": "X-Finatic-Environment",
-        "x-finatic-environments": [
-          "live",
-          "sandbox"
-        ],
-        "x-finatic-error-taxonomy": [
-          "AUTHENTICATION",
-          "AUTHORIZATION",
-          "VALIDATION",
-          "RATE_LIMITED",
-          "REAUTH_REQUIRED",
-          "PROVIDER_ERROR",
-          "CONFLICT",
-          "NOT_FOUND",
-          "INTERNAL"
-        ],
-        "x-finatic-extension": "fdx-consent",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
-        "x-mcp-export": true,
-        "x-sdk-audiences": [
-          "sdk"
+          "internal"
         ]
       }
     },
     "/api/v1/consents/{consentId}": {
       "get": {
         "description": "Get one FDX consent grant for the current company account.",
-        "operationId": "finaticV1GetConsentsConsentId",
+        "operationId": "get_consent_api_v1_consents__consent_id__get",
         "parameters": [
           {
             "in": "path",
@@ -14463,189 +13834,11 @@
         "tags": [
           "consents"
         ],
-        "x-finatic-environment-header": "X-Finatic-Environment",
-        "x-finatic-environments": [
-          "live",
-          "sandbox"
-        ],
-        "x-finatic-error-taxonomy": [
-          "AUTHENTICATION",
-          "AUTHORIZATION",
-          "VALIDATION",
-          "RATE_LIMITED",
-          "REAUTH_REQUIRED",
-          "PROVIDER_ERROR",
-          "CONFLICT",
-          "NOT_FOUND",
-          "INTERNAL"
-        ],
         "x-finatic-extension": "fdx-consent",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
-        "x-mcp-export": true,
+        "x-finatic-internal": true,
+        "x-mcp-export": false,
         "x-sdk-audiences": [
-          "sdk"
-        ]
-      }
-    },
-    "/api/v1/consents/{consentId}/revoke": {
-      "post": {
-        "description": "Revoke one FDX consent grant for the current company account.",
-        "operationId": "finaticV1PostConsentsConsentIdRevoke",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "consentId",
-            "required": true,
-            "schema": {
-              "format": "uuid",
-              "title": "Consent Id",
-              "type": "string"
-            }
-          },
-          {
-            "in": "header",
-            "name": "X-Finatic-Environment",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "X-Finatic-Environment"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_FDXConsentGrant_"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
-          },
-          "403": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
-          },
-          "404": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
-          },
-          "409": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
-          },
-          "429": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
-          },
-          "500": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
-          },
-          "502": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
-                }
-              }
-            },
-            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
-          }
-        },
-        "summary": "Revoke Consent",
-        "tags": [
-          "consents"
-        ],
-        "x-finatic-environment-header": "X-Finatic-Environment",
-        "x-finatic-environments": [
-          "live",
-          "sandbox"
-        ],
-        "x-finatic-error-taxonomy": [
-          "AUTHENTICATION",
-          "AUTHORIZATION",
-          "VALIDATION",
-          "RATE_LIMITED",
-          "REAUTH_REQUIRED",
-          "PROVIDER_ERROR",
-          "CONFLICT",
-          "NOT_FOUND",
-          "INTERNAL"
-        ],
-        "x-finatic-extension": "fdx-consent",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
-        "x-mcp-export": true,
-        "x-sdk-audiences": [
-          "sdk"
+          "internal"
         ]
       }
     },
@@ -15659,6 +14852,89 @@
           }
         },
         "summary": "Get Portal Auth Attempt",
+        "tags": [
+          "portal"
+        ],
+        "x-finatic-environment-header": "X-Finatic-Environment",
+        "x-finatic-environments": [
+          "live",
+          "sandbox"
+        ],
+        "x-finatic-error-taxonomy": [
+          "AUTHENTICATION",
+          "AUTHORIZATION",
+          "VALIDATION",
+          "RATE_LIMITED",
+          "REAUTH_REQUIRED",
+          "PROVIDER_ERROR",
+          "CONFLICT",
+          "NOT_FOUND",
+          "INTERNAL"
+        ],
+        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-mcp-export": true,
+        "x-sdk-audiences": [
+          "portal"
+        ]
+      }
+    },
+    "/api/v1/portal/{sessionId}/broker-connect": {
+      "post": {
+        "description": "Connect or reauth a broker for an authenticated portal session.",
+        "operationId": "finaticV1PostPortalSessionIdBrokerConnect",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sessionId",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.",
+            "in": "header",
+            "name": "X-Finatic-Environment",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/FinaticEnvironment"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerConnectionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticResponse_Any_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Connect Portal Broker",
         "tags": [
           "portal"
         ],

@@ -1,9 +1,6 @@
 """Main SDK entry point."""
 
-from .openapi import (
-    path_bootstrap,  # noqa: F401
-    path_bootstrap_legacy,  # noqa: F401
-)
+from .openapi import path_bootstrap  # noqa: F401
 
 try:
     from .FinaticServer import FinaticServer
