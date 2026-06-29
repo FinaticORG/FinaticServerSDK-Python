@@ -28,4 +28,3 @@ from finatic_server.models.success_payload_session_response_data import SuccessP
 from finatic_server.models.success_payload_session_user_response import SuccessPayloadSessionUserResponse
 from finatic_server.models.success_payload_token_response_data import SuccessPayloadTokenResponseData
 from finatic_server.models.token_response_data import TokenResponseData
-

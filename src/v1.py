@@ -252,7 +252,7 @@ class V1Client:
         if asset_types:
             portal_url = append_asset_types_to_url(portal_url, asset_types)
         if stage:
-            portal_url = append_stage_to_url(portal_url, stage)
+            portal_url = append_stage_to_url(portal_url, list(stage))
         if email:
             portal_url = _append_query_param(portal_url, "email", email)
         if mode:

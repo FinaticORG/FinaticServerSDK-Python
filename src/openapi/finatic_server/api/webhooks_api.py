@@ -1847,5 +1847,3 @@ class WebhooksApi:
             _host=_host,
             _request_auth=_request_auth
         )
-
-

@@ -1253,13 +1253,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -1589,13 +1589,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -2876,13 +2876,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -3227,13 +3227,13 @@ class AccountsApi:
             _path_params['resource'] = resource
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -3563,13 +3563,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -4309,5 +4309,3 @@ class AccountsApi:
             _host=_host,
             _request_auth=_request_auth
         )
-
-

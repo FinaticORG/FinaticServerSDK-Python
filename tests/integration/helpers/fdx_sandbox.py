@@ -46,9 +46,9 @@ class SandboxBootstrapResult:
     account_id: str
 
 
-async def bootstrap_sandbox_api_key() -> tuple[
-    SandboxBootstrapResult, Callable[[], Awaitable[None]]
-]:
+async def bootstrap_sandbox_api_key() -> (
+    tuple[SandboxBootstrapResult, Callable[[], Awaitable[None]]]
+):
     existing_api_key = os.environ.get("FINATIC_SANDBOX_API_KEY")
     if existing_api_key:
         result = SandboxBootstrapResult(

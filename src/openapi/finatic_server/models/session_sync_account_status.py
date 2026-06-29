@@ -118,5 +118,3 @@ class SessionSyncAccountStatus(BaseModel):
             "syncStatus": obj.get("syncStatus")
         })
         return _obj
-
-
