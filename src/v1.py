@@ -570,7 +570,7 @@ class V1Client:
         ):
             success = payload.get("success")
             data = success.get("data") if isinstance(success, dict) else None
-            errors = self._errors_from_legacy_error(payload.get("error"))
+            errors = self._errors_from_api_error(payload.get("error"))
             warnings = payload.get("warnings", payload.get("warning")) or []
             return cast(
                 FinaticResponse,
@@ -624,7 +624,7 @@ class V1Client:
             "errors": [error],
         }
 
-    def _errors_from_legacy_error(self, error: Any) -> list[dict[str, Any]]:
+    def _errors_from_api_error(self, error: Any) -> list[dict[str, Any]]:
         if error is None:
             return []
         if isinstance(error, list):

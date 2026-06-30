@@ -1,4 +1,4 @@
-"""Legacy wrapper package — v1 client lives in ``src.v1``."""
+"""Compatibility import package; the SDK client lives in ``src.v1``."""
 
 from ..v1 import V1Client
 

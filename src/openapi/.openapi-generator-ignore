@@ -24,3 +24,21 @@
 
 # Hand-maintained path setup for ``from finatic_server…`` imports (see path_bootstrap.py).
 path_bootstrap.py
+
+# FDX 1.0 ships only account-first v1/session SDK source. Do not regenerate
+# beta broker/company clients, connection-first models, or inactive position-lot
+# contracts until the API intentionally reintroduces that product surface.
+finatic_server/api/brokers_api.py
+finatic_server/api/company_api.py
+finatic_server/api/core_api.py
+finatic_server/api/mcp_api.py
+finatic_server/api/mt_connectors_api.py
+finatic_server/api/owner_portal_api.py
+finatic_server/api/portal_api.py
+finatic_server/api/telemetry_api.py
+finatic_server/models/*api_beta*
+finatic_server/models/*legacy*
+finatic_server/models/*fdx_broker*
+finatic_server/models/*broker_connection*
+finatic_server/models/*user_broker_connection*
+finatic_server/models/*position_lot*

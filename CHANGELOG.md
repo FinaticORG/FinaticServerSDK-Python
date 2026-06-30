@@ -6,8 +6,8 @@
   contract.
 - Add the account-first v1 facade, environment header support, and route
   coverage validation against `artifacts/openapi/finaticapi-v1.json`.
-- Preserve beta compatibility wrappers while v1 remains under the coordinated
-  FDX account-consent operator hold.
+- Remove generated beta broker/company clients, connection-first models, and
+  inactive position-lot types from the 1.0 SDK source.
 
 ## 0.9.14
 
