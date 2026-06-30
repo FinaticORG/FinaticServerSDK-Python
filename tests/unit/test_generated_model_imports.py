@@ -15,6 +15,18 @@ def test_import_generated_models_for_public_surface_coverage() -> None:
         for module_path in models_dir.glob("*.py")
         if module_path.stem not in {"__init__"}
     )
+    forbidden_fragments = (
+        "api_beta",
+        "legacy",
+        "broker_connection",
+        "user_broker_connection",
+        "position_lot",
+    )
+    assert not [
+        module_name
+        for module_name in model_modules
+        if any(fragment in module_name for fragment in forbidden_fragments)
+    ]
 
     imported_count = 0
     for module_name in model_modules:
@@ -30,4 +42,4 @@ def test_import_generated_models_for_public_surface_coverage() -> None:
                 # Keep going so we still exercise as much generated surface as possible.
                 continue
 
-    assert imported_count > 50
+    assert imported_count > 25

@@ -1,7 +1,4 @@
-"""Contract tests for stable, hand-authored SDK surfaces (not generated internals).
-
-See docs/sdk-public-api-inventory.md at the Finatic workspace root.
-"""
+"""Contract tests for stable, hand-authored SDK surfaces (not generated internals)."""
 
 from __future__ import annotations
 
@@ -27,10 +24,17 @@ def test_finatic_server_public_entrypoint() -> None:
     assert inspect.iscoroutinefunction(FinaticServer.init)
 
 
-def test_finatic_server_stable_instance_api_subset() -> None:
-    """Minimal stable API on FinaticServer (expand inventory when adding contracts)."""
+def test_finatic_server_root_is_bootstrap_only() -> None:
+    """Root exposes bootstrap lifecycle; session state lives on finatic.v1."""
     from finatic_server_python import FinaticServer
 
-    assert hasattr(FinaticServer, "start_session")
-    assert inspect.iscoroutinefunction(FinaticServer.start_session)
-    assert hasattr(FinaticServer, "get_session_id")
+    sdk = FinaticServer(api_key="test-api-key")
+    assert hasattr(sdk, "v1")
+    assert hasattr(sdk, "close")
+    assert not hasattr(sdk, "get_session_id")
+    assert hasattr(sdk.v1, "get_session_id")
+    assert inspect.iscoroutinefunction(sdk.v1.start_session)
+    assert hasattr(sdk.v1, "list_accounts")
+    assert inspect.iscoroutinefunction(sdk.v1.list_accounts)
+    assert hasattr(sdk.v1, "list_balances")
+    assert hasattr(sdk.v1, "list_positions")

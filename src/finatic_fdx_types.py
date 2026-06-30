@@ -14,6 +14,4 @@ FDXBrokerOrderEvent = Any
 FDXBrokerOrderFill = Any
 FDXBrokerOrderGroup = Any
 FDXBrokerPosition = Any
-FDXBrokerPositionLot = Any
-FDXBrokerPositionLotFill = Any
 FDXBrokerTransaction = Any

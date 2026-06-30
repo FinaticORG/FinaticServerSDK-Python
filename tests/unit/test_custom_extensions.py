@@ -16,9 +16,8 @@ def test_custom_finatic_server_subclasses_generated_base() -> None:
     assert issubclass(custom_cls, generated_cls)
 
 
-def test_wrappers_module_exports_expected_classes() -> None:
-    session_module = importlib.import_module("src.wrappers.session")
-    brokers_module = importlib.import_module("src.wrappers.brokers")
+def test_wrappers_module_exports_v1_client_only() -> None:
+    wrappers_module = importlib.import_module("src.wrappers")
 
-    assert hasattr(session_module, "SessionWrapper")
-    assert hasattr(brokers_module, "BrokersWrapper")
+    assert hasattr(wrappers_module, "V1Client")
+    assert wrappers_module.__all__ == ["V1Client"]

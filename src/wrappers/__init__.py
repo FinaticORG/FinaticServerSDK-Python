@@ -1,11 +1,5 @@
-"""Re-exports hand-maintained API wrappers."""
+"""Compatibility import package; the SDK client lives in ``src.v1``."""
 
-from .brokers import BrokersWrapper
-from .company import CompanyWrapper
-from .session import SessionWrapper
+from ..v1 import V1Client
 
-__all__ = [
-    "BrokersWrapper",
-    "CompanyWrapper",
-    "SessionWrapper",
-]
+__all__ = ["V1Client"]

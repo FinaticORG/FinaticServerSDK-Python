@@ -1,14 +1,4 @@
-"""Finatic Server SDK Configuration
-
-═══════════════════════════════════════════════════════════════════════════
-CENTRALIZED CONFIGURATION - Adjust all SDK settings here
-═══════════════════════════════════════════════════════════════════════════
-
-This file contains all configurable options for the SDK.
-Modify values here to customize SDK behavior.
-
-Hand-maintained defaults; override via ``SdkConfig`` in application code.
-"""
+"""Finatic Server SDK Configuration."""
 
 import os
 from collections.abc import Callable
@@ -18,11 +8,7 @@ from typing import Any
 
 @dataclass
 class SdkConfig:
-    """SDK configuration with all customizable options."""
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # API Configuration
-    # ═══════════════════════════════════════════════════════════════════════
+    """SDK configuration with customizable options."""
 
     base_url: str = field(
         default_factory=lambda: os.getenv("FINATIC_API_URL", "https://api.finatic.dev")
@@ -32,40 +18,9 @@ class SdkConfig:
         default_factory=lambda: int(os.getenv("FINATIC_TIMEOUT", "30"))
     )
     headers: dict[str, str] = field(default_factory=dict)
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # Retry Configuration
-    # ═══════════════════════════════════════════════════════════════════════
-
-    retry_enabled: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_RETRY_ENABLED", "true").lower() != "false"
-        )
+    environment: str = field(
+        default_factory=lambda: os.getenv("FINATIC_ENVIRONMENT", "live")
     )
-    retry_count: int = field(
-        default_factory=lambda: int(os.getenv("FINATIC_RETRY_COUNT", "3"))
-    )
-    retry_delay: float = field(
-        default_factory=lambda: float(os.getenv("FINATIC_RETRY_DELAY", "1.0"))
-    )
-    retry_max_delay: float = field(
-        default_factory=lambda: float(os.getenv("FINATIC_RETRY_MAX_DELAY", "10.0"))
-    )
-    retry_multiplier: float = field(
-        default_factory=lambda: float(os.getenv("FINATIC_RETRY_MULTIPLIER", "2.0"))
-    )
-    retry_on_status: list[int] = field(
-        default_factory=lambda: [429, 500, 502, 503, 504]
-    )
-    retry_on_network_error: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_RETRY_ON_NETWORK_ERROR", "true").lower() != "false"
-        )
-    )
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # Logging Configuration
-    # ═══════════════════════════════════════════════════════════════════════
 
     log_level: str = field(
         default_factory=lambda: os.getenv("FINATIC_LOG_LEVEL", "error")
@@ -91,10 +46,6 @@ class SdkConfig:
         )
     )
 
-    # ═══════════════════════════════════════════════════════════════════════
-    # Validation Configuration
-    # ═══════════════════════════════════════════════════════════════════════
-
     validation_enabled: bool = field(
         default_factory=lambda: (
             os.getenv("FINATIC_VALIDATION_ENABLED", "true").lower() != "false"
@@ -106,60 +57,6 @@ class SdkConfig:
         )
     )
 
-    # ═══════════════════════════════════════════════════════════════════════
-    # Caching Configuration
-    # ═══════════════════════════════════════════════════════════════════════
-
-    cache_enabled: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_CACHE_ENABLED", "false").lower() == "true"
-        )
-    )
-    cache_ttl: int = field(
-        default_factory=lambda: int(os.getenv("FINATIC_CACHE_TTL", "300"))
-    )
-    cache_max_size: int = field(
-        default_factory=lambda: int(os.getenv("FINATIC_CACHE_MAX_SIZE", "1000"))
-    )
-    cache_key_include: list[str] = field(
-        default_factory=lambda: ["method", "path", "query", "body"]
-    )
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # Rate Limiting Configuration
-    # ═══════════════════════════════════════════════════════════════════════
-
-    rate_limit_enabled: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_RATE_LIMIT_ENABLED", "true").lower() != "false"
-        )
-    )
-    rate_limit_auto_retry: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_RATE_LIMIT_AUTO_RETRY", "true").lower() != "false"
-        )
-    )
-    rate_limit_handler: Callable[[float], Any] | None = None
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # Interceptor Configuration
-    # ═══════════════════════════════════════════════════════════════════════
-
-    request_interceptors_enabled: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_REQUEST_INTERCEPTORS", "true").lower() != "false"
-        )
-    )
-    response_interceptors_enabled: bool = field(
-        default_factory=lambda: (
-            os.getenv("FINATIC_RESPONSE_INTERCEPTORS", "true").lower() != "false"
-        )
-    )
-
-    # ═══════════════════════════════════════════════════════════════════════
-    # Session Management Configuration
-    # ═══════════════════════════════════════════════════════════════════════
-
     session_context_storage: str = field(
         default_factory=lambda: os.getenv("FINATIC_SESSION_STORAGE", "memory")
     )
@@ -168,15 +65,7 @@ class SdkConfig:
 
 
 def get_config(overrides: dict[str, Any] | None = None) -> SdkConfig:
-    """Get configuration with optional overrides.
-
-    Args:
-        overrides: Dictionary of configuration overrides
-
-    Returns:
-        SdkConfig instance
-
-    """
+    """Get configuration with optional overrides."""
     config = SdkConfig()
 
     if overrides:
