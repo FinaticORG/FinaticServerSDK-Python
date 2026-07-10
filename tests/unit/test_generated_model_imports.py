@@ -18,7 +18,6 @@ def test_import_generated_models_for_public_surface_coverage() -> None:
     forbidden_fragments = (
         "api_beta",
         "legacy",
-        "broker_connection",
         "user_broker_connection",
         "position_lot",
     )

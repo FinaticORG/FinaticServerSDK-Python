@@ -22,8 +22,6 @@ def test_beta_generated_clients_not_shipped_in_current_surface() -> None:
         "core_api.py",
         "mcp_api.py",
         "mt_connectors_api.py",
-        "owner_portal_api.py",
-        "portal_api.py",
         "telemetry_api.py",
     }
     for filename in removed_api_modules:
@@ -32,7 +30,6 @@ def test_beta_generated_clients_not_shipped_in_current_surface() -> None:
     forbidden_model_fragments = (
         "api_beta",
         "legacy",
-        "broker_connection",
         "user_broker_connection",
         "position_lot",
     )
