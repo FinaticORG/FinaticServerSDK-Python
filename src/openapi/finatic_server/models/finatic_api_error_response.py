@@ -27,11 +27,11 @@ class FinaticAPIErrorResponse(BaseModel):
     """
     Error response schema for OpenAPI documentation.  Errors include rich domain-specific codes (e.g., ORDER_NOT_FOUND, TRADE_ACCESS_DENIED) mapped to standardized types and HTTP status codes via ERROR_CODE_REGISTRY.
     """ # noqa: E501
-    trace_id: StrictStr = Field(description="Request trace identifier for tracking and debugging")
-    success: Dict[str, Any] = Field(description="Success payload with data=None for errors")
     error: Dict[str, Any] = Field(description="Error details with type (FinaticErrorType), code (domain-specific), message (human-readable), status (HTTP status code), and optional details. Error codes are mapped via ERROR_CODE_REGISTRY - see registry for available codes.")
+    success: Dict[str, Any] = Field(description="Success payload with data=None for errors")
+    trace_id: StrictStr = Field(description="Request trace identifier for tracking and debugging")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["trace_id", "success", "error"]
+    __properties: ClassVar[List[str]] = ["error", "success", "trace_id"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -91,9 +91,9 @@ class FinaticAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "trace_id": obj.get("trace_id"),
+            "error": obj.get("error"),
             "success": obj.get("success"),
-            "error": obj.get("error")
+            "trace_id": obj.get("trace_id")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
@@ -101,3 +101,5 @@ class FinaticAPIErrorResponse(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
+
+

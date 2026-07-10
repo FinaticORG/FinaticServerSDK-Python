@@ -43,6 +43,7 @@ class OwnerPortalConnection(BaseModel):
     status: Optional[StrictStr] = None
     updated_at: Optional[datetime] = None
     user_id: UUID
+    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["broker_id", "company_grants", "connection_metadata", "created_at", "id", "last_synced_at", "needs_reauth", "push_agent_connector_state", "push_agent_last_heartbeat_at", "requires_customer_agent", "status", "updated_at", "user_id"]
 
     model_config = ConfigDict(
@@ -75,8 +76,10 @@ class OwnerPortalConnection(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -91,6 +94,11 @@ class OwnerPortalConnection(BaseModel):
                 if _item_company_grants:
                     _items.append(_item_company_grants.to_dict())
             _dict['company_grants'] = _items
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         # set to None if connection_metadata (nullable) is None
         # and model_fields_set contains the field
         if self.connection_metadata is None and "connection_metadata" in self.model_fields_set:
@@ -152,4 +160,11 @@ class OwnerPortalConnection(BaseModel):
             "updated_at": obj.get("updated_at"),
             "user_id": obj.get("user_id")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+

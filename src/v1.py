@@ -368,6 +368,22 @@ class V1Client:
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}/events"
         )
 
+    async def get_account_order_schema(
+        self,
+        account_id: str,
+        action: Literal["place", "modify", "cancel"],
+        *,
+        broker: str | None = None,
+    ) -> FinaticResponse:
+        query: dict[str, Any] = {"action": action}
+        if broker is not None:
+            query["broker"] = broker
+        return await self._request(
+            "GET",
+            f"/api/v1/accounts/{account_id}/order-schemas",
+            query=query,
+        )
+
     async def create_account_order(
         self,
         account_id: str,

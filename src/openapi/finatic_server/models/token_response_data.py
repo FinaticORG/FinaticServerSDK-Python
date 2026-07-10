@@ -28,10 +28,10 @@ class TokenResponseData(BaseModel):
     """
     Response data for token operations.
     """ # noqa: E501
-    one_time_token: StrictStr = Field(description="One-time use token")
     expires_at: datetime = Field(description="Token expiration time")
+    one_time_token: StrictStr = Field(description="One-time use token")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["one_time_token", "expires_at"]
+    __properties: ClassVar[List[str]] = ["expires_at", "one_time_token"]
 
     model_config = ConfigDict(
         validate_by_name=True,
@@ -91,8 +91,8 @@ class TokenResponseData(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "one_time_token": obj.get("one_time_token"),
-            "expires_at": obj.get("expires_at")
+            "expires_at": obj.get("expires_at"),
+            "one_time_token": obj.get("one_time_token")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
@@ -100,3 +100,5 @@ class TokenResponseData(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
+
+

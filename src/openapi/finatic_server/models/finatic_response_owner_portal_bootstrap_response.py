@@ -32,6 +32,7 @@ class FinaticResponseOwnerPortalBootstrapResponse(BaseModel):
     success: Optional[SuccessPayloadOwnerPortalBootstrapResponse] = Field(default=None, description="Success payload containing data and optional meta. None when error is present.")
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
     warning: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional array of warning objects")
+    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["error", "success", "trace_id", "warning"]
 
     model_config = ConfigDict(
@@ -64,8 +65,10 @@ class FinaticResponseOwnerPortalBootstrapResponse(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -76,6 +79,11 @@ class FinaticResponseOwnerPortalBootstrapResponse(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of success
         if self.success:
             _dict['success'] = self.success.to_dict()
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         # set to None if error (nullable) is None
         # and model_fields_set contains the field
         if self.error is None and "error" in self.model_fields_set:
@@ -108,4 +116,11 @@ class FinaticResponseOwnerPortalBootstrapResponse(BaseModel):
             "trace_id": obj.get("trace_id") if obj.get("trace_id") is not None else '',
             "warning": obj.get("warning")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+
