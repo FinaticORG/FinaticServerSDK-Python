@@ -18,12 +18,9 @@ __version__ = "0.1.0"
 
 # Define package exports
 __all__ = [
-    "AccountGrantsApi",
-    "AccountsApi",
     "OwnerPortalApi",
     "PortalApi",
-    "SessionsApi",
-    "WebhooksApi",
+    "SessionApi",
     "ApiResponse",
     "ApiClient",
     "Configuration",
@@ -33,86 +30,57 @@ __all__ = [
     "ApiKeyError",
     "ApiAttributeError",
     "ApiException",
-    "AccountOrderCommandRequest",
+    "Accounts",
     "BrokerConnectionRequest",
     "BrokerPermissions",
-    "CreateSessionRequest",
-    "FDXAccountGrant",
-    "FDXAccountGrantUpdate",
-    "FDXBrokerOrderCommandResult",
-    "FDXWebhookEventDefinition",
-    "FDXWebhookSubscription",
-    "FDXWebhookSubscriptionCreate",
-    "FDXWebhookSubscriptionUpdate",
     "FinaticAPIErrorResponse",
-    "FinaticEnvironment",
+    "FinaticResponseAccounts",
     "FinaticResponseAny",
-    "FinaticResponseDictStrAny",
-    "FinaticResponseDictStrObject",
     "FinaticResponseDictStrStr",
-    "FinaticResponseDictStrUnionStrNoneType",
-    "FinaticResponseFDXAccountGrant",
-    "FinaticResponseFDXBrokerOrderCommandResult",
-    "FinaticResponseFDXWebhookSubscription",
-    "FinaticResponseListDictStrAny",
-    "FinaticResponseListFDXAccountGrant",
-    "FinaticResponseListFDXWebhookEventDefinition",
-    "FinaticResponseListFDXWebhookSubscription",
     "FinaticResponseOwnerPortalBootstrapResponse",
     "FinaticResponseOwnerPortalRevokeAllCompaniesResult",
+    "FinaticResponsePortalUrlResponse",
     "FinaticResponseReauthNotificationOptOutResult",
     "FinaticResponseReauthNotificationPreference",
     "FinaticResponseSessionResponseData",
-    "FinaticResponseSessionSyncStatusResponse",
+    "FinaticResponseSessionUserResponse",
     "FinaticResponseTokenResponseData",
     "HTTPValidationError",
-    "Lastsyncedat",
-    "LocationInner",
     "OwnerPortalBootstrapResponse",
     "OwnerPortalCompanyGrant",
     "OwnerPortalCompanyPermissionsUpdate",
     "OwnerPortalConnection",
     "OwnerPortalKnownCompany",
     "OwnerPortalRevokeAllCompaniesResult",
+    "PortalUrlResponse",
     "ReauthNotificationOptOutRequest",
     "ReauthNotificationOptOutResult",
     "ReauthNotificationPreference",
     "ReauthNotificationPreferenceUpdateRequest",
     "SessionResponseData",
+    "SessionStartRequest",
     "SessionStatus",
-    "SessionSyncAccountStatus",
-    "SessionSyncStatusResponse",
+    "SessionUserResponse",
+    "SuccessPayloadAccounts",
     "SuccessPayloadAny",
-    "SuccessPayloadDictStrAny",
-    "SuccessPayloadDictStrObject",
     "SuccessPayloadDictStrStr",
-    "SuccessPayloadDictStrUnionStrNoneType",
-    "SuccessPayloadDictStrUnionStrNoneTypeDataValue",
-    "SuccessPayloadFDXAccountGrant",
-    "SuccessPayloadFDXBrokerOrderCommandResult",
-    "SuccessPayloadFDXWebhookSubscription",
-    "SuccessPayloadListDictStrAny",
-    "SuccessPayloadListFDXAccountGrant",
-    "SuccessPayloadListFDXWebhookEventDefinition",
-    "SuccessPayloadListFDXWebhookSubscription",
     "SuccessPayloadOwnerPortalBootstrapResponse",
     "SuccessPayloadOwnerPortalRevokeAllCompaniesResult",
+    "SuccessPayloadPortalUrlResponse",
     "SuccessPayloadReauthNotificationOptOutResult",
     "SuccessPayloadReauthNotificationPreference",
     "SuccessPayloadSessionResponseData",
-    "SuccessPayloadSessionSyncStatusResponse",
+    "SuccessPayloadSessionUserResponse",
     "SuccessPayloadTokenResponseData",
     "TokenResponseData",
     "ValidationError",
+    "ValidationErrorLocInner",
 ]
 
 # import apis into sdk package
-from finatic_server.api.account_grants_api import AccountGrantsApi as AccountGrantsApi
-from finatic_server.api.accounts_api import AccountsApi as AccountsApi
 from finatic_server.api.owner_portal_api import OwnerPortalApi as OwnerPortalApi
 from finatic_server.api.portal_api import PortalApi as PortalApi
-from finatic_server.api.sessions_api import SessionsApi as SessionsApi
-from finatic_server.api.webhooks_api import WebhooksApi as WebhooksApi
+from finatic_server.api.session_api import SessionApi as SessionApi
 
 # import ApiClient
 from finatic_server.api_response import ApiResponse as ApiResponse
@@ -126,75 +94,49 @@ from finatic_server.exceptions import ApiAttributeError as ApiAttributeError
 from finatic_server.exceptions import ApiException as ApiException
 
 # import models into sdk package
-from finatic_server.models.account_order_command_request import AccountOrderCommandRequest as AccountOrderCommandRequest
+from finatic_server.models.accounts import Accounts as Accounts
 from finatic_server.models.broker_connection_request import BrokerConnectionRequest as BrokerConnectionRequest
 from finatic_server.models.broker_permissions import BrokerPermissions as BrokerPermissions
-from finatic_server.models.create_session_request import CreateSessionRequest as CreateSessionRequest
-from finatic_server.models.fdx_account_grant import FDXAccountGrant as FDXAccountGrant
-from finatic_server.models.fdx_account_grant_update import FDXAccountGrantUpdate as FDXAccountGrantUpdate
-from finatic_server.models.fdx_broker_order_command_result import FDXBrokerOrderCommandResult as FDXBrokerOrderCommandResult
-from finatic_server.models.fdx_webhook_event_definition import FDXWebhookEventDefinition as FDXWebhookEventDefinition
-from finatic_server.models.fdx_webhook_subscription import FDXWebhookSubscription as FDXWebhookSubscription
-from finatic_server.models.fdx_webhook_subscription_create import FDXWebhookSubscriptionCreate as FDXWebhookSubscriptionCreate
-from finatic_server.models.fdx_webhook_subscription_update import FDXWebhookSubscriptionUpdate as FDXWebhookSubscriptionUpdate
 from finatic_server.models.finatic_api_error_response import FinaticAPIErrorResponse as FinaticAPIErrorResponse
-from finatic_server.models.finatic_environment import FinaticEnvironment as FinaticEnvironment
+from finatic_server.models.finatic_response_accounts import FinaticResponseAccounts as FinaticResponseAccounts
 from finatic_server.models.finatic_response_any import FinaticResponseAny as FinaticResponseAny
-from finatic_server.models.finatic_response_dict_str_any import FinaticResponseDictStrAny as FinaticResponseDictStrAny
-from finatic_server.models.finatic_response_dict_str_object import FinaticResponseDictStrObject as FinaticResponseDictStrObject
 from finatic_server.models.finatic_response_dict_str_str import FinaticResponseDictStrStr as FinaticResponseDictStrStr
-from finatic_server.models.finatic_response_dict_str_union_str_none_type import FinaticResponseDictStrUnionStrNoneType as FinaticResponseDictStrUnionStrNoneType
-from finatic_server.models.finatic_response_fdx_account_grant import FinaticResponseFDXAccountGrant as FinaticResponseFDXAccountGrant
-from finatic_server.models.finatic_response_fdx_broker_order_command_result import FinaticResponseFDXBrokerOrderCommandResult as FinaticResponseFDXBrokerOrderCommandResult
-from finatic_server.models.finatic_response_fdx_webhook_subscription import FinaticResponseFDXWebhookSubscription as FinaticResponseFDXWebhookSubscription
-from finatic_server.models.finatic_response_list_dict_str_any import FinaticResponseListDictStrAny as FinaticResponseListDictStrAny
-from finatic_server.models.finatic_response_list_fdx_account_grant import FinaticResponseListFDXAccountGrant as FinaticResponseListFDXAccountGrant
-from finatic_server.models.finatic_response_list_fdx_webhook_event_definition import FinaticResponseListFDXWebhookEventDefinition as FinaticResponseListFDXWebhookEventDefinition
-from finatic_server.models.finatic_response_list_fdx_webhook_subscription import FinaticResponseListFDXWebhookSubscription as FinaticResponseListFDXWebhookSubscription
 from finatic_server.models.finatic_response_owner_portal_bootstrap_response import FinaticResponseOwnerPortalBootstrapResponse as FinaticResponseOwnerPortalBootstrapResponse
 from finatic_server.models.finatic_response_owner_portal_revoke_all_companies_result import FinaticResponseOwnerPortalRevokeAllCompaniesResult as FinaticResponseOwnerPortalRevokeAllCompaniesResult
+from finatic_server.models.finatic_response_portal_url_response import FinaticResponsePortalUrlResponse as FinaticResponsePortalUrlResponse
 from finatic_server.models.finatic_response_reauth_notification_opt_out_result import FinaticResponseReauthNotificationOptOutResult as FinaticResponseReauthNotificationOptOutResult
 from finatic_server.models.finatic_response_reauth_notification_preference import FinaticResponseReauthNotificationPreference as FinaticResponseReauthNotificationPreference
 from finatic_server.models.finatic_response_session_response_data import FinaticResponseSessionResponseData as FinaticResponseSessionResponseData
-from finatic_server.models.finatic_response_session_sync_status_response import FinaticResponseSessionSyncStatusResponse as FinaticResponseSessionSyncStatusResponse
+from finatic_server.models.finatic_response_session_user_response import FinaticResponseSessionUserResponse as FinaticResponseSessionUserResponse
 from finatic_server.models.finatic_response_token_response_data import FinaticResponseTokenResponseData as FinaticResponseTokenResponseData
 from finatic_server.models.http_validation_error import HTTPValidationError as HTTPValidationError
-from finatic_server.models.lastsyncedat import Lastsyncedat as Lastsyncedat
-from finatic_server.models.location_inner import LocationInner as LocationInner
 from finatic_server.models.owner_portal_bootstrap_response import OwnerPortalBootstrapResponse as OwnerPortalBootstrapResponse
 from finatic_server.models.owner_portal_company_grant import OwnerPortalCompanyGrant as OwnerPortalCompanyGrant
 from finatic_server.models.owner_portal_company_permissions_update import OwnerPortalCompanyPermissionsUpdate as OwnerPortalCompanyPermissionsUpdate
 from finatic_server.models.owner_portal_connection import OwnerPortalConnection as OwnerPortalConnection
 from finatic_server.models.owner_portal_known_company import OwnerPortalKnownCompany as OwnerPortalKnownCompany
 from finatic_server.models.owner_portal_revoke_all_companies_result import OwnerPortalRevokeAllCompaniesResult as OwnerPortalRevokeAllCompaniesResult
+from finatic_server.models.portal_url_response import PortalUrlResponse as PortalUrlResponse
 from finatic_server.models.reauth_notification_opt_out_request import ReauthNotificationOptOutRequest as ReauthNotificationOptOutRequest
 from finatic_server.models.reauth_notification_opt_out_result import ReauthNotificationOptOutResult as ReauthNotificationOptOutResult
 from finatic_server.models.reauth_notification_preference import ReauthNotificationPreference as ReauthNotificationPreference
 from finatic_server.models.reauth_notification_preference_update_request import ReauthNotificationPreferenceUpdateRequest as ReauthNotificationPreferenceUpdateRequest
 from finatic_server.models.session_response_data import SessionResponseData as SessionResponseData
+from finatic_server.models.session_start_request import SessionStartRequest as SessionStartRequest
 from finatic_server.models.session_status import SessionStatus as SessionStatus
-from finatic_server.models.session_sync_account_status import SessionSyncAccountStatus as SessionSyncAccountStatus
-from finatic_server.models.session_sync_status_response import SessionSyncStatusResponse as SessionSyncStatusResponse
+from finatic_server.models.session_user_response import SessionUserResponse as SessionUserResponse
+from finatic_server.models.success_payload_accounts import SuccessPayloadAccounts as SuccessPayloadAccounts
 from finatic_server.models.success_payload_any import SuccessPayloadAny as SuccessPayloadAny
-from finatic_server.models.success_payload_dict_str_any import SuccessPayloadDictStrAny as SuccessPayloadDictStrAny
-from finatic_server.models.success_payload_dict_str_object import SuccessPayloadDictStrObject as SuccessPayloadDictStrObject
 from finatic_server.models.success_payload_dict_str_str import SuccessPayloadDictStrStr as SuccessPayloadDictStrStr
-from finatic_server.models.success_payload_dict_str_union_str_none_type import SuccessPayloadDictStrUnionStrNoneType as SuccessPayloadDictStrUnionStrNoneType
-from finatic_server.models.success_payload_dict_str_union_str_none_type_data_value import SuccessPayloadDictStrUnionStrNoneTypeDataValue as SuccessPayloadDictStrUnionStrNoneTypeDataValue
-from finatic_server.models.success_payload_fdx_account_grant import SuccessPayloadFDXAccountGrant as SuccessPayloadFDXAccountGrant
-from finatic_server.models.success_payload_fdx_broker_order_command_result import SuccessPayloadFDXBrokerOrderCommandResult as SuccessPayloadFDXBrokerOrderCommandResult
-from finatic_server.models.success_payload_fdx_webhook_subscription import SuccessPayloadFDXWebhookSubscription as SuccessPayloadFDXWebhookSubscription
-from finatic_server.models.success_payload_list_dict_str_any import SuccessPayloadListDictStrAny as SuccessPayloadListDictStrAny
-from finatic_server.models.success_payload_list_fdx_account_grant import SuccessPayloadListFDXAccountGrant as SuccessPayloadListFDXAccountGrant
-from finatic_server.models.success_payload_list_fdx_webhook_event_definition import SuccessPayloadListFDXWebhookEventDefinition as SuccessPayloadListFDXWebhookEventDefinition
-from finatic_server.models.success_payload_list_fdx_webhook_subscription import SuccessPayloadListFDXWebhookSubscription as SuccessPayloadListFDXWebhookSubscription
 from finatic_server.models.success_payload_owner_portal_bootstrap_response import SuccessPayloadOwnerPortalBootstrapResponse as SuccessPayloadOwnerPortalBootstrapResponse
 from finatic_server.models.success_payload_owner_portal_revoke_all_companies_result import SuccessPayloadOwnerPortalRevokeAllCompaniesResult as SuccessPayloadOwnerPortalRevokeAllCompaniesResult
+from finatic_server.models.success_payload_portal_url_response import SuccessPayloadPortalUrlResponse as SuccessPayloadPortalUrlResponse
 from finatic_server.models.success_payload_reauth_notification_opt_out_result import SuccessPayloadReauthNotificationOptOutResult as SuccessPayloadReauthNotificationOptOutResult
 from finatic_server.models.success_payload_reauth_notification_preference import SuccessPayloadReauthNotificationPreference as SuccessPayloadReauthNotificationPreference
 from finatic_server.models.success_payload_session_response_data import SuccessPayloadSessionResponseData as SuccessPayloadSessionResponseData
-from finatic_server.models.success_payload_session_sync_status_response import SuccessPayloadSessionSyncStatusResponse as SuccessPayloadSessionSyncStatusResponse
+from finatic_server.models.success_payload_session_user_response import SuccessPayloadSessionUserResponse as SuccessPayloadSessionUserResponse
 from finatic_server.models.success_payload_token_response_data import SuccessPayloadTokenResponseData as SuccessPayloadTokenResponseData
 from finatic_server.models.token_response_data import TokenResponseData as TokenResponseData
 from finatic_server.models.validation_error import ValidationError as ValidationError
+from finatic_server.models.validation_error_loc_inner import ValidationErrorLocInner as ValidationErrorLocInner
 

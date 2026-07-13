@@ -22,7 +22,6 @@ from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class OwnerPortalKnownCompany(BaseModel):
     """
@@ -30,14 +29,13 @@ class OwnerPortalKnownCompany(BaseModel):
     """ # noqa: E501
     company_id: UUID
     company_name: StrictStr
-    logo_url: Optional[StrictStr] = None
     trading_enabled: Optional[StrictBool] = False
+    logo_url: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["company_id", "company_name", "logo_url", "trading_enabled"]
+    __properties: ClassVar[List[str]] = ["company_id", "company_name", "trading_enabled", "logo_url"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -49,7 +47,8 @@ class OwnerPortalKnownCompany(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -100,8 +99,8 @@ class OwnerPortalKnownCompany(BaseModel):
         _obj = cls.model_validate({
             "company_id": obj.get("company_id"),
             "company_name": obj.get("company_name"),
-            "logo_url": obj.get("logo_url"),
-            "trading_enabled": obj.get("trading_enabled") if obj.get("trading_enabled") is not None else False
+            "trading_enabled": obj.get("trading_enabled") if obj.get("trading_enabled") is not None else False,
+            "logo_url": obj.get("logo_url")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

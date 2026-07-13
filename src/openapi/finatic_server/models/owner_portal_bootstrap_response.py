@@ -24,21 +24,19 @@ from finatic_server.models.owner_portal_connection import OwnerPortalConnection
 from finatic_server.models.owner_portal_known_company import OwnerPortalKnownCompany
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class OwnerPortalBootstrapResponse(BaseModel):
     """
     Bootstrap payload after Supabase OTP in owner portal mode.
     """ # noqa: E501
-    connections: Optional[List[OwnerPortalConnection]] = None
-    known_companies: Optional[List[OwnerPortalKnownCompany]] = None
     user_id: UUID
+    known_companies: Optional[List[OwnerPortalKnownCompany]] = None
+    connections: Optional[List[OwnerPortalConnection]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["connections", "known_companies", "user_id"]
+    __properties: ClassVar[List[str]] = ["user_id", "known_companies", "connections"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -50,7 +48,8 @@ class OwnerPortalBootstrapResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -77,13 +76,6 @@ class OwnerPortalBootstrapResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in connections (list)
-        _items = []
-        if self.connections:
-            for _item_connections in self.connections:
-                if _item_connections:
-                    _items.append(_item_connections.to_dict())
-            _dict['connections'] = _items
         # override the default output from pydantic by calling `to_dict()` of each item in known_companies (list)
         _items = []
         if self.known_companies:
@@ -91,6 +83,13 @@ class OwnerPortalBootstrapResponse(BaseModel):
                 if _item_known_companies:
                     _items.append(_item_known_companies.to_dict())
             _dict['known_companies'] = _items
+        # override the default output from pydantic by calling `to_dict()` of each item in connections (list)
+        _items = []
+        if self.connections:
+            for _item_connections in self.connections:
+                if _item_connections:
+                    _items.append(_item_connections.to_dict())
+            _dict['connections'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -108,9 +107,9 @@ class OwnerPortalBootstrapResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "connections": [OwnerPortalConnection.from_dict(_item) for _item in obj["connections"]] if obj.get("connections") is not None else None,
+            "user_id": obj.get("user_id"),
             "known_companies": [OwnerPortalKnownCompany.from_dict(_item) for _item in obj["known_companies"]] if obj.get("known_companies") is not None else None,
-            "user_id": obj.get("user_id")
+            "connections": [OwnerPortalConnection.from_dict(_item) for _item in obj["connections"]] if obj.get("connections") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

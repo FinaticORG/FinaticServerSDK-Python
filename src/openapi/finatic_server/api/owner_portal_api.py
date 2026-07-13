@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -8,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
@@ -311,7 +312,7 @@ class OwnerPortalApi:
         Read reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -379,7 +380,7 @@ class OwnerPortalApi:
         Read reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -447,7 +448,7 @@ class OwnerPortalApi:
         Read reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -852,7 +853,7 @@ class OwnerPortalApi:
         Disconnect a user-owned broker connection (personal or after revoking company access).
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -920,7 +921,7 @@ class OwnerPortalApi:
         Disconnect a user-owned broker connection (personal or after revoking company access).
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -988,7 +989,7 @@ class OwnerPortalApi:
         Disconnect a user-owned broker connection (personal or after revoking company access).
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1116,7 +1117,7 @@ class OwnerPortalApi:
         Remove every company_access row for a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1184,7 +1185,7 @@ class OwnerPortalApi:
         Remove every company_access row for a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1252,7 +1253,7 @@ class OwnerPortalApi:
         Remove every company_access row for a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1381,9 +1382,9 @@ class OwnerPortalApi:
         Remove one company's access to a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1453,9 +1454,9 @@ class OwnerPortalApi:
         Remove one company's access to a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1525,9 +1526,9 @@ class OwnerPortalApi:
         Remove one company's access to a connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -1661,9 +1662,9 @@ class OwnerPortalApi:
         Create or update company_access for one company on a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param owner_portal_company_permissions_update: (required)
         :type owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate
         :param _request_timeout: timeout setting for this request. If one
@@ -1737,9 +1738,9 @@ class OwnerPortalApi:
         Create or update company_access for one company on a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param owner_portal_company_permissions_update: (required)
         :type owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate
         :param _request_timeout: timeout setting for this request. If one
@@ -1813,9 +1814,9 @@ class OwnerPortalApi:
         Create or update company_access for one company on a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param company_id: (required)
-        :type company_id: UUID
+        :type company_id: str
         :param owner_portal_company_permissions_update: (required)
         :type owner_portal_company_permissions_update: OwnerPortalCompanyPermissionsUpdate
         :param _request_timeout: timeout setting for this request. If one
@@ -1967,7 +1968,7 @@ class OwnerPortalApi:
         Persist reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param reauth_notification_preference_update_request: (required)
         :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -2039,7 +2040,7 @@ class OwnerPortalApi:
         Persist reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param reauth_notification_preference_update_request: (required)
         :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
         :param _request_timeout: timeout setting for this request. If one
@@ -2111,7 +2112,7 @@ class OwnerPortalApi:
         Persist reauth email preference for a user-owned connection.
 
         :param connection_id: (required)
-        :type connection_id: UUID
+        :type connection_id: str
         :param reauth_notification_preference_update_request: (required)
         :type reauth_notification_preference_update_request: ReauthNotificationPreferenceUpdateRequest
         :param _request_timeout: timeout setting for this request. If one

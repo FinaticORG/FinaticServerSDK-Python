@@ -22,20 +22,18 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class TokenResponseData(BaseModel):
     """
     Response data for token operations.
     """ # noqa: E501
-    expires_at: datetime = Field(description="Token expiration time")
     one_time_token: StrictStr = Field(description="One-time use token")
+    expires_at: datetime = Field(description="Token expiration time")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["expires_at", "one_time_token"]
+    __properties: ClassVar[List[str]] = ["one_time_token", "expires_at"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -47,7 +45,8 @@ class TokenResponseData(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -91,8 +90,8 @@ class TokenResponseData(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "expires_at": obj.get("expires_at"),
-            "one_time_token": obj.get("one_time_token")
+            "one_time_token": obj.get("one_time_token"),
+            "expires_at": obj.get("expires_at")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

@@ -22,23 +22,21 @@ from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class ReauthNotificationOptOutResult(BaseModel):
     """
     Sanitized result for a reauth email opt-out token application.
     """ # noqa: E501
-    email_enabled: Optional[StrictBool] = Field(default=None, description="Effective email notification state after opt-out.")
-    preference_updated: Optional[StrictBool] = Field(default=False, description="Whether the stored preference was updated.")
-    reason: Optional[StrictStr] = Field(default=None, description="Sanitized non-secret failure or status reason.")
     status: StrictStr = Field(description="One of success, expired, invalid, or error.")
-    user_broker_connection_id: Optional[UUID] = Field(default=None, description="Connection updated when the token was valid.")
+    preference_updated: Optional[StrictBool] = Field(default=False, description="Whether the stored preference was updated.")
+    user_broker_connection_id: Optional[UUID] = None
+    email_enabled: Optional[StrictBool] = None
+    reason: Optional[StrictStr] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["email_enabled", "preference_updated", "reason", "status", "user_broker_connection_id"]
+    __properties: ClassVar[List[str]] = ["status", "preference_updated", "user_broker_connection_id", "email_enabled", "reason"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -50,7 +48,8 @@ class ReauthNotificationOptOutResult(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -82,6 +81,11 @@ class ReauthNotificationOptOutResult(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if user_broker_connection_id (nullable) is None
+        # and model_fields_set contains the field
+        if self.user_broker_connection_id is None and "user_broker_connection_id" in self.model_fields_set:
+            _dict['user_broker_connection_id'] = None
+
         # set to None if email_enabled (nullable) is None
         # and model_fields_set contains the field
         if self.email_enabled is None and "email_enabled" in self.model_fields_set:
@@ -91,11 +95,6 @@ class ReauthNotificationOptOutResult(BaseModel):
         # and model_fields_set contains the field
         if self.reason is None and "reason" in self.model_fields_set:
             _dict['reason'] = None
-
-        # set to None if user_broker_connection_id (nullable) is None
-        # and model_fields_set contains the field
-        if self.user_broker_connection_id is None and "user_broker_connection_id" in self.model_fields_set:
-            _dict['user_broker_connection_id'] = None
 
         return _dict
 
@@ -109,11 +108,11 @@ class ReauthNotificationOptOutResult(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "email_enabled": obj.get("email_enabled"),
-            "preference_updated": obj.get("preference_updated") if obj.get("preference_updated") is not None else False,
-            "reason": obj.get("reason"),
             "status": obj.get("status"),
-            "user_broker_connection_id": obj.get("user_broker_connection_id")
+            "preference_updated": obj.get("preference_updated") if obj.get("preference_updated") is not None else False,
+            "user_broker_connection_id": obj.get("user_broker_connection_id"),
+            "email_enabled": obj.get("email_enabled"),
+            "reason": obj.get("reason")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

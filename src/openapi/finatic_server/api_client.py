@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -8,7 +10,6 @@
 
     Do not edit the class manually.
 """  # noqa: E501
-
 
 
 import datetime
@@ -68,7 +69,6 @@ class ApiClient:
         'date': datetime.date,
         'datetime': datetime.datetime,
         'decimal': decimal.Decimal,
-        'UUID': uuid.UUID,
         'object': object,
     }
     _pool = None
@@ -309,13 +309,13 @@ class ApiClient:
         response_text = None
         return_data = None
         try:
-            if response_type in ("bytearray", "bytes"):
+            if response_type == "bytearray":
                 return_data = response_data.data
             elif response_type == "file":
                 return_data = self.__deserialize_file(response_data)
             elif response_type is not None:
                 match = None
-                content_type = response_data.headers.get('content-type')
+                content_type = response_data.getheader('content-type')
                 if content_type is not None:
                     match = re.search(r"charset=([a-zA-Z\-\d]+)[\s;]?", content_type)
                 encoding = match.group(1) if match else "utf-8"
@@ -332,7 +332,7 @@ class ApiClient:
         return ApiResponse(
             status_code = response_data.status,
             data = return_data,
-            headers = response_data.headers,
+            headers = response_data.getheaders(),
             raw_data = response_data.data
         )
 
@@ -374,24 +374,28 @@ class ApiClient:
             return obj.isoformat()
         elif isinstance(obj, decimal.Decimal):
             return str(obj)
+
         elif isinstance(obj, dict):
-            return {
-                key: self.sanitize_for_serialization(val)
-                for key, val in obj.items()
-            }
-
-        # Convert model obj to dict except
-        # attributes `openapi_types`, `attribute_map`
-        # and attributes which value is not None.
-        # Convert attribute name to json key in
-        # model definition for request.
-        if hasattr(obj, 'to_dict') and callable(getattr(obj, 'to_dict')):
-            obj_dict = obj.to_dict()
+            obj_dict = obj
         else:
-            obj_dict = obj.__dict__
+            # Convert model obj to dict except
+            # attributes `openapi_types`, `attribute_map`
+            # and attributes which value is not None.
+            # Convert attribute name to json key in
+            # model definition for request.
+            if hasattr(obj, 'to_dict') and callable(getattr(obj, 'to_dict')):
+                obj_dict = obj.to_dict()
+            else:
+                obj_dict = obj.__dict__
 
-        return self.sanitize_for_serialization(obj_dict)
+        if isinstance(obj_dict, list):
+            # here we handle instances that can either be a list or something else, and only became a real list by calling to_dict()
+            return self.sanitize_for_serialization(obj_dict)
 
+        return {
+            key: self.sanitize_for_serialization(val)
+            for key, val in obj_dict.items()
+        }
 
     def deserialize(self, response_text: str, response_type: str, content_type: Optional[str]):
         """Deserializes response into an object.
@@ -467,8 +471,6 @@ class ApiClient:
             return self.__deserialize_datetime(data)
         elif klass is decimal.Decimal:
             return decimal.Decimal(data)
-        elif klass is uuid.UUID:
-            return uuid.UUID(data)
         elif issubclass(klass, Enum):
             return self.__deserialize_enum(data, klass)
         else:
@@ -702,16 +704,14 @@ class ApiClient:
         os.close(fd)
         os.remove(path)
 
-        content_disposition = response.headers.get("Content-Disposition")
+        content_disposition = response.getheader("Content-Disposition")
         if content_disposition:
             m = re.search(
                 r'filename=[\'"]?([^\'"\s]+)[\'"]?',
                 content_disposition
             )
             assert m is not None, "Unexpected 'content-disposition' header value"
-            filename = os.path.basename(m.group(1))  # Strip any directory traversal
-            if filename in ("", ".", ".."):  # fall back to tmp filename
-                filename = os.path.basename(path)
+            filename = m.group(1)
             path = os.path.join(os.path.dirname(path), filename)
 
         with open(path, "wb") as f:
