@@ -22,21 +22,19 @@ from typing import Any, ClassVar, Dict, List
 from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class OwnerPortalRevokeAllCompaniesResult(BaseModel):
     """
     Result of revoking every company grant on a connection.
     """ # noqa: E501
     connection_id: UUID
-    message: StrictStr
     revoked_company_count: StrictInt
+    message: StrictStr
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["connection_id", "message", "revoked_company_count"]
+    __properties: ClassVar[List[str]] = ["connection_id", "revoked_company_count", "message"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -48,7 +46,8 @@ class OwnerPortalRevokeAllCompaniesResult(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -93,8 +92,8 @@ class OwnerPortalRevokeAllCompaniesResult(BaseModel):
 
         _obj = cls.model_validate({
             "connection_id": obj.get("connection_id"),
-            "message": obj.get("message"),
-            "revoked_company_count": obj.get("revoked_company_count")
+            "revoked_company_count": obj.get("revoked_company_count"),
+            "message": obj.get("message")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

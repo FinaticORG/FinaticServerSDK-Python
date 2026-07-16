@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,16 +11,11 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field
-from typing import Optional
-from typing_extensions import Annotated
-from finatic_server.models.finatic_environment import FinaticEnvironment
 from finatic_server.models.finatic_response_reauth_notification_opt_out_result import FinaticResponseReauthNotificationOptOutResult
 from finatic_server.models.reauth_notification_opt_out_request import ReauthNotificationOptOutRequest
 
@@ -41,10 +38,9 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_reauth_notification_opt_out(
+    async def apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post(
         self,
         reauth_notification_opt_out_request: ReauthNotificationOptOutRequest,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -64,8 +60,6 @@ class PortalApi:
 
         :param reauth_notification_opt_out_request: (required)
         :type reauth_notification_opt_out_request: ReauthNotificationOptOutRequest
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -88,9 +82,8 @@ class PortalApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._finatic_v1_post_portal_reauth_notification_opt_out_serialize(
+        _param = self._apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post_serialize(
             reauth_notification_opt_out_request=reauth_notification_opt_out_request,
-            x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -113,10 +106,9 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_reauth_notification_opt_out_with_http_info(
+    async def apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post_with_http_info(
         self,
         reauth_notification_opt_out_request: ReauthNotificationOptOutRequest,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -136,8 +128,6 @@ class PortalApi:
 
         :param reauth_notification_opt_out_request: (required)
         :type reauth_notification_opt_out_request: ReauthNotificationOptOutRequest
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -160,9 +150,8 @@ class PortalApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._finatic_v1_post_portal_reauth_notification_opt_out_serialize(
+        _param = self._apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post_serialize(
             reauth_notification_opt_out_request=reauth_notification_opt_out_request,
-            x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -185,10 +174,9 @@ class PortalApi:
 
 
     @validate_call
-    async def finatic_v1_post_portal_reauth_notification_opt_out_without_preload_content(
+    async def apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post_without_preload_content(
         self,
         reauth_notification_opt_out_request: ReauthNotificationOptOutRequest,
-        x_finatic_environment: Annotated[Optional[FinaticEnvironment], Field(description="Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.")] = None,
         _request_timeout: Union[
             None,
             Annotated[StrictFloat, Field(gt=0)],
@@ -208,8 +196,6 @@ class PortalApi:
 
         :param reauth_notification_opt_out_request: (required)
         :type reauth_notification_opt_out_request: ReauthNotificationOptOutRequest
-        :param x_finatic_environment: Select the Finatic environment for account-first v1 calls. Defaults to the API-key environment when omitted.
-        :type x_finatic_environment: FinaticEnvironment
         :param _request_timeout: timeout setting for this request. If one
                                  number provided, it will be total request
                                  timeout. It can also be a pair (tuple) of
@@ -232,9 +218,8 @@ class PortalApi:
         :return: Returns the result object.
         """ # noqa: E501
 
-        _param = self._finatic_v1_post_portal_reauth_notification_opt_out_serialize(
+        _param = self._apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post_serialize(
             reauth_notification_opt_out_request=reauth_notification_opt_out_request,
-            x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
             _headers=_headers,
@@ -252,10 +237,9 @@ class PortalApi:
         return response_data.response
 
 
-    def _finatic_v1_post_portal_reauth_notification_opt_out_serialize(
+    def _apply_reauth_notification_opt_out_api_v1_portal_reauth_notification_opt_out_post_serialize(
         self,
         reauth_notification_opt_out_request,
-        x_finatic_environment,
         _request_auth,
         _content_type,
         _headers,
@@ -279,8 +263,6 @@ class PortalApi:
         # process the path parameters
         # process the query parameters
         # process the header parameters
-        if x_finatic_environment is not None:
-            _header_params['X-Finatic-Environment'] = x_finatic_environment
         # process the form parameters
         # process the body parameter
         if reauth_notification_opt_out_request is not None:

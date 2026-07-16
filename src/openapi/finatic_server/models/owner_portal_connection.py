@@ -24,31 +24,29 @@ from uuid import UUID
 from finatic_server.models.owner_portal_company_grant import OwnerPortalCompanyGrant
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class OwnerPortalConnection(BaseModel):
     """
     Broker connection with merged company grant rows for owner UI.
     """ # noqa: E501
+    id: UUID
+    user_id: UUID
     broker_id: StrictStr
-    company_grants: Optional[List[OwnerPortalCompanyGrant]] = None
+    status: Optional[StrictStr] = None
     connection_metadata: Optional[Dict[str, Any]] = None
     created_at: Optional[datetime] = None
-    id: UUID
+    updated_at: Optional[datetime] = None
     last_synced_at: Optional[datetime] = None
     needs_reauth: Optional[StrictBool] = False
+    requires_customer_agent: Optional[StrictBool] = False
     push_agent_connector_state: Optional[StrictStr] = None
     push_agent_last_heartbeat_at: Optional[datetime] = None
-    requires_customer_agent: Optional[StrictBool] = False
-    status: Optional[StrictStr] = None
-    updated_at: Optional[datetime] = None
-    user_id: UUID
+    company_grants: Optional[List[OwnerPortalCompanyGrant]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["broker_id", "company_grants", "connection_metadata", "created_at", "id", "last_synced_at", "needs_reauth", "push_agent_connector_state", "push_agent_last_heartbeat_at", "requires_customer_agent", "status", "updated_at", "user_id"]
+    __properties: ClassVar[List[str]] = ["id", "user_id", "broker_id", "status", "connection_metadata", "created_at", "updated_at", "last_synced_at", "needs_reauth", "requires_customer_agent", "push_agent_connector_state", "push_agent_last_heartbeat_at", "company_grants"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -60,7 +58,8 @@ class OwnerPortalConnection(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -99,6 +98,11 @@ class OwnerPortalConnection(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
+        # set to None if status (nullable) is None
+        # and model_fields_set contains the field
+        if self.status is None and "status" in self.model_fields_set:
+            _dict['status'] = None
+
         # set to None if connection_metadata (nullable) is None
         # and model_fields_set contains the field
         if self.connection_metadata is None and "connection_metadata" in self.model_fields_set:
@@ -108,6 +112,11 @@ class OwnerPortalConnection(BaseModel):
         # and model_fields_set contains the field
         if self.created_at is None and "created_at" in self.model_fields_set:
             _dict['created_at'] = None
+
+        # set to None if updated_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.updated_at is None and "updated_at" in self.model_fields_set:
+            _dict['updated_at'] = None
 
         # set to None if last_synced_at (nullable) is None
         # and model_fields_set contains the field
@@ -124,16 +133,6 @@ class OwnerPortalConnection(BaseModel):
         if self.push_agent_last_heartbeat_at is None and "push_agent_last_heartbeat_at" in self.model_fields_set:
             _dict['push_agent_last_heartbeat_at'] = None
 
-        # set to None if status (nullable) is None
-        # and model_fields_set contains the field
-        if self.status is None and "status" in self.model_fields_set:
-            _dict['status'] = None
-
-        # set to None if updated_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.updated_at is None and "updated_at" in self.model_fields_set:
-            _dict['updated_at'] = None
-
         return _dict
 
     @classmethod
@@ -146,19 +145,19 @@ class OwnerPortalConnection(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
+            "user_id": obj.get("user_id"),
             "broker_id": obj.get("broker_id"),
-            "company_grants": [OwnerPortalCompanyGrant.from_dict(_item) for _item in obj["company_grants"]] if obj.get("company_grants") is not None else None,
+            "status": obj.get("status"),
             "connection_metadata": obj.get("connection_metadata"),
             "created_at": obj.get("created_at"),
-            "id": obj.get("id"),
+            "updated_at": obj.get("updated_at"),
             "last_synced_at": obj.get("last_synced_at"),
             "needs_reauth": obj.get("needs_reauth") if obj.get("needs_reauth") is not None else False,
+            "requires_customer_agent": obj.get("requires_customer_agent") if obj.get("requires_customer_agent") is not None else False,
             "push_agent_connector_state": obj.get("push_agent_connector_state"),
             "push_agent_last_heartbeat_at": obj.get("push_agent_last_heartbeat_at"),
-            "requires_customer_agent": obj.get("requires_customer_agent") if obj.get("requires_customer_agent") is not None else False,
-            "status": obj.get("status"),
-            "updated_at": obj.get("updated_at"),
-            "user_id": obj.get("user_id")
+            "company_grants": [OwnerPortalCompanyGrant.from_dict(_item) for _item in obj["company_grants"]] if obj.get("company_grants") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

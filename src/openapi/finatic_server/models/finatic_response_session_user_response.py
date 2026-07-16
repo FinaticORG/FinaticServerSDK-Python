@@ -22,22 +22,20 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.success_payload_session_user_response import SuccessPayloadSessionUserResponse
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FinaticResponseSessionUserResponse(BaseModel):
     """
     FinaticResponseSessionUserResponse
     """ # noqa: E501
     trace_id: Optional[StrictStr] = Field(default='', description="Request trace identifier for tracking and debugging. Auto-generated if not provided.")
-    success: Optional[SuccessPayloadSessionUserResponse] = Field(default=None, description="Success payload containing data and optional meta. None when error is present.")
-    error: Optional[Dict[str, Any]] = Field(default=None, description="Optional error object with message, code, status, and details")
-    warning: Optional[List[Dict[str, Any]]] = Field(default=None, description="Optional array of warning objects")
+    success: Optional[SuccessPayloadSessionUserResponse] = None
+    error: Optional[Dict[str, Any]] = None
+    warning: Optional[List[Dict[str, Any]]] = None
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["trace_id", "success", "error", "warning"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -49,7 +47,8 @@ class FinaticResponseSessionUserResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

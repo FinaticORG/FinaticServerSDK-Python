@@ -23,12 +23,12 @@ from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class Accounts(BaseModel):
     """
     Accounts
     """ # noqa: E501
+    id: Optional[UUID] = None
     api_key_created_at: Optional[datetime] = None
     api_key_expires_at: Optional[datetime] = None
     api_key_hash: Optional[StrictStr] = None
@@ -37,7 +37,6 @@ class Accounts(BaseModel):
     created_at: Optional[datetime]
     created_by: Optional[UUID] = None
     email: Optional[StrictStr] = None
-    id: Optional[UUID] = None
     is_personal_account: StrictBool
     name: StrictStr
     onboarding_completed: Optional[StrictBool] = None
@@ -56,12 +55,12 @@ class Accounts(BaseModel):
     trading_usage_description: Optional[StrictStr] = None
     updated_at: Optional[datetime]
     updated_by: Optional[UUID] = None
-    use_case_features: Optional[Any] = None
-    __properties: ClassVar[List[str]] = ["api_key_created_at", "api_key_expires_at", "api_key_hash", "api_key_last_used_at", "compliance_agreement", "created_at", "created_by", "email", "id", "is_personal_account", "name", "onboarding_completed", "onboarding_step", "picture_url", "primary_owner_user_id", "public_data", "referral_source", "sandbox_api_key_hash", "sandbox_key_created_at", "sandbox_key_expires_at", "sandbox_key_last_used_at", "slug", "terms_accepted_at", "trading_enabled", "trading_usage_description", "updated_at", "updated_by", "use_case_features"]
+    use_case_features: Optional[Dict[str, Any]] = None
+    additional_properties: Dict[str, Any] = {}
+    __properties: ClassVar[List[str]] = ["id", "api_key_created_at", "api_key_expires_at", "api_key_hash", "api_key_last_used_at", "compliance_agreement", "created_at", "created_by", "email", "is_personal_account", "name", "onboarding_completed", "onboarding_step", "picture_url", "primary_owner_user_id", "public_data", "referral_source", "sandbox_api_key_hash", "sandbox_key_created_at", "sandbox_key_expires_at", "sandbox_key_last_used_at", "slug", "terms_accepted_at", "trading_enabled", "trading_usage_description", "updated_at", "updated_by", "use_case_features"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -73,7 +72,8 @@ class Accounts(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -89,8 +89,10 @@ class Accounts(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -98,9 +100,16 @@ class Accounts(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of use_case_features
-        if self.use_case_features:
-            _dict['use_case_features'] = self.use_case_features.to_dict()
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
+        # set to None if id (nullable) is None
+        # and model_fields_set contains the field
+        if self.id is None and "id" in self.model_fields_set:
+            _dict['id'] = None
+
         # set to None if api_key_created_at (nullable) is None
         # and model_fields_set contains the field
         if self.api_key_created_at is None and "api_key_created_at" in self.model_fields_set:
@@ -140,11 +149,6 @@ class Accounts(BaseModel):
         # and model_fields_set contains the field
         if self.email is None and "email" in self.model_fields_set:
             _dict['email'] = None
-
-        # set to None if id (nullable) is None
-        # and model_fields_set contains the field
-        if self.id is None and "id" in self.model_fields_set:
-            _dict['id'] = None
 
         # set to None if onboarding_completed (nullable) is None
         # and model_fields_set contains the field
@@ -238,6 +242,7 @@ class Accounts(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "id": obj.get("id"),
             "api_key_created_at": obj.get("api_key_created_at"),
             "api_key_expires_at": obj.get("api_key_expires_at"),
             "api_key_hash": obj.get("api_key_hash"),
@@ -246,7 +251,6 @@ class Accounts(BaseModel):
             "created_at": obj.get("created_at"),
             "created_by": obj.get("created_by"),
             "email": obj.get("email"),
-            "id": obj.get("id"),
             "is_personal_account": obj.get("is_personal_account"),
             "name": obj.get("name"),
             "onboarding_completed": obj.get("onboarding_completed"),
@@ -265,6 +269,13 @@ class Accounts(BaseModel):
             "trading_usage_description": obj.get("trading_usage_description"),
             "updated_at": obj.get("updated_at"),
             "updated_by": obj.get("updated_by"),
-            "use_case_features": AnyOf.from_dict(obj["use_case_features"]) if obj.get("use_case_features") is not None else None
+            "use_case_features": obj.get("use_case_features")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
+
+

@@ -23,26 +23,24 @@ from typing import Any, ClassVar, Dict, List, Optional
 from uuid import UUID
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class ReauthNotificationPreference(BaseModel):
     """
     Per-connection reauth email notification preference state.
     """ # noqa: E501
+    user_broker_connection_id: UUID
     email_enabled: StrictBool = Field(description="Effective email notification preference for reauth events.")
     is_default: StrictBool = Field(description="True when no explicit preference row has been saved.")
-    last_delivery_at: Optional[datetime] = Field(default=None, description="Most recent reauth notification delivery row timestamp.")
-    last_delivery_status: Optional[StrictStr] = Field(default=None, description="Most recent delivery status recorded by Background.")
-    last_notified_at: Optional[datetime] = Field(default=None, description="Most recent reauth notification timestamp.")
-    opted_out_at: Optional[datetime] = Field(default=None, description="Timestamp when email notification was opted out.")
     preference_source: StrictStr = Field(description="Source of the current preference value.")
-    user_broker_connection_id: UUID
+    opted_out_at: Optional[datetime] = None
+    last_notified_at: Optional[datetime] = None
+    last_delivery_status: Optional[StrictStr] = None
+    last_delivery_at: Optional[datetime] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["email_enabled", "is_default", "last_delivery_at", "last_delivery_status", "last_notified_at", "opted_out_at", "preference_source", "user_broker_connection_id"]
+    __properties: ClassVar[List[str]] = ["user_broker_connection_id", "email_enabled", "is_default", "preference_source", "opted_out_at", "last_notified_at", "last_delivery_status", "last_delivery_at"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -54,7 +52,8 @@ class ReauthNotificationPreference(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -86,25 +85,25 @@ class ReauthNotificationPreference(BaseModel):
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
 
-        # set to None if last_delivery_at (nullable) is None
+        # set to None if opted_out_at (nullable) is None
         # and model_fields_set contains the field
-        if self.last_delivery_at is None and "last_delivery_at" in self.model_fields_set:
-            _dict['last_delivery_at'] = None
-
-        # set to None if last_delivery_status (nullable) is None
-        # and model_fields_set contains the field
-        if self.last_delivery_status is None and "last_delivery_status" in self.model_fields_set:
-            _dict['last_delivery_status'] = None
+        if self.opted_out_at is None and "opted_out_at" in self.model_fields_set:
+            _dict['opted_out_at'] = None
 
         # set to None if last_notified_at (nullable) is None
         # and model_fields_set contains the field
         if self.last_notified_at is None and "last_notified_at" in self.model_fields_set:
             _dict['last_notified_at'] = None
 
-        # set to None if opted_out_at (nullable) is None
+        # set to None if last_delivery_status (nullable) is None
         # and model_fields_set contains the field
-        if self.opted_out_at is None and "opted_out_at" in self.model_fields_set:
-            _dict['opted_out_at'] = None
+        if self.last_delivery_status is None and "last_delivery_status" in self.model_fields_set:
+            _dict['last_delivery_status'] = None
+
+        # set to None if last_delivery_at (nullable) is None
+        # and model_fields_set contains the field
+        if self.last_delivery_at is None and "last_delivery_at" in self.model_fields_set:
+            _dict['last_delivery_at'] = None
 
         return _dict
 
@@ -118,14 +117,14 @@ class ReauthNotificationPreference(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "user_broker_connection_id": obj.get("user_broker_connection_id"),
             "email_enabled": obj.get("email_enabled"),
             "is_default": obj.get("is_default"),
-            "last_delivery_at": obj.get("last_delivery_at"),
-            "last_delivery_status": obj.get("last_delivery_status"),
-            "last_notified_at": obj.get("last_notified_at"),
-            "opted_out_at": obj.get("opted_out_at"),
             "preference_source": obj.get("preference_source"),
-            "user_broker_connection_id": obj.get("user_broker_connection_id")
+            "opted_out_at": obj.get("opted_out_at"),
+            "last_notified_at": obj.get("last_notified_at"),
+            "last_delivery_status": obj.get("last_delivery_status"),
+            "last_delivery_at": obj.get("last_delivery_at")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

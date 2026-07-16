@@ -21,21 +21,19 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FinaticAPIErrorResponse(BaseModel):
     """
     Error response schema for OpenAPI documentation.  Errors include rich domain-specific codes (e.g., ORDER_NOT_FOUND, TRADE_ACCESS_DENIED) mapped to standardized types and HTTP status codes via ERROR_CODE_REGISTRY.
     """ # noqa: E501
-    error: Dict[str, Any] = Field(description="Error details with type (FinaticErrorType), code (domain-specific), message (human-readable), status (HTTP status code), and optional details. Error codes are mapped via ERROR_CODE_REGISTRY - see registry for available codes.")
-    success: Dict[str, Any] = Field(description="Success payload with data=None for errors")
     trace_id: StrictStr = Field(description="Request trace identifier for tracking and debugging")
+    success: Dict[str, Any] = Field(description="Success payload with data=None for errors")
+    error: Dict[str, Any] = Field(description="Error details with type (FinaticErrorType), code (domain-specific), message (human-readable), status (HTTP status code), and optional details. Error codes are mapped via ERROR_CODE_REGISTRY - see registry for available codes.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["error", "success", "trace_id"]
+    __properties: ClassVar[List[str]] = ["trace_id", "success", "error"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -47,7 +45,8 @@ class FinaticAPIErrorResponse(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -91,9 +90,9 @@ class FinaticAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "error": obj.get("error"),
+            "trace_id": obj.get("trace_id"),
             "success": obj.get("success"),
-            "trace_id": obj.get("trace_id")
+            "error": obj.get("error")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

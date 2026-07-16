@@ -19,26 +19,24 @@ import json
 
 from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from finatic_server.models.location_inner import LocationInner
+from finatic_server.models.validation_error_loc_inner import ValidationErrorLocInner
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class ValidationError(BaseModel):
     """
     ValidationError
     """ # noqa: E501
-    ctx: Optional[Dict[str, Any]] = None
-    input: Optional[Any] = None
-    loc: List[LocationInner]
+    loc: List[ValidationErrorLocInner]
     msg: StrictStr
     type: StrictStr
+    input: Optional[Any] = None
+    ctx: Optional[Dict[str, Any]] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["ctx", "input", "loc", "msg", "type"]
+    __properties: ClassVar[List[str]] = ["loc", "msg", "type", "input", "ctx"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -50,7 +48,8 @@ class ValidationError(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -106,11 +105,11 @@ class ValidationError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "ctx": obj.get("ctx"),
-            "input": obj.get("input"),
-            "loc": [LocationInner.from_dict(_item) for _item in obj["loc"]] if obj.get("loc") is not None else None,
+            "loc": [ValidationErrorLocInner.from_dict(_item) for _item in obj["loc"]] if obj.get("loc") is not None else None,
             "msg": obj.get("msg"),
-            "type": obj.get("type")
+            "type": obj.get("type"),
+            "input": obj.get("input"),
+            "ctx": obj.get("ctx")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
