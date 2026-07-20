@@ -14,8 +14,10 @@ FinaticResponse = dict[str, Any]
 
 # Note: At runtime, FinaticResponse[T] is just Dict[str, Any]
 # The generic type parameter T is used for type hints and IntelliSense only
-# The actual structure is: {
-#   "success": {"data": T, "meta": dict | None},
-#   "error": dict | None,
-#   "warning": list[dict] | None
+# The public v1 envelope structure is:
+# {
+#   "traceId": str | None,
+#   "data": T | None,
+#   "warnings": list[dict],
+#   "errors": list[dict],
 # }

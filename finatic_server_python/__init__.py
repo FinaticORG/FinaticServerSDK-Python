@@ -1,23 +1,32 @@
-"""Finatic Server Python SDK
+"""Public import path for the Finatic Server Python SDK.
 
-This package re-exports everything from src to provide a clean import path:
+Install: ``pip install finatic-server-python``
+
+Import::
+
     from finatic_server_python import FinaticServer
 
-This matches the pattern used by:
-    - Node.js: import { FinaticServer } from '@finatic/server-node'
-    - TypeScript: import { FinaticConnect } from '@finatic/client'
+    finatic = FinaticServer(api_key="...")
+    await finatic.v1.create_session()
+    await finatic.v1.create_portal_link()
 
-Package name: finatic-server-python (pip install finatic-server-python)
-Import name: finatic_server_python (from finatic_server_python import ...)
+Package layout:
+
+- ``finatic_server_python`` — stable public import name (this shim re-exports ``src``).
+- ``src`` — hand-written SDK: ``FinaticServer``, ``FinaticServerCore``, ``v1.V1Client``.
+- ``finatic_server`` — generated OpenAPI transport client (``src/openapi/finatic_server``).
+  Use ``finatic_server`` only for low-level generated APIs; prefer ``FinaticServer.v1``.
+
+Portal auth flows (institutions, auth-attempts, discovered accounts, grant consent UI)
+run in **FinaticConnect**, not the server SDK. The server SDK exposes session +
+``portal-links`` creation and post-consent account/grant/webhook APIs.
 """
 
-# Re-export all from src
-# When installed via pip, both src and finatic_server_python are in the same namespace
-# In development, ensure src is importable by adding parent to path if needed
+from __future__ import annotations
+
 import sys
 from pathlib import Path
 
-# Add parent directory to path if src is not importable (development mode)
 parent_dir = str(Path(__file__).parent.parent)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
