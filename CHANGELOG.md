@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Release from 9d9cd9ca5ab93037a171a1131f288806885a093e.
+
 ## 1.0.0
 
 - Align the Python server SDK release lane with the FinaticAPI account-first v1
