@@ -133,6 +133,16 @@ jobs:
           name: finatic-server-python-${{ steps.version.outputs.version }}
           path: dist/*
 
+      - name: Publish to TestPyPI
+        if: steps.mode.outputs.dry_run != 'true' && steps.mode.outputs.repository == 'testpypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+      - name: Publish to PyPI
+        if: steps.mode.outputs.dry_run != 'true' && steps.mode.outputs.repository == 'pypi'
+        uses: pypa/gh-action-pypi-publish@release/v1
+
       - name: Commit version bump and tag
         if: steps.mode.outputs.dry_run != 'true'
         shell: bash
@@ -150,14 +160,5 @@ jobs:
           else
             git tag "${{ steps.version.outputs.tag }}"
           fi
-          git push origin HEAD:main --follow-tags
-
-      - name: Publish to TestPyPI
-        if: steps.mode.outputs.dry_run != 'true' && steps.mode.outputs.repository == 'testpypi'
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-
-      - name: Publish to PyPI
-        if: steps.mode.outputs.dry_run != 'true' && steps.mode.outputs.repository == 'pypi'
-        uses: pypa/gh-action-pypi-publish@release/v1
+          git pull --rebase origin main || true
+          git push origin HEAD:main --follow-tags || echo "Warning: git push failed after publish; package may already be on PyPI."
