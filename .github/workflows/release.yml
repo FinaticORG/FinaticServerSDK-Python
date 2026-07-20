@@ -91,10 +91,6 @@ jobs:
           requested = os.environ["REQUESTED_VERSION"].strip()
           if requested:
               next_version = requested
-          elif current in {"1.0.0", "1.0.1"}:
-              # First v1 PyPI publish: keep 1.0.0 when Trusted Publisher
-              # is only wired for push events (not workflow_dispatch).
-              next_version = "1.0.0"
           else:
               parts = current.split(".")
               if len(parts) != 3 or not all(part.isdigit() for part in parts):
