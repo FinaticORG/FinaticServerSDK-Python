@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.3
+
+- Release sync after PyPI publish.
+
+## 1.0.2
+
+- Release from 6e6639c3189421d195165575ba08f571817f6c6c.
+
 ## 1.0.1
 
 - Release from 9d9cd9ca5ab93037a171a1131f288806885a093e.
