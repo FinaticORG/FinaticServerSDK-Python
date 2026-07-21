@@ -1,8 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
+  # Manual only: auto-publish on every main push re-bumps after version-sync PRs.
   workflow_dispatch:
     inputs:
       dry_run:
