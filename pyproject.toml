@@ -48,7 +48,7 @@ dev = [
     "types-cachetools>=5.3.0",
     "types-python-dateutil>=2.9.0.20260716",
 ]
-integration = ["psycopg[binary]>=3.2.0"]
+integration = ["psycopg[binary]>=3.3.4"]
 
 [project.urls]
 Homepage = "https://github.com/FinaticORG/FinaticServerSDK-Python"
