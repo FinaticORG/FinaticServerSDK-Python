@@ -18,34 +18,34 @@ jobs:
         python-version: ["3.11", "3.12"]
 
     steps:
-      - name: Skip heavy CI for Dependabot
-        if: github.actor == 'dependabot[bot]'
-        run: echo "Skipping heavy product CI for Dependabot (Actions cost control)."
+      - name: Skip heavy CI for Dependabot / release PRs
+        if: github.actor == 'dependabot[bot]' || (github.event_name == 'pull_request' && startsWith(github.event.pull_request.title, 'chore(release):'))
+        run: echo "Skipping heavy product CI for Dependabot or chore(release) PRs (Actions cost control)."
       - uses: actions/checkout@v7
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
 
       - uses: actions/setup-python@v7
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
         with:
           python-version: ${{ matrix.python-version }}
 
       - uses: astral-sh/setup-uv@v7
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
         with:
           enable-cache: true
 
       - name: Install package with dev dependencies
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
         run: |
           uv venv
           uv pip install -e ".[dev]"
 
       - name: Compile package
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
         run: uv run python -m compileall finatic_server_python src tests
 
       - name: Run unit tests with coverage gate
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
         run: >
           uv run pytest -q -m "not integration"
           --cov=src
@@ -54,5 +54,5 @@ jobs:
           --cov-fail-under=50
 
       - name: Build package
-        if: github.actor != 'dependabot[bot]'
+        if: github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || !startsWith(github.event.pull_request.title, 'chore(release):'))
         run: uv run python -m build
