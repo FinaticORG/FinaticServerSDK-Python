@@ -1,18 +1,6 @@
 # Finatic Server SDK (Python)
 
-Python SDK for server-side Finatic integrations.
-
-Use this package to authenticate with Finatic from Python services, generate client tokens, and retrieve standardized broker-domain data.
-
-## Version lines (FDX v1)
-
-| Version | API surface | Use when |
-|---------|-------------|----------|
-| **1.0.0** | `/api/v1/*` via `FinaticServer.v1` | New account-grant integrations |
-
-The 1.0 line does not ship generated beta broker/company clients, connection-first models, or
-inactive position-lot types. The generated transport source is maintained for the account-first
-v1/session surface used by the public facade.
+Python SDK for embedding Finatic in **your backend**. Keep the company API key on the server. Mint a 90-second one-time token for the browser Client SDK, or start a session and redirect to Connect.
 
 ## Install
 
@@ -20,102 +8,94 @@ v1/session surface used by the public facade.
 pip install finatic-server-python
 ```
 
-## Quick Start
+## Quick start
 
 ```python
-from finatic_server_python import FinaticServer
-
-finatic = await FinaticServer.init(api_key="your-api-key")
-token = await finatic.get_token()
-positions = await finatic.get_all_positions()
-```
-
-## Package layout
-
-| Name | Role |
-|------|------|
-| `finatic-server-python` | PyPI package (`pip install finatic-server-python`) |
-| `finatic_server_python` | Public import path (`from finatic_server_python import FinaticServer`) |
-| `src` | Hand-written SDK (`FinaticServer`, `v1.V1Client`) |
-| `finatic_server` | Generated OpenAPI transport client (`src/openapi/finatic_server`) |
-
-Portal connect flows (institutions, auth-attempts, discovered accounts, grant UI)
-run in **FinaticConnect**, not the server SDK. The server SDK exposes session
-management, `portal-links` creation, and post-consent account/grant/webhook APIs.
-
-## Account-First v1 Preview
-
-The v1 facade targets the SDK OpenAPI contract (`spec-sdk.yaml`) and sends
-`X-Finatic-Environment` on every request.
-
-```python
+import os
 from finatic_server_python import FinaticServer
 
 finatic = FinaticServer(
-    api_key="fntc_live_your_key",
-    sdk_config={"environment": "live"},
+    api_key=os.environ["FINATIC_API_KEY"],
+    sdk_config={"environment": "sandbox"},
 )
 
-session = await finatic.v1.create_session()
-portal_link = await finatic.v1.create_portal_link()
-# Open portal_link URL in FinaticConnect for user auth + grant consent
+# Client iframe: 90-second token. Never send the API key to the browser.
+one_time_token = await finatic.v1.get_token()
 
-accounts = await finatic.v1.list_accounts()
-orders = await finatic.v1.list_account_orders("broker-account-id")
+# Redirect flow: start a session first (get_portal_url requires it).
+session = await finatic.v1.start_session()
+if not session.get("session_id"):
+    raise RuntimeError(session.get("error") or "Session start failed")
+portal_url = await finatic.v1.get_portal_url(mode="dark")
+
+# After account.grant.created, start a session for that portal user, then read.
+portal_user_id = "user-from-connect-onSuccess"
+authed = await finatic.v1.start_session(user_id=portal_user_id)
+accounts = await finatic.v1.list_accounts(include_sync_status=True)
+if accounts.get("errors"):
+    raise RuntimeError(accounts["errors"])
+if not accounts.get("data"):
+    raise RuntimeError("No granted accounts yet")
+account_id = accounts["data"][0]["accountId"]
+positions = await finatic.v1.list_positions(account_id)
+```
+
+Server `v1` data methods return `{ "traceId", "data", "warnings", "errors" }`. Check `errors` before using `data`.
+
+Use `sdk_config={"environment": "sandbox"}` for Finatic synthetic data (`fntc_sandbox_` keys). Broker paper/sim accounts stay `live`.
+
+`FinaticServer.init(...)` is a shortcut that calls `start_session`. Use the constructor + `get_token()` when you only need to hand a token to the browser.
+
+## Embed Connect
+
+Connect UI lives in **FinaticConnect**. This SDK does not open an iframe.
+
+1. `v1.get_token()` → pass the token to `@finatic/client` `FinaticConnect.init(token)` in the browser (token TTL is 90 seconds).
+2. Or `v1.start_session()` then `v1.get_portal_url(...)` → redirect. Treat the full URL as secret.
+
+Wait for HTTPS webhook `account.grant.created` (or poll `list_accounts` on an ACTIVE session) before account-scoped reads.
+
+## Trading
+
+Fetch the broker schema, then send an idempotent command:
+
+```python
+schema = await finatic.v1.get_account_order_schema(account_id, "place")
 created = await finatic.v1.create_account_order(
-    "broker-account-id",
+    account_id,
     {"symbol": "AAPL", "quantity": 1, "side": "BUY", "type": "MARKET"},
     idempotency_key="partner-order-123",
 )
 ```
 
-Use `sdk_config={"environment": "sandbox"}` for Finatic synthetic sandbox data.
-Broker paper or simulated accounts remain `live` environment accounts.
+Python wraps the dict as `{"order": ...}` on the wire. `idempotency_key` is required.
 
-### OpenAPI Contract Artifact
+## Package layout
 
-The v1 facade is validated against `artifacts/openapi/finaticapi-v1.json`, which
-is exported from the FinaticAPI account-first branch. Refresh it with:
+| Name | Role |
+|------|------|
+| `finatic-server-python` | PyPI package |
+| `finatic_server_python` | Public import |
+| `src` | Hand-written `FinaticServer` and `v1.V1Client` |
+| `finatic_server` | Generated OpenAPI transport — prefer `FinaticServer.v1` |
 
-```bash
-env PYTHONPATH=/home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/src:/home/claw/.openclaw/workspace/worktrees/FinaticCore-pr171-openapi/src /home/claw/.openclaw/workspace/repos/FinaticAPI/.venv/bin/python /home/claw/.openclaw/workspace/worktrees/FinaticAPI-pr174-openapi/scripts/export_openapi.py --output /home/claw/.openclaw/workspace/repos/FinaticServerSDK-Python/artifacts/openapi/finaticapi-v1.json
-```
-
-PR #25 currently uses FinaticAPI PR #174 head `4ca17320` and finaticCore PR
-#171 head `0a126bed` as branch-ready dependency inputs. The package version is
-prepared as `1.0.0` for the API v1 semver lane, but the coordinated FDX
-account-consent operator hold still controls merge and release timing.
-
-## Common Commands
+## Common commands
 
 | Task | Command |
-|---|---|
-| Install in editable mode | `uv pip install -e .` |
-| Run tests | `pytest` |
-| Build package | `python -m build` |
-| Lint | `ruff check .` |
-| Format | `ruff format .` |
-
-## Core Capabilities
-
-- API-key initialization and session management.
-- Portal URL generation for end-user authentication.
-- One-time token generation for client SDK sessions.
-- Typed access to orders, positions, accounts, and balances.
-- Consistent response/error structures across endpoints.
+|------|---------|
+| Test | `pytest` |
+| Type check | `mypy` |
 
 ## Documentation
 
-- Product docs: [https://finatic.dev/docs](https://finatic.dev/docs)
+This README is the Python SDK contract. Fetch the rest before writing a full integration:
+
+- Quick start: [https://finatic.dev/docs/quick-start/quick-start](https://finatic.dev/docs/quick-start/quick-start)
+- Client SDK README: [https://github.com/FinaticORG/FinaticClientSDK/blob/develop/README.md](https://github.com/FinaticORG/FinaticClientSDK/blob/develop/README.md)
+- Node SDK README: [https://github.com/FinaticORG/FinaticServerSDK-Node/blob/develop/README.md](https://github.com/FinaticORG/FinaticServerSDK-Node/blob/develop/README.md)
+- Embed Connect: [https://github.com/FinaticORG/FinaticConnect/blob/develop/docs/embedding.md](https://github.com/FinaticORG/FinaticConnect/blob/develop/docs/embedding.md)
+- Demo apps: [https://github.com/FinaticORG/FinaticDemoApps/blob/develop/README.md](https://github.com/FinaticORG/FinaticDemoApps/blob/develop/README.md)
 - API reference: [https://finatic.dev/docs/api-reference](https://finatic.dev/docs/api-reference)
-- LLM context doc: [https://finatic.dev/llms.txt](https://finatic.dev/llms.txt)
-
-## Using Finatic with AI
-
-Use this SDK in Python AI/data systems to:
-
-- query balances, positions, and orders across connected brokers
-- normalize broker interactions behind one SDK surface
-- feed structured brokerage data into analytics or model workflows
-
-MCP support is coming soon.
+- OpenAPI: [https://finatic.dev/openapi.json](https://finatic.dev/openapi.json)
+- Agent index: [https://finatic.dev/llms.txt](https://finatic.dev/llms.txt)
+- Agent notes: [https://finatic.dev/AGENTS.md](https://finatic.dev/AGENTS.md)
