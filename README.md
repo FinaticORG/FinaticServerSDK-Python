@@ -31,6 +31,8 @@ portal_url = await finatic.v1.get_portal_url(mode="dark")
 # After account.grant.created, start a session for that portal user, then read.
 portal_user_id = "user-from-connect-onSuccess"
 authed = await finatic.v1.start_session(user_id=portal_user_id)
+if not authed.get("session_id"):
+    raise RuntimeError(authed.get("error") or "Authenticated session start failed")
 accounts = await finatic.v1.list_accounts(include_sync_status=True)
 if accounts.get("errors"):
     raise RuntimeError(accounts["errors"])

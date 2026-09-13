@@ -52,3 +52,19 @@ def test_public_init_docstring_uses_published_v1_methods() -> None:
             snippet not in init_module
         ), f"finatic_server_python.__init__ still documents unpublished API: {snippet}"
     assert "v1.get_token()" in init_module
+
+
+def test_readme_guards_authenticated_session_before_account_reads() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    authenticated_session = readme.index(
+        "authed = await finatic.v1.start_session(user_id=portal_user_id)"
+    )
+    authenticated_session_guard = readme.index('if not authed.get("session_id"):')
+    account_read = readme.index(
+        "accounts = await finatic.v1.list_accounts(include_sync_status=True)"
+    )
+    assert authenticated_session < authenticated_session_guard < account_read
+    assert (
+        'raise RuntimeError(authed.get("error") or "Authenticated session start failed")'
+        in readme
+    )
