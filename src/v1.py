@@ -130,6 +130,16 @@ class V1Client:
         )
 
     async def get_token(self, api_key: str | None = None) -> str:
+        """Mint a 90-second one-time token for the browser Client SDK.
+
+        Does not start a session. For redirect, call ``start_session()`` then
+        ``get_portal_url()``.
+
+        @example
+        ```python
+        token = await finatic.v1.get_token()
+        ```
+        """
         response = await self.init_session(api_key)
         if response.get("errors"):
             errors = response["errors"]
@@ -222,6 +232,14 @@ class V1Client:
         email: str | None = None,
         mode: Literal["light", "dark"] | None = None,
     ) -> str:
+        """Return a Connect redirect URL. Does not open a browser iframe.
+
+        @example
+        ```python
+        session = await finatic.v1.start_session()
+        portal_url = await finatic.v1.get_portal_url(mode='dark')
+        ```
+        """
         if not self.session_id:
             raise ValueError("Session not initialized. Call v1.start_session() first.")
 
@@ -289,6 +307,14 @@ class V1Client:
         offset: int | None = None,
         include_sync_status: bool | None = None,
     ) -> FinaticResponse:
+        """List granted financial accounts. Server envelope uses ``data`` / ``errors``.
+
+        @example
+        ```python
+        result = await finatic.v1.list_accounts()
+        print(result.get('data'), result.get('traceId'))
+        ```
+        """
         return await self._request(
             "GET",
             "/api/v1/accounts",
@@ -329,6 +355,13 @@ class V1Client:
     async def list_positions(
         self, account_id: str, *, limit: int | None = None, offset: int | None = None
     ) -> FinaticResponse:
+        """Positions for one financial account.
+
+        @example
+        ```python
+        result = await finatic.v1.list_positions('acct_123')
+        ```
+        """
         return await self.list_account_resource(
             account_id, "positions", limit=limit, offset=offset
         )
