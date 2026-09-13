@@ -33,6 +33,11 @@ def test_readme_uses_published_v1_methods() -> None:
         "https://github.com/FinaticORG/FinaticServerSDK-Node/blob/develop/README.md"
         in readme
     )
+    assert "https://finatic.dev/docs/quick-start/account-grants" in readme
+    assert (
+        "https://github.com/FinaticORG/FinaticConnect/blob/develop/docs/embedding.md"
+        not in readme
+    )
     assert "https://finatic.dev/llms.txt" in readme
     assert "https://finatic.dev/AGENTS.md" in readme
     assert "https://finatic.dev/openapi.json" in readme

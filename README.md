@@ -93,7 +93,7 @@ This README is the Python SDK contract. Fetch the rest before writing a full int
 - Quick start: [https://finatic.dev/docs/quick-start/quick-start](https://finatic.dev/docs/quick-start/quick-start)
 - Client SDK README: [https://github.com/FinaticORG/FinaticClientSDK/blob/develop/README.md](https://github.com/FinaticORG/FinaticClientSDK/blob/develop/README.md)
 - Node SDK README: [https://github.com/FinaticORG/FinaticServerSDK-Node/blob/develop/README.md](https://github.com/FinaticORG/FinaticServerSDK-Node/blob/develop/README.md)
-- Embed Connect: [https://github.com/FinaticORG/FinaticConnect/blob/develop/docs/embedding.md](https://github.com/FinaticORG/FinaticConnect/blob/develop/docs/embedding.md)
+- Embed Connect: [https://finatic.dev/docs/quick-start/account-grants](https://finatic.dev/docs/quick-start/account-grants)
 - Demo apps: [https://github.com/FinaticORG/FinaticDemoApps/blob/develop/README.md](https://github.com/FinaticORG/FinaticDemoApps/blob/develop/README.md)
 - API reference: [https://finatic.dev/docs/api-reference](https://finatic.dev/docs/api-reference)
 - OpenAPI: [https://finatic.dev/openapi.json](https://finatic.dev/openapi.json)
