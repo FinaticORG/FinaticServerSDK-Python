@@ -83,9 +83,6 @@ yarn.lock
 # TernJS port file
 .tern-port
 
-# Isolated feature worktrees
-.worktrees/
-
 # Python specific
 __pycache__/
 *.py[cod]
