@@ -11,35 +11,42 @@ pip install finatic-server-python
 ## Quick start
 
 ```python
+import asyncio
 import os
+
 from finatic_server_python import FinaticServer
 
-finatic = FinaticServer(
-    api_key=os.environ["FINATIC_API_KEY"],
-    sdk_config={"environment": "sandbox"},
-)
 
-# Client iframe: 90-second token. Never send the API key to the browser.
-one_time_token = await finatic.v1.get_token()
+async def main() -> None:
+    finatic = FinaticServer(
+        api_key=os.environ["FINATIC_API_KEY"],
+        sdk_config={"environment": "sandbox"},
+    )
 
-# Redirect flow: start a session first (get_portal_url requires it).
-session = await finatic.v1.start_session()
-if not session.get("session_id"):
-    raise RuntimeError(session.get("error") or "Session start failed")
-portal_url = await finatic.v1.get_portal_url(mode="dark")
+    # Client iframe: 90-second token. Never send the API key to the browser.
+    one_time_token = await finatic.v1.get_token()
 
-# After account.grant.created, start a session for that portal user, then read.
-portal_user_id = "user-from-connect-onSuccess"
-authed = await finatic.v1.start_session(user_id=portal_user_id)
-if not authed.get("session_id"):
-    raise RuntimeError(authed.get("error") or "Authenticated session start failed")
-accounts = await finatic.v1.list_accounts(include_sync_status=True)
-if accounts.get("errors"):
-    raise RuntimeError(accounts["errors"])
-if not accounts.get("data"):
-    raise RuntimeError("No granted accounts yet")
-account_id = accounts["data"][0]["accountId"]
-positions = await finatic.v1.list_positions(account_id)
+    # Redirect flow: start a session first (get_portal_url requires it).
+    session = await finatic.v1.start_session()
+    if not session.get("session_id"):
+        raise RuntimeError(session.get("error") or "Session start failed")
+    portal_url = await finatic.v1.get_portal_url(mode="dark")
+
+    # After account.grant.created, start a session for that portal user, then read.
+    portal_user_id = "user-from-connect-onSuccess"
+    authed = await finatic.v1.start_session(user_id=portal_user_id)
+    if not authed.get("session_id"):
+        raise RuntimeError(authed.get("error") or "Authenticated session start failed")
+    accounts = await finatic.v1.list_accounts(include_sync_status=True)
+    if accounts.get("errors"):
+        raise RuntimeError(accounts["errors"])
+    if not accounts.get("data"):
+        raise RuntimeError("No granted accounts yet")
+    account_id = accounts["data"][0]["accountId"]
+    positions = await finatic.v1.list_positions(account_id)
+
+
+asyncio.run(main())
 ```
 
 Server `v1` data methods return `{ "traceId", "data", "warnings", "errors" }`. Check `errors` before using `data`.

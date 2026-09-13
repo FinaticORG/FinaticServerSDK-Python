@@ -43,6 +43,12 @@ def test_readme_uses_published_v1_methods() -> None:
     assert "https://finatic.dev/openapi.json" in readme
 
 
+def test_readme_quick_start_is_standalone_python() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    quick_start = readme.split("```python", maxsplit=1)[1].split("```", maxsplit=1)[0]
+    compile(quick_start, "README.md quick start", "exec")
+
+
 def test_public_init_docstring_uses_published_v1_methods() -> None:
     init_module = (ROOT / "finatic_server_python" / "__init__.py").read_text(
         encoding="utf-8"
