@@ -6,20 +6,21 @@ Import::
 
     from finatic_server_python import FinaticServer
 
-    finatic = FinaticServer(api_key="...")
-    await finatic.v1.create_session()
-    await finatic.v1.create_portal_link()
+    finatic = FinaticServer(
+        api_key="fntc_sandbox_your_key",
+        sdk_config={"environment": "sandbox"},
+    )
+    token = await finatic.v1.get_token()  # 90 seconds; send to the browser only
 
 Package layout:
 
 - ``finatic_server_python`` — stable public import name (this shim re-exports ``src``).
 - ``src`` — hand-written SDK: ``FinaticServer``, ``FinaticServerCore``, ``v1.V1Client``.
 - ``finatic_server`` — generated OpenAPI transport client (``src/openapi/finatic_server``).
-  Use ``finatic_server`` only for low-level generated APIs; prefer ``FinaticServer.v1``.
+  Prefer ``FinaticServer.v1``.
 
-Portal auth flows (institutions, auth-attempts, discovered accounts, grant consent UI)
-run in **FinaticConnect**, not the server SDK. The server SDK exposes session +
-``portal-links`` creation and post-consent account/grant/webhook APIs.
+Portal auth UX runs in **FinaticConnect**. This SDK mints one-time tokens and portal URLs
+and exposes post-grant account, order, grant, and webhook APIs.
 """
 
 from __future__ import annotations
