@@ -18,11 +18,11 @@ from finatic_server.configuration import Configuration
 
 from .finatic_fdx_types import (
     AccountOrderPayload,
-    FDXBrokerOrder,
-    FDXBrokerOrderCommandResult,
-    FDXBrokerOrderEvent,
-    FDXBrokerOrderFill,
-    FDXBrokerPosition,
+    FDXBrokerOrderCommandResultDict,
+    FDXBrokerOrderDict,
+    FDXBrokerOrderEventDict,
+    FDXBrokerOrderFillDict,
+    FDXBrokerPositionDict,
 )
 from .types import FinaticResponse
 from .utils.url_utils import (
@@ -363,7 +363,7 @@ class V1Client:
 
     async def list_positions(
         self, account_id: str, *, limit: int | None = None, offset: int | None = None
-    ) -> FinaticResponse[list[FDXBrokerPosition]]:
+    ) -> FinaticResponse[list[FDXBrokerPositionDict]]:
         """Positions for one financial account.
 
         @example
@@ -384,28 +384,28 @@ class V1Client:
 
     async def list_orders(
         self, account_id: str, *, limit: int | None = None, offset: int | None = None
-    ) -> FinaticResponse[list[FDXBrokerOrder]]:
+    ) -> FinaticResponse[list[FDXBrokerOrderDict]]:
         return await self.list_account_resource(
             account_id, "orders", limit=limit, offset=offset
         )
 
     async def get_account_order(
         self, account_id: str, order_id: str
-    ) -> FinaticResponse[FDXBrokerOrder]:
+    ) -> FinaticResponse[FDXBrokerOrderDict]:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}"
         )
 
     async def get_account_order_fills(
         self, account_id: str, order_id: str
-    ) -> FinaticResponse[list[FDXBrokerOrderFill]]:
+    ) -> FinaticResponse[list[FDXBrokerOrderFillDict]]:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}/fills"
         )
 
     async def get_account_order_events(
         self, account_id: str, order_id: str
-    ) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
+    ) -> FinaticResponse[list[FDXBrokerOrderEventDict]]:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}/events"
         )
@@ -432,7 +432,7 @@ class V1Client:
         order: AccountOrderPayload | Mapping[str, Any],
         *,
         idempotency_key: str,
-    ) -> FinaticResponse[FDXBrokerOrderCommandResult]:
+    ) -> FinaticResponse[FDXBrokerOrderCommandResultDict]:
         return await self._account_order_request(
             "POST", f"/api/v1/accounts/{account_id}/orders", order, idempotency_key
         )
@@ -444,7 +444,7 @@ class V1Client:
         order: AccountOrderPayload | Mapping[str, Any],
         *,
         idempotency_key: str,
-    ) -> FinaticResponse[FDXBrokerOrderCommandResult]:
+    ) -> FinaticResponse[FDXBrokerOrderCommandResultDict]:
         return await self._account_order_request(
             "PATCH",
             f"/api/v1/accounts/{account_id}/orders/{order_id}",
@@ -522,7 +522,7 @@ class V1Client:
         path: str,
         order: AccountOrderPayload | Mapping[str, Any] | None,
         idempotency_key: str,
-    ) -> FinaticResponse[FDXBrokerOrderCommandResult]:
+    ) -> FinaticResponse[FDXBrokerOrderCommandResultDict]:
         if not idempotency_key:
             raise ValueError("idempotency_key is required for account order commands")
         headers = {"Idempotency-Key": idempotency_key}

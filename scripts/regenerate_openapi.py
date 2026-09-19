@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = ROOT / "artifacts/openapi/finaticapi-v1.json"
 PROVENANCE = ROOT / "artifacts/openapi/finaticapi-v1.provenance.json"
 MANIFEST = ROOT / "scripts/openapi-account-manifest.txt"
+COMPLETE_MANIFEST = ROOT / "scripts/openapi-generated-tree-manifest.json"
 GENERATED_ROOT = ROOT / "src/openapi"
 PACKAGE_ROOT = Path("finatic_server")
 GENERATOR_VERSION = "7.18.0"
@@ -37,6 +38,8 @@ SUPPORTING_FILES = {
     PACKAGE_ROOT / "exceptions.py",
     PACKAGE_ROOT / "rest.py",
 }
+
+LEGACY_PROVENANCE = "origin/develop@4451280121ebd9e29d0bd88e1adeadfad509a8d4"
 
 
 def normalize_generated(content: bytes) -> bytes:
@@ -187,6 +190,75 @@ def synchronize(output: Path, files: set[Path], write: bool) -> bool:
     return clean or write
 
 
+def committed_generated_files() -> set[Path]:
+    package = GENERATED_ROOT / PACKAGE_ROOT
+    return {
+        path.relative_to(GENERATED_ROOT)
+        for path in package.rglob("*")
+        if path.is_file()
+        and "__pycache__" not in path.parts
+        and path.suffix not in {".pyc", ".pyo"}
+    }
+
+
+def write_complete_manifest(current_files: set[Path]) -> None:
+    files = []
+    for relative in sorted(committed_generated_files()):
+        content = (GENERATED_ROOT / relative).read_bytes()
+        files.append(
+            {
+                "path": relative.as_posix(),
+                "provenance": (
+                    "current_artifact"
+                    if relative in current_files
+                    else "legacy_snapshot"
+                ),
+                "sha256": hashlib.sha256(content).hexdigest(),
+            }
+        )
+    payload = {
+        "version": 1,
+        "current_artifact": json.loads(PROVENANCE.read_text(encoding="utf-8")),
+        "legacy_snapshot": LEGACY_PROVENANCE,
+        "files": files,
+    }
+    COMPLETE_MANIFEST.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    print(f"updated {COMPLETE_MANIFEST.relative_to(ROOT)}")
+
+
+def verify_complete_manifest(current_files: set[Path]) -> bool:
+    payload = json.loads(COMPLETE_MANIFEST.read_text(encoding="utf-8"))
+    entries = {Path(item["path"]): item for item in payload["files"]}
+    committed = committed_generated_files()
+    clean = True
+    if committed != set(entries):
+        clean = False
+        print("Complete generated-tree file manifest is stale.", file=sys.stderr)
+        for missing in sorted(committed - set(entries)):
+            print(f"  add: src/openapi/{missing}", file=sys.stderr)
+        for extra in sorted(set(entries) - committed):
+            print(f"  remove: src/openapi/{extra}", file=sys.stderr)
+    manifest_current = {
+        path
+        for path, item in entries.items()
+        if item["provenance"] == "current_artifact"
+    }
+    if manifest_current != current_files:
+        clean = False
+        print(
+            "Complete manifest current-artifact classification is stale.",
+            file=sys.stderr,
+        )
+    for relative in sorted(committed & set(entries)):
+        digest = hashlib.sha256((GENERATED_ROOT / relative).read_bytes()).hexdigest()
+        if digest != entries[relative]["sha256"]:
+            clean = False
+            print(f"generated tree drift: src/openapi/{relative}", file=sys.stderr)
+    return clean
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group()
@@ -195,6 +267,11 @@ def parse_args() -> argparse.Namespace:
         "--print-manifest",
         action="store_true",
         help="print the generated transitive file manifest",
+    )
+    mode.add_argument(
+        "--write-complete-manifest",
+        action="store_true",
+        help="record checksums and provenance for the complete committed generated tree",
     )
     return parser.parse_args()
 
@@ -210,10 +287,26 @@ def main() -> int:
             if args.print_manifest:
                 show_manifest(actual)
                 return 0
+            if args.write_complete_manifest:
+                write_complete_manifest(actual)
+                return 0
             expected = manifest_files()
             if not verify_manifest(actual, expected):
                 return 1
             if not synchronize(output, actual, args.write):
+                return 1
+            if not verify_complete_manifest(actual):
+                return 1
+            typed_dict_check = subprocess.run(
+                [
+                    sys.executable,
+                    str(ROOT / "scripts/generate_fdx_typeddicts.py"),
+                    "--check",
+                ],
+                cwd=ROOT,
+                check=False,
+            )
+            if typed_dict_check.returncode != 0:
                 return 1
     except (KeyError, OSError, RuntimeError, ValueError) as error:
         print(f"OpenAPI generation check failed: {error}", file=sys.stderr)

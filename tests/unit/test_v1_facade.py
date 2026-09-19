@@ -52,6 +52,32 @@ class FakeApiClient:
         return FakeResponse({"success": {"data": [], "meta": None}, "error": None})
 
 
+class DescriptorApiClient(FakeApiClient):
+    def call_api(
+        self,
+        method: str,
+        url: str,
+        header_params: dict[str, str] | None = None,
+        body: dict[str, Any] | None = None,
+    ) -> FakeResponse:
+        instrument = {
+            "version": "1",
+            "finaticInstrumentId": "finatic:future:MGCZ6",
+            "displaySymbol": "MGCZ6",
+            "assetType": "FUTURE",
+            "future": {"productRoot": "MGC", "identityQuality": "EXACT"},
+        }
+        if url.endswith("/fills"):
+            data = [{"fillId": "fill-1", "instrument": instrument}]
+        elif url.endswith("/events"):
+            data = [{"eventId": "event-1", "affectedInstruments": [instrument]}]
+        elif url.endswith("/positions"):
+            data = [{"id": "position-1", "instrument": instrument}]
+        else:
+            data = [{"orderId": "order-1", "legs": [{"instrument": instrument}]}]
+        return FakeResponse({"data": data, "warnings": [], "errors": []})
+
+
 V1_DATA_OPERATION_METHODS = {
     ("GET", "/api/v1/account-grants"): "list_account_grants",
     ("GET", "/api/v1/account-grants/{grantId}"): "get_account_grant",
@@ -355,3 +381,24 @@ def test_v1_reads_trace_header_from_generated_response() -> None:
 
     assert response["traceId"] == "trace-from-generated-response"
     assert response["data"] == {"ok": True}
+
+
+@pytest.mark.asyncio
+async def test_descriptor_facade_methods_return_typed_raw_mappings() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    sdk.v1.api_client = DescriptorApiClient()  # type: ignore[assignment]
+
+    orders = (await sdk.v1.list_orders("account-1"))["data"] or []
+    fills = (await sdk.v1.get_account_order_fills("account-1", "order-1"))["data"] or []
+    events = (await sdk.v1.get_account_order_events("account-1", "order-1"))[
+        "data"
+    ] or []
+    positions = (await sdk.v1.list_positions("account-1"))["data"] or []
+
+    assert isinstance(orders[0], dict)
+    assert orders[0]["legs"][0]["instrument"]["displaySymbol"] == "MGCZ6"
+    assert fills[0]["instrument"]["finaticInstrumentId"] == "finatic:future:MGCZ6"
+    assert events[0]["affectedInstruments"][0]["future"]["identityQuality"] == "EXACT"
+    assert positions[0]["instrument"]["future"]["productRoot"] == "MGC"

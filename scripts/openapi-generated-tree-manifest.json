@@ -1,0 +1,2156 @@
+{
+  "current_artifact": {
+    "artifact_path": "artifacts/openapi/finaticapi-v1.json",
+    "generator": "@openapitools/openapi-generator-cli",
+    "generator_library": "asyncio",
+    "generator_version": "7.18.0",
+    "sha256": "5c450a4e43aaad1e0f30d0bf0705183b0b882c86308ff78d9ff05cf2bde8054f",
+    "source_pr": 748,
+    "source_repo": "FinaticORG/FinaticAPI",
+    "source_sha": "7e45c28e68b4e7fad7f7f890983ffe44e2ff1279"
+  },
+  "files": [
+    {
+      "path": "finatic_server/__init__.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "10c5042dcf20bb55152f1e1a7a879a60f6072076cc931b7ac30702c79493a6b4"
+    },
+    {
+      "path": "finatic_server/api/__init__.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e3e9c8b7590c7e8ec2b409e4338b6272e639e3986798263061efb3c47c51669a"
+    },
+    {
+      "path": "finatic_server/api/account_grants_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "adda2235ed2c0ef54813f0fc888552e5469c3747533ab11576f1f57e4265925c"
+    },
+    {
+      "path": "finatic_server/api/accounts_api.py",
+      "provenance": "current_artifact",
+      "sha256": "83678694f8db843c3d5923dd0700d9ccacd590b83d842341175fe9dd6b07f717"
+    },
+    {
+      "path": "finatic_server/api/consents_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "46daf236abfb5be356b08dde0cfd3fecb32a85bbaeea0899f210555607af41de"
+    },
+    {
+      "path": "finatic_server/api/default_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "37530026369ffa3f101cc24bd7a6c88bbabb1e65f746d4b37a5bb58e1225ac2b"
+    },
+    {
+      "path": "finatic_server/api/owner_portal_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6a5c5f2f937cd662adeb543b64f9cab542ab352ec03677166354756f2811c421"
+    },
+    {
+      "path": "finatic_server/api/portal_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "143ef52526c4074b6e74b8ce29ce29f01f2d15bc7a40a1a3aeb6a24321c7929d"
+    },
+    {
+      "path": "finatic_server/api/session_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "5c613b11820ee233f83a6c81b6352c729c1ab1987fc515a8d101b135bd10af31"
+    },
+    {
+      "path": "finatic_server/api/sessions_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "34efd28cf053a8c522f85d3b837dba0f6a0036ec634d44d1990bb3885ee457e3"
+    },
+    {
+      "path": "finatic_server/api/webhooks_api.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "07945c135389b1db2f55e1a6e1117a5ed6134093f4c956a98b2d72415bd491e1"
+    },
+    {
+      "path": "finatic_server/api_client.py",
+      "provenance": "current_artifact",
+      "sha256": "ccdf710a44384369e1726e68082633984dae2ca4854c591b67a083d3135b6aea"
+    },
+    {
+      "path": "finatic_server/api_response.py",
+      "provenance": "current_artifact",
+      "sha256": "78cc70d66a6625ca0667782cf73ea3338a18a19d741a3937df7b3db0ac46bfbb"
+    },
+    {
+      "path": "finatic_server/configuration.py",
+      "provenance": "current_artifact",
+      "sha256": "545a9ff34b815dfaba72f46134bda88c38c052db2463035fdba4d8cd7ed6c7bf"
+    },
+    {
+      "path": "finatic_server/exceptions.py",
+      "provenance": "current_artifact",
+      "sha256": "759a1622d4ebdcd7156947fe66d908fa727da790aa26b3c0262c7619991e59af"
+    },
+    {
+      "path": "finatic_server/models/__init__.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "073077ac09c62dfac14ce6fc04eb84bce522c9f0e3626de194bbc51970118057"
+    },
+    {
+      "path": "finatic_server/models/account_order_command_request.py",
+      "provenance": "current_artifact",
+      "sha256": "eef4e843cf1588e9b42695239842d55c8aa038f43d5f950e3674e4787a730a10"
+    },
+    {
+      "path": "finatic_server/models/account_order_payload.py",
+      "provenance": "current_artifact",
+      "sha256": "88a3e2cf86cda7cba5bc2de5cf190421c1933bb959f42898790dead6f2345231"
+    },
+    {
+      "path": "finatic_server/models/account_order_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "eb06d1bb485f474660ee6931d921a385b2e3581959dd8d85037fe680b5560ede"
+    },
+    {
+      "path": "finatic_server/models/accountnumber.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bb6b910c8785bf0e4248a2ce565391b18018384f57fb2df9442125537c0de79e"
+    },
+    {
+      "path": "finatic_server/models/accountnumber1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0b3bec8a4b1644ac85c1491c64dcf8d88dd556222ec0e4536ed0fe6213560880"
+    },
+    {
+      "path": "finatic_server/models/accountnumber2.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6bf476024ffb23cf6fde076c81f42eef7af5603a26feb1667b268a1b73ad825f"
+    },
+    {
+      "path": "finatic_server/models/accounts.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ff3f0e0a89a64daffd256da66283d968f001905aa6d17a87ad7d837c84a058b4"
+    },
+    {
+      "path": "finatic_server/models/alpaca_crypto_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2eb57abaf0c14d61dc97163ddcf975532345193db9c59b9f609260d8a229a5ee"
+    },
+    {
+      "path": "finatic_server/models/alpaca_crypto_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "21950b6f42356960b6963073588380dd978a44ef675eb22ae40a14b54a20960d"
+    },
+    {
+      "path": "finatic_server/models/alpaca_crypto_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "098d67a69601388128989f6c80d4c6c1899ebf6bf7760898a225c6ebd2a0f843"
+    },
+    {
+      "path": "finatic_server/models/alpaca_equity_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "db910434749b7b56561f1b15e5c3170890dc94225429eb94547ec2bac4ae1c0c"
+    },
+    {
+      "path": "finatic_server/models/alpaca_equity_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2003aed478fb520374caec73ee32ea33268a9f899c012195184feb2ecbe683ce"
+    },
+    {
+      "path": "finatic_server/models/alpaca_equity_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8c4774327db2486b7d20ce4bb453a65634146a4bc1fe78df3f1acbf421e1722e"
+    },
+    {
+      "path": "finatic_server/models/alpaca_equity_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2ff526c0a97346bfe38e6415c124d29bcde07d22818608b8feceb301a28e3a2d"
+    },
+    {
+      "path": "finatic_server/models/alpaca_equity_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f794c985df8e2b96534643ffdc7189632f68bc928dea5055873541077ea42a4f"
+    },
+    {
+      "path": "finatic_server/models/alpaca_option_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c80915f2c9f145f1cdbc8f8a6b8d22f9d19c32f66384658e6d8309ab3a26f624"
+    },
+    {
+      "path": "finatic_server/models/alpaca_option_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "603b4d0da06dd5f2f3fcc0e82321b2814608ae9dc638362f2c2962723e7393b0"
+    },
+    {
+      "path": "finatic_server/models/alpaca_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ba190232c3bfdee20d4b1ddfbffe397a3161edff04b03d41cdbc0260a2e79689"
+    },
+    {
+      "path": "finatic_server/models/alpaca_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "840f2f52deef5c944ac6c0f3c0967c860bb1ba92899f489fae5f9fc9802e6842"
+    },
+    {
+      "path": "finatic_server/models/alpaca_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ec91c68de4704a3375c471d7ed26ac539b2edac2746707e696bc7de9e2ac9bc8"
+    },
+    {
+      "path": "finatic_server/models/assettype.py",
+      "provenance": "current_artifact",
+      "sha256": "75086976a32c37ad92278612caf2c35c727894473445c072d31bd5335794e5a3"
+    },
+    {
+      "path": "finatic_server/models/auth_attempt.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f311c0c36e9030e7d71ae9e2dc99bad92bdb4b265af23503673bf49c5639e221"
+    },
+    {
+      "path": "finatic_server/models/auth_step_action.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9f93084510f361fdc180d49ba3d8e01eaa3c1335ab8982fc357cede6bdcd7e44"
+    },
+    {
+      "path": "finatic_server/models/auth_step_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cce143512ef3dd0aa7b7103432fdfdcb2879fa1b71b0541b21756acd1eeb1c0a"
+    },
+    {
+      "path": "finatic_server/models/availablebalance.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9a839b3118238895c4c8fa5edb78faf2a51d961b58bc59ac11b6f3ab41b674c2"
+    },
+    {
+      "path": "finatic_server/models/availabletowithdraw.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "40439bbe61a291cde8a4ed7b0e841f677741adb25691a1677bcb2646e066340d"
+    },
+    {
+      "path": "finatic_server/models/averagebuyprice.py",
+      "provenance": "current_artifact",
+      "sha256": "43e68e1f8119453b6afa0a7cbe66d4e608eb9aaa03d4489edab5b4aa0176e883"
+    },
+    {
+      "path": "finatic_server/models/averagefillprice.py",
+      "provenance": "current_artifact",
+      "sha256": "496aaecf9d48337551a4b3a5c4ebaac09afaad08cb40501d420c1c820ef42de6"
+    },
+    {
+      "path": "finatic_server/models/averagesellprice.py",
+      "provenance": "current_artifact",
+      "sha256": "204b74c772d312ecbc9abf2543ad8a71c85c0ee355dd95c134e529b1f54e9094"
+    },
+    {
+      "path": "finatic_server/models/broker_connection_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c918277b1a33012db6dfa32e989c71ac3d0098ef5f2565965677aa460e724669"
+    },
+    {
+      "path": "finatic_server/models/broker_data_option_type_enum.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d8a19f4f0c1b131efee9d64098c92302ce1ca9a9c3dbb0a3a9e7ebee9376f571"
+    },
+    {
+      "path": "finatic_server/models/broker_data_order_side_enum.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "097d6f99c8d11809e95bb15a6aebe9dd6bf17645a1f5cbdc7a2011e524741eef"
+    },
+    {
+      "path": "finatic_server/models/broker_data_order_status_enum.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "64c709d32a47e6022c3077704c18ad2663073cebfe1bf5fd3b781cf6f70d3829"
+    },
+    {
+      "path": "finatic_server/models/broker_institution_capability_profile.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8c762c0e5e407b1340859a38e7e58956fe489090635a00e1ac42e57f765871f9"
+    },
+    {
+      "path": "finatic_server/models/broker_permission_cluster.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "be6120c31fd487f31d27f57ddf5a931abce6eee9ede91637b2315c684ab16974"
+    },
+    {
+      "path": "finatic_server/models/broker_permission_cluster_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ae52fb87650644c2377469a4b356401374bd9c4649a828da2da420c4a91d1355"
+    },
+    {
+      "path": "finatic_server/models/broker_permissions.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7a0ddc72116739ea518e7ad95d8f8b7d788145c21b90353bd00277a12d7db525"
+    },
+    {
+      "path": "finatic_server/models/broker_realtime_support.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "66fb8f4540fdef6fa673648486044f910ac2482731761e6440afb037706e4f5d"
+    },
+    {
+      "path": "finatic_server/models/broker_resource_ordering_rule.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "29c2112fd11e34403287328a9384c5d2246725f13b3d5431a8163378e36a8377"
+    },
+    {
+      "path": "finatic_server/models/broker_resource_version_strategy.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6abd00ec68dbbaa6a70f6704787a5a892507417940441f8d14437d83aa14686b"
+    },
+    {
+      "path": "finatic_server/models/broker_trace_propagation_contract.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cefe6d667a6a002fea732cdd6ad2a77dedcb24ee775e5f7f48c9dadca6ca7c99"
+    },
+    {
+      "path": "finatic_server/models/broker_trade_capability.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "37441d36b01b2722f3783c9406fb5506114b56a62ee2a734d93c1a52547920d4"
+    },
+    {
+      "path": "finatic_server/models/buyingpower.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bf3f5709941d4e5925d4da8b66d604371cc53a6b19e5192a6a83f7023a156d8c"
+    },
+    {
+      "path": "finatic_server/models/cashbalance.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "67dafc56ed05312c1c800d562c11b82b2edff18ad1b0e4e3a90ca99f92ab6c9c"
+    },
+    {
+      "path": "finatic_server/models/closedquantity.py",
+      "provenance": "current_artifact",
+      "sha256": "891831fdf2deb9ef5c98702ee611c8313c09dbf3cd660a2d6d82f2d3e0433343"
+    },
+    {
+      "path": "finatic_server/models/closepriceavg.py",
+      "provenance": "current_artifact",
+      "sha256": "8c22acbba390a202ef3db7b8f80ce47a5da8a729b751f503b25740e7e0d54cb4"
+    },
+    {
+      "path": "finatic_server/models/commission.py",
+      "provenance": "current_artifact",
+      "sha256": "a74b126fe82e6bda330f1526dc2c00a5b9e4069e9368dea080448160935dc114"
+    },
+    {
+      "path": "finatic_server/models/commission1.py",
+      "provenance": "current_artifact",
+      "sha256": "7d54b4b1e15ac1fd4ad66951d2d51933ea630b4c0ddfcf7cd3e6a75c17f4c3ec"
+    },
+    {
+      "path": "finatic_server/models/commissionshare.py",
+      "provenance": "current_artifact",
+      "sha256": "d4d2cc872cfef964b56187fa8437646e468c6cae29c4cd2043d513a5b7b87c96"
+    },
+    {
+      "path": "finatic_server/models/complete_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "afb9cd6cda3f93af15bf11a1baec18ffab720e387560d1bb7f1eda09466186bb"
+    },
+    {
+      "path": "finatic_server/models/connector_list_item.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d622ba8dcf9e76b80062119bc23736588a17585fd98d5bff75179c14a93a6be4"
+    },
+    {
+      "path": "finatic_server/models/costbasis.py",
+      "provenance": "current_artifact",
+      "sha256": "87d435a70c3a4f160af54ee94f7526eaceb79bb29b91152a58105074dc7d4c56"
+    },
+    {
+      "path": "finatic_server/models/costbasis1.py",
+      "provenance": "current_artifact",
+      "sha256": "82683dfa7b15a010c2e5613a72702637791269bc5ad6adadbb6032895e0b6f29"
+    },
+    {
+      "path": "finatic_server/models/costbasiswithcommission.py",
+      "provenance": "current_artifact",
+      "sha256": "ff7e000a7987dce8c59a8b504c8e33b8ac095fc05a262792b4f999fdb97310c8"
+    },
+    {
+      "path": "finatic_server/models/costbasiswithcommission1.py",
+      "provenance": "current_artifact",
+      "sha256": "1c62357794e321336419bace9b974e95798f270a6c3df7de756b71a46a1f134a"
+    },
+    {
+      "path": "finatic_server/models/create_session_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6d86085982d0b270ffd25b90bf1d5850b18cd34f5ced00c8cb1e71f095412896"
+    },
+    {
+      "path": "finatic_server/models/currentbalance.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ad60ac1bc42dc69a9f2605363ccedd60c13acc42427fbb8170ca0c151e0ee6f3"
+    },
+    {
+      "path": "finatic_server/models/currentprice.py",
+      "provenance": "current_artifact",
+      "sha256": "8f3b86b44ffc782c4f143cf12ebdc41958dc462ce3e966a9e08ff3a94b30d590"
+    },
+    {
+      "path": "finatic_server/models/day_tif.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3c08cc34b0318e24272575fe2ccf74d5bb93c0b1d231424bfdb6c7416e8a5b1c"
+    },
+    {
+      "path": "finatic_server/models/ea_configuration_payload.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "348889650a690ffbc850fbaa15a457d087fe09d428c0f2daf20662059c4bfe13"
+    },
+    {
+      "path": "finatic_server/models/etoro_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4bbf78815bc8d56dce1d9a5bc9e8d5565af3298e4b1ebc5636597f1209dad89f"
+    },
+    {
+      "path": "finatic_server/models/etoro_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9797506957d8ae28af75e94d1d42eabee49e8a4d4844cf996a08dbb977e8f7d2"
+    },
+    {
+      "path": "finatic_server/models/etoro_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "69774925ccdeb90029be58203934c3ecbca4a260c0fe83c4aae839a1d482f328"
+    },
+    {
+      "path": "finatic_server/models/etoro_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e1384d9444d2c51a57d2a5457b70856916509a2d68863b1701039472836eb948"
+    },
+    {
+      "path": "finatic_server/models/eventtype.py",
+      "provenance": "current_artifact",
+      "sha256": "ac3adbb930b55905085012cbe68d7b90889d269fd388e27dc211af9caefee7d3"
+    },
+    {
+      "path": "finatic_server/models/fdx_account_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3051a724f671f2b1a436ee7a98315735a86bacef330af7591ead7f16b2465333"
+    },
+    {
+      "path": "finatic_server/models/fdx_account_grant_update.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d1db01647df93ef9a2df76258843cc27f5726e33ba7d451e8faaaa00c72b7e2b"
+    },
+    {
+      "path": "finatic_server/models/fdx_account_status.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6785174c348ffa1884250a8617730ac14560ad42bb83535ab3371a8b7b89c830"
+    },
+    {
+      "path": "finatic_server/models/fdx_account_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ce7e9e868ba4de6ef93f5d18dc5c511c5ae143c51bb29ac8d334f20a267beb03"
+    },
+    {
+      "path": "finatic_server/models/fdx_asset_type.py",
+      "provenance": "current_artifact",
+      "sha256": "b3fd7c876a205f77e84e0acb6f90b0ce7ed3e8c5055103e693ed8b197a7ad42d"
+    },
+    {
+      "path": "finatic_server/models/fdx_balance_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "616a4623b07c9276999f1315f02b342ce9f28469533da73eb8a67256a4e8241e"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_order.py",
+      "provenance": "current_artifact",
+      "sha256": "428411dd544c2289eb85641fb2bf4ceb81abfcd1f5594e27226a80f629c19ac5"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_order_command_result.py",
+      "provenance": "current_artifact",
+      "sha256": "2ff6ebc661969d27acdac6dbb9cb308727b21f19c2e3113d20d021d82cb485cb"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_order_event.py",
+      "provenance": "current_artifact",
+      "sha256": "ed971c690f07c6f1754e4b54f5953ddf65b877469e9231acdeb4b13eb444ffa8"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_order_fill.py",
+      "provenance": "current_artifact",
+      "sha256": "95c592ea7837849f05e4d5c3f62120ba8cb33e08dc6de95209985a7db708860e"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_order_group.py",
+      "provenance": "current_artifact",
+      "sha256": "94a578a06236cc85ab1b030148e1286fdea3cec45e0a001c11079dd29e891007"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_position.py",
+      "provenance": "current_artifact",
+      "sha256": "91936fd06d4d8adcf6666e5f34ce4ba13f59fe6f1b5f8caf752b1ae17d620287"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_position_lot.py",
+      "provenance": "current_artifact",
+      "sha256": "2d6a07b650eb18a428d084cd2317bf1d9039a77a5ff4fd04e79d777d31f93c7c"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_position_lot_fill.py",
+      "provenance": "current_artifact",
+      "sha256": "cdf372d221c56896628d737c357009b2bbe3081d9de40abbdbbe7bbd029ef926"
+    },
+    {
+      "path": "finatic_server/models/fdx_broker_transaction.py",
+      "provenance": "current_artifact",
+      "sha256": "c31e6f5cd38469ebbc9e2432bff4a567b30fe12440314c2d81e7b32b13dc2cf9"
+    },
+    {
+      "path": "finatic_server/models/fdx_consent_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "081c3e1366fe2f6eb2d195727baf2c4e43ab6757e55064d3a84328edd820e83f"
+    },
+    {
+      "path": "finatic_server/models/fdx_consent_grant_create.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "45a2b901cc5946656e32a5a7da95d5226e3e5d4b253fd6b3ea457f16b2ab2352"
+    },
+    {
+      "path": "finatic_server/models/fdx_future_instrument_details.py",
+      "provenance": "current_artifact",
+      "sha256": "5517bb4985ebd146f40e94950d5ab7765f7c966147260f7efea8a1f30cfbb02c"
+    },
+    {
+      "path": "finatic_server/models/fdx_instrument_descriptor.py",
+      "provenance": "current_artifact",
+      "sha256": "f130cfbd68416284563e0b303cb88c9005d077bc515728fd708218aaffccc3fe"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_class.py",
+      "provenance": "current_artifact",
+      "sha256": "c1ba7f17f2a1e45cb96ed141ab62014d505ab141cb13b931335f44def20fc771"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_event_type.py",
+      "provenance": "current_artifact",
+      "sha256": "f1fe7778bc080841818303e0672a4922e823e4baa97b5b6b092e456639d0bb10"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_group_order.py",
+      "provenance": "current_artifact",
+      "sha256": "1581b3828ab6a7593dc1dab5e538b8f18a1e2daddad3502ab8799a1e3a315b6d"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_group_type.py",
+      "provenance": "current_artifact",
+      "sha256": "26df72d4a20457740415e809bd5c03f99033d948bb2c14894a57c2562caee697"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_leg.py",
+      "provenance": "current_artifact",
+      "sha256": "d68009b92f63ed3997680bc17092aa1d8649a1fb9db35851e8099c14c86b370a"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_position_intent.py",
+      "provenance": "current_artifact",
+      "sha256": "7366275a2909959cdf14bcf45a937507eb03373bbe5bff7205234477584930d4"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_side.py",
+      "provenance": "current_artifact",
+      "sha256": "4dcb622d198e0760bd474daf47cb2be4b5a68a4cb1e085df678178b46d16e7c7"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_status.py",
+      "provenance": "current_artifact",
+      "sha256": "bc646be7b7da8c3aabb91cd19784de858fe45a92133657314ebb8925513c6831"
+    },
+    {
+      "path": "finatic_server/models/fdx_order_type.py",
+      "provenance": "current_artifact",
+      "sha256": "13584f9c5c97e7f1a3e04779d0f6531a88dd96def76796ef8d24504445bec9ef"
+    },
+    {
+      "path": "finatic_server/models/fdx_position_side.py",
+      "provenance": "current_artifact",
+      "sha256": "de1febfb7ef910b825d9af34250ab671e9b20a66457439b5f890d6db0133b1a9"
+    },
+    {
+      "path": "finatic_server/models/fdx_position_status.py",
+      "provenance": "current_artifact",
+      "sha256": "a6b3668b36fa6bd413a89109d129863c6002c2d515c1635fd3ceaac1f4d7da06"
+    },
+    {
+      "path": "finatic_server/models/fdx_security_id_type.py",
+      "provenance": "current_artifact",
+      "sha256": "e7b1bb8d198e4f61889eb6e0cd4afa77a234a8310ffae91d5e7f96a95dcc31a9"
+    },
+    {
+      "path": "finatic_server/models/fdx_time_in_force.py",
+      "provenance": "current_artifact",
+      "sha256": "5c2c8634ce2248be474ce47330e0c605a94118e452a9d4d4a44de1b0f2972a3e"
+    },
+    {
+      "path": "finatic_server/models/fdx_webhook_event_definition.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "51ef3a9ffd189e4ef6b8d2b18073d694bcf14c2a54798f105aa59bf94b9627f3"
+    },
+    {
+      "path": "finatic_server/models/fdx_webhook_subscription.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c0dd784e552564921e1e6d012b61fd3f3237a13135b88619e391c66ddec24768"
+    },
+    {
+      "path": "finatic_server/models/fdx_webhook_subscription_create.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ce96e998716af72de663ba61b10be0c77c02f7833d79c09ea8edfa37af895d19"
+    },
+    {
+      "path": "finatic_server/models/fdx_webhook_subscription_update.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "54065e82c7453fbefe53705478e7924d2fad7603a75637c301a13cd37ff68e05"
+    },
+    {
+      "path": "finatic_server/models/filledquantity.py",
+      "provenance": "current_artifact",
+      "sha256": "65328504c590a4137bb82549c597c7202f3178e6fab03e32f2a56129874ab1a6"
+    },
+    {
+      "path": "finatic_server/models/fillprice.py",
+      "provenance": "current_artifact",
+      "sha256": "fc683aa5ca2143ad9788243ba423b9ab386984626c75447c938d3cf6c097849a"
+    },
+    {
+      "path": "finatic_server/models/fillquantity.py",
+      "provenance": "current_artifact",
+      "sha256": "1cc60b5cb73f24d6cbf7c9a6793d15f671aacbd71cd48e08c8424c7af3a1637d"
+    },
+    {
+      "path": "finatic_server/models/finatic_api_error_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3691f61dafe0046379df3f9c033d3ba2c8839d382d28c4b8e96ab1d53145fdcb"
+    },
+    {
+      "path": "finatic_server/models/finatic_environment.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b81c98c7877ee3dc3f86d5465a51db80c9493f5e38e93948ca412fadb76d1928"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_accounts.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "062968764a8d7a550242b2cc7c2678fdd684b0630d7d2ed715f15373e5043a09"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_any.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2c0b4a884c56c137211099291175d384c4fe64e72e48003dbf1b845fc18578d1"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_auth_attempt.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "107388e5a248e22db103819aa609b49b1ee14cef3572af5680e3cf427d49b83a"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_bool.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c24b6cb9a1e14889346ca89cc2a954f5fb357697fdab13ad907719fd722ba60a"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_complete_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c5cbe2e8335fbe1aa0f991132af6570e6ef8a958a3d2a3b5f23a420a6a3f3ff4"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d2ca5d1653bfcf3627b75426b72658b1cd4e0b0f6da5401d9456d04eb2d9968d"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict_str_any.py",
+      "provenance": "current_artifact",
+      "sha256": "fbb958d26cc1bc7f948a0369e8812262bf2d5e5ee51a1f8b343dd32b8a357ffc"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict_str_bool.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "700a502107b335ca1555ae83c09fa7f067aa71233e62507bbb56f752dd85f68a"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict_str_object.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c6f315254b5751be4e0437b36034a7da1391187215c44fdb357c414cb82de996"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict_str_str.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "244b3e9981d910c3093ce5c7adbdaa5ccaf60702d1db62d6ef011231a76f5f3c"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict_str_union_int_none_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e6a06b549e3432142a299e6eaea3dec97b3f6ca47a0bc178edd54fc189646ac7"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_dict_str_union_str_none_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "adbb95c0c8671b9d5a7cd2480c160fc0e548e30c925ac6437baaa5e3fccb5a35"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_fdx_account_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0e0f0ca2630ee219a83cb65cda2599290d432983a624f74938650e167d8f4b99"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_fdx_broker_order.py",
+      "provenance": "current_artifact",
+      "sha256": "d1ecf512e6d626ca68b25958bd51cdeaac6562eb6e7497fd6aa672824d8d8597"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_fdx_broker_order_command_result.py",
+      "provenance": "current_artifact",
+      "sha256": "2d5eefdd18f99427e08298b09a54b99e644e5482fe851817ea7a8ebc1d6e44e9"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_fdx_consent_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6ae7e05fe82e37f672c8a7fbfaddffb4eced0da20b134ff3e39c5ef8fc800553"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_fdx_webhook_subscription.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4892afe8b8751923f3da3224ee21eb09734be2862348fe483a8a2031ea79d6ae"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_link_user_to_mcp_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b09b22fcce49453ed003560cb7f339bddd94478c1b8811ce67fd9da8228620d3"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_link_user_to_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bafe1f1800eff8d108a6cb5c9b2458634f9a0f2a9900d56e3692a685fc5d0c1f"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_connector_list_item.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "30f5fca36b16161f9c34052778a85b2973010cdfbfe098319887ca76b3a3e531"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_dict_str_any.py",
+      "provenance": "current_artifact",
+      "sha256": "e3319d17d948659e8895ddc84abecbe33bcd8a6a9fbd2d112a103b5a7e38b249"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_dict_str_str.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3e0c1f520cff222f4328e1fb957e6157570e9b5ef349401de5122e252cb4b89b"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_account_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d85f737cf1d4abca3347234285f3bcc4c985e78903762aeffc8fa240cfd76660"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_broker_order.py",
+      "provenance": "current_artifact",
+      "sha256": "ced3e2eb839fa1c60123cb68ec858e394281a0d23d2cbb568b59ee0509b89188"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_broker_order_event.py",
+      "provenance": "current_artifact",
+      "sha256": "5337c08b5beccc27e621544a29f28de8bb22fbe2f16710d5c612d7778fe10fe7"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_broker_order_fill.py",
+      "provenance": "current_artifact",
+      "sha256": "605e336cabdd03e6ed4cc464ba1173e1e56139bcf1860e950b91f64f0c4ffa59"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_broker_position.py",
+      "provenance": "current_artifact",
+      "sha256": "52f766c09b878e72a902a47c02fb12394fbfad49d80c98e099ac5146cf8f9da1"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_consent_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d8b7e7ee7cd298f3c4b9ed76504906ff4f5247df59b7225e257d694200fedd45"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_webhook_event_definition.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2c8274f9badaf33830073c51011c40d09ac18ba90571581b749950353f64070e"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_list_fdx_webhook_subscription.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "50b9b3d88fb9beb6d6638e927deb1c266f3a2087e7d911f8e0543fd67fc73f80"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_o_auth_completion_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fab92b11d11d0a51b8c28c3c7b519d0ad514ee6e2c3d4c180d3d48aa173e4293"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_order_action_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c350bc185b4328dc7460ff8458bb1e8ce455e1037413adda78db78a5e64bf6a3"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_owner_portal_bootstrap_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "89515b362c4603ab8ddb0f560350ac1c690d305d24f87691257da7e18e6470ae"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_owner_portal_revoke_all_companies_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "5fc10e631a3ea132a82226dabd122bb38e6fde50dc0578eaf35df52c999fb89c"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_portal_session_validation_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "92e866aed523a7c829caae640b9c6f54a80b89d4047594087cd8a110ac2eb7b8"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_portal_url_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b17135e7c8a352e95ebacb12eca032fa3a4d6489b6fd54aa3dd1d223cd0f2547"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_reauth_notification_opt_out_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7bb63a8fdb16c2dab8ed35d68d43af60baf828f3b7ac2e1a06947d27de546996"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_reauth_notification_preference.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7918103e1a612a042ee1d208c6ebc0b944951d5bf7a878ba6915cbaf5beb1def"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_rotate_secret_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6395611f7178148afc08fb2a8943c926063b01bdc564f5cd16b955169c0566a1"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_sandbox_order_simulate_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "92d79c250f2d2d39ada61e27ecf0573d50eda19e14fdb38d7505f28c99b557a9"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_session_response_data.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7e705c05c97c17e6a477ef8b56eed9df051ae03ec4f6d7259044c8191441b071"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_session_sync_status_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c309a151835e0c9255af74867ad03ef77e3980f0b220ce9162b00d12df52c338"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_session_user_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c2246be8ec89cd476d9ac82aa68bea9908bb3eb9cc59ed4e7796e57b0460e24c"
+    },
+    {
+      "path": "finatic_server/models/finatic_response_token_response_data.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cc2dcb3dd4c351fcc46784828d51e5f487aad2c6c34d168a1ee3e55fb74ac5f9"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_account_sync_status.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6b8fe0f63d47706c6fc5f89cbc31b02bf2031aaededab661930a5dc150942625"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_error.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4aceb249279083dba1caabf8a771bd6cc6832385a4b9429cad2fa9698469b982"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_error_category.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b879aa34d0056089900c8492c1f44e1323468eba9c4a4d0ec421ce67d3aee7bf"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_provider_health.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f9a8627f5ae6f3557569f3099d24a52ef2416bf115739934bc9954b8c429a88f"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_realtime_subscription.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "305bc37c7021cf69e1496968ea3ead01c47624c6b02c75bb7d31e56988169330"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_response_envelope.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3683b3b15306ef137941a4625897977f486de081fb3da993c0cbef576a061218"
+    },
+    {
+      "path": "finatic_server/models/finatic_v1_warning.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "024d3f4a8e6e0360af2e4a6541b7c8a755843e043b6036af2199ea0419495f21"
+    },
+    {
+      "path": "finatic_server/models/finaticapi_api_v1_routers_portal_portal_router_portal_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "09b86134c207c2c36b695269d96f611172dc3788d9b952f5eff825c99de11d4d"
+    },
+    {
+      "path": "finatic_server/models/foktif.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "1348cbcb07f2a9af4e272ab0c7b9e2c54a5bd90c3230e84ffe7a6e89473af303"
+    },
+    {
+      "path": "finatic_server/models/futureunderlyingassettype.py",
+      "provenance": "current_artifact",
+      "sha256": "15227535b5f25b31425e6eaa4f2e3a9553fb094dc4058b450fbac3b665ee63a0"
+    },
+    {
+      "path": "finatic_server/models/grouptype.py",
+      "provenance": "current_artifact",
+      "sha256": "a816ee1dbd21d63d97cc217f8c0b79efc6e1bf730bf96e27292fccd07ecd1f7b"
+    },
+    {
+      "path": "finatic_server/models/gtctif.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "5dd3bfd656d99c8044ea7251b2740d9c8940bb5768b9b2de11838c2eb1bab413"
+    },
+    {
+      "path": "finatic_server/models/gtdtif.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c6a4cc75a840e7a8917ceb7bef63773d45bfe8e44470b1c508c09d996ec00169"
+    },
+    {
+      "path": "finatic_server/models/http_validation_error.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "40f8fceb455f27c25728b5cb18fe318a5507d8a51bd3d82cde4350e606a18498"
+    },
+    {
+      "path": "finatic_server/models/initialmargin.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4675a72bace957be31a0dce48e8ad3814e6b6aa774c003b190c8b829071e9335"
+    },
+    {
+      "path": "finatic_server/models/instrumentid.py",
+      "provenance": "current_artifact",
+      "sha256": "9cf19546f2c1e3b792c6550f3ecc0bd24ba4871227bd3c6fe56466ec0a808f91"
+    },
+    {
+      "path": "finatic_server/models/ioctif.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "870cd71df250cafa8f8a0a60d22ee6e904c1461b3cdd9295de32a3dfe8aa52b7"
+    },
+    {
+      "path": "finatic_server/models/lastsyncedat.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c0963d5268dbdcc4a622a9b037dd1f47abf73aa8801332eb5ddf76a35d020929"
+    },
+    {
+      "path": "finatic_server/models/limitprice.py",
+      "provenance": "current_artifact",
+      "sha256": "4415a5e0f62fd2d4c09d7237955d87494a4c7529a1d9761ec38e2a070d6497c4"
+    },
+    {
+      "path": "finatic_server/models/link_user_to_mcp_session_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8a6570bca2546d8011fecd53149cb8684d718841b7fd96e0c6ffca129dbec062"
+    },
+    {
+      "path": "finatic_server/models/link_user_to_mcp_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bc545405a0c82facc84d23f8cddd886cae96d039d221cfa7fd0304b96679dd22"
+    },
+    {
+      "path": "finatic_server/models/link_user_to_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a5f0e419a36fcec32aa62abdfa26b2f58384a1c7877943366ddb8e3e2e35c6db"
+    },
+    {
+      "path": "finatic_server/models/location_inner.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bff3da24bcfb36186f63e595c1b26ec603bf474690949533af9883ff72f5b368"
+    },
+    {
+      "path": "finatic_server/models/maintenancemargin.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b9fb9a1a86bd0dc6e4d7b3695287e2e6ae839d5ba01882f2396710b5be892070"
+    },
+    {
+      "path": "finatic_server/models/marketvalue.py",
+      "provenance": "current_artifact",
+      "sha256": "121453fb79df714a28ec5e0325e41222faffb629faf0e3b6e5235d327d13027e"
+    },
+    {
+      "path": "finatic_server/models/mcp_bootstrap_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0cde9ff9ef84b94a0d9a296f5c59e1a7fe87c75153c9346df0a2332ee2f31d98"
+    },
+    {
+      "path": "finatic_server/models/mt_connect_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b37002a85f04aad379d78a2b54873000cf8a5097127be360777019f922a1163e"
+    },
+    {
+      "path": "finatic_server/models/multi_step_auth_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9e6f20478d48e5ee12e6d1d5a71742f49d8de47ed76413daa48bde3d90e61844"
+    },
+    {
+      "path": "finatic_server/models/netliquidationvalue.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "92f2bf0c33ec12932f5f0fa3a0067434ee8bc1b0a9ad6a193649d9e99baf2cba"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_future_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8ef0cdbd54f7d458906df48e5f4a7579572b2b04a3b79bbcbb80e8655d334896"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_future_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "16aaef1efec0b4161384e5e6a134add8eb645a195057d8dc3dec0b74c8e204a2"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_future_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b50d7eb40e5968ca777616b78b8a0a3d8e192648e58b67b3d9c95b8b34b3623a"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_future_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6dd4ed8911c6d47788a88ad485d17b4f64cf868380d9219c366e77725d491c6a"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_future_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8aa04bfd59b2b1818958e4429e111aaf9520ce72efca290c681a07722cbb5021"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "15dbab1ff0f4ae3f42cf2077804ce1e6a72ea66e453136e5358e6ffc86c11d12"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2ed6fb7e5a85a98c2654995fe48f62166a24df6b7ab22ef7a943feb896744e67"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_order_modify_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7fab8cbc660f062b632c67ce24b5b67126f836fa642c429fbbbe8d464a7f4b55"
+    },
+    {
+      "path": "finatic_server/models/ninja_trader_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "012c03b17789008d049271634eb212a721e3f78d805c6eecfc49651044a84692"
+    },
+    {
+      "path": "finatic_server/models/notional.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8d157b0a13cf385fe5d07a5e2692dbd20bc92f1ae5ef8b7df58d5959c9185698"
+    },
+    {
+      "path": "finatic_server/models/notional1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6213cead53fc35219d4bc65f7fb90761d39a8774dc3d2dfe14c970298dca8eda"
+    },
+    {
+      "path": "finatic_server/models/notional2.py",
+      "provenance": "current_artifact",
+      "sha256": "0642d48a9c7d238e8b66628cd28d71f8c4a2722392bf7be9dbe7dfe0cee8f45d"
+    },
+    {
+      "path": "finatic_server/models/o_auth_completion_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a13316477a9447531e206c9b69f7a7165a966dd38ce16c99770cc009fa6aaefe"
+    },
+    {
+      "path": "finatic_server/models/openprice.py",
+      "provenance": "current_artifact",
+      "sha256": "f4ae8cb3a93ba6ae674804a0f00f826600f802d1a09f4c021461f2fc1ecc4a3e"
+    },
+    {
+      "path": "finatic_server/models/openquantity.py",
+      "provenance": "current_artifact",
+      "sha256": "bd1b41c99e90f9b76467d3b33eb0fba015092bcd224ed29c7e7822a7fbb97191"
+    },
+    {
+      "path": "finatic_server/models/order.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4a25b39ed357738435aacc6743673c0680c653c61983dca61624d49dcd011811"
+    },
+    {
+      "path": "finatic_server/models/order1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "34789e7cb90fe7540139aa0bf73c13f6e42dcd8f164b5daf0d7f2a1071295cf9"
+    },
+    {
+      "path": "finatic_server/models/order2.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7ab1d49f77cd77501f8257daeea610b500db796eea6887764741ca5dbc3774f4"
+    },
+    {
+      "path": "finatic_server/models/order2_any_of.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "10296d227ffb50ea3e4dea61bd27309cda5e8fa14f3e3842a99618aaa32c41fc"
+    },
+    {
+      "path": "finatic_server/models/order2_any_of1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b5d4fbb4538ee18637b59dfea7f47065a7f24150b2b71621f8d1adaca34be23b"
+    },
+    {
+      "path": "finatic_server/models/order2_any_of2.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7662dd517ce3282a8ce48f4467d3e4ea887dc006af77ed89ae3ba167a77b417d"
+    },
+    {
+      "path": "finatic_server/models/order3.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "579928ec2680e0576f94c8660504d89d05ecd42811ab56bf8e05775063b805d0"
+    },
+    {
+      "path": "finatic_server/models/order3_one_of.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a237b039d682732c433291ba4a456ad4daef940709b47c3eea4d6024ef69eed0"
+    },
+    {
+      "path": "finatic_server/models/order3_one_of1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0a155f4d8edd4b484b6a982c2aab13f9cb545f93527fe6f53ab27a5eecada0dd"
+    },
+    {
+      "path": "finatic_server/models/order4.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8fe5a56f07fd624fb066203d7a932799d8d6586f9d4357688e844eb45c5e827d"
+    },
+    {
+      "path": "finatic_server/models/order4_one_of.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "829b23cba26bc9fa9b78d63d651bbd491777b5f2ddda404df7e9775c4d177e2b"
+    },
+    {
+      "path": "finatic_server/models/order4_one_of1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "448c1ff75f681b10b80df4d8634898324a3ac19e48b67fd3a0100b197db6f400"
+    },
+    {
+      "path": "finatic_server/models/order4_one_of2.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "09e6707274d51c6f59ed8b45fb7cbb3aa66340689cd0a5ceb47f2449f78eb156"
+    },
+    {
+      "path": "finatic_server/models/order5.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0f2545208393cfd8d09a2b979142ddf7d391b93dfa59135302e0c2e4b5180b45"
+    },
+    {
+      "path": "finatic_server/models/order6.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6c90201e24b6b80c6f784529598cc5b55e9cd01fad950839775d0123977500e1"
+    },
+    {
+      "path": "finatic_server/models/order7.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b2d77845ad75b9659d77f9e854da2356aa88f3e769d7c38c10b3fa96103ac526"
+    },
+    {
+      "path": "finatic_server/models/order7_one_of.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a9d372482c71dce2aedeb5ce764abc72c95bb68f0c913dd6637ae3140fba2dbe"
+    },
+    {
+      "path": "finatic_server/models/order7_one_of1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ff7ac03ea0d4873f269f1d283c896127ada934762523874a296437d78a4bc0fa"
+    },
+    {
+      "path": "finatic_server/models/order_action_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bb1c296228286c9c2f79bf3a240f41751f59824b761dc2920ea3d59845f059b6"
+    },
+    {
+      "path": "finatic_server/models/order_modify_query_params_base.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "55beaae6ac3a6c0a47784948b7465e355b542057a743173fd55f7dae43165cfb"
+    },
+    {
+      "path": "finatic_server/models/order_modify_query_params_base_time_in_force.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "98faef69db331b31d050fdba934a4e17b2e557f4de7b3a9d8abbf821edea829d"
+    },
+    {
+      "path": "finatic_server/models/order_one_of.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "de24e1f8b8ad4bf17141a6066fa5ba6d3d4398fdbec657044326007b87d46ef6"
+    },
+    {
+      "path": "finatic_server/models/order_one_of1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fcba194f451af1ec03b69712fb6a6c6fed17fe60484d76b70aca56ceeedcc54a"
+    },
+    {
+      "path": "finatic_server/models/order_one_of2.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "86226c45400d1ea1b2428edf4e318c8d2de56dc54277e67c2b043280e04218c7"
+    },
+    {
+      "path": "finatic_server/models/order_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4cf1014b826f4c1cf5c0dcd7241b2a998f88cf1d70029bfc5da84dad439b7cab"
+    },
+    {
+      "path": "finatic_server/models/orderclass.py",
+      "provenance": "current_artifact",
+      "sha256": "0d4b0f500c44520cea1944c3916c9bc1b7da126a68ca3fbb2d47afb7843689e8"
+    },
+    {
+      "path": "finatic_server/models/orderqty.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "45c082f597deecdb7fda751032710869a3d64cf01bff1395c8d529cccba85df2"
+    },
+    {
+      "path": "finatic_server/models/orderqty1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4a509b1c841179ad6dae2fa2f8cd36ea35fc2484987d3186528f38cc383e5c64"
+    },
+    {
+      "path": "finatic_server/models/orderqty2.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9aba28c6789308eac597853c4b6ce231de352b9cfa788bb66f8b200b992e3f95"
+    },
+    {
+      "path": "finatic_server/models/orderqty3.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b3ed9a916103916f18cb0c355b6193632c0035bbbc33a0f4d376e6c02fbaa091"
+    },
+    {
+      "path": "finatic_server/models/orderqty4.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "86a72f960964ed7ba1437d007b0909afae5dd47b903d67105bdd17cc1c3a6f04"
+    },
+    {
+      "path": "finatic_server/models/orderstatus.py",
+      "provenance": "current_artifact",
+      "sha256": "cde7c2bad6e29f4ad06852b3034d02d011b9348fb1d91d825c480302b50d5509"
+    },
+    {
+      "path": "finatic_server/models/ordertype.py",
+      "provenance": "current_artifact",
+      "sha256": "e07fa4094ba1aae4a1447eafd99effc6966fa24cf8f239766517ccf4e1d27878"
+    },
+    {
+      "path": "finatic_server/models/owner_portal_bootstrap_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b2561d6ae2bc12e183c9e51766ddc606732462aa5aec15f9a7015f5391aa83ec"
+    },
+    {
+      "path": "finatic_server/models/owner_portal_company_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "121111c41cdf38fda101b3626603a844c526476a2c4ea85625774a9288cfa471"
+    },
+    {
+      "path": "finatic_server/models/owner_portal_company_permissions_update.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "64aa0686cb2c1a4f71e22ae2bbacc11d86f2b4ac4c9b3e7718002cf546c64d60"
+    },
+    {
+      "path": "finatic_server/models/owner_portal_connection.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "070a8d24fa6422d0e370b555f9ab7551fec9a2555b00d36cb1fd1c34c8eabab3"
+    },
+    {
+      "path": "finatic_server/models/owner_portal_known_company.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ad6b910ea36fdcc9eb332607749f6c1c34a35863377a1c4ef8e983a6e3620fe4"
+    },
+    {
+      "path": "finatic_server/models/owner_portal_revoke_all_companies_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d2b13e886c8766860ddb48c457c062ac96641aa3fafc27e3162b6aff90f42a5f"
+    },
+    {
+      "path": "finatic_server/models/pendingbalance.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "5c8a4ac3d5eece80ee265633b46dd6ea4fd10ed7b4db019d04e376c1b85d7bb3"
+    },
+    {
+      "path": "finatic_server/models/portal_account_grant_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4f9d6e059787bc0a9959e1586c40a1a1fb68dcc7cc406a19b2867900c6f02185"
+    },
+    {
+      "path": "finatic_server/models/portal_auth_attempt_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6ee9726d5bbbe0466358b65892376f20492fc477681f7f84e197f67ef6612673"
+    },
+    {
+      "path": "finatic_server/models/portal_session_validation_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "dd44dd28cdcd99180c72e73e1365dd9dce190da43db2725703daea7ff755f1a6"
+    },
+    {
+      "path": "finatic_server/models/portal_url_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fb7d49879af13fe2921dd67be27435257aafbbae525ee53c129aa04ae4a39083"
+    },
+    {
+      "path": "finatic_server/models/portal_user_link_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a3e00fdde6ddc8c0994b624904c1f5ca5142ae857c65673be4ca503de4c5d09f"
+    },
+    {
+      "path": "finatic_server/models/positionintent.py",
+      "provenance": "current_artifact",
+      "sha256": "d81bc3d5b6ded8628f9fe62e53842307faaad58e10b945481cb6b5fa019f868c"
+    },
+    {
+      "path": "finatic_server/models/previousstatus.py",
+      "provenance": "current_artifact",
+      "sha256": "46068d6e7f32dacb094850784ea9500876ec987b8773839e5c0593bf0fcf20c8"
+    },
+    {
+      "path": "finatic_server/models/price.py",
+      "provenance": "current_artifact",
+      "sha256": "874608c1b2545a8f3769096874dcddc0225ed7dcc068240542b5fe1f61bce15d"
+    },
+    {
+      "path": "finatic_server/models/quantity.py",
+      "provenance": "current_artifact",
+      "sha256": "a04096e470092c7ed306429eb29c47a3de911935bd151c58eb97838f5e5b2e9d"
+    },
+    {
+      "path": "finatic_server/models/quantity1.py",
+      "provenance": "current_artifact",
+      "sha256": "956a4707cb47591ae7769c21c515cbb8560b954b0eb0667e72988ab0db7d6c82"
+    },
+    {
+      "path": "finatic_server/models/quantity2.py",
+      "provenance": "current_artifact",
+      "sha256": "bf182ff6d45cd076c4d40b70647a34aa9600a3a1bd0374be99691bc95065bfbd"
+    },
+    {
+      "path": "finatic_server/models/realizedprofitloss.py",
+      "provenance": "current_artifact",
+      "sha256": "f2a71300b6fc79457928353447ae405786c45239b5e8e47111f7db986fa88c94"
+    },
+    {
+      "path": "finatic_server/models/realizedprofitloss1.py",
+      "provenance": "current_artifact",
+      "sha256": "8b92fd48719cd63c68e7f2320039d694f21967de08a483a8acfe4bd15ba88521"
+    },
+    {
+      "path": "finatic_server/models/realizedprofitlosspercent.py",
+      "provenance": "current_artifact",
+      "sha256": "df90733be3150094d256851586b482383dcba44ab770c5ef8fc5fb79f21aafb5"
+    },
+    {
+      "path": "finatic_server/models/realizedprofitlosswithcommission.py",
+      "provenance": "current_artifact",
+      "sha256": "58b4ed00fe84f4e2a51bf4c4b9db02673fc8711631f6c137ea49239904c0322a"
+    },
+    {
+      "path": "finatic_server/models/realizedprofitlosswithcommission1.py",
+      "provenance": "current_artifact",
+      "sha256": "0313fa9dbf0fe0a9f388234b2c7421fc2100d8746a28cdaaed404f4c922b2f4e"
+    },
+    {
+      "path": "finatic_server/models/reauth_notification_opt_out_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "934c81dcfb7170c0c74382a983d09a5f619ebc0a2af3e7f317b80df5a482b156"
+    },
+    {
+      "path": "finatic_server/models/reauth_notification_opt_out_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b319b7ead7b6150291099546aca093d7ff6cd8958f9a50bf99b1f43dbf32b2d1"
+    },
+    {
+      "path": "finatic_server/models/reauth_notification_preference.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8f6592e42a36d9226755efd3e659fb1f3222bb53ca07f63064e8c8d0426a8a98"
+    },
+    {
+      "path": "finatic_server/models/reauth_notification_preference_update_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "47c9ba3bbec18e889b212a0b9a86317153fd40ff95b0eb0b346490e9589c803c"
+    },
+    {
+      "path": "finatic_server/models/remainingquantity.py",
+      "provenance": "current_artifact",
+      "sha256": "153ed3a6b58ce3c75825234c30ce38fbdc9d0e1981d20c4f7f70f3d080f79079"
+    },
+    {
+      "path": "finatic_server/models/remainingquantity1.py",
+      "provenance": "current_artifact",
+      "sha256": "502ff9ca3050f4bbd2c853d0258856d9e856a82c4212bcf1c98c2c9c20156093"
+    },
+    {
+      "path": "finatic_server/models/robinhood_crypto_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6a8a2534f358277602f8ce6187fe83cd297736cc8b625601f8429b68611d2d30"
+    },
+    {
+      "path": "finatic_server/models/robinhood_crypto_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7eb5f62d48d1f5898fa268aef21fb0945714f1484ea6c737300204452b94f459"
+    },
+    {
+      "path": "finatic_server/models/robinhood_crypto_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "47dfe9c8e72cb096996eb5d3a4d6bf7f7b0c09472ce1da6db5897868a8311119"
+    },
+    {
+      "path": "finatic_server/models/robinhood_crypto_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b7f38a19b2b67a042ed980984fec150d5f6b74646a1425efb3ac26dd9ff94a0d"
+    },
+    {
+      "path": "finatic_server/models/robinhood_crypto_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cd697e4a8bb49a04b84a0447da637595d0b0bcdc0130c3791e11659c5943e3f4"
+    },
+    {
+      "path": "finatic_server/models/robinhood_equity_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7e1e8573df79cd9e244326a29e032b23c567380f6c640e9c2f436c98c2f2bc18"
+    },
+    {
+      "path": "finatic_server/models/robinhood_equity_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3d090ac45b2afd8911e57202e16869cfaf21f8915d7cc9263d0c26e4f44d217d"
+    },
+    {
+      "path": "finatic_server/models/robinhood_equity_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f1f4ee6068a7482b18025432a7f32c88619fc66805ec5545e5c8e2f42c05436d"
+    },
+    {
+      "path": "finatic_server/models/robinhood_equity_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b7c885e81733c14c6735a69166f352bdfd65734f7f53305ed187326ec222ac12"
+    },
+    {
+      "path": "finatic_server/models/robinhood_equity_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "bf8eccc72de4d9b76e6f044e540cea0e9bd869aff497855e013a2c314a876ede"
+    },
+    {
+      "path": "finatic_server/models/robinhood_option_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ad3695c67c272a90dc6e72306669b0b821e4f2a53b7d61b95da5873fcfc77403"
+    },
+    {
+      "path": "finatic_server/models/robinhood_option_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fac6dceab330f3d87d6eac4aca433dfbddd27c08f79f984fa3b15f12fd3fd112"
+    },
+    {
+      "path": "finatic_server/models/robinhood_option_spread_leg.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "67893c64682549c1cc7865d9949c035765a6453ea8b96b1a4ca681d8ab79c20f"
+    },
+    {
+      "path": "finatic_server/models/robinhood_option_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9271bf8d0bd6660f35a7b1d7d550bf972ac48a6615ffd0ded25a54f9cfeb4ea7"
+    },
+    {
+      "path": "finatic_server/models/robinhood_option_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "42310ac0a078c854c889bf689b8bcbe688341de25f9d524c99a56b95d5a70a0b"
+    },
+    {
+      "path": "finatic_server/models/robinhood_option_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fa1615d1fad2a0b2ee46e2b603508d28794bac13eb78562dbd6287a2fdb5975f"
+    },
+    {
+      "path": "finatic_server/models/robinhood_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "87961249a10b129edc9dcca743426df8d26c892a265717c1b35d478f9cf32c08"
+    },
+    {
+      "path": "finatic_server/models/robinhood_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "152995fdb2b48f8675a478eb05fdc8b3d581bd0dcf59afb827d5563f4385d3ed"
+    },
+    {
+      "path": "finatic_server/models/robinhood_order_modify_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "44fa53c3ca1719fe3c6442e73426a1ecf09889ce6447f2e70b44af6644af39a7"
+    },
+    {
+      "path": "finatic_server/models/robinhood_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "238400877bc3ec94b36b3a16dcd42a1c3b84421a71a66f88e62083c904865d3b"
+    },
+    {
+      "path": "finatic_server/models/rotate_secret_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8e8571c086e6a9bbe0257050bb267bed235edbf51fce78c47ca320025ccdea8e"
+    },
+    {
+      "path": "finatic_server/models/sandbox_order_simulate_request_body.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "1ab12b781239487583948c98e37c69d29cf6e874c0b44fb1653c726f2742c9f5"
+    },
+    {
+      "path": "finatic_server/models/sandbox_order_simulate_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e6e715083a6a64e87fc46b42d3809d3ac5a5ba75b36f941214bdd049c4b788b6"
+    },
+    {
+      "path": "finatic_server/models/securityidtype.py",
+      "provenance": "current_artifact",
+      "sha256": "3241d2f7a093675743f4533eb5a8bde7b470b876139d6f1864c556f3093b18c7"
+    },
+    {
+      "path": "finatic_server/models/session_link_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "5d825b568dcb21b0f58f5e066628e75292bb94ac02d79e7e808123e34ec2e2ac"
+    },
+    {
+      "path": "finatic_server/models/session_response_data.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4e6fb7755c417d3282dd562fae4c33f59d1fd92f56b5ae3e8888592465af2f39"
+    },
+    {
+      "path": "finatic_server/models/session_start_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d07d943824d452d84b8f35b72a137d9106adf9faf3891ca709505db62b0ab53b"
+    },
+    {
+      "path": "finatic_server/models/session_status.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f5dbcd07996b9335d5be03fc47b831a93cc1a3d5b7411756af84df7c5454244f"
+    },
+    {
+      "path": "finatic_server/models/session_sync_account_status.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4eb4d80a4cc5ddaf943ef99310e2722240e864d20a4704bc533e93328f10cf35"
+    },
+    {
+      "path": "finatic_server/models/session_sync_status_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b9e63a25d8842fc6c906bb887f46c2204c27f453aee17c1ab509b4b19d44a42f"
+    },
+    {
+      "path": "finatic_server/models/session_user_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a00370fcc7ffc8fe545864f7d75a4146612695dcb4812d15f1e05333c72cc69c"
+    },
+    {
+      "path": "finatic_server/models/side.py",
+      "provenance": "current_artifact",
+      "sha256": "2f15919aac6fc9b269a0db283fe39998858708c36a181d4be33ee626a4be5256"
+    },
+    {
+      "path": "finatic_server/models/side1.py",
+      "provenance": "current_artifact",
+      "sha256": "f01b1a8facaaef832619f76d1d52f134eda48068e810636a1aab2ea07cd28a44"
+    },
+    {
+      "path": "finatic_server/models/side2.py",
+      "provenance": "current_artifact",
+      "sha256": "5dcd6a347944f385fa2516997b3568d45caeacbb3e49ad168ce0fda18914365b"
+    },
+    {
+      "path": "finatic_server/models/side3.py",
+      "provenance": "current_artifact",
+      "sha256": "147a2d8dac079f209bdea8254391702646f5baeb62742a56794fb8ece0ef1df7"
+    },
+    {
+      "path": "finatic_server/models/status.py",
+      "provenance": "current_artifact",
+      "sha256": "1b2c9a76c94cd5c074910ccda8eb45e4dbcea23bcc8f211da2839fcbeb0253c0"
+    },
+    {
+      "path": "finatic_server/models/status1.py",
+      "provenance": "current_artifact",
+      "sha256": "e3a25a88dc26d86ac2ddae4bc6848ec0e57aa6743e83e3ef9977a036ba958dbb"
+    },
+    {
+      "path": "finatic_server/models/stopprice.py",
+      "provenance": "current_artifact",
+      "sha256": "db11fe215cf1e0e97cede54ce31f50b5cd9973ee4aa12aae6c1b9aa818118c2a"
+    },
+    {
+      "path": "finatic_server/models/strikeprice.py",
+      "provenance": "current_artifact",
+      "sha256": "48c242f41dc76ab4bbbd96e70c9fa0fea6512afb0f4bba4b3bbca5d72f18951a"
+    },
+    {
+      "path": "finatic_server/models/strikeprice1.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e73268580464cf03a126008fa280241a2727c30585c2983d20d582f4baf31bf0"
+    },
+    {
+      "path": "finatic_server/models/success_payload_accounts.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "04c592a19dd829595d1a33de6045dfc06bf464cab585e43203203b5654c09247"
+    },
+    {
+      "path": "finatic_server/models/success_payload_any.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "61f6d17f1c7c625370494268b340336c1a75b0736f316fc3ea115b42ff254b8e"
+    },
+    {
+      "path": "finatic_server/models/success_payload_auth_attempt.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "08bdc13cac3714d6bdd87982b28edbf091063cd30944f105cde0ab565857ba12"
+    },
+    {
+      "path": "finatic_server/models/success_payload_bool.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d6059d47e40bc1a399eab45da063f1dc1afa9bf7a871f779eac5f8a9bc245c45"
+    },
+    {
+      "path": "finatic_server/models/success_payload_complete_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ba8dfba72446421e744ecd1a666d08524e878db647eee878906da81a59b1229a"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "eb24d2f15c8533892fa772ab5224bd1b7ebddc3ec18ad064692c033bb34e3b0b"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_any.py",
+      "provenance": "current_artifact",
+      "sha256": "7c721f95cb47efa58adfeb41f87b5e882054a0e6898080fee35a90e98f881f9e"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_bool.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "13d53c3065099a7e9e71148c0698e2c415c2c8ff3e5bad16552ae52659938d4e"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_object.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3fdd19b83dc4ab8ecfcbcc477063b2c0dd17def7b33e61de74aef556d6bf3e9c"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_str.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6a1e084907b5ef831f8603343aea954d8792614cbb51d0e408e36dad9134cf01"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_union_int_none_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "056517e155448788bff350bf6eb7065e5b5af555e86baeed842131875845cd9c"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_union_int_none_type_data_value.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b37bd42eebaa6be81a620e2081e63ffed521c4103ae3bbeb6a127dc27abafbd6"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_union_str_none_type.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b778798fbab061f7048c2c5e913c145e03a5d6450093ab80e115b7437f4562e3"
+    },
+    {
+      "path": "finatic_server/models/success_payload_dict_str_union_str_none_type_data_value.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fd579409292bb6e78dccd77c41a71484625121e26db5edd41154003cfbd75005"
+    },
+    {
+      "path": "finatic_server/models/success_payload_fdx_account_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d6a605803f9ac2a35015c843d0198aa97fe63c632889c42ca4a2738c8aa01ff8"
+    },
+    {
+      "path": "finatic_server/models/success_payload_fdx_broker_order.py",
+      "provenance": "current_artifact",
+      "sha256": "105c58e25764f9d3aedd4d9b8275b58dc78daf5417782bc12f6e3b3a6258b38c"
+    },
+    {
+      "path": "finatic_server/models/success_payload_fdx_broker_order_command_result.py",
+      "provenance": "current_artifact",
+      "sha256": "f808f7b80192a5ca71f90ed4ece2ee45f6661a17d6bd64a492988b8d286921e3"
+    },
+    {
+      "path": "finatic_server/models/success_payload_fdx_consent_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "78753bfc500f49cc5c5475181a3816b28f2bc6da0fc3df9cc989634e87539691"
+    },
+    {
+      "path": "finatic_server/models/success_payload_fdx_webhook_subscription.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f0af27a6bfa7afd1a3a0dcd1e9b5df7fd5caf43d56aa04dfe9aebe8f38e6a0c6"
+    },
+    {
+      "path": "finatic_server/models/success_payload_link_user_to_mcp_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "05eaeba65f504733f1c0eeb85aa8ccdfb798a496d2fcbf67538e048d9a5c8610"
+    },
+    {
+      "path": "finatic_server/models/success_payload_link_user_to_session_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e349a629f1b706cbd99eec63a2213c97ff4efc977c7415b579e441a078973ac8"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_connector_list_item.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a51d30c1b4c3fa27a5fdb228eb6adca40cddcb82f4ecd3060d6cb19cc975008f"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_dict_str_any.py",
+      "provenance": "current_artifact",
+      "sha256": "d402953d2546bda7b1c8014f1d997d45912eac569e781ffd3f224a77c0e9c717"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_dict_str_str.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d614c50e4220bc8ff61798ac15faab28a435a2b9e65aa74d242a899be1bb79c7"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_account_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2463133101beebc4edc15c2b1223cbb185eeb7672e55e0dee0312a10feb844e6"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_broker_order.py",
+      "provenance": "current_artifact",
+      "sha256": "839d299030abee40634ddff8c5a8a9c9220e740157ebfc99b3874960ecd108eb"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_broker_order_event.py",
+      "provenance": "current_artifact",
+      "sha256": "41c9b31da85e73ba9d0e6a06d4004bce9916ff85d9028310bb07f7faa149c7fe"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_broker_order_fill.py",
+      "provenance": "current_artifact",
+      "sha256": "a5b19acaddbefa28b71db28f194865b2c9475be6b7334949888f806e2f5d5889"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_broker_position.py",
+      "provenance": "current_artifact",
+      "sha256": "dff65282358ff396ee43983629554b4e9e8b2c907a20b87ea7937d95cccc63a4"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_consent_grant.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c8a441cab405750a93576f2cc05a8f0e759fa74d74df54d610fc9b64f946df69"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_webhook_event_definition.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a92937847029287c64ffa84e2cd023e76a7a50dcfa26dbadcf071fb8084d9d21"
+    },
+    {
+      "path": "finatic_server/models/success_payload_list_fdx_webhook_subscription.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "509dc19c7a7c5df5a6233c2d4dd1a7553fc35ce891635c76f0e9bf8db60438c0"
+    },
+    {
+      "path": "finatic_server/models/success_payload_o_auth_completion_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "dd0352369ec1d9e2a3d25ccd3ed91f5a38b750463ea84420bd99f7059065e3d0"
+    },
+    {
+      "path": "finatic_server/models/success_payload_order_action_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "04e5568e643f42a76ea78fed05de34b952c940f61f13f69efc3526f7799671cf"
+    },
+    {
+      "path": "finatic_server/models/success_payload_owner_portal_bootstrap_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a72baafc981a4a6183564f473eba389a1c517d0baba6e1a2f07b5c19cc06b3b1"
+    },
+    {
+      "path": "finatic_server/models/success_payload_owner_portal_revoke_all_companies_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "724de5a064bf4595f4eed0ee1e93fa7c223e235d37404cea7b2203ca28297546"
+    },
+    {
+      "path": "finatic_server/models/success_payload_portal_session_validation_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "65ee291ca9d9fd5881f06abca1a033fedc40e727687eb1fb2463fb3378f9a267"
+    },
+    {
+      "path": "finatic_server/models/success_payload_portal_url_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f4f9d929eda68ff944a26bdfcf7322c36920edb918e763269ac41355d3875aa2"
+    },
+    {
+      "path": "finatic_server/models/success_payload_reauth_notification_opt_out_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "c986880edb013d245be5f32f78217ae0ca550ea931be2f60bf91f568f3f45e03"
+    },
+    {
+      "path": "finatic_server/models/success_payload_reauth_notification_preference.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "fd320c1534520928293a400bc375b5c21a2b28b265d87e645d22fdf0b7781415"
+    },
+    {
+      "path": "finatic_server/models/success_payload_rotate_secret_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d45d44c3414fe04994ecf907a7c445fa5f29e74800d682e24051147ef7504e02"
+    },
+    {
+      "path": "finatic_server/models/success_payload_sandbox_order_simulate_result.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6a15f60088e871e030a8cb2101cdbd4f0798b5494fe2ef10d5e116bc3e5e6d5e"
+    },
+    {
+      "path": "finatic_server/models/success_payload_session_response_data.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b558c1ca241316399aa83016054dc4a02cdde176a16348e20609ae8ede2f696b"
+    },
+    {
+      "path": "finatic_server/models/success_payload_session_sync_status_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4b3f74bdd2f5bddf900958fec58bf2c77f1f1d1bad290a600878320402fdc093"
+    },
+    {
+      "path": "finatic_server/models/success_payload_session_user_response.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "dd8d88282b28b4b2c4097f577e2827094db6f2e72b422dcc3d52b55403ed395d"
+    },
+    {
+      "path": "finatic_server/models/success_payload_token_response_data.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6b341db3107cb76f1db6e80c191ad9ab05bdac34c87aa1c3e0cad0c6a4c237aa"
+    },
+    {
+      "path": "finatic_server/models/sync_orders_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "55bee59d0e39248e77087cd32a6b26db46092a26c7fcbae29b7807207c01f7d9"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_equity_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "981f360a3a5fd775bd7d7813a1a8e06a75eaa0d4dd6c1fd90dbf95a0c460dc22"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_equity_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "3c66042c9b74c6b63bf2061c3c007acae5d9a49ef8e02cd0d9f8c4beddae45c7"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_equity_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9eb416297b6830df9c8b05dcc8bba9ef554662ad6f8739ffa718916db6eb1deb"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_equity_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7ceba76d54c0caa88c6e3b86ec4f3b6ebc881e20980bb584e69eab2fb5344a77"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_option_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8312a7f1d277ae9a452d75641bca805ce37925c012725599f42296d29db1444d"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_option_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a895d95d866e5ab7917ccf49d45e71966ba1a66ece77496e6db791338726e013"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_option_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "e83c0d0b11158b968d78582bf7ae45cafeff0fc18a095d7471571f9bdbb8fc10"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_option_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "a5758632870b695780521da9f9d91b39b328fb97adde10c1b154b0c928fa1ae5"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9e6b233943fa2e65551dc902f3a51f3cb5f6b6b11ca40bd261c8507e536713d5"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2e1a385a1a77cca8e580e6d2888797faec68a2eae826ba38adde4b8cbc0b25d7"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_order_modify_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "718516dfeb7aa8f3b41f3441d6d1f1b281c6fe13e893ffcf9081505595474b43"
+    },
+    {
+      "path": "finatic_server/models/tasty_trade_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "320fef8c1a930330779701eb9bd5bcbbf0d3dca74ddbd08adbed2303fe9b315b"
+    },
+    {
+      "path": "finatic_server/models/timeinforce.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7e284588d3f20b222fb163b897a9b6c037b6a02de13dd143460fc64786601b35"
+    },
+    {
+      "path": "finatic_server/models/timeinforce1.py",
+      "provenance": "current_artifact",
+      "sha256": "8bcf901829673ef8f5667954b236bc046df8a0d58b5eddd92a7a83c6ea3d6dd5"
+    },
+    {
+      "path": "finatic_server/models/token_response_data.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "530f89c98147d7e66cc10271eac59248205b57939e63c1f9e5ce3e9afdd98286"
+    },
+    {
+      "path": "finatic_server/models/totalcashvalue.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "775ae8b2e57ea66b9e7b9f13d843ad00ebf47b275c5f3b94c3b2875c190b26f6"
+    },
+    {
+      "path": "finatic_server/models/totalrealizedpnl.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ad6e2155173e0b5dcf86fe57cd57e2c06362e6d461f5058d4f2635812d5e10bd"
+    },
+    {
+      "path": "finatic_server/models/tradestation_equity_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ffba6ec86c6fd32eaa5a624aaaaa18605c24311abb9b0f6c00bffa567309303b"
+    },
+    {
+      "path": "finatic_server/models/tradestation_equity_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4a76f19dc594ce76b0722ee42a42fde4750b2ad0b1a752400ff50f0a8089b74c"
+    },
+    {
+      "path": "finatic_server/models/tradestation_equity_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "185e342521e1d2c682de5c496400fe7f7291eb48fd74ed00c9052d6b85d08098"
+    },
+    {
+      "path": "finatic_server/models/tradestation_equity_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cfad4b9b506996d9364e01273902fbbd1358e7ab78f1ff1df752aafc3d6f274b"
+    },
+    {
+      "path": "finatic_server/models/tradestation_equity_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b6b3c33251fd80329248697eaa49bfcf91194c7e0f8773fb1cb3698bd99bf38a"
+    },
+    {
+      "path": "finatic_server/models/tradestation_future_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d344cce5eabb6b88aea2a2fb662bb1aa42ae6011d86649cd9083c2f72864dec1"
+    },
+    {
+      "path": "finatic_server/models/tradestation_future_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "5eb69fb74abeb57c0ddc06576ace9412e40d35016139af2666669e85f082f9cb"
+    },
+    {
+      "path": "finatic_server/models/tradestation_future_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "396a46827113c6d55198e382c52142dc34abc94c8cfb91af904445f648e02803"
+    },
+    {
+      "path": "finatic_server/models/tradestation_future_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "369ab8f95bdbad4b708dc55ed6b6cb3a24a532a49773cd9a56bca6e19c25c921"
+    },
+    {
+      "path": "finatic_server/models/tradestation_future_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b800bd2f96fb5feaa06890ab8b8b135485b5373f6b88ee4c02a431eb589a3775"
+    },
+    {
+      "path": "finatic_server/models/tradestation_option_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "67e853866c7982a1d9a748a0b6d87755ba22330e5b6bdd7859c6d84d847c163a"
+    },
+    {
+      "path": "finatic_server/models/tradestation_option_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "374e4e59b2f2cfd6f3e12468add4e3659059ce1acd16bd8c1efa50a6f46c72c5"
+    },
+    {
+      "path": "finatic_server/models/tradestation_option_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cb185ae68ed7fcbf179ee298f428fb241879e565ddb773ff5eab77a69ad5cc1a"
+    },
+    {
+      "path": "finatic_server/models/tradestation_option_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "29b6d4457d73db7472da81226bf4a53785b9989f57dc39f876991b50c8192d04"
+    },
+    {
+      "path": "finatic_server/models/tradestation_option_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "9774ae578842aebc8ea63d2c140b9cd13da6b5c5cabb683bad3ddc291d329a18"
+    },
+    {
+      "path": "finatic_server/models/tradestation_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "939b9a615d098b040c78c14839fba755d66c85a5ed7399f7842c0e830549cb67"
+    },
+    {
+      "path": "finatic_server/models/tradestation_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7cee6df3c306bed162cbd94bbea694c6a8855ac0048ba306448dc9574ab34a52"
+    },
+    {
+      "path": "finatic_server/models/tradestation_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "96bc083f0267b730c39dc0f1381b8dd232a0030fb5f149ae10bcc15020ebefc9"
+    },
+    {
+      "path": "finatic_server/models/trading212_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "de85416d7d387ba47d1c9c615fc53cc740f46bd3d97e48f60976e0c9c7570a0c"
+    },
+    {
+      "path": "finatic_server/models/trading212_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "f0a772cfce5634b384160ba4426a4b47ffaedbcb1a104f39a9e198c05f1f9110"
+    },
+    {
+      "path": "finatic_server/models/trading212_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "73caf84c6aba618151aff312ff08e9519d0c6278cf66dc57f3420b80fc372fae"
+    },
+    {
+      "path": "finatic_server/models/trading212_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "eaf55e99f6991cd29967c1d833098c8656b385f7bb30b196dada31003b73aead"
+    },
+    {
+      "path": "finatic_server/models/trading212_order_modify_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7ddffa7de5b81cfc94bc071edca1c906e0ed9c1bd1be73edbb5c279e6874d6ad"
+    },
+    {
+      "path": "finatic_server/models/trading212_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "711a2e11f820e17ee382fcd63cf86f58cbad0e192152d634eb075237d0e1d52d"
+    },
+    {
+      "path": "finatic_server/models/trading212_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b84f639502d9aab7bd5733d5f9ef2b29da6f36003472da1eeeee47330f0ca265"
+    },
+    {
+      "path": "finatic_server/models/trading212_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "aaf8072e3ebf4359c85646d20d8ba1e1f507edd3798d0109c7c1e060fd002500"
+    },
+    {
+      "path": "finatic_server/models/trail_percent.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "ae44e9483d57252aa3844e671485528a610952665fa070edc951003bbe9c7a54"
+    },
+    {
+      "path": "finatic_server/models/trail_price.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "07c6368cf2ac5f4e9cf80ce233fdfa503bad23dd498d65dd2349147eafcd5f62"
+    },
+    {
+      "path": "finatic_server/models/transactionamount.py",
+      "provenance": "current_artifact",
+      "sha256": "ad9aa03b95e2f3991d863e5367a23f60ef6f514ab99c2e21938f75a605da523d"
+    },
+    {
+      "path": "finatic_server/models/units.py",
+      "provenance": "current_artifact",
+      "sha256": "446a84e4b6e85a4e5272c5fa8b61904c2c26e43a87e15775dc2cd9842d546245"
+    },
+    {
+      "path": "finatic_server/models/unrealizedprofitloss.py",
+      "provenance": "current_artifact",
+      "sha256": "864ff649b30fef01f86cf23a5fbd55763d6d5e0f272df45beacd06d26b16dbd0"
+    },
+    {
+      "path": "finatic_server/models/unrealizedprofitlosspercent.py",
+      "provenance": "current_artifact",
+      "sha256": "e319dafefaf6d62e98449c603310818c2f54a1117c5b3c76ac2229f18e109c24"
+    },
+    {
+      "path": "finatic_server/models/validation_error.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0e986fafbc2f3a560e8933ce4461d9fad79a742719db040450b19f6e72707abc"
+    },
+    {
+      "path": "finatic_server/models/validation_error_loc_inner.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0c3610025633c8dd80428805f4923ef72950d710f9b5ec1a3f5457323adb80d5"
+    },
+    {
+      "path": "finatic_server/models/webull_equity_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "00e63733ddbc26019224d09cb42630c9b3109c80db8ee39c661a536bfac87b19"
+    },
+    {
+      "path": "finatic_server/models/webull_equity_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0d729c44b3bbc565fcbd2d3f48a1819788404f83afb328b11d704c575b05ede3"
+    },
+    {
+      "path": "finatic_server/models/webull_equity_stop_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "145f6edd87e0e99f545c36134035e65b7d8c289e23a555ddc90d8cf57f73fbaf"
+    },
+    {
+      "path": "finatic_server/models/webull_equity_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "2cab5a8556d38d6726e7f98e226508cf92ed3ed37c9f09d6fffc7b5c494ed658"
+    },
+    {
+      "path": "finatic_server/models/webull_equity_trailing_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "8d2de75c97ef9c5bc252a244b97ea71eeb2b3ac9444943de51895d2ad0a2b698"
+    },
+    {
+      "path": "finatic_server/models/webull_limit_order_modify_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0542c742a049fe50e11ff92636142bc1d2b09608f95349e9234c4494b254494f"
+    },
+    {
+      "path": "finatic_server/models/webull_market_order_modify_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "6eeb49cac8ce2809df2753c16a9d071fb3f61a8e65d6bb60b1dc93279d6c673c"
+    },
+    {
+      "path": "finatic_server/models/webull_option_limit_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "cd5acab9118463cec5d60228774117be1e0198edfa2fe72ebe9ecf863d53f666"
+    },
+    {
+      "path": "finatic_server/models/webull_option_market_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "820f2b827b66c0373d61fc23d2ed92666a417cd8edd3816ed8547911a2197fd9"
+    },
+    {
+      "path": "finatic_server/models/webull_option_stop_order_place_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "96c3de6fc7f8bdd06f66c9d4112154f703109cd1f95c4076b149a42863aca6d2"
+    },
+    {
+      "path": "finatic_server/models/webull_order_cancel_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "d089fdbefcf7531af5291d62b595af121a7e7a914bfc1ccdd118df3b8e49d89f"
+    },
+    {
+      "path": "finatic_server/models/webull_order_cancel_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "4e2c5c0c80be63284b2370718822e7107025d325f45718fc5d1897a3e61b6dab"
+    },
+    {
+      "path": "finatic_server/models/webull_order_modify_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "b744809699ad586292e9073c516f50754dadcef440729837a1def12ac2ae9362"
+    },
+    {
+      "path": "finatic_server/models/webull_order_place_request.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "652597cc61c215063c6bd5710186b83a6897f6ca74d4780ad37e536517d9715d"
+    },
+    {
+      "path": "finatic_server/models/webull_stop_order_modify_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "0ed4f3eea97c80293671e1e095d763aa4d2c2308d988165b0e62416f97d6fc9d"
+    },
+    {
+      "path": "finatic_server/models/webull_trailing_stop_order_modify_query_params.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "daf19109130a50124f69d7d17d4ecb9105882e9e4f3c21ef1075292ff766f344"
+    },
+    {
+      "path": "finatic_server/py.typed",
+      "provenance": "legacy_snapshot",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "finatic_server/rest.py",
+      "provenance": "current_artifact",
+      "sha256": "5ae9e493b01cc9938a7da098762b3f19d0dfcef4f3acd2c2807a48b23926b678"
+    }
+  ],
+  "legacy_snapshot": "origin/develop@4451280121ebd9e29d0bd88e1adeadfad509a8d4",
+  "version": 1
+}

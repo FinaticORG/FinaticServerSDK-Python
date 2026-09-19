@@ -104,6 +104,10 @@ result = await finatic.v1.create_account_order(
 
 The server authorizes and resolves identities in account/provider scope. The
 SDK preserves both identifiers and never infers an exact contract from a root.
+The v1 facade continues to return dictionaries; its generated `TypedDict`
+annotations make descriptor keys discoverable without changing existing
+mapping access. Generated model classes remain available when explicit
+validation or construction is desired.
 
 ## Package layout
 

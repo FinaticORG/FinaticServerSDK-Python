@@ -25,6 +25,14 @@ from finatic_server.models.fdx_future_instrument_details import (
 )
 from finatic_server.models.fdx_instrument_descriptor import FDXInstrumentDescriptor
 
+from .finatic_fdx_typed_dicts import (
+    FDXBrokerOrderCommandResultDict,
+    FDXBrokerOrderDict,
+    FDXBrokerOrderEventDict,
+    FDXBrokerOrderFillDict,
+    FDXBrokerPositionDict,
+)
+
 __all__ = [
     "AccountOrderPayload",
     "FDXBrokerOrder",
@@ -38,4 +46,9 @@ __all__ = [
     "FDXBrokerTransaction",
     "FDXFutureInstrumentDetails",
     "FDXInstrumentDescriptor",
+    "FDXBrokerOrderCommandResultDict",
+    "FDXBrokerOrderDict",
+    "FDXBrokerOrderEventDict",
+    "FDXBrokerOrderFillDict",
+    "FDXBrokerPositionDict",
 ]

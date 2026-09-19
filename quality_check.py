@@ -90,7 +90,7 @@ def main() -> int:
             (["black", "--check", "src", "tests"], "Format check (black)"),
             (["isort", "--check-only", "src", "tests"], "Import sort check (isort)"),
             (["flake8", "src", "tests"], "Lint & import check (flake8)"),
-            (["mypy", "src"], "Type check (mypy)"),
+            (["mypy", "src", "typecheck"], "Type check (mypy)"),
         ]
 
         all_passed = True
