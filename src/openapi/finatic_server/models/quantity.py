@@ -28,7 +28,7 @@ QUANTITY_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Quantity(BaseModel):
     """
-    Requested quantity
+    Filled quantity
     """
 
     # data type: str

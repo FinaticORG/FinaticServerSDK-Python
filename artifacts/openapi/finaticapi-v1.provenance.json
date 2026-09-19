@@ -1,7 +1,7 @@
 {
   "source_repo": "FinaticORG/FinaticAPI",
   "source_pr": 748,
-  "source_sha": "a7e80ac708d34f20cb241b8152b3c672674022b5",
+  "source_sha": "54eb17ac130af907f95318c1833ff8f6fb915712",
   "artifact_path": "artifacts/openapi/finaticapi-v1.json",
   "sha256": "5c450a4e43aaad1e0f30d0bf0705183b0b882c86308ff78d9ff05cf2bde8054f",
   "generator": "@openapitools/openapi-generator-cli",

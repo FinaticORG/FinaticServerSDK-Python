@@ -138,5 +138,3 @@ class FDXBrokerOrderCommandResult(BaseModel):
             "supersededOrderId": obj.get("supersededOrderId")
         })
         return _obj
-
-

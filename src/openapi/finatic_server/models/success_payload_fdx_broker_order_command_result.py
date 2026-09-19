@@ -101,5 +101,3 @@ class SuccessPayloadFDXBrokerOrderCommandResult(BaseModel):
             "meta": obj.get("meta")
         })
         return _obj
-
-

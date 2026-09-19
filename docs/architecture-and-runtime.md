@@ -27,17 +27,26 @@
 ## OpenAPI provenance
 
 The committed v1 artifact comes from FinaticAPI PR #748 at
-`a7e80ac708d34f20cb241b8152b3c672674022b5` and has SHA-256
+`54eb17ac130af907f95318c1833ff8f6fb915712` and has SHA-256
 `5c450a4e43aaad1e0f30d0bf0705183b0b882c86308ff78d9ff05cf2bde8054f`.
 `artifacts/openapi/finaticapi-v1.provenance.json` is the machine-checked source
 record.
 
 The generated asyncio client uses OpenAPI Generator `7.18.0`, pinned in
-`openapitools.json`. The generation command is:
+`openapitools.json`. Regeneration is deliberately limited to the Accounts API,
+its transitive generated model graph, the public FDX models, and the generated
+runtime support files. This prevents unrelated broker/Core/MCP/telemetry
+surfaces from entering the packaged client.
 
 ```bash
-npx --yes @openapitools/openapi-generator-cli generate -g python -i artifacts/openapi/finaticapi-v1.json -o src/openapi --library asyncio --additional-properties=packageName=finatic_server,projectName=finatic-server-python,packageVersion=0.1.0,generateSourceCodeOnly=true --global-property=apiDocs=false,modelDocs=false,apiTests=false,modelTests=false --ignore-file-override src/openapi/.openapi-generator-ignore
+uv run python scripts/regenerate_openapi.py --write
+uv run python scripts/regenerate_openapi.py
 ```
 
-Generated models are not edited by hand. The hand-authored public facade and
-aliases live in `src/v1.py`, `src/types.py`, and `src/finatic_fdx_types.py`.
+The wrapper always generates into a clean temporary directory, verifies the
+pinned artifact checksum and generator version, derives the selected model
+dependency graph, checks its committed file manifest, and byte-compares the
+curated output after deterministic whitespace normalization. CI runs the
+check-only form. Generated files are not edited by hand; rerun `--write` and
+commit the generated diff. The hand-authored public facade and aliases live in
+`src/v1.py`, `src/types.py`, and `src/finatic_fdx_types.py`.

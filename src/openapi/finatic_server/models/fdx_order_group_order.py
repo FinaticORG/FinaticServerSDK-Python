@@ -22,23 +22,21 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.fdx_order_leg import FDXOrderLeg
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FDXOrderGroupOrder(BaseModel):
     """
     Order reference within an order group.
     """ # noqa: E501
-    broker_order_id: Optional[StrictStr] = Field(default=None, description="Filter by broker ID", alias="brokerOrderId")
+    broker_order_id: Optional[StrictStr] = Field(default=None, alias="brokerOrderId")
     legs: Optional[List[FDXOrderLeg]] = Field(default=None, description="Order legs")
     order_id: StrictStr = Field(description="Order identifier", alias="orderId")
-    order_type: Optional[StrictStr] = Field(default=None, description="Filter by broker ID", alias="orderType")
+    order_type: Optional[StrictStr] = Field(default=None, alias="orderType")
     status: StrictStr = Field(description="Order status")
-    symbol: Optional[StrictStr] = Field(default=None, description="Filter by broker ID")
+    symbol: Optional[StrictStr] = None
     __properties: ClassVar[List[str]] = ["brokerOrderId", "legs", "orderId", "orderType", "status", "symbol"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -50,7 +48,8 @@ class FDXOrderGroupOrder(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:

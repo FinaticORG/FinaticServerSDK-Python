@@ -96,5 +96,3 @@ class AccountOrderCommandRequest(BaseModel):
             "paperTradeConfirmed": obj.get("paperTradeConfirmed") if obj.get("paperTradeConfirmed") is not None else False
         })
         return _obj
-
-

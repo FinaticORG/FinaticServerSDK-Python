@@ -108,5 +108,3 @@ class FinaticResponseFDXBrokerOrderCommandResult(BaseModel):
             "warning": obj.get("warning")
         })
         return _obj
-
-
