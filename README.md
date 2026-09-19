@@ -79,6 +79,32 @@ created = await finatic.v1.create_account_order(
 
 Python wraps the dict as `{"order": ...}` on the wire. `idempotency_key` is required.
 
+### Exact instrument identity
+
+Order, fill, event, position, lot, and lot-fill responses expose the generated
+`FDXInstrumentDescriptor` contract. `future.identityQuality` distinguishes an
+exact contract such as `MGCZ6` from a root-only identity such as `MGC`; optional
+month, expiry, MIC, and provenance fields remain absent when the API did not
+prove them.
+
+```python
+from finatic_server_python import AccountOrderPayload, FDXInstrumentDescriptor
+
+order = AccountOrderPayload.from_dict(
+    {
+        "finaticInstrumentId": "finatic:future:MGCZ6",
+        "instrumentId": 611092087,  # provider-native identity remains supported
+        "symbol": "MGCZ6",
+    }
+)
+result = await finatic.v1.create_account_order(
+    account_id, order, idempotency_key="unique-command-key"
+)
+```
+
+The server authorizes and resolves identities in account/provider scope. The
+SDK preserves both identifiers and never infers an exact contract from a root.
+
 ## Package layout
 
 | Name | Role |

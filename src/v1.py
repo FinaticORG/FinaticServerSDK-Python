@@ -8,6 +8,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Literal, cast
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
@@ -15,6 +16,14 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 from finatic_server.api_client import ApiClient
 from finatic_server.configuration import Configuration
 
+from .finatic_fdx_types import (
+    AccountOrderPayload,
+    FDXBrokerOrder,
+    FDXBrokerOrderCommandResult,
+    FDXBrokerOrderEvent,
+    FDXBrokerOrderFill,
+    FDXBrokerPosition,
+)
 from .types import FinaticResponse
 from .utils.url_utils import (
     append_asset_types_to_url,
@@ -51,7 +60,7 @@ _STABLE_ERROR_CODES = {
 class AccountOrderCommand:
     """Account-scoped order command payload."""
 
-    order: dict[str, Any]
+    order: AccountOrderPayload | Mapping[str, Any]
 
 
 def _read_session_field(data: dict[str, Any] | None, keys: tuple[str, ...]) -> str:
@@ -354,7 +363,7 @@ class V1Client:
 
     async def list_positions(
         self, account_id: str, *, limit: int | None = None, offset: int | None = None
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[list[FDXBrokerPosition]]:
         """Positions for one financial account.
 
         @example
@@ -375,28 +384,28 @@ class V1Client:
 
     async def list_orders(
         self, account_id: str, *, limit: int | None = None, offset: int | None = None
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[list[FDXBrokerOrder]]:
         return await self.list_account_resource(
             account_id, "orders", limit=limit, offset=offset
         )
 
     async def get_account_order(
         self, account_id: str, order_id: str
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[FDXBrokerOrder]:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}"
         )
 
     async def get_account_order_fills(
         self, account_id: str, order_id: str
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[list[FDXBrokerOrderFill]]:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}/fills"
         )
 
     async def get_account_order_events(
         self, account_id: str, order_id: str
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[list[FDXBrokerOrderEvent]]:
         return await self._request(
             "GET", f"/api/v1/accounts/{account_id}/orders/{order_id}/events"
         )
@@ -420,10 +429,10 @@ class V1Client:
     async def create_account_order(
         self,
         account_id: str,
-        order: dict[str, Any],
+        order: AccountOrderPayload | Mapping[str, Any],
         *,
         idempotency_key: str,
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[FDXBrokerOrderCommandResult]:
         return await self._account_order_request(
             "POST", f"/api/v1/accounts/{account_id}/orders", order, idempotency_key
         )
@@ -432,10 +441,10 @@ class V1Client:
         self,
         account_id: str,
         order_id: str,
-        order: dict[str, Any],
+        order: AccountOrderPayload | Mapping[str, Any],
         *,
         idempotency_key: str,
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[FDXBrokerOrderCommandResult]:
         return await self._account_order_request(
             "PATCH",
             f"/api/v1/accounts/{account_id}/orders/{order_id}",
@@ -511,13 +520,18 @@ class V1Client:
         self,
         method: str,
         path: str,
-        order: dict[str, Any] | None,
+        order: AccountOrderPayload | Mapping[str, Any] | None,
         idempotency_key: str,
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[FDXBrokerOrderCommandResult]:
         if not idempotency_key:
             raise ValueError("idempotency_key is required for account order commands")
         headers = {"Idempotency-Key": idempotency_key}
-        body = {"order": order} if order is not None else None
+        normalized_order = (
+            order.to_dict() if isinstance(order, AccountOrderPayload) else order
+        )
+        body = (
+            {"order": dict(normalized_order)} if normalized_order is not None else None
+        )
         return await self._request(method, path, body=body, headers=headers)
 
     async def _request(

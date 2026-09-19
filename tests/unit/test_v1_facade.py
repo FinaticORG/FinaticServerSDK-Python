@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+from finatic_server_python import AccountOrderPayload
 from src.FinaticServerCore import FinaticServer
 from src.v1 import V1Client
 
@@ -59,6 +60,10 @@ V1_DATA_OPERATION_METHODS = {
     ("GET", "/api/v1/accounts"): "list_accounts",
     ("GET", "/api/v1/accounts/{accountId}"): "get_account",
     ("GET", "/api/v1/accounts/{accountId}/balances"): "list_balances",
+    (
+        "GET",
+        "/api/v1/accounts/{accountId}/order-schemas",
+    ): "get_account_order_schema",
     ("GET", "/api/v1/accounts/{accountId}/orders"): "list_orders",
     ("POST", "/api/v1/accounts/{accountId}/orders"): "create_account_order",
     (
@@ -122,7 +127,13 @@ def _data_openapi_operations() -> set[tuple[str, str]]:
     return {
         operation
         for operation in _v1_openapi_operations()
-        if "/session" not in operation[1]
+        if operation[1].startswith(
+            (
+                "/api/v1/account-grants",
+                "/api/v1/accounts",
+                "/api/v1/webhooks",
+            )
+        )
     }
 
 
@@ -209,6 +220,33 @@ async def test_v1_order_commands_send_idempotency_key() -> None:
     assert call["url"] == "https://api.test/api/v1/accounts/account-1/orders"
     assert call["headers"]["Idempotency-Key"] == "order-key-1"
     assert call["body"] == {"order": {"symbol": "AAPL", "quantity": 1}}
+
+
+@pytest.mark.asyncio
+async def test_v1_order_commands_accept_typed_additive_identity() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+    order = AccountOrderPayload.from_dict(
+        {
+            "finaticInstrumentId": "finatic:future:MGCZ6",
+            "instrumentId": 611092087,
+            "symbol": "MGCZ6",
+        }
+    )
+    assert order is not None
+
+    await sdk.v1.create_account_order("account-1", order, idempotency_key="order-key-2")
+
+    assert fake_api_client.calls[0]["body"] == {
+        "order": {
+            "finaticInstrumentId": "finatic:future:MGCZ6",
+            "instrumentId": 611092087,
+            "symbol": "MGCZ6",
+        }
+    }
 
 
 @pytest.mark.asyncio

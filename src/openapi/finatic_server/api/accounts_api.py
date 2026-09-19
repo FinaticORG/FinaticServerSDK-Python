@@ -1,3 +1,5 @@
+# coding: utf-8
+
 """
     Finatic FastAPI Backend
 
@@ -9,20 +11,24 @@
     Do not edit the class manually.
 """  # noqa: E501
 
-
 import warnings
 from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
-from pydantic import Field, StrictStr
+from pydantic import Field, StrictBool, StrictStr
 from typing import Optional
 from typing_extensions import Annotated
 from uuid import UUID
 from finatic_server.models.account_order_command_request import AccountOrderCommandRequest
 from finatic_server.models.finatic_response_dict_str_any import FinaticResponseDictStrAny
+from finatic_server.models.finatic_response_fdx_broker_order import FinaticResponseFDXBrokerOrder
 from finatic_server.models.finatic_response_fdx_broker_order_command_result import FinaticResponseFDXBrokerOrderCommandResult
 from finatic_server.models.finatic_response_list_dict_str_any import FinaticResponseListDictStrAny
+from finatic_server.models.finatic_response_list_fdx_broker_order import FinaticResponseListFDXBrokerOrder
+from finatic_server.models.finatic_response_list_fdx_broker_order_event import FinaticResponseListFDXBrokerOrderEvent
+from finatic_server.models.finatic_response_list_fdx_broker_order_fill import FinaticResponseListFDXBrokerOrderFill
+from finatic_server.models.finatic_response_list_fdx_broker_position import FinaticResponseListFDXBrokerPosition
 
 from finatic_server.api_client import ApiClient, RequestSerialized
 from finatic_server.api_response import ApiResponse
@@ -45,10 +51,11 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_delete_accounts_account_id_orders_order_id(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         idempotency_key: StrictStr,
         broker: Annotated[Optional[StrictStr], Field(description="Optional broker id hint; must match account grant if set.")] = None,
+        paper_trade_confirmed: Annotated[Optional[StrictBool], Field(description="Explicit per-operation confirmation for a Public sandbox order cancellation.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -67,7 +74,7 @@ class AccountsApi:
 
         Cancel an account-scoped order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -75,6 +82,8 @@ class AccountsApi:
         :type idempotency_key: str
         :param broker: Optional broker id hint; must match account grant if set.
         :type broker: str
+        :param paper_trade_confirmed: Explicit per-operation confirmation for a Public sandbox order cancellation.
+        :type paper_trade_confirmed: bool
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -104,6 +113,7 @@ class AccountsApi:
             order_id=order_id,
             idempotency_key=idempotency_key,
             broker=broker,
+            paper_trade_confirmed=paper_trade_confirmed,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -137,10 +147,11 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_delete_accounts_account_id_orders_order_id_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         idempotency_key: StrictStr,
         broker: Annotated[Optional[StrictStr], Field(description="Optional broker id hint; must match account grant if set.")] = None,
+        paper_trade_confirmed: Annotated[Optional[StrictBool], Field(description="Explicit per-operation confirmation for a Public sandbox order cancellation.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -159,7 +170,7 @@ class AccountsApi:
 
         Cancel an account-scoped order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -167,6 +178,8 @@ class AccountsApi:
         :type idempotency_key: str
         :param broker: Optional broker id hint; must match account grant if set.
         :type broker: str
+        :param paper_trade_confirmed: Explicit per-operation confirmation for a Public sandbox order cancellation.
+        :type paper_trade_confirmed: bool
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -196,6 +209,7 @@ class AccountsApi:
             order_id=order_id,
             idempotency_key=idempotency_key,
             broker=broker,
+            paper_trade_confirmed=paper_trade_confirmed,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -229,10 +243,11 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_delete_accounts_account_id_orders_order_id_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         idempotency_key: StrictStr,
         broker: Annotated[Optional[StrictStr], Field(description="Optional broker id hint; must match account grant if set.")] = None,
+        paper_trade_confirmed: Annotated[Optional[StrictBool], Field(description="Explicit per-operation confirmation for a Public sandbox order cancellation.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -251,7 +266,7 @@ class AccountsApi:
 
         Cancel an account-scoped order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -259,6 +274,8 @@ class AccountsApi:
         :type idempotency_key: str
         :param broker: Optional broker id hint; must match account grant if set.
         :type broker: str
+        :param paper_trade_confirmed: Explicit per-operation confirmation for a Public sandbox order cancellation.
+        :type paper_trade_confirmed: bool
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -288,6 +305,7 @@ class AccountsApi:
             order_id=order_id,
             idempotency_key=idempotency_key,
             broker=broker,
+            paper_trade_confirmed=paper_trade_confirmed,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -320,6 +338,7 @@ class AccountsApi:
         order_id,
         idempotency_key,
         broker,
+        paper_trade_confirmed,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -348,9 +367,13 @@ class AccountsApi:
             _path_params['orderId'] = order_id
         # process the query parameters
         if broker is not None:
-            
+
             _query_params.append(('broker', broker))
-            
+
+        if paper_trade_confirmed is not None:
+
+            _query_params.append(('paperTradeConfirmed', paper_trade_confirmed))
+
         # process the header parameters
         if idempotency_key is not None:
             _header_params['Idempotency-Key'] = idempotency_key
@@ -681,7 +704,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -700,7 +723,7 @@ class AccountsApi:
 
         Get one broker account visible through an active account grant.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param x_finatic_environment:
         :type x_finatic_environment: str
@@ -761,7 +784,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -780,7 +803,7 @@ class AccountsApi:
 
         Get one broker account visible through an active account grant.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param x_finatic_environment:
         :type x_finatic_environment: str
@@ -841,7 +864,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -860,7 +883,7 @@ class AccountsApi:
 
         Get one broker account visible through an active account grant.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param x_finatic_environment:
         :type x_finatic_environment: str
@@ -983,7 +1006,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_balances(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1004,7 +1027,7 @@ class AccountsApi:
 
         List account-scoped balances.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -1071,7 +1094,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_balances_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1092,7 +1115,7 @@ class AccountsApi:
 
         List account-scoped balances.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -1159,7 +1182,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_balances_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1180,7 +1203,7 @@ class AccountsApi:
 
         List account-scoped balances.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -1271,13 +1294,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -1319,7 +1342,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_order_schemas(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         action: Annotated[StrictStr, Field(description="Order command action: place, modify, or cancel.")],
         broker: Annotated[Optional[StrictStr], Field(description="Optional broker id hint; must match account grant if set.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1340,7 +1363,7 @@ class AccountsApi:
 
         Return JSON Schema for broker-specific order fields for this account.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param action: Order command action: place, modify, or cancel. (required)
         :type action: str
@@ -1407,7 +1430,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_order_schemas_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         action: Annotated[StrictStr, Field(description="Order command action: place, modify, or cancel.")],
         broker: Annotated[Optional[StrictStr], Field(description="Optional broker id hint; must match account grant if set.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1428,7 +1451,7 @@ class AccountsApi:
 
         Return JSON Schema for broker-specific order fields for this account.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param action: Order command action: place, modify, or cancel. (required)
         :type action: str
@@ -1495,7 +1518,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_order_schemas_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         action: Annotated[StrictStr, Field(description="Order command action: place, modify, or cancel.")],
         broker: Annotated[Optional[StrictStr], Field(description="Optional broker id hint; must match account grant if set.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1516,7 +1539,7 @@ class AccountsApi:
 
         Return JSON Schema for broker-specific order fields for this account.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param action: Order command action: place, modify, or cancel. (required)
         :type action: str
@@ -1607,13 +1630,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if action is not None:
-            
+
             _query_params.append(('action', action))
-            
+
         if broker is not None:
-            
+
             _query_params.append(('broker', broker))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -1655,7 +1678,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1671,12 +1694,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDictStrAny:
+    ) -> FinaticResponseListFDXBrokerOrder:
         """List Account Orders
 
         List account-scoped orders.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -1718,7 +1741,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrder",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1743,7 +1766,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1759,12 +1782,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDictStrAny]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrder]:
         """List Account Orders
 
         List account-scoped orders.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -1806,7 +1829,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrder",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1831,7 +1854,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -1852,7 +1875,7 @@ class AccountsApi:
 
         List account-scoped orders.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -1894,7 +1917,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrder",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1943,13 +1966,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -1991,7 +2014,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2006,12 +2029,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDictStrAny:
+    ) -> FinaticResponseFDXBrokerOrder:
         """Get Account Order
 
         Get one order after account-grant authorization.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2050,7 +2073,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrAny",
+            '200': "FinaticResponseFDXBrokerOrder",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2075,7 +2098,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2090,12 +2113,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDictStrAny]:
+    ) -> ApiResponse[FinaticResponseFDXBrokerOrder]:
         """Get Account Order
 
         Get one order after account-grant authorization.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2134,7 +2157,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrAny",
+            '200': "FinaticResponseFDXBrokerOrder",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2159,7 +2182,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2179,7 +2202,7 @@ class AccountsApi:
 
         Get one order after account-grant authorization.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2218,7 +2241,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrAny",
+            '200': "FinaticResponseFDXBrokerOrder",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2308,7 +2331,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_events(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2323,12 +2346,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDictStrAny:
+    ) -> FinaticResponseListFDXBrokerOrderEvent:
         """Get Account Order Events
 
         List events for an account order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2367,7 +2390,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrderEvent",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2392,7 +2415,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_events_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2407,12 +2430,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDictStrAny]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderEvent]:
         """Get Account Order Events
 
         List events for an account order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2451,7 +2474,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrderEvent",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2476,7 +2499,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_events_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2496,7 +2519,7 @@ class AccountsApi:
 
         List events for an account order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2535,7 +2558,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrderEvent",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2625,7 +2648,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_fills(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2640,12 +2663,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDictStrAny:
+    ) -> FinaticResponseListFDXBrokerOrderFill:
         """Get Account Order Fills
 
         List fills for an account order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2684,7 +2707,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrderFill",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2709,7 +2732,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_fills_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2724,12 +2747,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDictStrAny]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerOrderFill]:
         """Get Account Order Fills
 
         List fills for an account order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2768,7 +2791,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrderFill",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2793,7 +2816,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_orders_order_id_fills_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
@@ -2813,7 +2836,7 @@ class AccountsApi:
 
         List fills for an account order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -2852,7 +2875,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerOrderFill",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -2942,7 +2965,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_positions(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -2958,12 +2981,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseListDictStrAny:
+    ) -> FinaticResponseListFDXBrokerPosition:
         """List Account Positions
 
         List account-scoped positions.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -3005,7 +3028,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerPosition",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -3030,7 +3053,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_positions_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -3046,12 +3069,12 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseListDictStrAny]:
+    ) -> ApiResponse[FinaticResponseListFDXBrokerPosition]:
         """List Account Positions
 
         List account-scoped positions.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -3093,7 +3116,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerPosition",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -3118,7 +3141,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_positions_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -3139,7 +3162,7 @@ class AccountsApi:
 
         List account-scoped positions.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -3181,7 +3204,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseListDictStrAny",
+            '200': "FinaticResponseListFDXBrokerPosition",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -3230,13 +3253,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -3278,7 +3301,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_resource(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         resource: StrictStr,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
@@ -3300,7 +3323,7 @@ class AccountsApi:
 
         List account-scoped balances, positions, transactions, or orders.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param resource: (required)
         :type resource: str
@@ -3370,7 +3393,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_resource_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         resource: StrictStr,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
@@ -3392,7 +3415,7 @@ class AccountsApi:
 
         List account-scoped balances, positions, transactions, or orders.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param resource: (required)
         :type resource: str
@@ -3462,7 +3485,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_resource_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         resource: StrictStr,
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
@@ -3484,7 +3507,7 @@ class AccountsApi:
 
         List account-scoped balances, positions, transactions, or orders.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param resource: (required)
         :type resource: str
@@ -3581,13 +3604,13 @@ class AccountsApi:
             _path_params['resource'] = resource
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -3629,7 +3652,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_transactions(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -3650,7 +3673,7 @@ class AccountsApi:
 
         List account-scoped transactions.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -3717,7 +3740,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_transactions_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -3738,7 +3761,7 @@ class AccountsApi:
 
         List account-scoped transactions.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -3805,7 +3828,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_get_accounts_account_id_transactions_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -3826,7 +3849,7 @@ class AccountsApi:
 
         List account-scoped transactions.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param limit:
         :type limit: int
@@ -3917,13 +3940,13 @@ class AccountsApi:
             _path_params['accountId'] = account_id
         # process the query parameters
         if limit is not None:
-            
+
             _query_params.append(('limit', limit))
-            
+
         if offset is not None:
-            
+
             _query_params.append(('offset', offset))
-            
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -3965,7 +3988,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_patch_accounts_account_id_orders_order_id(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
@@ -3987,7 +4010,7 @@ class AccountsApi:
 
         Modify an account-scoped order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -4057,7 +4080,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_patch_accounts_account_id_orders_order_id_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
@@ -4079,7 +4102,7 @@ class AccountsApi:
 
         Modify an account-scoped order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -4149,7 +4172,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_patch_accounts_account_id_orders_order_id_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
@@ -4171,7 +4194,7 @@ class AccountsApi:
 
         Modify an account-scoped order.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
@@ -4325,7 +4348,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_post_accounts_account_id_orders(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -4346,7 +4369,7 @@ class AccountsApi:
 
         Create an account-scoped order with grant and idempotency checks.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param idempotency_key: (required)
         :type idempotency_key: str
@@ -4413,7 +4436,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_post_accounts_account_id_orders_with_http_info(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -4434,7 +4457,7 @@ class AccountsApi:
 
         Create an account-scoped order with grant and idempotency checks.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param idempotency_key: (required)
         :type idempotency_key: str
@@ -4501,7 +4524,7 @@ class AccountsApi:
     @validate_call
     async def finatic_v1_post_accounts_account_id_orders_without_preload_content(
         self,
-        account_id: UUID,
+        account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
         x_finatic_environment: Optional[StrictStr] = None,
@@ -4522,7 +4545,7 @@ class AccountsApi:
 
         Create an account-scoped order with grant and idempotency checks.
 
-        :param account_id: (required)
+        :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
         :param idempotency_key: (required)
         :type idempotency_key: str
