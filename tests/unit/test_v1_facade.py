@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+from finatic_server_python import AccountOrderPayload
 from src.FinaticServerCore import FinaticServer
 from src.v1 import V1Client
 
@@ -51,6 +52,32 @@ class FakeApiClient:
         return FakeResponse({"success": {"data": [], "meta": None}, "error": None})
 
 
+class DescriptorApiClient(FakeApiClient):
+    def call_api(
+        self,
+        method: str,
+        url: str,
+        header_params: dict[str, str] | None = None,
+        body: dict[str, Any] | None = None,
+    ) -> FakeResponse:
+        instrument = {
+            "version": "1",
+            "finaticInstrumentId": "finatic:future:MGCZ6",
+            "displaySymbol": "MGCZ6",
+            "assetType": "FUTURE",
+            "future": {"productRoot": "MGC", "identityQuality": "EXACT"},
+        }
+        if url.endswith("/fills"):
+            data = [{"fillId": "fill-1", "instrument": instrument}]
+        elif url.endswith("/events"):
+            data = [{"eventId": "event-1", "affectedInstruments": [instrument]}]
+        elif url.endswith("/positions"):
+            data = [{"id": "position-1", "instrument": instrument}]
+        else:
+            data = [{"orderId": "order-1", "legs": [{"instrument": instrument}]}]
+        return FakeResponse({"data": data, "warnings": [], "errors": []})
+
+
 V1_DATA_OPERATION_METHODS = {
     ("GET", "/api/v1/account-grants"): "list_account_grants",
     ("GET", "/api/v1/account-grants/{grantId}"): "get_account_grant",
@@ -59,6 +86,10 @@ V1_DATA_OPERATION_METHODS = {
     ("GET", "/api/v1/accounts"): "list_accounts",
     ("GET", "/api/v1/accounts/{accountId}"): "get_account",
     ("GET", "/api/v1/accounts/{accountId}/balances"): "list_balances",
+    (
+        "GET",
+        "/api/v1/accounts/{accountId}/order-schemas",
+    ): "get_account_order_schema",
     ("GET", "/api/v1/accounts/{accountId}/orders"): "list_orders",
     ("POST", "/api/v1/accounts/{accountId}/orders"): "create_account_order",
     (
@@ -122,7 +153,13 @@ def _data_openapi_operations() -> set[tuple[str, str]]:
     return {
         operation
         for operation in _v1_openapi_operations()
-        if "/session" not in operation[1]
+        if operation[1].startswith(
+            (
+                "/api/v1/account-grants",
+                "/api/v1/accounts",
+                "/api/v1/webhooks",
+            )
+        )
     }
 
 
@@ -209,6 +246,33 @@ async def test_v1_order_commands_send_idempotency_key() -> None:
     assert call["url"] == "https://api.test/api/v1/accounts/account-1/orders"
     assert call["headers"]["Idempotency-Key"] == "order-key-1"
     assert call["body"] == {"order": {"symbol": "AAPL", "quantity": 1}}
+
+
+@pytest.mark.asyncio
+async def test_v1_order_commands_accept_typed_additive_identity() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+    order = AccountOrderPayload.from_dict(
+        {
+            "finaticInstrumentId": "finatic:future:MGCZ6",
+            "instrumentId": 611092087,
+            "symbol": "MGCZ6",
+        }
+    )
+    assert order is not None
+
+    await sdk.v1.create_account_order("account-1", order, idempotency_key="order-key-2")
+
+    assert fake_api_client.calls[0]["body"] == {
+        "order": {
+            "finaticInstrumentId": "finatic:future:MGCZ6",
+            "instrumentId": 611092087,
+            "symbol": "MGCZ6",
+        }
+    }
 
 
 @pytest.mark.asyncio
@@ -317,3 +381,24 @@ def test_v1_reads_trace_header_from_generated_response() -> None:
 
     assert response["traceId"] == "trace-from-generated-response"
     assert response["data"] == {"ok": True}
+
+
+@pytest.mark.asyncio
+async def test_descriptor_facade_methods_return_typed_raw_mappings() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    sdk.v1.api_client = DescriptorApiClient()  # type: ignore[assignment]
+
+    orders = (await sdk.v1.list_orders("account-1"))["data"] or []
+    fills = (await sdk.v1.get_account_order_fills("account-1", "order-1"))["data"] or []
+    events = (await sdk.v1.get_account_order_events("account-1", "order-1"))[
+        "data"
+    ] or []
+    positions = (await sdk.v1.list_positions("account-1"))["data"] or []
+
+    assert isinstance(orders[0], dict)
+    assert orders[0]["legs"][0]["instrument"]["displaySymbol"] == "MGCZ6"
+    assert fills[0]["instrument"]["finaticInstrumentId"] == "finatic:future:MGCZ6"
+    assert events[0]["affectedInstruments"][0]["future"]["identityQuality"] == "EXACT"
+    assert positions[0]["instrument"]["future"]["productRoot"] == "MGC"

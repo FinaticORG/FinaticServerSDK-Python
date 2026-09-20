@@ -22,19 +22,20 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.assettype import Assettype
 from finatic_server.models.averagefillprice import Averagefillprice
+from finatic_server.models.fdx_instrument_descriptor import FDXInstrumentDescriptor
 from finatic_server.models.filledquantity import Filledquantity
 from finatic_server.models.futureunderlyingassettype import Futureunderlyingassettype
 from finatic_server.models.limitprice import Limitprice
 from finatic_server.models.notional2 import Notional2
-from finatic_server.models.quantity import Quantity
-from finatic_server.models.remainingquantity import Remainingquantity
+from finatic_server.models.positionintent import Positionintent
+from finatic_server.models.quantity2 import Quantity2
+from finatic_server.models.remainingquantity1 import Remainingquantity1
 from finatic_server.models.securityidtype import Securityidtype
-from finatic_server.models.side import Side
+from finatic_server.models.side3 import Side3
 from finatic_server.models.stopprice import Stopprice
 from finatic_server.models.strikeprice import Strikeprice
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FDXOrderLeg(BaseModel):
     """
@@ -42,30 +43,31 @@ class FDXOrderLeg(BaseModel):
     """ # noqa: E501
     asset_type: Assettype = Field(alias="assetType")
     average_fill_price: Optional[Averagefillprice] = Field(default=None, alias="averageFillPrice")
-    broker_provided_symbol: Optional[StrictStr] = Field(default=None, description="Raw symbol/contract from broker", alias="brokerProvidedSymbol")
-    contract_code: Optional[StrictStr] = Field(default=None, description="Future contract code (e.g., ESZ4)", alias="contractCode")
-    crypto_base_symbol: Optional[StrictStr] = Field(default=None, description="Crypto base symbol", alias="cryptoBaseSymbol")
-    crypto_quote_symbol: Optional[StrictStr] = Field(default=None, description="Crypto quote symbol", alias="cryptoQuoteSymbol")
-    expiration_date: Optional[date] = Field(default=None, description="Expiration date", alias="expirationDate")
+    broker_provided_symbol: Optional[StrictStr] = Field(default=None, alias="brokerProvidedSymbol")
+    contract_code: Optional[StrictStr] = Field(default=None, alias="contractCode")
+    crypto_base_symbol: Optional[StrictStr] = Field(default=None, alias="cryptoBaseSymbol")
+    crypto_quote_symbol: Optional[StrictStr] = Field(default=None, alias="cryptoQuoteSymbol")
+    expiration_date: Optional[date] = Field(default=None, alias="expirationDate")
     filled_quantity: Optional[Filledquantity] = Field(default=None, alias="filledQuantity")
     future_underlying_asset_type: Optional[Futureunderlyingassettype] = Field(default=None, alias="futureUnderlyingAssetType")
+    instrument: Optional[FDXInstrumentDescriptor] = None
     leg_index: StrictInt = Field(description="Leg index (0 for single-leg)", alias="legIndex")
     limit_price: Optional[Limitprice] = Field(default=None, alias="limitPrice")
     notional: Optional[Notional2] = None
-    option_type: Optional[StrictStr] = Field(default=None, description="Option type (CALL, PUT)", alias="optionType")
-    quantity: Quantity
-    remaining_quantity: Optional[Remainingquantity] = Field(default=None, alias="remainingQuantity")
+    option_type: Optional[StrictStr] = Field(default=None, alias="optionType")
+    position_intent: Optional[Positionintent] = Field(default=None, alias="positionIntent")
+    quantity: Quantity2
+    remaining_quantity: Optional[Remainingquantity1] = Field(default=None, alias="remainingQuantity")
     security_id: StrictStr = Field(description="Symbol or instrument identifier", alias="securityId")
     security_id_type: Securityidtype = Field(alias="securityIdType")
-    side: Side
+    side: Side3
     stop_price: Optional[Stopprice] = Field(default=None, alias="stopPrice")
     strike_price: Optional[Strikeprice] = Field(default=None, alias="strikePrice")
-    underlying_symbol: Optional[StrictStr] = Field(default=None, description="Underlying symbol", alias="underlyingSymbol")
-    __properties: ClassVar[List[str]] = ["assetType", "averageFillPrice", "brokerProvidedSymbol", "contractCode", "cryptoBaseSymbol", "cryptoQuoteSymbol", "expirationDate", "filledQuantity", "futureUnderlyingAssetType", "legIndex", "limitPrice", "notional", "optionType", "quantity", "remainingQuantity", "securityId", "securityIdType", "side", "stopPrice", "strikePrice", "underlyingSymbol"]
+    underlying_symbol: Optional[StrictStr] = Field(default=None, alias="underlyingSymbol")
+    __properties: ClassVar[List[str]] = ["assetType", "averageFillPrice", "brokerProvidedSymbol", "contractCode", "cryptoBaseSymbol", "cryptoQuoteSymbol", "expirationDate", "filledQuantity", "futureUnderlyingAssetType", "instrument", "legIndex", "limitPrice", "notional", "optionType", "positionIntent", "quantity", "remainingQuantity", "securityId", "securityIdType", "side", "stopPrice", "strikePrice", "underlyingSymbol"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -77,7 +79,8 @@ class FDXOrderLeg(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -114,12 +117,18 @@ class FDXOrderLeg(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of future_underlying_asset_type
         if self.future_underlying_asset_type:
             _dict['futureUnderlyingAssetType'] = self.future_underlying_asset_type.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of instrument
+        if self.instrument:
+            _dict['instrument'] = self.instrument.to_dict()
         # override the default output from pydantic by calling `to_dict()` of limit_price
         if self.limit_price:
             _dict['limitPrice'] = self.limit_price.to_dict()
         # override the default output from pydantic by calling `to_dict()` of notional
         if self.notional:
             _dict['notional'] = self.notional.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of position_intent
+        if self.position_intent:
+            _dict['positionIntent'] = self.position_intent.to_dict()
         # override the default output from pydantic by calling `to_dict()` of quantity
         if self.quantity:
             _dict['quantity'] = self.quantity.to_dict()
@@ -178,6 +187,11 @@ class FDXOrderLeg(BaseModel):
         if self.future_underlying_asset_type is None and "future_underlying_asset_type" in self.model_fields_set:
             _dict['futureUnderlyingAssetType'] = None
 
+        # set to None if instrument (nullable) is None
+        # and model_fields_set contains the field
+        if self.instrument is None and "instrument" in self.model_fields_set:
+            _dict['instrument'] = None
+
         # set to None if limit_price (nullable) is None
         # and model_fields_set contains the field
         if self.limit_price is None and "limit_price" in self.model_fields_set:
@@ -192,6 +206,11 @@ class FDXOrderLeg(BaseModel):
         # and model_fields_set contains the field
         if self.option_type is None and "option_type" in self.model_fields_set:
             _dict['optionType'] = None
+
+        # set to None if position_intent (nullable) is None
+        # and model_fields_set contains the field
+        if self.position_intent is None and "position_intent" in self.model_fields_set:
+            _dict['positionIntent'] = None
 
         # set to None if remaining_quantity (nullable) is None
         # and model_fields_set contains the field
@@ -234,15 +253,17 @@ class FDXOrderLeg(BaseModel):
             "expirationDate": obj.get("expirationDate"),
             "filledQuantity": Filledquantity.from_dict(obj["filledQuantity"]) if obj.get("filledQuantity") is not None else None,
             "futureUnderlyingAssetType": Futureunderlyingassettype.from_dict(obj["futureUnderlyingAssetType"]) if obj.get("futureUnderlyingAssetType") is not None else None,
+            "instrument": FDXInstrumentDescriptor.from_dict(obj["instrument"]) if obj.get("instrument") is not None else None,
             "legIndex": obj.get("legIndex"),
             "limitPrice": Limitprice.from_dict(obj["limitPrice"]) if obj.get("limitPrice") is not None else None,
             "notional": Notional2.from_dict(obj["notional"]) if obj.get("notional") is not None else None,
             "optionType": obj.get("optionType"),
-            "quantity": Quantity.from_dict(obj["quantity"]) if obj.get("quantity") is not None else None,
-            "remainingQuantity": Remainingquantity.from_dict(obj["remainingQuantity"]) if obj.get("remainingQuantity") is not None else None,
+            "positionIntent": Positionintent.from_dict(obj["positionIntent"]) if obj.get("positionIntent") is not None else None,
+            "quantity": Quantity2.from_dict(obj["quantity"]) if obj.get("quantity") is not None else None,
+            "remainingQuantity": Remainingquantity1.from_dict(obj["remainingQuantity"]) if obj.get("remainingQuantity") is not None else None,
             "securityId": obj.get("securityId"),
             "securityIdType": Securityidtype.from_dict(obj["securityIdType"]) if obj.get("securityIdType") is not None else None,
-            "side": Side.from_dict(obj["side"]) if obj.get("side") is not None else None,
+            "side": Side3.from_dict(obj["side"]) if obj.get("side") is not None else None,
             "stopPrice": Stopprice.from_dict(obj["stopPrice"]) if obj.get("stopPrice") is not None else None,
             "strikePrice": Strikeprice.from_dict(obj["strikePrice"]) if obj.get("strikePrice") is not None else None,
             "underlyingSymbol": obj.get("underlyingSymbol")

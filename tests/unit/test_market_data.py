@@ -31,7 +31,6 @@ def test_beta_generated_clients_not_shipped_in_current_surface() -> None:
         "api_beta",
         "legacy",
         "user_broker_connection",
-        "position_lot",
     )
     remaining_models = [path.name for path in model_dir.glob("*.py")]
     assert not [
@@ -39,3 +38,9 @@ def test_beta_generated_clients_not_shipped_in_current_surface() -> None:
         for filename in remaining_models
         if any(fragment in filename for fragment in forbidden_model_fragments)
     ]
+    assert {
+        filename for filename in remaining_models if "position_lot" in filename
+    } == {
+        "fdx_broker_position_lot.py",
+        "fdx_broker_position_lot_fill.py",
+    }

@@ -17,24 +17,23 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from finatic_server.models.account_order_payload import AccountOrderPayload
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class AccountOrderCommandRequest(BaseModel):
     """
     Account-scoped order command body for place and modify.
     """ # noqa: E501
-    broker: Optional[StrictStr] = Field(default=None, description="Optional broker id hint for schema discrimination; must match the account grant when provided.")
-    order: Dict[str, Any] = Field(description="Broker-specific order payload")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["broker", "order"]
+    broker: Optional[StrictStr] = None
+    order: AccountOrderPayload = Field(description="Broker-specific order payload. Provider-specific fields are accepted and preserved.")
+    paper_trade_confirmed: Optional[StrictBool] = Field(default=False, description="Explicit per-operation confirmation for paper-trading writes. Public sandbox orders are rejected unless this is true.", alias="paperTradeConfirmed")
+    __properties: ClassVar[List[str]] = ["broker", "order", "paperTradeConfirmed"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -46,7 +45,8 @@ class AccountOrderCommandRequest(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -62,10 +62,8 @@ class AccountOrderCommandRequest(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -73,11 +71,9 @@ class AccountOrderCommandRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
+        # override the default output from pydantic by calling `to_dict()` of order
+        if self.order:
+            _dict['order'] = self.order.to_dict()
         # set to None if broker (nullable) is None
         # and model_fields_set contains the field
         if self.broker is None and "broker" in self.model_fields_set:
@@ -96,13 +92,7 @@ class AccountOrderCommandRequest(BaseModel):
 
         _obj = cls.model_validate({
             "broker": obj.get("broker"),
-            "order": obj.get("order")
+            "order": AccountOrderPayload.from_dict(obj["order"]) if obj.get("order") is not None else None,
+            "paperTradeConfirmed": obj.get("paperTradeConfirmed") if obj.get("paperTradeConfirmed") is not None else False
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
-
-

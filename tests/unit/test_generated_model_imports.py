@@ -19,7 +19,6 @@ def test_import_generated_models_for_public_surface_coverage() -> None:
         "api_beta",
         "legacy",
         "user_broker_connection",
-        "position_lot",
     )
     assert not [
         module_name
