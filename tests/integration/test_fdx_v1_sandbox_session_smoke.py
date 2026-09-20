@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import pytest
+
 from finatic_server.api_client import ApiClient
 from finatic_server.configuration import Configuration
-
 from src.v1 import V1Client
 from tests.integration.helpers.fdx_sandbox import (
     DEFAULT_API_BASE_URL,

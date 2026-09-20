@@ -15,4 +15,3 @@ finatic_server/api/telemetry_api.py
 finatic_server/models/*beta*
 finatic_server/models/*legacy*
 finatic_server/models/*user_broker_connection*
-finatic_server/models/*position_lot*
