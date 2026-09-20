@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Regenerate the account-resource client from FinaticAPI PR #748 and expose
+  typed instrument descriptors for orders, fills, events, positions, lots, and
+  lot fills.
+- Add typed canonical `finaticInstrumentId` placement while preserving the
+  provider-native `instrumentId`, arbitrary provider fields, raw dictionaries,
+  account scoping, and idempotency behavior.
+
 ## 1.0.3
 
 - Release sync after PyPI publish.

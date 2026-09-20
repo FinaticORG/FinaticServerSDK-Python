@@ -28,7 +28,7 @@ SIDE_ANY_OF_SCHEMAS = ["FDXOrderSide", "str"]
 
 class Side(BaseModel):
     """
-    Order side (BUY, SELL)
+    Execution side (BUY, SELL)
     """
 
     # data type: FDXOrderSide

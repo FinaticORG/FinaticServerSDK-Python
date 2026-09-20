@@ -13,6 +13,29 @@ except ModuleNotFoundError:
     pass
 
 try:
+    from .finatic_fdx_types import (
+        AccountOrderPayload,
+        FDXBrokerOrder,
+        FDXBrokerOrderCommandResult,
+        FDXBrokerOrderCommandResultDict,
+        FDXBrokerOrderDict,
+        FDXBrokerOrderEvent,
+        FDXBrokerOrderEventDict,
+        FDXBrokerOrderFill,
+        FDXBrokerOrderFillDict,
+        FDXBrokerOrderGroup,
+        FDXBrokerPosition,
+        FDXBrokerPositionDict,
+        FDXBrokerPositionLot,
+        FDXBrokerPositionLotFill,
+        FDXBrokerTransaction,
+        FDXFutureInstrumentDetails,
+        FDXInstrumentDescriptor,
+    )
+except ModuleNotFoundError:
+    pass
+
+try:
     from finatic_server import *  # type: ignore[F401,F403]
 except ModuleNotFoundError:
     pass

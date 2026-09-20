@@ -3,17 +3,24 @@
 This file is regenerated on each run - do not edit directly.
 """
 
-from typing import Any, TypeVar
+from typing import Any, Generic, TypeVar
+
+from typing_extensions import TypedDict
 
 # Generic type variable for response data
 T = TypeVar("T")
 
-# Type alias for FinaticResponse structure
-# This provides IntelliSense and type checking while runtime is a plain dict
-FinaticResponse = dict[str, Any]
 
-# Note: At runtime, FinaticResponse[T] is just Dict[str, Any]
-# The generic type parameter T is used for type hints and IntelliSense only
+class FinaticResponse(TypedDict, Generic[T]):
+    """Public response envelope; runtime values remain ordinary dictionaries."""
+
+    traceId: str | None
+    data: T | None
+    warnings: list[dict[str, Any]]
+    errors: list[dict[str, Any]]
+
+
+# The generic type parameter is for static typing and IntelliSense only.
 # The public v1 envelope structure is:
 # {
 #   "traceId": str | None,
