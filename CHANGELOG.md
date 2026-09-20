@@ -9,6 +9,10 @@
   provider-native `instrumentId`, arbitrary provider fields, raw dictionaries,
   account scoping, and idempotency behavior.
 
+## 1.0.4
+
+- Release from 1f12f4e6b4f0eba77d315913d338d90aef8adfd9.
+
 ## 1.0.3
 
 - Release sync after PyPI publish.
