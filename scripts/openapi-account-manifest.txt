@@ -10,6 +10,9 @@ src/openapi/finatic_server/models/assettype.py
 src/openapi/finatic_server/models/averagebuyprice.py
 src/openapi/finatic_server/models/averagefillprice.py
 src/openapi/finatic_server/models/averagesellprice.py
+src/openapi/finatic_server/models/broker_data_option_type_enum.py
+src/openapi/finatic_server/models/broker_data_order_side_enum.py
+src/openapi/finatic_server/models/broker_data_order_status_enum.py
 src/openapi/finatic_server/models/closedquantity.py
 src/openapi/finatic_server/models/closepriceavg.py
 src/openapi/finatic_server/models/commission.py

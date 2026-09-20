@@ -39,7 +39,18 @@ SUPPORTING_FILES = {
     PACKAGE_ROOT / "rest.py",
 }
 
+# These schemas are not reachable from the curated Accounts/public FDX import
+# closure, but retained legacy generated models import them.  Keep them pinned
+# to and byte-compared with the current artifact instead of misclassifying new
+# files as part of the legacy snapshot.
+CURRENT_ARTIFACT_COMPATIBILITY_FILES = {
+    PACKAGE_ROOT / "models/broker_data_option_type_enum.py",
+    PACKAGE_ROOT / "models/broker_data_order_side_enum.py",
+    PACKAGE_ROOT / "models/broker_data_order_status_enum.py",
+}
+
 LEGACY_PROVENANCE = "origin/develop@4451280121ebd9e29d0bd88e1adeadfad509a8d4"
+LEGACY_REVISION = "4451280121ebd9e29d0bd88e1adeadfad509a8d4"
 
 
 def normalize_generated(content: bytes) -> bytes:
@@ -116,6 +127,7 @@ def managed_files(output: Path) -> set[Path]:
     seeds = {
         PACKAGE_ROOT / "api/accounts_api.py",
         *SUPPORTING_FILES,
+        *CURRENT_ARTIFACT_COMPATIBILITY_FILES,
         *(
             PACKAGE_ROOT / "models" / f"{module}.py"
             for module in PUBLIC_MODEL_RE.findall(public_types)
@@ -201,18 +213,42 @@ def committed_generated_files() -> set[Path]:
     }
 
 
+def legacy_snapshot_content(relative: Path) -> bytes | None:
+    """Read a generated file from the pinned legacy Git tree, if it exists."""
+    repository_path = (Path("src/openapi") / relative).as_posix()
+    result = subprocess.run(
+        ["git", "show", f"{LEGACY_REVISION}:{repository_path}"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode == 0:
+        return result.stdout
+    return None
+
+
 def write_complete_manifest(current_files: set[Path]) -> None:
     files = []
     for relative in sorted(committed_generated_files()):
         content = (GENERATED_ROOT / relative).read_bytes()
+        provenance = "current_artifact"
+        if relative not in current_files:
+            legacy_content = legacy_snapshot_content(relative)
+            if legacy_content is None:
+                raise RuntimeError(
+                    "generated file is neither current-artifact managed nor present "
+                    f"in {LEGACY_PROVENANCE}: src/openapi/{relative}"
+                )
+            if content != legacy_content:
+                raise RuntimeError(
+                    "legacy generated file differs from its pinned snapshot: "
+                    f"src/openapi/{relative}"
+                )
+            provenance = "legacy_snapshot"
         files.append(
             {
                 "path": relative.as_posix(),
-                "provenance": (
-                    "current_artifact"
-                    if relative in current_files
-                    else "legacy_snapshot"
-                ),
+                "provenance": provenance,
                 "sha256": hashlib.sha256(content).hexdigest(),
             }
         )
@@ -233,6 +269,14 @@ def verify_complete_manifest(current_files: set[Path]) -> bool:
     entries = {Path(item["path"]): item for item in payload["files"]}
     committed = committed_generated_files()
     clean = True
+    if payload.get("legacy_snapshot") != LEGACY_PROVENANCE:
+        clean = False
+        print("Complete manifest legacy provenance is stale.", file=sys.stderr)
+    if payload.get("current_artifact") != json.loads(
+        PROVENANCE.read_text(encoding="utf-8")
+    ):
+        clean = False
+        print("Complete manifest current-artifact provenance is stale.", file=sys.stderr)
     if committed != set(entries):
         clean = False
         print("Complete generated-tree file manifest is stale.", file=sys.stderr)
@@ -251,11 +295,40 @@ def verify_complete_manifest(current_files: set[Path]) -> bool:
             "Complete manifest current-artifact classification is stale.",
             file=sys.stderr,
         )
+    unknown_provenance = {
+        path
+        for path, item in entries.items()
+        if item.get("provenance") not in {"current_artifact", "legacy_snapshot"}
+    }
+    for relative in sorted(unknown_provenance):
+        clean = False
+        print(
+            f"unknown generated provenance: src/openapi/{relative}", file=sys.stderr
+        )
     for relative in sorted(committed & set(entries)):
         digest = hashlib.sha256((GENERATED_ROOT / relative).read_bytes()).hexdigest()
         if digest != entries[relative]["sha256"]:
             clean = False
             print(f"generated tree drift: src/openapi/{relative}", file=sys.stderr)
+        if entries[relative].get("provenance") != "legacy_snapshot":
+            continue
+        legacy_content = legacy_snapshot_content(relative)
+        if legacy_content is None:
+            clean = False
+            print(
+                "legacy provenance path missing from pinned snapshot: "
+                f"src/openapi/{relative}",
+                file=sys.stderr,
+            )
+            continue
+        legacy_digest = hashlib.sha256(legacy_content).hexdigest()
+        if legacy_digest != entries[relative]["sha256"]:
+            clean = False
+            print(
+                "legacy provenance digest mismatch: "
+                f"src/openapi/{relative}",
+                file=sys.stderr,
+            )
     return clean
 
 

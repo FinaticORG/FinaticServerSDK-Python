@@ -242,17 +242,17 @@
     },
     {
       "path": "finatic_server/models/broker_data_option_type_enum.py",
-      "provenance": "legacy_snapshot",
+      "provenance": "current_artifact",
       "sha256": "d8a19f4f0c1b131efee9d64098c92302ce1ca9a9c3dbb0a3a9e7ebee9376f571"
     },
     {
       "path": "finatic_server/models/broker_data_order_side_enum.py",
-      "provenance": "legacy_snapshot",
+      "provenance": "current_artifact",
       "sha256": "097d6f99c8d11809e95bb15a6aebe9dd6bf17645a1f5cbdc7a2011e524741eef"
     },
     {
       "path": "finatic_server/models/broker_data_order_status_enum.py",
-      "provenance": "legacy_snapshot",
+      "provenance": "current_artifact",
       "sha256": "64c709d32a47e6022c3077704c18ad2663073cebfe1bf5fd3b781cf6f70d3829"
     },
     {
