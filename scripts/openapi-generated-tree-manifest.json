@@ -4,10 +4,10 @@
     "generator": "@openapitools/openapi-generator-cli",
     "generator_library": "asyncio",
     "generator_version": "7.18.0",
-    "sha256": "5c450a4e43aaad1e0f30d0bf0705183b0b882c86308ff78d9ff05cf2bde8054f",
-    "source_pr": 748,
+    "sha256": "eb46395f01861eba2c2fa33b68367304dd48377e1624244e126c90d3e414747a",
+    "source_pr": 822,
     "source_repo": "FinaticORG/FinaticAPI",
-    "source_sha": "7e45c28e68b4e7fad7f7f890983ffe44e2ff1279"
+    "source_sha": "0931df616d3bbce9a9922dbb014d11430f180dd4"
   },
   "files": [
     {
@@ -223,17 +223,17 @@
     {
       "path": "finatic_server/models/averagebuyprice.py",
       "provenance": "current_artifact",
-      "sha256": "43e68e1f8119453b6afa0a7cbe66d4e608eb9aaa03d4489edab5b4aa0176e883"
+      "sha256": "b7938f1f747020c7e3025f051faf7c243d8dda030266df6e6bd5f90c19adc049"
     },
     {
       "path": "finatic_server/models/averagefillprice.py",
       "provenance": "current_artifact",
-      "sha256": "496aaecf9d48337551a4b3a5c4ebaac09afaad08cb40501d420c1c820ef42de6"
+      "sha256": "f37e9cb20de23bfd6bf9bacc1fb6ba2c355fdb735f9856aa52468837f73f8612"
     },
     {
       "path": "finatic_server/models/averagesellprice.py",
       "provenance": "current_artifact",
-      "sha256": "204b74c772d312ecbc9abf2543ad8a71c85c0ee355dd95c134e529b1f54e9094"
+      "sha256": "960b626257739524f17fa376f373cc5fac886f68310856f46ca968ca64098fc2"
     },
     {
       "path": "finatic_server/models/broker_connection_request.py",
@@ -313,27 +313,27 @@
     {
       "path": "finatic_server/models/closedquantity.py",
       "provenance": "current_artifact",
-      "sha256": "891831fdf2deb9ef5c98702ee611c8313c09dbf3cd660a2d6d82f2d3e0433343"
+      "sha256": "e67ef2fb7af7c88716794a206ecb31c663357e1f085cf782dd467e119a850fa9"
     },
     {
       "path": "finatic_server/models/closepriceavg.py",
       "provenance": "current_artifact",
-      "sha256": "8c22acbba390a202ef3db7b8f80ce47a5da8a729b751f503b25740e7e0d54cb4"
+      "sha256": "a7d00e2edb81f2d67ae2646ccf205b3edcdabd59f37ec4e962581caacce282e9"
     },
     {
       "path": "finatic_server/models/commission.py",
       "provenance": "current_artifact",
-      "sha256": "a74b126fe82e6bda330f1526dc2c00a5b9e4069e9368dea080448160935dc114"
+      "sha256": "e99c7686f14177196f05ecedb70e0db0c0291f1db82f5ddf1b9323e96507523a"
     },
     {
       "path": "finatic_server/models/commission1.py",
       "provenance": "current_artifact",
-      "sha256": "7d54b4b1e15ac1fd4ad66951d2d51933ea630b4c0ddfcf7cd3e6a75c17f4c3ec"
+      "sha256": "cfd1b68999a9ef601fab096abd1fd9936e11974e3791baef51a3b41caee1a40b"
     },
     {
       "path": "finatic_server/models/commissionshare.py",
       "provenance": "current_artifact",
-      "sha256": "d4d2cc872cfef964b56187fa8437646e468c6cae29c4cd2043d513a5b7b87c96"
+      "sha256": "fa52c4711f65ca02fbfaf2eedaeb65392e9c0d63955742a8b291f10764ebafb0"
     },
     {
       "path": "finatic_server/models/complete_session_response.py",
@@ -348,22 +348,22 @@
     {
       "path": "finatic_server/models/costbasis.py",
       "provenance": "current_artifact",
-      "sha256": "87d435a70c3a4f160af54ee94f7526eaceb79bb29b91152a58105074dc7d4c56"
+      "sha256": "de6c89768b14270a1df4be010a3e9e2dd5e3a711249c1b860bf04e857c32c168"
     },
     {
       "path": "finatic_server/models/costbasis1.py",
       "provenance": "current_artifact",
-      "sha256": "82683dfa7b15a010c2e5613a72702637791269bc5ad6adadbb6032895e0b6f29"
+      "sha256": "24047aab03f9719cd5aa717188c14ec827eb23a0a613d3ef4b0ea5e2b09db21b"
     },
     {
       "path": "finatic_server/models/costbasiswithcommission.py",
       "provenance": "current_artifact",
-      "sha256": "ff7e000a7987dce8c59a8b504c8e33b8ac095fc05a262792b4f999fdb97310c8"
+      "sha256": "a0ba9a34cebc2de2a2637e74109b7db429f04ce1bb08ba603b50ab1b9b0397ca"
     },
     {
       "path": "finatic_server/models/costbasiswithcommission1.py",
       "provenance": "current_artifact",
-      "sha256": "1c62357794e321336419bace9b974e95798f270a6c3df7de756b71a46a1f134a"
+      "sha256": "94d83cc1d84ec0c61c39662c3ccc4da13c4083c2dddb153dc769934383e8e49b"
     },
     {
       "path": "finatic_server/models/create_session_request.py",
@@ -378,7 +378,7 @@
     {
       "path": "finatic_server/models/currentprice.py",
       "provenance": "current_artifact",
-      "sha256": "8f3b86b44ffc782c4f143cf12ebdc41958dc462ce3e966a9e08ff3a94b30d590"
+      "sha256": "4f8105f2e6f146bd3d8d7556db5cb592751240fe405445e0295de9bb823d6e9f"
     },
     {
       "path": "finatic_server/models/day_tif.py",
@@ -598,17 +598,17 @@
     {
       "path": "finatic_server/models/filledquantity.py",
       "provenance": "current_artifact",
-      "sha256": "65328504c590a4137bb82549c597c7202f3178e6fab03e32f2a56129874ab1a6"
+      "sha256": "2bc85d4630ee326225011ee54ee750db64e24db45386029313d01d2d815c5844"
     },
     {
       "path": "finatic_server/models/fillprice.py",
       "provenance": "current_artifact",
-      "sha256": "fc683aa5ca2143ad9788243ba423b9ab386984626c75447c938d3cf6c097849a"
+      "sha256": "cd7dacd351e53dfb25e5e0b327c05ca9377bc3d9df615c607b38a0858439f3e0"
     },
     {
       "path": "finatic_server/models/fillquantity.py",
       "provenance": "current_artifact",
-      "sha256": "1cc60b5cb73f24d6cbf7c9a6793d15f671aacbd71cd48e08c8424c7af3a1637d"
+      "sha256": "c0df491a1b9e1abb6ba964ba577e84a2ff4c24d60d2ec0c7c4cce9bed9fb2b5f"
     },
     {
       "path": "finatic_server/models/finatic_api_error_response.py",
@@ -933,7 +933,7 @@
     {
       "path": "finatic_server/models/limitprice.py",
       "provenance": "current_artifact",
-      "sha256": "4415a5e0f62fd2d4c09d7237955d87494a4c7529a1d9761ec38e2a070d6497c4"
+      "sha256": "20a9fd97134ffeae5b918e291fc3388165f18ea3bd8e23a5f95918688c334865"
     },
     {
       "path": "finatic_server/models/link_user_to_mcp_session_request.py",
@@ -963,7 +963,7 @@
     {
       "path": "finatic_server/models/marketvalue.py",
       "provenance": "current_artifact",
-      "sha256": "121453fb79df714a28ec5e0325e41222faffb629faf0e3b6e5235d327d13027e"
+      "sha256": "68fc3aa3df5e1c50391b4c63776a685c217ec36e439dbd0a1f1ca62a7361d569"
     },
     {
       "path": "finatic_server/models/mcp_bootstrap_request.py",
@@ -1043,7 +1043,7 @@
     {
       "path": "finatic_server/models/notional2.py",
       "provenance": "current_artifact",
-      "sha256": "0642d48a9c7d238e8b66628cd28d71f8c4a2722392bf7be9dbe7dfe0cee8f45d"
+      "sha256": "38c1a23be60fec887457d7e290102e54bb54ab1827b98684e9b58b2464006aa0"
     },
     {
       "path": "finatic_server/models/o_auth_completion_response.py",
@@ -1053,12 +1053,12 @@
     {
       "path": "finatic_server/models/openprice.py",
       "provenance": "current_artifact",
-      "sha256": "f4ae8cb3a93ba6ae674804a0f00f826600f802d1a09f4c021461f2fc1ecc4a3e"
+      "sha256": "df141c9f33c6e3d5e42d58c4ccefad59e8772e777637ba04023a9337146b135b"
     },
     {
       "path": "finatic_server/models/openquantity.py",
       "provenance": "current_artifact",
-      "sha256": "bd1b41c99e90f9b76467d3b33eb0fba015092bcd224ed29c7e7822a7fbb97191"
+      "sha256": "ac8484b752ea4cde426226e637011bafdb608ecf41993d7cd5a5300163878619"
     },
     {
       "path": "finatic_server/models/order.py",
@@ -1298,47 +1298,47 @@
     {
       "path": "finatic_server/models/price.py",
       "provenance": "current_artifact",
-      "sha256": "874608c1b2545a8f3769096874dcddc0225ed7dcc068240542b5fe1f61bce15d"
+      "sha256": "e8eb821d7c48df6b566a9d9581fb48ae2d7a521dbc8971230689afeff62cfec5"
     },
     {
       "path": "finatic_server/models/quantity.py",
       "provenance": "current_artifact",
-      "sha256": "a04096e470092c7ed306429eb29c47a3de911935bd151c58eb97838f5e5b2e9d"
+      "sha256": "71a9ee0eeef47777d7c2b30f5ca12ff9663888a20306984a5e74b6023d5696e0"
     },
     {
       "path": "finatic_server/models/quantity1.py",
       "provenance": "current_artifact",
-      "sha256": "956a4707cb47591ae7769c21c515cbb8560b954b0eb0667e72988ab0db7d6c82"
+      "sha256": "680df7ca44ccdaa18793d905dbe8fd0781202bd726f9c6efc2a31ae2760700cc"
     },
     {
       "path": "finatic_server/models/quantity2.py",
       "provenance": "current_artifact",
-      "sha256": "bf182ff6d45cd076c4d40b70647a34aa9600a3a1bd0374be99691bc95065bfbd"
+      "sha256": "1cd81c754399bfe6829f31a54d4ab129f4dbb6be11cfba6caa1ad5d44fab50b0"
     },
     {
       "path": "finatic_server/models/realizedprofitloss.py",
       "provenance": "current_artifact",
-      "sha256": "f2a71300b6fc79457928353447ae405786c45239b5e8e47111f7db986fa88c94"
+      "sha256": "50dfb984298c36756f419bd5f0ffdbff98294bdaf212de90dec3af93e2275f2c"
     },
     {
       "path": "finatic_server/models/realizedprofitloss1.py",
       "provenance": "current_artifact",
-      "sha256": "8b92fd48719cd63c68e7f2320039d694f21967de08a483a8acfe4bd15ba88521"
+      "sha256": "eaabdad85c9f94dc31467addc1bb843f4c7432f61a096efcea537124eb7239fe"
     },
     {
       "path": "finatic_server/models/realizedprofitlosspercent.py",
       "provenance": "current_artifact",
-      "sha256": "df90733be3150094d256851586b482383dcba44ab770c5ef8fc5fb79f21aafb5"
+      "sha256": "acd66f00eb4584d9fdd071e04d556dc5061ce84da4d1f9d1d11b9571d9e99eb1"
     },
     {
       "path": "finatic_server/models/realizedprofitlosswithcommission.py",
       "provenance": "current_artifact",
-      "sha256": "58b4ed00fe84f4e2a51bf4c4b9db02673fc8711631f6c137ea49239904c0322a"
+      "sha256": "ae726f17d26d2155aa361d7695eb3100530d439514ea132d0d54a93f50414c77"
     },
     {
       "path": "finatic_server/models/realizedprofitlosswithcommission1.py",
       "provenance": "current_artifact",
-      "sha256": "0313fa9dbf0fe0a9f388234b2c7421fc2100d8746a28cdaaed404f4c922b2f4e"
+      "sha256": "b0e256fc8320ed20142ad0670ef182ad569c5ca06c09ae1307b46dff12951865"
     },
     {
       "path": "finatic_server/models/reauth_notification_opt_out_request.py",
@@ -1363,12 +1363,12 @@
     {
       "path": "finatic_server/models/remainingquantity.py",
       "provenance": "current_artifact",
-      "sha256": "153ed3a6b58ce3c75825234c30ce38fbdc9d0e1981d20c4f7f70f3d080f79079"
+      "sha256": "bf659fe0bce6e557cb282c5978fb5e9e823ef377b34e5f8d4b41f2f71c4b5807"
     },
     {
       "path": "finatic_server/models/remainingquantity1.py",
       "provenance": "current_artifact",
-      "sha256": "502ff9ca3050f4bbd2c853d0258856d9e856a82c4212bcf1c98c2c9c20156093"
+      "sha256": "7f5fdd4e725af1019812b9245021cbfd1cf08ebeb0cae5ede859f20f214aef5a"
     },
     {
       "path": "finatic_server/models/robinhood_crypto_limit_order_place_query_params.py",
@@ -1558,12 +1558,12 @@
     {
       "path": "finatic_server/models/stopprice.py",
       "provenance": "current_artifact",
-      "sha256": "db11fe215cf1e0e97cede54ce31f50b5cd9973ee4aa12aae6c1b9aa818118c2a"
+      "sha256": "335749c87b1fb1ac4c9cfdbbbc95445c674d4ffe7ebc851572e3163e6f14baab"
     },
     {
       "path": "finatic_server/models/strikeprice.py",
       "provenance": "current_artifact",
-      "sha256": "48c242f41dc76ab4bbbd96e70c9fa0fea6512afb0f4bba4b3bbca5d72f18951a"
+      "sha256": "638c2582fb41dec98826962d802734cd6c4600667f23c6ba5da9fbacf7e49fc0"
     },
     {
       "path": "finatic_server/models/strikeprice1.py",
@@ -2033,22 +2033,22 @@
     {
       "path": "finatic_server/models/transactionamount.py",
       "provenance": "current_artifact",
-      "sha256": "ad9aa03b95e2f3991d863e5367a23f60ef6f514ab99c2e21938f75a605da523d"
+      "sha256": "1ceca0a8492595e88fed486224723d6e78c1aa0d52bf08bf2f27ea7b8eb1c729"
     },
     {
       "path": "finatic_server/models/units.py",
       "provenance": "current_artifact",
-      "sha256": "446a84e4b6e85a4e5272c5fa8b61904c2c26e43a87e15775dc2cd9842d546245"
+      "sha256": "5122d25102c0b48459d7b0a08f556e54ff649691de1468187955cf6bfa27b5a9"
     },
     {
       "path": "finatic_server/models/unrealizedprofitloss.py",
       "provenance": "current_artifact",
-      "sha256": "864ff649b30fef01f86cf23a5fbd55763d6d5e0f272df45beacd06d26b16dbd0"
+      "sha256": "766e1e15bae420361b38d733785e6d517102c8c220df8708e093d0d29b562967"
     },
     {
       "path": "finatic_server/models/unrealizedprofitlosspercent.py",
       "provenance": "current_artifact",
-      "sha256": "e319dafefaf6d62e98449c603310818c2f54a1117c5b3c76ac2229f18e109c24"
+      "sha256": "733101151309931ae6af6d0a387315590577e56008b5d0d962f31e49da240af1"
     },
     {
       "path": "finatic_server/models/validation_error.py",

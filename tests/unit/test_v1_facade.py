@@ -83,6 +83,10 @@ V1_DATA_OPERATION_METHODS = {
     ("GET", "/api/v1/account-grants/{grantId}"): "get_account_grant",
     ("PATCH", "/api/v1/account-grants/{grantId}"): "update_account_grant",
     ("POST", "/api/v1/account-grants/{grantId}/revoke"): "revoke_account_grant",
+    (
+        "POST",
+        "/api/v1/users/{userId}/broker-connections/offboarding",
+    ): "offboard_broker_connection",
     ("GET", "/api/v1/accounts"): "list_accounts",
     ("GET", "/api/v1/accounts/{accountId}"): "get_account",
     ("GET", "/api/v1/accounts/{accountId}/balances"): "list_balances",
@@ -153,12 +157,15 @@ def _data_openapi_operations() -> set[tuple[str, str]]:
     return {
         operation
         for operation in _v1_openapi_operations()
-        if operation[1].startswith(
-            (
-                "/api/v1/account-grants",
-                "/api/v1/accounts",
-                "/api/v1/webhooks",
+        if (
+            operation[1].startswith(
+                (
+                    "/api/v1/account-grants",
+                    "/api/v1/accounts",
+                    "/api/v1/webhooks",
+                )
             )
+            or operation[1] == "/api/v1/users/{userId}/broker-connections/offboarding"
         )
     }
 
@@ -246,6 +253,28 @@ async def test_v1_order_commands_send_idempotency_key() -> None:
     assert call["url"] == "https://api.test/api/v1/accounts/account-1/orders"
     assert call["headers"]["Idempotency-Key"] == "order-key-1"
     assert call["body"] == {"order": {"symbol": "AAPL", "quantity": 1}}
+
+
+@pytest.mark.asyncio
+async def test_v1_offboards_account_selected_connection_without_connection_id() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    await sdk.v1.offboard_broker_connection(
+        "user-1", "account-1", idempotency_key="offboard-key-1"
+    )
+
+    call = fake_api_client.calls[0]
+    assert call["method"] == "POST"
+    assert call["url"] == (
+        "https://api.test/api/v1/users/user-1/broker-connections/offboarding"
+    )
+    assert call["headers"]["Idempotency-Key"] == "offboard-key-1"
+    assert call["body"] == {"accountId": "account-1"}
+    assert "connectionId" not in json.dumps(call)
 
 
 @pytest.mark.asyncio

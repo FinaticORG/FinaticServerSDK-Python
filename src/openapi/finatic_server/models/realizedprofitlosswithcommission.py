@@ -19,7 +19,6 @@ import pprint
 import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, ValidationError, field_validator
 from typing import Optional, Union
-from typing_extensions import Annotated
 from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
 from typing_extensions import Literal, Self
 from pydantic import Field
@@ -32,7 +31,7 @@ class Realizedprofitlosswithcommission(BaseModel):
     """
 
     # data type: str
-    anyof_schema_1_validator: Optional[Annotated[str, Field(strict=True)]] = None
+    anyof_schema_1_validator: Optional[StrictStr] = None
     # data type: float
     anyof_schema_2_validator: Optional[Union[StrictFloat, StrictInt]] = None
     if TYPE_CHECKING:
