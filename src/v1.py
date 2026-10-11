@@ -482,6 +482,21 @@ class V1Client:
     async def revoke_account_grant(self, grant_id: str) -> FinaticResponse:
         return await self._request("POST", f"/api/v1/account-grants/{grant_id}/revoke")
 
+    async def offboard_broker_connection(
+        self,
+        user_id: str,
+        account_id: str,
+        *,
+        idempotency_key: str,
+    ) -> FinaticResponse:
+        """Offboard one account-selected broker connection without its internal ID."""
+        return await self._request(
+            "POST",
+            f"/api/v1/users/{user_id}/broker-connections/offboarding",
+            body={"accountId": account_id},
+            headers={"Idempotency-Key": self._require_idempotency_key(idempotency_key)},
+        )
+
     async def get_webhook_catalog(self) -> FinaticResponse:
         return await self._request("GET", "/api/v1/webhooks/catalog")
 
@@ -764,6 +779,12 @@ class V1Client:
         if not self.session_id:
             raise ValueError("Session not initialized. Call v1.start_session() first.")
         return self.session_id
+
+    @staticmethod
+    def _require_idempotency_key(idempotency_key: str) -> str:
+        if not idempotency_key:
+            raise ValueError("idempotency_key is required")
+        return idempotency_key
 
     def _compact_query(self, query: dict[str, Any]) -> dict[str, Any]:
         return {key: value for key, value in query.items() if value is not None}
