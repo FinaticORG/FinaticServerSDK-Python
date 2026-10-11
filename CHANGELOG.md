@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+- Release from d4277ef3e830b95a4d337992784833d864d679f1.
+
 ## Unreleased
 
 - Regenerate the account-resource client from FinaticAPI PR #748 and expose
@@ -8,6 +12,10 @@
 - Add typed canonical `finaticInstrumentId` placement while preserving the
   provider-native `instrumentId`, arbitrary provider fields, raw dictionaries,
   account scoping, and idempotency behavior.
+
+## 1.0.4
+
+- Release from 1f12f4e6b4f0eba77d315913d338d90aef8adfd9.
 
 ## 1.0.3
 
