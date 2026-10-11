@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+- Release from d4277ef3e830b95a4d337992784833d864d679f1.
+
 ## Unreleased
 
 - Regenerate the account-resource client from FinaticAPI PR #748 and expose
