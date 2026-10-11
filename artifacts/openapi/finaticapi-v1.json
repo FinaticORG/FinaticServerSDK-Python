@@ -2054,6 +2054,78 @@
         "title": "AuthStepType",
         "type": "string"
       },
+      "BrokerConnectionOffboardingRequest": {
+        "additionalProperties": false,
+        "description": "Public selector for one broker connection without exposing its ID.",
+        "properties": {
+          "accountId": {
+            "format": "uuid",
+            "title": "Accountid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "accountId"
+        ],
+        "title": "BrokerConnectionOffboardingRequest",
+        "type": "object"
+      },
+      "BrokerConnectionOffboardingResult": {
+        "description": "Tenant-safe result for account-selected broker offboarding.",
+        "properties": {
+          "accountId": {
+            "format": "uuid",
+            "title": "Accountid",
+            "type": "string"
+          },
+          "action": {
+            "enum": [
+              "company_grants_revoked",
+              "connection_deletion_started"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "idempotentReplay": {
+            "default": false,
+            "title": "Idempotentreplay",
+            "type": "boolean"
+          },
+          "operationId": {
+            "format": "uuid",
+            "title": "Operationid",
+            "type": "string"
+          },
+          "revokedGrantCount": {
+            "minimum": 0.0,
+            "title": "Revokedgrantcount",
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "accepted",
+              "completed"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "userId": {
+            "format": "uuid",
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operationId",
+          "userId",
+          "accountId",
+          "state",
+          "action",
+          "revokedGrantCount"
+        ],
+        "title": "BrokerConnectionOffboardingResult",
+        "type": "object"
+      },
       "BrokerConnectionRequest": {
         "description": "Request model for creating a broker connection.\n\nThis model represents the request payload for creating a new broker connection\nor reconnecting to an existing one. Used by the POST /connections endpoint to\nauthenticate with a broker and establish a connection that can be shared across\ncompany accounts.\n\nThe model includes broker identification, authentication credentials, optional\npermission settings, and an optional connection ID for reconnection scenarios.\n\nAttributes\n----------\nbroker_id : str\n    Unique identifier for the broker (e.g., \"tradestation\", \"tasty_trade\").\n    Must match a broker ID from the available brokers list. Determines which\n    broker adapter handles the connection.\ncredentials : dict\n    Authentication credentials required by the broker. Structure varies by\n    broker and auth_type. Common formats include:\n    - OAuth: {\"access_token\": \"...\", \"refresh_token\": \"...\"}\n    - API Key: {\"api_key\": \"...\", \"api_secret\": \"...\"}\n    - Username/Password: {\"username\": \"...\", \"password\": \"...\"}\npermissions : BrokerPermissions | None\n    Initial permission settings for the connection. If None, defaults to\n    read-only access (read=True, write=False). Can be updated later via\n    BrokerConnectionUpdateRequest.\nconnection_id : UUID | None\n    Optional connection ID for reconnection scenarios. If provided, the system\n    attempts to reconnect to an existing connection rather than creating a\n    new one. Used when refreshing expired tokens or restoring connections.\n    Default is None (create new connection).\n\nNotes\n-----\n1. **Credential Format**: The credentials dict structure is broker-specific.\n   Each broker adapter validates credentials according to its requirements.\n\n2. **Reconnection**: When connection_id is provided, the system validates\n   that the connection exists and belongs to the user before reconnecting.\n\n3. **Multi-Step Auth**: Some brokers require multi-step authentication flows\n   (OAuth). In these cases, the initial request may return a MultiStepAuthResponse\n   instead of a BrokerDataUserBrokerConnections object.\n\n4. **Company Sharing**: Once created, connections can be shared with company\n   accounts via the CompanyAccess table with specific permissions per company.\n\nExamples\n--------\n>>> # Create new connection with API key\n>>> request = BrokerConnectionRequest(\n...     broker_id=\"tradestation\",\n...     credentials={\n...         \"api_key\": \"your_api_key\",\n...         \"api_secret\": \"your_api_secret\",\n...     },\n...     permissions=BrokerPermissions(read=True, write=True),\n... )\n>>> # Reconnect to existing connection\n>>> reconnect_request = BrokerConnectionRequest(\n...     broker_id=\"tasty_trade\",\n...     credentials={\"refresh_token\": \"token_here\"},\n...     connection_id=UUID(\"123e4567-e89b-12d3-a456-426614174000\"),\n... )\n>>> # OAuth connection (may require multi-step flow)\n>>> oauth_request = BrokerConnectionRequest(\n...     broker_id=\"interactive_brokers\",\n...     credentials={\"code\": \"oauth_code_from_callback\"},\n... )\n\nSee Also\n--------\nBrokerPermissions : Permission model used in this request\nBrokerConnectionUpdateRequest : Model for updating existing connections\nfinaticapi.api.beta.routers.brokers.legacy.legacy_brokers_router.create_connection\n    : Endpoint that accepts this model\nfinaticapi.core.services.broker_service.BrokerService.create_connection\n    : Service method that processes this request",
         "properties": {
@@ -3948,7 +4020,6 @@
           "commission": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4483,7 +4554,6 @@
           "commission": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4563,7 +4633,6 @@
           "price": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4576,7 +4645,6 @@
           "quantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4791,7 +4859,6 @@
           "averageBuyPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4807,7 +4874,6 @@
           "averageSellPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4828,7 +4894,6 @@
           "costBasis": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4844,7 +4909,6 @@
           "costBasisWithCommission": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4860,7 +4924,6 @@
           "currentPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4917,7 +4980,6 @@
           "marketValue": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -4997,7 +5059,6 @@
           "quantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5010,7 +5071,6 @@
           "realizedProfitLoss": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5026,7 +5086,6 @@
           "realizedProfitLossPercent": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5042,7 +5101,6 @@
           "realizedProfitLossWithCommission": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5118,7 +5176,6 @@
           "units": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5134,7 +5191,6 @@
           "unrealizedProfitLoss": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5150,7 +5206,6 @@
           "unrealizedProfitLossPercent": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5203,7 +5258,6 @@
           "closePriceAvg": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5232,7 +5286,6 @@
           "closedQuantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5257,7 +5310,6 @@
           "costBasis": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5270,7 +5322,6 @@
           "costBasisWithCommission": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5324,7 +5375,6 @@
           "openPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5337,7 +5387,6 @@
           "openQuantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5376,7 +5425,6 @@
           "realizedProfitLoss": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5389,7 +5437,6 @@
           "realizedProfitLossWithCommission": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5402,7 +5449,6 @@
           "remainingQuantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5462,7 +5508,6 @@
           "commissionShare": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5484,7 +5529,6 @@
           "fillPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5497,7 +5541,6 @@
           "fillQuantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -5642,7 +5685,6 @@
           "transactionAmount": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6149,7 +6191,6 @@
           "averageFillPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6226,7 +6267,6 @@
           "filledQuantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6273,7 +6313,6 @@
           "limitPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6289,7 +6328,6 @@
           "notional": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6332,7 +6370,6 @@
           "quantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6345,7 +6382,6 @@
           "remainingQuantity": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6390,7 +6426,6 @@
           "stopPrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -6406,7 +6441,6 @@
           "strikePrice": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -7938,6 +7972,58 @@
           }
         },
         "title": "FinaticResponse[Any]",
+        "type": "object"
+      },
+      "FinaticResponse_BrokerConnectionOffboardingResult_": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_BrokerConnectionOffboardingResult_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[BrokerConnectionOffboardingResult]",
         "type": "object"
       },
       "FinaticResponse_BrokerDataUserBrokerConnections_": {
@@ -12577,7 +12663,6 @@
           "availableBalance": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12593,7 +12678,6 @@
           "availableToWithdraw": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12651,7 +12735,6 @@
           "buyingPower": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12667,7 +12750,6 @@
           "cashBalance": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12707,7 +12789,6 @@
           "currentBalance": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12723,7 +12804,6 @@
           "initialMargin": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12764,7 +12844,6 @@
           "maintenanceMargin": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12780,7 +12859,6 @@
           "netLiquidationValue": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12796,7 +12874,6 @@
           "pendingBalance": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12812,7 +12889,6 @@
           "totalCashValue": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -12828,7 +12904,6 @@
           "totalRealizedPnl": {
             "anyOf": [
               {
-                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -14878,6 +14953,45 @@
         "title": "OwnerPortalAccountGrant",
         "type": "object"
       },
+      "OwnerPortalAccountGrantCreate": {
+        "additionalProperties": false,
+        "description": "Create a fresh grant for one selected account on an owned connection.",
+        "properties": {
+          "brokerAccountId": {
+            "format": "uuid",
+            "title": "Brokeraccountid",
+            "type": "string"
+          },
+          "canRead": {
+            "default": true,
+            "title": "Canread",
+            "type": "boolean"
+          },
+          "canTrade": {
+            "default": false,
+            "title": "Cantrade",
+            "type": "boolean"
+          },
+          "companyAccountId": {
+            "format": "uuid",
+            "title": "Companyaccountid",
+            "type": "string"
+          },
+          "dataClusters": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Dataclusters",
+            "type": "array"
+          }
+        },
+        "required": [
+          "companyAccountId",
+          "brokerAccountId"
+        ],
+        "title": "OwnerPortalAccountGrantCreate",
+        "type": "object"
+      },
       "OwnerPortalAccountGrantUpdate": {
         "additionalProperties": false,
         "description": "Owner-portal update for one account grant's resource clusters.",
@@ -15166,6 +15280,18 @@
             "title": "Connection Id",
             "type": "string"
           },
+          "disconnect_operation_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disconnect Operation Id"
+          },
           "message": {
             "title": "Message",
             "type": "string"
@@ -15173,6 +15299,17 @@
           "revoked_company_count": {
             "title": "Revoked Company Count",
             "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
           }
         },
         "required": [
@@ -19977,6 +20114,40 @@
           }
         },
         "title": "SuccessPayload[Any]",
+        "type": "object"
+      },
+      "SuccessPayload_BrokerConnectionOffboardingResult_": {
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrokerConnectionOffboardingResult"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The response data (None when error is present)"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional metadata (pagination, etc.)",
+            "title": "Meta"
+          }
+        },
+        "title": "SuccessPayload[BrokerConnectionOffboardingResult]",
         "type": "object"
       },
       "SuccessPayload_BrokerDataUserBrokerConnections_": {
@@ -29590,6 +29761,18 @@
             "title": "Cascadegroup",
             "type": "boolean"
           },
+          "clientComboOrderId": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clientcomboorderid"
+          },
           "orderId": {
             "anyOf": [
               {
@@ -37072,6 +37255,70 @@
         ],
         "x-sdk-session-headers": false,
         "x-sdk-session-in-params": false
+      },
+      "post": {
+        "description": "Create a fresh consent/grant for an owner-selected account.",
+        "operationId": "create_owner_connection_account_grant_api_v1_owner_portal_connections__connection_id__account_grants_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "connection_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Connection Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OwnerPortalAccountGrantCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticResponse_FDXAccountGrant_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Owner Connection Account Grant",
+        "tags": [
+          "owner-portal"
+        ],
+        "x-sdk-audiences": [
+          "sdk",
+          "web",
+          "portal"
+        ],
+        "x-sdk-session-headers": false,
+        "x-sdk-session-in-params": false
       }
     },
     "/api/v1/owner-portal/connections/{connection_id}/companies": {
@@ -41030,6 +41277,197 @@
         "tags": [
           "telemetry"
         ]
+      }
+    },
+    "/api/v1/users/{userId}/broker-connections/offboarding": {
+      "post": {
+        "description": "Offboard only the broker connection selected by a public account ID.",
+        "operationId": "finaticV1PostUsersUserIdBrokerConnectionsOffboarding",
+        "parameters": [
+          {
+            "description": "Stable Finatic end-user UUID",
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "description": "Stable Finatic end-user UUID",
+              "format": "uuid",
+              "title": "User Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Client-generated retry key scoped to the calling company, environment, user, and selected account.",
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "description": "Client-generated retry key scoped to the calling company, environment, user, and selected account.",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Finatic-Environment",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Finatic-Environment"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerConnectionOffboardingRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticResponse_BrokerConnectionOffboardingResult_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
+          }
+        },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
+        "summary": "Offboard Broker Connection",
+        "tags": [
+          "user-lifecycle"
+        ],
+        "x-finatic-environment-header": "X-Finatic-Environment",
+        "x-finatic-environments": [
+          "live",
+          "sandbox"
+        ],
+        "x-finatic-error-taxonomy": [
+          "AUTHENTICATION",
+          "AUTHORIZATION",
+          "VALIDATION",
+          "RATE_LIMITED",
+          "REAUTH_REQUIRED",
+          "PROVIDER_ERROR",
+          "CONFLICT",
+          "NOT_FOUND",
+          "INTERNAL"
+        ],
+        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-mcp-export": true,
+        "x-sdk-audiences": [
+          "sdk"
+        ],
+        "x-sdk-auth": "required",
+        "x-sdk-session-headers": true
       }
     },
     "/api/v1/users/{userId}/offboarding": {
