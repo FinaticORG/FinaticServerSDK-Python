@@ -4351,7 +4351,6 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
-        x_finatic_order_diagnostic: Annotated[Optional[StrictBool], Field(description="Request targeted diagnostics when company-allowlisted.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -4376,8 +4375,6 @@ class AccountsApi:
         :type idempotency_key: str
         :param account_order_command_request: (required)
         :type account_order_command_request: AccountOrderCommandRequest
-        :param x_finatic_order_diagnostic: Request targeted diagnostics when company-allowlisted.
-        :type x_finatic_order_diagnostic: bool
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4406,7 +4403,6 @@ class AccountsApi:
             account_id=account_id,
             idempotency_key=idempotency_key,
             account_order_command_request=account_order_command_request,
-            x_finatic_order_diagnostic=x_finatic_order_diagnostic,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4443,7 +4439,6 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
-        x_finatic_order_diagnostic: Annotated[Optional[StrictBool], Field(description="Request targeted diagnostics when company-allowlisted.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -4468,8 +4463,6 @@ class AccountsApi:
         :type idempotency_key: str
         :param account_order_command_request: (required)
         :type account_order_command_request: AccountOrderCommandRequest
-        :param x_finatic_order_diagnostic: Request targeted diagnostics when company-allowlisted.
-        :type x_finatic_order_diagnostic: bool
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4498,7 +4491,6 @@ class AccountsApi:
             account_id=account_id,
             idempotency_key=idempotency_key,
             account_order_command_request=account_order_command_request,
-            x_finatic_order_diagnostic=x_finatic_order_diagnostic,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4535,7 +4527,6 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         idempotency_key: StrictStr,
         account_order_command_request: AccountOrderCommandRequest,
-        x_finatic_order_diagnostic: Annotated[Optional[StrictBool], Field(description="Request targeted diagnostics when company-allowlisted.")] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -4560,8 +4551,6 @@ class AccountsApi:
         :type idempotency_key: str
         :param account_order_command_request: (required)
         :type account_order_command_request: AccountOrderCommandRequest
-        :param x_finatic_order_diagnostic: Request targeted diagnostics when company-allowlisted.
-        :type x_finatic_order_diagnostic: bool
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -4590,7 +4579,6 @@ class AccountsApi:
             account_id=account_id,
             idempotency_key=idempotency_key,
             account_order_command_request=account_order_command_request,
-            x_finatic_order_diagnostic=x_finatic_order_diagnostic,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -4622,7 +4610,6 @@ class AccountsApi:
         account_id,
         idempotency_key,
         account_order_command_request,
-        x_finatic_order_diagnostic,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -4651,8 +4638,6 @@ class AccountsApi:
         # process the header parameters
         if idempotency_key is not None:
             _header_params['Idempotency-Key'] = idempotency_key
-        if x_finatic_order_diagnostic is not None:
-            _header_params['X-Finatic-Order-Diagnostic'] = x_finatic_order_diagnostic
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
         # process the form parameters

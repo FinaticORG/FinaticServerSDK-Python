@@ -13,37 +13,45 @@
 
 
 from __future__ import annotations
-from inspect import getfullargspec
 import json
 import pprint
-import re  # noqa: F401
 from pydantic import BaseModel, ConfigDict, Field, StrictStr, ValidationError, field_validator
-from typing import Optional
-from finatic_server.models.fdx_time_in_force import FDXTimeInForce
-from typing import Union, Any, List, Set, TYPE_CHECKING, Optional, Dict
+from typing import Any, List, Optional
+from finatic_server.models.day_tif import DayTIF
+from finatic_server.models.foktif import FOKTIF
+from finatic_server.models.gtctif import GTCTIF
+from finatic_server.models.gtdtif import GTDTIF
+from finatic_server.models.ioctif import IOCTIF
+from pydantic import StrictStr, Field
+from typing import Union, List, Set, Optional, Dict
 from typing_extensions import Literal, Self
-from pydantic import Field
 
-TIMEINFORCE_ANY_OF_SCHEMAS = ["FDXTimeInForce", "str"]
+TIMEINFORCE_ONE_OF_SCHEMAS = ["DayTIF", "FOKTIF", "GTCTIF", "GTDTIF", "IOCTIF"]
 
 class Timeinforce(BaseModel):
     """
-    Time in force (DAY, GTC, GTD, IOC, FOK)
+    Timeinforce
     """
+    # data type: DayTIF
+    oneof_schema_1_validator: Optional[DayTIF] = None
+    # data type: GTCTIF
+    oneof_schema_2_validator: Optional[GTCTIF] = None
+    # data type: GTDTIF
+    oneof_schema_3_validator: Optional[GTDTIF] = None
+    # data type: IOCTIF
+    oneof_schema_4_validator: Optional[IOCTIF] = None
+    # data type: FOKTIF
+    oneof_schema_5_validator: Optional[FOKTIF] = None
+    actual_instance: Optional[Union[DayTIF, FOKTIF, GTCTIF, GTDTIF, IOCTIF]] = None
+    one_of_schemas: Set[str] = { "DayTIF", "FOKTIF", "GTCTIF", "GTDTIF", "IOCTIF" }
 
-    # data type: FDXTimeInForce
-    anyof_schema_1_validator: Optional[FDXTimeInForce] = None
-    # data type: str
-    anyof_schema_2_validator: Optional[StrictStr] = None
-    if TYPE_CHECKING:
-        actual_instance: Optional[Union[FDXTimeInForce, str]] = None
-    else:
-        actual_instance: Any = None
-    any_of_schemas: Set[str] = { "FDXTimeInForce", "str" }
+    model_config = ConfigDict(
+        validate_assignment=True,
+        protected_namespaces=(),
+    )
 
-    model_config = {
-        "validate_assignment": True,
-        "protected_namespaces": (),
+
+    discriminator_value_class_map: Dict[str, str] = {
     }
 
     def __init__(self, *args, **kwargs) -> None:
@@ -57,61 +65,92 @@ class Timeinforce(BaseModel):
             super().__init__(**kwargs)
 
     @field_validator('actual_instance')
-    def actual_instance_must_validate_anyof(cls, v):
-        if v is None:
-            return v
-
+    def actual_instance_must_validate_oneof(cls, v):
         instance = Timeinforce.model_construct()
         error_messages = []
-        # validate data type: FDXTimeInForce
-        if not isinstance(v, FDXTimeInForce):
-            error_messages.append(f"Error! Input type `{type(v)}` is not `FDXTimeInForce`")
+        match = 0
+        # validate data type: DayTIF
+        if not isinstance(v, DayTIF):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `DayTIF`")
         else:
-            return v
-
-        # validate data type: str
-        try:
-            instance.anyof_schema_2_validator = v
-            return v
-        except (ValidationError, ValueError) as e:
-            error_messages.append(str(e))
-        if error_messages:
+            match += 1
+        # validate data type: GTCTIF
+        if not isinstance(v, GTCTIF):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GTCTIF`")
+        else:
+            match += 1
+        # validate data type: GTDTIF
+        if not isinstance(v, GTDTIF):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `GTDTIF`")
+        else:
+            match += 1
+        # validate data type: IOCTIF
+        if not isinstance(v, IOCTIF):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `IOCTIF`")
+        else:
+            match += 1
+        # validate data type: FOKTIF
+        if not isinstance(v, FOKTIF):
+            error_messages.append(f"Error! Input type `{type(v)}` is not `FOKTIF`")
+        else:
+            match += 1
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when setting `actual_instance` in Timeinforce with oneOf schemas: DayTIF, FOKTIF, GTCTIF, GTDTIF, IOCTIF. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when setting the actual_instance in Timeinforce with anyOf schemas: FDXTimeInForce, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when setting `actual_instance` in Timeinforce with oneOf schemas: DayTIF, FOKTIF, GTCTIF, GTDTIF, IOCTIF. Details: " + ", ".join(error_messages))
         else:
             return v
 
     @classmethod
-    def from_dict(cls, obj: Dict[str, Any]) -> Self:
+    def from_dict(cls, obj: Union[str, Dict[str, Any]]) -> Self:
         return cls.from_json(json.dumps(obj))
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
         """Returns the object represented by the json string"""
         instance = cls.model_construct()
-        if json_str is None:
-            return instance
-
         error_messages = []
-        # anyof_schema_1_validator: Optional[FDXTimeInForce] = None
+        match = 0
+
+        # deserialize data into DayTIF
         try:
-            instance.actual_instance = FDXTimeInForce.from_json(json_str)
-            return instance
+            instance.actual_instance = DayTIF.from_json(json_str)
+            match += 1
         except (ValidationError, ValueError) as e:
-             error_messages.append(str(e))
-        # deserialize data into str
+            error_messages.append(str(e))
+        # deserialize data into GTCTIF
         try:
-            # validation
-            instance.anyof_schema_2_validator = json.loads(json_str)
-            # assign value to actual_instance
-            instance.actual_instance = instance.anyof_schema_2_validator
-            return instance
+            instance.actual_instance = GTCTIF.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into GTDTIF
+        try:
+            instance.actual_instance = GTDTIF.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into IOCTIF
+        try:
+            instance.actual_instance = IOCTIF.from_json(json_str)
+            match += 1
+        except (ValidationError, ValueError) as e:
+            error_messages.append(str(e))
+        # deserialize data into FOKTIF
+        try:
+            instance.actual_instance = FOKTIF.from_json(json_str)
+            match += 1
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
 
-        if error_messages:
+        if match > 1:
+            # more than 1 match
+            raise ValueError("Multiple matches found when deserializing the JSON string into Timeinforce with oneOf schemas: DayTIF, FOKTIF, GTCTIF, GTDTIF, IOCTIF. Details: " + ", ".join(error_messages))
+        elif match == 0:
             # no match
-            raise ValueError("No match found when deserializing the JSON string into Timeinforce with anyOf schemas: FDXTimeInForce, str. Details: " + ", ".join(error_messages))
+            raise ValueError("No match found when deserializing the JSON string into Timeinforce with oneOf schemas: DayTIF, FOKTIF, GTCTIF, GTDTIF, IOCTIF. Details: " + ", ".join(error_messages))
         else:
             return instance
 
@@ -125,7 +164,7 @@ class Timeinforce(BaseModel):
         else:
             return json.dumps(self.actual_instance)
 
-    def to_dict(self) -> Optional[Union[Dict[str, Any], FDXTimeInForce, str]]:
+    def to_dict(self) -> Optional[Union[Dict[str, Any], DayTIF, FOKTIF, GTCTIF, GTDTIF, IOCTIF]]:
         """Returns the dict representation of the actual instance"""
         if self.actual_instance is None:
             return None
@@ -133,6 +172,7 @@ class Timeinforce(BaseModel):
         if hasattr(self.actual_instance, "to_dict") and callable(self.actual_instance.to_dict):
             return self.actual_instance.to_dict()
         else:
+            # primitive type
             return self.actual_instance
 
     def to_str(self) -> str:

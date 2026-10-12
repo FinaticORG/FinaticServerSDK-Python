@@ -26,7 +26,7 @@ from finatic_server.models.fdx_instrument_descriptor import FDXInstrumentDescrip
 from finatic_server.models.filledquantity import Filledquantity
 from finatic_server.models.futureunderlyingassettype import Futureunderlyingassettype
 from finatic_server.models.limitprice import Limitprice
-from finatic_server.models.notional import Notional
+from finatic_server.models.notional2 import Notional2
 from finatic_server.models.positionintent import Positionintent
 from finatic_server.models.quantity2 import Quantity2
 from finatic_server.models.remainingquantity1 import Remainingquantity1
@@ -53,7 +53,7 @@ class FDXOrderLeg(BaseModel):
     instrument: Optional[FDXInstrumentDescriptor] = None
     leg_index: StrictInt = Field(description="Leg index (0 for single-leg)", alias="legIndex")
     limit_price: Optional[Limitprice] = Field(default=None, alias="limitPrice")
-    notional: Optional[Notional] = None
+    notional: Optional[Notional2] = None
     option_type: Optional[StrictStr] = Field(default=None, alias="optionType")
     position_intent: Optional[Positionintent] = Field(default=None, alias="positionIntent")
     quantity: Quantity2
@@ -256,7 +256,7 @@ class FDXOrderLeg(BaseModel):
             "instrument": FDXInstrumentDescriptor.from_dict(obj["instrument"]) if obj.get("instrument") is not None else None,
             "legIndex": obj.get("legIndex"),
             "limitPrice": Limitprice.from_dict(obj["limitPrice"]) if obj.get("limitPrice") is not None else None,
-            "notional": Notional.from_dict(obj["notional"]) if obj.get("notional") is not None else None,
+            "notional": Notional2.from_dict(obj["notional"]) if obj.get("notional") is not None else None,
             "optionType": obj.get("optionType"),
             "positionIntent": Positionintent.from_dict(obj["positionIntent"]) if obj.get("positionIntent") is not None else None,
             "quantity": Quantity2.from_dict(obj["quantity"]) if obj.get("quantity") is not None else None,

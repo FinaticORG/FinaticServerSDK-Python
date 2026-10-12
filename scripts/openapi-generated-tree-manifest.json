@@ -4,10 +4,10 @@
     "generator": "@openapitools/openapi-generator-cli",
     "generator_library": "asyncio",
     "generator_version": "7.18.0",
-    "sha256": "ce60741e437b2ceb6d44df307d6387082ddcc40e05048ccedd02eda0df1ae833",
+    "sha256": "210e912bac904f2729aaa9be4444a1ca20381bd6890b5b96cae3dc59d13d7755",
     "source_pr": 843,
     "source_repo": "FinaticORG/FinaticAPI",
-    "source_sha": "36b10a13af9a2f75834227cb7c16e906bc623ad8"
+    "source_sha": "2e792ca86086301d981673bf32399258288f0470"
   },
   "files": [
     {
@@ -28,7 +28,7 @@
     {
       "path": "finatic_server/api/accounts_api.py",
       "provenance": "current_artifact",
-      "sha256": "70fff65fc5cc1ce5a5a4a566f976de4550fa42a56d3efbe603d5843f7c139844"
+      "sha256": "83678694f8db843c3d5923dd0700d9ccacd590b83d842341175fe9dd6b07f717"
     },
     {
       "path": "finatic_server/api/consents_api.py",
@@ -448,7 +448,7 @@
     {
       "path": "finatic_server/models/fdx_broker_order.py",
       "provenance": "current_artifact",
-      "sha256": "7cff44d5092f550138eb98028d19738bdd15f0bcc2621aaf895fff2698c6476e"
+      "sha256": "428411dd544c2289eb85641fb2bf4ceb81abfcd1f5594e27226a80f629c19ac5"
     },
     {
       "path": "finatic_server/models/fdx_broker_order_command_result.py",
@@ -533,7 +533,7 @@
     {
       "path": "finatic_server/models/fdx_order_leg.py",
       "provenance": "current_artifact",
-      "sha256": "28adc983617dab1f0b423304f5279743e34adad6ae94a492a629883b4f7c07bb"
+      "sha256": "d68009b92f63ed3997680bc17092aa1d8649a1fb9db35851e8099c14c86b370a"
     },
     {
       "path": "finatic_server/models/fdx_order_position_intent.py",
@@ -1012,13 +1012,18 @@
     },
     {
       "path": "finatic_server/models/notional.py",
-      "provenance": "current_artifact",
-      "sha256": "d6a4d89403a984cfa63837d761286011be9c32110733e860323838c201eb35d7"
+      "provenance": "legacy_snapshot",
+      "sha256": "8d157b0a13cf385fe5d07a5e2692dbd20bc92f1ae5ef8b7df58d5959c9185698"
     },
     {
       "path": "finatic_server/models/notional1.py",
       "provenance": "legacy_snapshot",
       "sha256": "6213cead53fc35219d4bc65f7fb90761d39a8774dc3d2dfe14c970298dca8eda"
+    },
+    {
+      "path": "finatic_server/models/notional2.py",
+      "provenance": "current_artifact",
+      "sha256": "38c1a23be60fec887457d7e290102e54bb54ab1827b98684e9b58b2464006aa0"
     },
     {
       "path": "finatic_server/models/o_auth_completion_response.py",
@@ -1837,8 +1842,13 @@
     },
     {
       "path": "finatic_server/models/timeinforce.py",
+      "provenance": "legacy_snapshot",
+      "sha256": "7e284588d3f20b222fb163b897a9b6c037b6a02de13dd143460fc64786601b35"
+    },
+    {
+      "path": "finatic_server/models/timeinforce1.py",
       "provenance": "current_artifact",
-      "sha256": "db1aecb656f72cf8b91b44f8f7001057c0cb495330cfca652f8b89c12ca217d9"
+      "sha256": "8bcf901829673ef8f5667954b236bc046df8a0d58b5eddd92a7a83c6ea3d6dd5"
     },
     {
       "path": "finatic_server/models/token_response_data.py",

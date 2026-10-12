@@ -11034,18 +11034,6 @@
             }
           },
           {
-            "description": "Request targeted diagnostics when company-allowlisted.",
-            "in": "header",
-            "name": "X-Finatic-Order-Diagnostic",
-            "required": false,
-            "schema": {
-              "default": false,
-              "description": "Request targeted diagnostics when company-allowlisted.",
-              "title": "X-Finatic-Order-Diagnostic",
-              "type": "boolean"
-            }
-          },
-          {
             "in": "header",
             "name": "X-Finatic-Environment",
             "required": false,

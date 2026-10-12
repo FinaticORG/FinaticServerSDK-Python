@@ -10,7 +10,9 @@ import json
 import re
 import subprocess
 import sys
+import tarfile
 import tempfile
+import zipfile
 from collections import deque
 from pathlib import Path
 
@@ -20,11 +22,18 @@ PROVENANCE = ROOT / "artifacts/openapi/finaticapi-v1.provenance.json"
 MANIFEST = ROOT / "scripts/openapi-account-manifest.txt"
 COMPLETE_MANIFEST = ROOT / "scripts/openapi-generated-tree-manifest.json"
 GENERATED_ROOT = ROOT / "src/openapi"
+DISTRIBUTION_ROOT = ROOT / "dist"
 PACKAGE_ROOT = Path("finatic_server")
 GENERATOR_VERSION = "7.18.0"
+FORBIDDEN_MCP_PATH_PREFIX = "/api/v1/session/mcp"
 FORBIDDEN_MCP_PUBLIC_MARKERS = (
     b"mcpbootstrap",
     b"linkusertomcpsession",
+)
+SHIPPED_PACKAGE_ROOTS = (
+    ROOT / "finatic_server",
+    ROOT / "finatic_server_python",
+    ROOT / "src",
 )
 
 IMPORT_RE = re.compile(
@@ -81,37 +90,142 @@ def verify_inputs() -> None:
         )
 
 
+def normalized_surface(name: str | bytes, content: bytes = b"") -> bytes:
+    if isinstance(name, str):
+        name = name.encode()
+    return re.sub(rb"[^a-z0-9]", b"", name.lower() + content.lower())
+
+
+def contains_forbidden_mcp_marker(name: str | bytes, content: bytes = b"") -> bool:
+    surface = normalized_surface(name, content)
+    return any(marker in surface for marker in FORBIDDEN_MCP_PUBLIC_MARKERS)
+
+
+def display_path(path: Path) -> str:
+    try:
+        return path.relative_to(ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def shipped_package_files() -> set[Path]:
+    return {
+        path
+        for package_root in SHIPPED_PACKAGE_ROOTS
+        if package_root.is_dir()
+        for path in package_root.rglob("*")
+        if path.is_file()
+        and "__pycache__" not in path.parts
+        and path.suffix not in {".pyc", ".pyo"}
+    }
+
+
+def artifact_surface_violations(artifact: dict, label: str) -> list[str]:
+    violations: list[str] = []
+    for path, path_item in artifact.get("paths", {}).items():
+        normalized_path = path.rstrip("/")
+        if normalized_path == FORBIDDEN_MCP_PATH_PREFIX or normalized_path.startswith(
+            f"{FORBIDDEN_MCP_PATH_PREFIX}/"
+        ):
+            violations.append(f"{label}:{path}")
+        if not isinstance(path_item, dict):
+            continue
+        for operation in path_item.values():
+            if not isinstance(operation, dict):
+                continue
+            operation_id = operation.get("operationId")
+            if isinstance(operation_id, str) and contains_forbidden_mcp_marker(
+                operation_id
+            ):
+                violations.append(f"{label}:operationId={operation_id}")
+
+    for schema_name in artifact.get("components", {}).get("schemas", {}):
+        if contains_forbidden_mcp_marker(schema_name):
+            violations.append(f"{label}:schema={schema_name}")
+    return violations
+
+
 def verify_no_forbidden_mcp_public_surface() -> None:
     artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
-    artifact_names = [
-        *artifact.get("paths", {}),
-        *artifact.get("components", {}).get("schemas", {}),
-    ]
-    artifact_surface = re.sub(
-        rb"[^a-z0-9]", b"", "\n".join(artifact_names).lower().encode()
-    )
-    violations = []
-    if any(
-        marker in artifact_surface for marker in FORBIDDEN_MCP_PUBLIC_MARKERS
-    ):
-        violations.append(ARTIFACT.relative_to(ROOT).as_posix())
+    violations = artifact_surface_violations(artifact, display_path(ARTIFACT))
 
     candidates = {
         COMPLETE_MANIFEST,
         *(GENERATED_ROOT / relative for relative in committed_generated_files()),
+        *shipped_package_files(),
     }
     for path in sorted(candidates):
-        normalized = re.sub(
-            rb"[^a-z0-9]",
-            b"",
-            path.relative_to(ROOT).as_posix().lower().encode()
-            + path.read_bytes().lower(),
-        )
-        if any(marker in normalized for marker in FORBIDDEN_MCP_PUBLIC_MARKERS):
-            violations.append(path.relative_to(ROOT).as_posix())
+        if contains_forbidden_mcp_marker(display_path(path), path.read_bytes()):
+            violations.append(display_path(path))
     if violations:
         raise RuntimeError(
             "MCP bootstrap/link surface must not be shipped in the public SDK: "
+            + ", ".join(violations)
+        )
+
+
+def distribution_members(archive: Path) -> list[tuple[str, bytes]]:
+    if archive.suffix == ".whl":
+        with zipfile.ZipFile(archive) as package:
+            return [
+                (member.filename, package.read(member))
+                for member in package.infolist()
+                if not member.is_dir()
+            ]
+    if archive.name.endswith(".tar.gz"):
+        with tarfile.open(archive, "r:gz") as package:
+            members = []
+            for member in package.getmembers():
+                if not member.isfile():
+                    continue
+                extracted = package.extractfile(member)
+                if extracted is not None:
+                    members.append((member.name, extracted.read()))
+            return members
+    return []
+
+
+def is_shipped_archive_member(member_name: str) -> bool:
+    parts = Path(member_name).parts
+    if not parts:
+        return False
+    if parts[0].startswith("finatic_server_python-"):
+        parts = parts[1:]
+    return bool(parts) and parts[0] in {
+        "finatic_server",
+        "finatic_server_python",
+        "src",
+    }
+
+
+def verify_built_distributions() -> None:
+    archives = sorted(
+        [*DISTRIBUTION_ROOT.glob("*.whl"), *DISTRIBUTION_ROOT.glob("*.tar.gz")]
+    )
+    if not archives:
+        raise RuntimeError(f"no built distributions found in {DISTRIBUTION_ROOT}")
+
+    violations = []
+    for archive in archives:
+        for member_name, content in distribution_members(archive):
+            if contains_forbidden_mcp_marker(member_name):
+                violations.append(f"{archive.name}:{member_name}")
+                continue
+            if member_name.endswith("artifacts/openapi/finaticapi-v1.json"):
+                artifact = json.loads(content.decode("utf-8"))
+                violations.extend(
+                    artifact_surface_violations(
+                        artifact, f"{archive.name}:{member_name}"
+                    )
+                )
+                continue
+            if not is_shipped_archive_member(member_name):
+                continue
+            if contains_forbidden_mcp_marker(member_name, content):
+                violations.append(f"{archive.name}:{member_name}")
+    if violations:
+        raise RuntimeError(
+            "MCP bootstrap/link surface found in built distributions: "
             + ", ".join(violations)
         )
 
@@ -140,6 +254,8 @@ def generate_clean(output: Path) -> None:
             "apis=accounts,models,supportingFiles,apiDocs=false,modelDocs=false,"
             "apiTests=false,modelTests=false"
         ),
+        "--inline-schema-name-mappings",
+        "Notional=Notional2,Timeinforce=Timeinforce1",
     ]
     result = subprocess.run(
         command,
@@ -315,7 +431,9 @@ def verify_complete_manifest(current_files: set[Path]) -> bool:
         PROVENANCE.read_text(encoding="utf-8")
     ):
         clean = False
-        print("Complete manifest current-artifact provenance is stale.", file=sys.stderr)
+        print(
+            "Complete manifest current-artifact provenance is stale.", file=sys.stderr
+        )
     if committed != set(entries):
         clean = False
         print("Complete generated-tree file manifest is stale.", file=sys.stderr)
@@ -341,9 +459,7 @@ def verify_complete_manifest(current_files: set[Path]) -> bool:
     }
     for relative in sorted(unknown_provenance):
         clean = False
-        print(
-            f"unknown generated provenance: src/openapi/{relative}", file=sys.stderr
-        )
+        print(f"unknown generated provenance: src/openapi/{relative}", file=sys.stderr)
     for relative in sorted(committed & set(entries)):
         digest = hashlib.sha256((GENERATED_ROOT / relative).read_bytes()).hexdigest()
         if digest != entries[relative]["sha256"]:
@@ -364,8 +480,7 @@ def verify_complete_manifest(current_files: set[Path]) -> bool:
         if legacy_digest != entries[relative]["sha256"]:
             clean = False
             print(
-                "legacy provenance digest mismatch: "
-                f"src/openapi/{relative}",
+                f"legacy provenance digest mismatch: src/openapi/{relative}",
                 file=sys.stderr,
             )
     return clean
@@ -385,6 +500,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="record checksums and provenance for the complete committed generated tree",
     )
+    mode.add_argument(
+        "--verify-distributions",
+        action="store_true",
+        help="scan built wheel and sdist contents for forbidden MCP public surface",
+    )
     return parser.parse_args()
 
 
@@ -392,6 +512,11 @@ def main() -> int:
     args = parse_args()
     try:
         verify_inputs()
+        if args.verify_distributions:
+            verify_no_forbidden_mcp_public_surface()
+            verify_built_distributions()
+            print("Built distributions contain no MCP bootstrap/link surface.")
+            return 0
         with tempfile.TemporaryDirectory(prefix="finatic-openapi-") as temporary:
             output = Path(temporary)
             generate_clean(output)

@@ -27,13 +27,13 @@ NOTIONAL_ANY_OF_SCHEMAS = ["float", "str"]
 
 class Notional(BaseModel):
     """
-    Notional value for this leg
+    Notional
     """
 
-    # data type: str
-    anyof_schema_1_validator: Optional[StrictStr] = None
     # data type: float
-    anyof_schema_2_validator: Optional[Union[StrictFloat, StrictInt]] = None
+    anyof_schema_1_validator: Optional[Union[StrictFloat, StrictInt]] = None
+    # data type: str
+    anyof_schema_2_validator: Optional[StrictStr] = None
     if TYPE_CHECKING:
         actual_instance: Optional[Union[float, str]] = None
     else:
@@ -62,13 +62,13 @@ class Notional(BaseModel):
 
         instance = Notional.model_construct()
         error_messages = []
-        # validate data type: str
+        # validate data type: float
         try:
             instance.anyof_schema_1_validator = v
             return v
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # validate data type: float
+        # validate data type: str
         try:
             instance.anyof_schema_2_validator = v
             return v
@@ -92,7 +92,7 @@ class Notional(BaseModel):
             return instance
 
         error_messages = []
-        # deserialize data into str
+        # deserialize data into float
         try:
             # validation
             instance.anyof_schema_1_validator = json.loads(json_str)
@@ -101,7 +101,7 @@ class Notional(BaseModel):
             return instance
         except (ValidationError, ValueError) as e:
             error_messages.append(str(e))
-        # deserialize data into float
+        # deserialize data into str
         try:
             # validation
             instance.anyof_schema_2_validator = json.loads(json_str)
