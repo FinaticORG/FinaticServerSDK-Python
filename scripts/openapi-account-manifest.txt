@@ -65,7 +65,7 @@ src/openapi/finatic_server/models/grouptype.py
 src/openapi/finatic_server/models/instrumentid.py
 src/openapi/finatic_server/models/limitprice.py
 src/openapi/finatic_server/models/marketvalue.py
-src/openapi/finatic_server/models/notional2.py
+src/openapi/finatic_server/models/notional.py
 src/openapi/finatic_server/models/openprice.py
 src/openapi/finatic_server/models/openquantity.py
 src/openapi/finatic_server/models/orderclass.py
@@ -101,7 +101,7 @@ src/openapi/finatic_server/models/success_payload_list_fdx_broker_order.py
 src/openapi/finatic_server/models/success_payload_list_fdx_broker_order_event.py
 src/openapi/finatic_server/models/success_payload_list_fdx_broker_order_fill.py
 src/openapi/finatic_server/models/success_payload_list_fdx_broker_position.py
-src/openapi/finatic_server/models/timeinforce1.py
+src/openapi/finatic_server/models/timeinforce.py
 src/openapi/finatic_server/models/transactionamount.py
 src/openapi/finatic_server/models/units.py
 src/openapi/finatic_server/models/unrealizedprofitloss.py

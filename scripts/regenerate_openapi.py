@@ -22,6 +22,10 @@ COMPLETE_MANIFEST = ROOT / "scripts/openapi-generated-tree-manifest.json"
 GENERATED_ROOT = ROOT / "src/openapi"
 PACKAGE_ROOT = Path("finatic_server")
 GENERATOR_VERSION = "7.18.0"
+FORBIDDEN_MCP_PUBLIC_MARKERS = (
+    b"mcpbootstrap",
+    b"linkusertomcpsession",
+)
 
 IMPORT_RE = re.compile(
     r"^from finatic_server(?:(\.models|\.api))?\.([a-z0-9_]+) import ",
@@ -74,6 +78,41 @@ def verify_inputs() -> None:
     if actual_version != GENERATOR_VERSION:
         raise RuntimeError(
             f"expected OpenAPI Generator {GENERATOR_VERSION}, got {actual_version}"
+        )
+
+
+def verify_no_forbidden_mcp_public_surface() -> None:
+    artifact = json.loads(ARTIFACT.read_text(encoding="utf-8"))
+    artifact_names = [
+        *artifact.get("paths", {}),
+        *artifact.get("components", {}).get("schemas", {}),
+    ]
+    artifact_surface = re.sub(
+        rb"[^a-z0-9]", b"", "\n".join(artifact_names).lower().encode()
+    )
+    violations = []
+    if any(
+        marker in artifact_surface for marker in FORBIDDEN_MCP_PUBLIC_MARKERS
+    ):
+        violations.append(ARTIFACT.relative_to(ROOT).as_posix())
+
+    candidates = {
+        COMPLETE_MANIFEST,
+        *(GENERATED_ROOT / relative for relative in committed_generated_files()),
+    }
+    for path in sorted(candidates):
+        normalized = re.sub(
+            rb"[^a-z0-9]",
+            b"",
+            path.relative_to(ROOT).as_posix().lower().encode()
+            + path.read_bytes().lower(),
+        )
+        if any(marker in normalized for marker in FORBIDDEN_MCP_PUBLIC_MARKERS):
+            violations.append(path.relative_to(ROOT).as_posix())
+    if violations:
+        raise RuntimeError(
+            "MCP bootstrap/link surface must not be shipped in the public SDK: "
+            + ", ".join(violations)
         )
 
 
@@ -362,12 +401,14 @@ def main() -> int:
                 return 0
             if args.write_complete_manifest:
                 write_complete_manifest(actual)
+                verify_no_forbidden_mcp_public_surface()
                 return 0
             expected = manifest_files()
             if not verify_manifest(actual, expected):
                 return 1
             if not synchronize(output, actual, args.write):
                 return 1
+            verify_no_forbidden_mcp_public_surface()
             if not verify_complete_manifest(actual):
                 return 1
             typed_dict_check = subprocess.run(

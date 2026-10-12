@@ -4,10 +4,10 @@
     "generator": "@openapitools/openapi-generator-cli",
     "generator_library": "asyncio",
     "generator_version": "7.18.0",
-    "sha256": "eb46395f01861eba2c2fa33b68367304dd48377e1624244e126c90d3e414747a",
-    "source_pr": 822,
+    "sha256": "ce60741e437b2ceb6d44df307d6387082ddcc40e05048ccedd02eda0df1ae833",
+    "source_pr": 843,
     "source_repo": "FinaticORG/FinaticAPI",
-    "source_sha": "0931df616d3bbce9a9922dbb014d11430f180dd4"
+    "source_sha": "36b10a13af9a2f75834227cb7c16e906bc623ad8"
   },
   "files": [
     {
@@ -28,7 +28,7 @@
     {
       "path": "finatic_server/api/accounts_api.py",
       "provenance": "current_artifact",
-      "sha256": "83678694f8db843c3d5923dd0700d9ccacd590b83d842341175fe9dd6b07f717"
+      "sha256": "70fff65fc5cc1ce5a5a4a566f976de4550fa42a56d3efbe603d5843f7c139844"
     },
     {
       "path": "finatic_server/api/consents_api.py",
@@ -448,7 +448,7 @@
     {
       "path": "finatic_server/models/fdx_broker_order.py",
       "provenance": "current_artifact",
-      "sha256": "428411dd544c2289eb85641fb2bf4ceb81abfcd1f5594e27226a80f629c19ac5"
+      "sha256": "7cff44d5092f550138eb98028d19738bdd15f0bcc2621aaf895fff2698c6476e"
     },
     {
       "path": "finatic_server/models/fdx_broker_order_command_result.py",
@@ -533,7 +533,7 @@
     {
       "path": "finatic_server/models/fdx_order_leg.py",
       "provenance": "current_artifact",
-      "sha256": "d68009b92f63ed3997680bc17092aa1d8649a1fb9db35851e8099c14c86b370a"
+      "sha256": "28adc983617dab1f0b423304f5279743e34adad6ae94a492a629883b4f7c07bb"
     },
     {
       "path": "finatic_server/models/fdx_order_position_intent.py",
@@ -704,11 +704,6 @@
       "path": "finatic_server/models/finatic_response_fdx_webhook_subscription.py",
       "provenance": "legacy_snapshot",
       "sha256": "4892afe8b8751923f3da3224ee21eb09734be2862348fe483a8a2031ea79d6ae"
-    },
-    {
-      "path": "finatic_server/models/finatic_response_link_user_to_mcp_session_response.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "b09b22fcce49453ed003560cb7f339bddd94478c1b8811ce67fd9da8228620d3"
     },
     {
       "path": "finatic_server/models/finatic_response_link_user_to_session_response.py",
@@ -936,16 +931,6 @@
       "sha256": "20a9fd97134ffeae5b918e291fc3388165f18ea3bd8e23a5f95918688c334865"
     },
     {
-      "path": "finatic_server/models/link_user_to_mcp_session_request.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "8a6570bca2546d8011fecd53149cb8684d718841b7fd96e0c6ffca129dbec062"
-    },
-    {
-      "path": "finatic_server/models/link_user_to_mcp_session_response.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "bc545405a0c82facc84d23f8cddd886cae96d039d221cfa7fd0304b96679dd22"
-    },
-    {
       "path": "finatic_server/models/link_user_to_session_response.py",
       "provenance": "legacy_snapshot",
       "sha256": "a5f0e419a36fcec32aa62abdfa26b2f58384a1c7877943366ddb8e3e2e35c6db"
@@ -964,11 +949,6 @@
       "path": "finatic_server/models/marketvalue.py",
       "provenance": "current_artifact",
       "sha256": "68fc3aa3df5e1c50391b4c63776a685c217ec36e439dbd0a1f1ca62a7361d569"
-    },
-    {
-      "path": "finatic_server/models/mcp_bootstrap_request.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "0cde9ff9ef84b94a0d9a296f5c59e1a7fe87c75153c9346df0a2332ee2f31d98"
     },
     {
       "path": "finatic_server/models/mt_connect_request.py",
@@ -1032,18 +1012,13 @@
     },
     {
       "path": "finatic_server/models/notional.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "8d157b0a13cf385fe5d07a5e2692dbd20bc92f1ae5ef8b7df58d5959c9185698"
+      "provenance": "current_artifact",
+      "sha256": "d6a4d89403a984cfa63837d761286011be9c32110733e860323838c201eb35d7"
     },
     {
       "path": "finatic_server/models/notional1.py",
       "provenance": "legacy_snapshot",
       "sha256": "6213cead53fc35219d4bc65f7fb90761d39a8774dc3d2dfe14c970298dca8eda"
-    },
-    {
-      "path": "finatic_server/models/notional2.py",
-      "provenance": "current_artifact",
-      "sha256": "38c1a23be60fec887457d7e290102e54bb54ab1827b98684e9b58b2464006aa0"
     },
     {
       "path": "finatic_server/models/o_auth_completion_response.py",
@@ -1666,11 +1641,6 @@
       "sha256": "f0af27a6bfa7afd1a3a0dcd1e9b5df7fd5caf43d56aa04dfe9aebe8f38e6a0c6"
     },
     {
-      "path": "finatic_server/models/success_payload_link_user_to_mcp_session_response.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "05eaeba65f504733f1c0eeb85aa8ccdfb798a496d2fcbf67538e048d9a5c8610"
-    },
-    {
       "path": "finatic_server/models/success_payload_link_user_to_session_response.py",
       "provenance": "legacy_snapshot",
       "sha256": "e349a629f1b706cbd99eec63a2213c97ff4efc977c7415b579e441a078973ac8"
@@ -1867,13 +1837,8 @@
     },
     {
       "path": "finatic_server/models/timeinforce.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "7e284588d3f20b222fb163b897a9b6c037b6a02de13dd143460fc64786601b35"
-    },
-    {
-      "path": "finatic_server/models/timeinforce1.py",
       "provenance": "current_artifact",
-      "sha256": "8bcf901829673ef8f5667954b236bc046df8a0d58b5eddd92a7a83c6ea3d6dd5"
+      "sha256": "db1aecb656f72cf8b91b44f8f7001057c0cb495330cfca652f8b89c12ca217d9"
     },
     {
       "path": "finatic_server/models/token_response_data.py",

@@ -25,7 +25,7 @@ from finatic_server.models.fdx_order_leg import FDXOrderLeg
 from finatic_server.models.orderclass import Orderclass
 from finatic_server.models.ordertype import Ordertype
 from finatic_server.models.status import Status
-from finatic_server.models.timeinforce1 import Timeinforce1
+from finatic_server.models.timeinforce import Timeinforce
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -52,7 +52,7 @@ class FDXBrokerOrder(BaseModel):
     order_updated_at: Optional[datetime] = Field(default=None, alias="orderUpdatedAt")
     state: Optional[StrictStr] = None
     status: Status
-    time_in_force: Optional[Timeinforce1] = Field(default=None, alias="timeInForce")
+    time_in_force: Optional[Timeinforce] = Field(default=None, alias="timeInForce")
     __properties: ClassVar[List[str]] = ["_id", "accountId", "brokerOrderId", "clientOrderId", "commission", "connectionId", "internalAccountId", "legs", "metadata", "orderClass", "orderCreatedAt", "orderGroupId", "orderId", "orderLiveAt", "orderTerminalAt", "orderType", "orderUpdatedAt", "state", "status", "timeInForce"]
 
     model_config = ConfigDict(
@@ -222,6 +222,6 @@ class FDXBrokerOrder(BaseModel):
             "orderUpdatedAt": obj.get("orderUpdatedAt"),
             "state": obj.get("state"),
             "status": Status.from_dict(obj["status"]) if obj.get("status") is not None else None,
-            "timeInForce": Timeinforce1.from_dict(obj["timeInForce"]) if obj.get("timeInForce") is not None else None
+            "timeInForce": Timeinforce.from_dict(obj["timeInForce"]) if obj.get("timeInForce") is not None else None
         })
         return _obj
