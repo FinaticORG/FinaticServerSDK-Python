@@ -8,7 +8,12 @@ except ModuleNotFoundError:
     pass
 
 try:
-    from .v1 import AccountOrderCommand, V1Client
+    from .v1 import (
+        AccountOrderCommand,
+        SessionStartResult,
+        SessionStatus,
+        V1Client,
+    )
 except ModuleNotFoundError:
     pass
 

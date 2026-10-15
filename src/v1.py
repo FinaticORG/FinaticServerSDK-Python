@@ -10,7 +10,7 @@ import inspect
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
-from typing import Any, Literal, cast
+from typing import Any, Literal, TypedDict, cast
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 from finatic_server.api_client import ApiClient
@@ -34,6 +34,36 @@ from .utils.url_utils import (
 )
 
 Environment = str
+SessionStatus = Literal[
+    "pending",
+    "authenticating",
+    "active",
+    "completed",
+    "expired",
+]
+_SESSION_STATUSES: set[str] = {
+    "pending",
+    "authenticating",
+    "active",
+    "completed",
+    "expired",
+}
+
+
+class SessionStartResult(TypedDict):
+    """Normalized result for every public session-start attempt."""
+
+    success: bool
+    session_id: str | None
+    company_id: str | None
+    error: str | None
+    status: SessionStatus | None
+    user_id: str | None
+    provided_user_id_rejected: bool
+    portal_connection_management_pending: bool
+    authenticated: bool
+
+
 _ERROR_CODE_BY_STATUS = {
     400: "VALIDATION",
     401: "AUTHENTICATION",
@@ -73,6 +103,39 @@ def _read_session_field(data: dict[str, Any] | None, keys: tuple[str, ...]) -> s
     return ""
 
 
+def _read_session_status(
+    data: dict[str, Any] | None, keys: tuple[str, ...]
+) -> SessionStatus | None:
+    value = _read_session_field(data, keys)
+    if value not in _SESSION_STATUSES:
+        return None
+    return cast(SessionStatus, value)
+
+
+def _read_session_bool(data: dict[str, Any] | None, keys: tuple[str, ...]) -> bool:
+    if not data:
+        return False
+    for key in keys:
+        if key in data:
+            value = data[key]
+            return value if type(value) is bool else False
+    return False
+
+
+def _failed_session_start(error: str) -> SessionStartResult:
+    return {
+        "success": False,
+        "session_id": None,
+        "company_id": None,
+        "error": error,
+        "status": None,
+        "user_id": None,
+        "provided_user_id_rejected": False,
+        "portal_connection_management_pending": False,
+        "authenticated": False,
+    }
+
+
 def _append_query_param(url: str, name: str, value: str) -> str:
     parsed = urlparse(url)
     query_params = parse_qs(parsed.query)
@@ -100,6 +163,8 @@ class V1Client:
         self.authorization: str | None = None
         self.csrf_token: str | None = None
         self.user_id: str | None = None
+        self.session_status: SessionStatus | None = None
+        self.authenticated = False
 
     def set_environment(self, environment: Environment) -> None:
         """Set the public v1 environment for subsequent requests."""
@@ -129,7 +194,7 @@ class V1Client:
         return self.user_id
 
     def is_authed(self) -> bool:
-        return bool(self.user_id)
+        return self.authenticated
 
     async def init_session(self, api_key: str | None = None) -> FinaticResponse:
         return await self._request(
@@ -170,38 +235,24 @@ class V1Client:
         *,
         one_time_token: str | None = None,
         user_id: str | None = None,
-    ) -> dict[str, Any]:
+    ) -> SessionStartResult:
         if not one_time_token:
             if not self.api_key:
-                return {
-                    "success": False,
-                    "session_id": None,
-                    "company_id": None,
-                    "error": "API key is required in the constructor.",
-                }
+                return _failed_session_start("API key is required in the constructor.")
             try:
-                token = await self.get_token()
-                started = await self._start_session_with_token(token, user_id)
-                return {
-                    "success": True,
-                    "session_id": started["session_id"],
-                    "company_id": started["company_id"],
-                    "error": None,
-                }
+                one_time_token = await self.get_token()
             except Exception as error:
-                return {
-                    "success": False,
-                    "session_id": None,
-                    "company_id": None,
-                    "error": str(error),
-                }
-        return await self._start_session_with_token(one_time_token, user_id)
+                return _failed_session_start(str(error))
+        try:
+            return await self._start_session_with_token(one_time_token, user_id)
+        except Exception as error:
+            return _failed_session_start(str(error))
 
     async def _start_session_with_token(
         self,
         one_time_token: str,
         user_id: str | None = None,
-    ) -> dict[str, str]:
+    ) -> SessionStartResult:
         body = {"user_id": user_id} if user_id else None
         response = await self._request(
             "POST",
@@ -220,15 +271,40 @@ class V1Client:
         company_id = _read_session_field(session_data_dict, ("company_id", "companyId"))
         csrf_token = _read_session_field(session_data_dict, ("csrf_token", "csrfToken"))
         response_user_id = _read_session_field(session_data_dict, ("user_id", "userId"))
+        status = _read_session_status(session_data_dict, ("status",))
+        provided_user_id_rejected = _read_session_bool(
+            session_data_dict,
+            ("provided_user_id_rejected", "providedUserIdRejected"),
+        )
+        portal_connection_management_pending = _read_session_bool(
+            session_data_dict,
+            (
+                "portal_connection_management_pending",
+                "portalConnectionManagementPending",
+            ),
+        )
+        authenticated = status == "active" and bool(response_user_id)
 
         if session_id and company_id:
             self.set_session_context(session_id, company_id, csrf_token=csrf_token)
 
-        final_user_id = response_user_id or user_id
-        if final_user_id:
-            self.user_id = final_user_id
+        self.session_status = status
+        self.authenticated = authenticated
+        self.user_id = response_user_id if authenticated else None
 
-        return {"session_id": session_id, "company_id": company_id}
+        return {
+            "success": True,
+            "session_id": session_id or None,
+            "company_id": company_id or None,
+            "error": None,
+            "status": status,
+            "user_id": response_user_id or None,
+            "provided_user_id_rejected": provided_user_id_rejected,
+            "portal_connection_management_pending": (
+                portal_connection_management_pending
+            ),
+            "authenticated": authenticated,
+        }
 
     async def get_portal_url(
         self,
