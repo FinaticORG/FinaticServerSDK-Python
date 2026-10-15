@@ -74,6 +74,11 @@ class FinaticServer:
                 "/api/v1/session/init + /start responses."
             )
             raise ValueError(str(error_message))
+        if user_id is not None and not session_result.get("authenticated"):
+            raise ValueError(
+                "Session initialization failed: requested user identity was not "
+                "authenticated."
+            )
         if not instance.v1.get_session_id():
             raise ValueError("Session initialization failed: missing session_id.")
         return instance
