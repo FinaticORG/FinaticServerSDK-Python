@@ -6,6 +6,7 @@ from typing import Any
 
 import pytest
 
+import src.v1 as v1_module
 from finatic_server_python import (
     AccountOrderPayload,
     SessionStartResult,
@@ -13,6 +14,11 @@ from finatic_server_python import (
 )
 from src.FinaticServerCore import FinaticServer
 from src.v1 import V1Client
+
+
+def test_public_session_types_match_v1_contract() -> None:
+    assert SessionStartResult is v1_module.SessionStartResult
+    assert SessionStatus is v1_module.SessionStatus
 
 
 class FakeResponse:
