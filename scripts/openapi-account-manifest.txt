@@ -6,6 +6,7 @@ src/openapi/finatic_server/configuration.py
 src/openapi/finatic_server/exceptions.py
 src/openapi/finatic_server/models/account_order_command_request.py
 src/openapi/finatic_server/models/account_order_payload.py
+src/openapi/finatic_server/models/account_order_schema_response.py
 src/openapi/finatic_server/models/assettype.py
 src/openapi/finatic_server/models/averagebuyprice.py
 src/openapi/finatic_server/models/averagefillprice.py
@@ -23,6 +24,7 @@ src/openapi/finatic_server/models/costbasis1.py
 src/openapi/finatic_server/models/costbasiswithcommission.py
 src/openapi/finatic_server/models/costbasiswithcommission1.py
 src/openapi/finatic_server/models/currentprice.py
+src/openapi/finatic_server/models/event_contract_capability_response.py
 src/openapi/finatic_server/models/eventtype.py
 src/openapi/finatic_server/models/fdx_asset_type.py
 src/openapi/finatic_server/models/fdx_broker_order.py
@@ -52,6 +54,8 @@ src/openapi/finatic_server/models/fdx_time_in_force.py
 src/openapi/finatic_server/models/filledquantity.py
 src/openapi/finatic_server/models/fillprice.py
 src/openapi/finatic_server/models/fillquantity.py
+src/openapi/finatic_server/models/finatic_api_error_response.py
+src/openapi/finatic_server/models/finatic_response_account_order_schema_response.py
 src/openapi/finatic_server/models/finatic_response_dict_str_any.py
 src/openapi/finatic_server/models/finatic_response_fdx_broker_order.py
 src/openapi/finatic_server/models/finatic_response_fdx_broker_order_command_result.py
@@ -60,6 +64,8 @@ src/openapi/finatic_server/models/finatic_response_list_fdx_broker_order.py
 src/openapi/finatic_server/models/finatic_response_list_fdx_broker_order_event.py
 src/openapi/finatic_server/models/finatic_response_list_fdx_broker_order_fill.py
 src/openapi/finatic_server/models/finatic_response_list_fdx_broker_position.py
+src/openapi/finatic_server/models/finatic_v1_error.py
+src/openapi/finatic_server/models/finatic_v1_error_category.py
 src/openapi/finatic_server/models/futureunderlyingassettype.py
 src/openapi/finatic_server/models/grouptype.py
 src/openapi/finatic_server/models/instrumentid.py
@@ -93,6 +99,7 @@ src/openapi/finatic_server/models/status.py
 src/openapi/finatic_server/models/status1.py
 src/openapi/finatic_server/models/stopprice.py
 src/openapi/finatic_server/models/strikeprice.py
+src/openapi/finatic_server/models/success_payload_account_order_schema_response.py
 src/openapi/finatic_server/models/success_payload_dict_str_any.py
 src/openapi/finatic_server/models/success_payload_fdx_broker_order.py
 src/openapi/finatic_server/models/success_payload_fdx_broker_order_command_result.py

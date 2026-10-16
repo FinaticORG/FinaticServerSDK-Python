@@ -18,6 +18,7 @@ from finatic_server.configuration import Configuration
 
 from .finatic_fdx_types import (
     AccountOrderPayload,
+    AccountOrderSchemaResponseDict,
     FDXBrokerOrderCommandResultDict,
     FDXBrokerOrderDict,
     FDXBrokerOrderEventDict,
@@ -416,7 +417,7 @@ class V1Client:
         action: Literal["place", "modify", "cancel"],
         *,
         broker: str | None = None,
-    ) -> FinaticResponse:
+    ) -> FinaticResponse[AccountOrderSchemaResponseDict]:
         query: dict[str, Any] = {"action": action}
         if broker is not None:
             query["broker"] = broker

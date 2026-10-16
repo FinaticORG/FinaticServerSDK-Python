@@ -26,11 +26,10 @@ class FinaticAPIErrorResponse(BaseModel):
     """
     Error response schema for OpenAPI documentation.  Errors include rich domain-specific codes (e.g., ORDER_NOT_FOUND, TRADE_ACCESS_DENIED) mapped to standardized types and HTTP status codes via ERROR_CODE_REGISTRY.
     """ # noqa: E501
-    trace_id: StrictStr = Field(description="Request trace identifier for tracking and debugging")
-    success: Dict[str, Any] = Field(description="Success payload with data=None for errors")
     error: Dict[str, Any] = Field(description="Error details with type (FinaticErrorType), code (domain-specific), message (human-readable), status (HTTP status code), and optional details. Error codes are mapped via ERROR_CODE_REGISTRY - see registry for available codes.")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["trace_id", "success", "error"]
+    success: Dict[str, Any] = Field(description="Success payload with data=None for errors")
+    trace_id: StrictStr = Field(description="Request trace identifier for tracking and debugging")
+    __properties: ClassVar[List[str]] = ["error", "success", "trace_id"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -62,10 +61,8 @@ class FinaticAPIErrorResponse(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -73,11 +70,6 @@ class FinaticAPIErrorResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         return _dict
 
     @classmethod
@@ -90,15 +82,8 @@ class FinaticAPIErrorResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "trace_id": obj.get("trace_id"),
+            "error": obj.get("error"),
             "success": obj.get("success"),
-            "error": obj.get("error")
+            "trace_id": obj.get("trace_id")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
-
-

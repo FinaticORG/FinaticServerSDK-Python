@@ -12,11 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = ROOT / "artifacts/openapi/finaticapi-v1.json"
 OUTPUT = ROOT / "src/finatic_fdx_typed_dicts.py"
 ROOT_SCHEMAS = (
+    "AccountOrderSchemaResponse",
+    "EventContractCapabilityResponse",
     "FDXBrokerOrder",
     "FDXBrokerOrderCommandResult",
     "FDXBrokerOrderEvent",
     "FDXBrokerOrderFill",
     "FDXBrokerPosition",
+    "FinaticV1Error",
 )
 
 
@@ -43,6 +46,9 @@ def annotation(schema: dict[str, Any], schemas: dict[str, Any]) -> str:
     if kind == "array":
         return f"list[{annotation(schema.get('items', {}), schemas)}]"
     if kind == "object":
+        additional_properties = schema.get("additionalProperties")
+        if isinstance(additional_properties, dict):
+            return f"dict[str, {annotation(additional_properties, schemas)}]"
         return "dict[str, Any]"
     return {
         "boolean": "bool",
@@ -108,7 +114,7 @@ def render() -> str:
             lines.append(f"    {field}: {annotation(field_schema, schemas)}")
         lines.append("")
         lines.append("")
-    exported = [f"{name}Dict" for name in ROOT_SCHEMAS]
+    exported = sorted(f"{name}Dict" for name in ROOT_SCHEMAS)
     lines.append("__all__ = [")
     lines.extend(f'    "{name}",' for name in exported)
     lines.append("]")

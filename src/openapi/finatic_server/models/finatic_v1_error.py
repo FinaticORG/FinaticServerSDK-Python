@@ -22,7 +22,6 @@ from typing import Any, ClassVar, Dict, List, Optional
 from finatic_server.models.finatic_v1_error_category import FinaticV1ErrorCategory
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FinaticV1Error(BaseModel):
     """
@@ -31,13 +30,12 @@ class FinaticV1Error(BaseModel):
     category: FinaticV1ErrorCategory
     code: StrictStr = Field(description="Stable public error code.")
     details: Optional[Dict[str, Any]] = None
-    message: Optional[StrictStr] = Field(description="Filter by broker ID")
+    message: Optional[StrictStr]
     additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["category", "code", "details", "message"]
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -49,7 +47,8 @@ class FinaticV1Error(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -80,6 +79,11 @@ class FinaticV1Error(BaseModel):
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
+
+        # set to None if details (nullable) is None
+        # and model_fields_set contains the field
+        if self.details is None and "details" in self.model_fields_set:
+            _dict['details'] = None
 
         # set to None if message (nullable) is None
         # and model_fields_set contains the field
