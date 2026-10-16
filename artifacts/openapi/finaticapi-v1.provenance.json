@@ -1,9 +1,10 @@
 {
   "source_repo": "FinaticORG/FinaticAPI",
-  "source_pr": 843,
-  "source_sha": "2e792ca86086301d981673bf32399258288f0470",
+  "source_pr": 870,
+  "source_branch": "feat/861-event-contract-api",
+  "source_sha": "b55f9b1dcddd51a0401a4eb969bf99530c4205f3",
   "artifact_path": "artifacts/openapi/finaticapi-v1.json",
-  "sha256": "210e912bac904f2729aaa9be4444a1ca20381bd6890b5b96cae3dc59d13d7755",
+  "sha256": "c788d74954e3914f5ba228a3e1bea439a9020bc7cff1a8be0b5eaee479833021",
   "generator": "@openapitools/openapi-generator-cli",
   "generator_version": "7.18.0",
   "generator_library": "asyncio"

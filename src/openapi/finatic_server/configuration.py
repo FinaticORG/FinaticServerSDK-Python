@@ -112,8 +112,9 @@ HTTPSignatureAuthSetting = TypedDict(
 AuthSettings = TypedDict(
     "AuthSettings",
     {
+        "FinaticCompanyApiKey": APIKeyAuthSetting,
+        "FinaticOwnerJWT": BearerFormatAuthSetting,
         "FinaticSession": APIKeyAuthSetting,
-        "HTTPBearer": BearerAuthSetting,
     },
     total=False,
 )
@@ -213,7 +214,7 @@ conf = finatic_server.Configuration(
     ) -> None:
         """Constructor
         """
-        self._base_path = "http://localhost" if host is None else host
+        self._base_path = "https://api.finatic.dev" if host is None else host
         """Default Base url
         """
         self.server_index = 0 if server_index is None and host is None else server_index
@@ -512,6 +513,23 @@ conf = finatic_server.Configuration(
         :return: The Auth Settings information dict.
         """
         auth: AuthSettings = {}
+        if 'FinaticCompanyApiKey' in self.api_key:
+            auth['FinaticCompanyApiKey'] = {
+                'type': 'api_key',
+                'in': 'header',
+                'key': 'x-api-key',
+                'value': self.get_api_key_with_prefix(
+                    'FinaticCompanyApiKey',
+                ),
+            }
+        if self.access_token is not None:
+            auth['FinaticOwnerJWT'] = {
+                'type': 'bearer',
+                'in': 'header',
+                'format': 'JWT',
+                'key': 'Authorization',
+                'value': 'Bearer ' + self.access_token
+            }
         if 'FinaticSession' in self.api_key:
             auth['FinaticSession'] = {
                 'type': 'api_key',
@@ -520,13 +538,6 @@ conf = finatic_server.Configuration(
                 'value': self.get_api_key_with_prefix(
                     'FinaticSession',
                 ),
-            }
-        if self.access_token is not None:
-            auth['HTTPBearer'] = {
-                'type': 'bearer',
-                'in': 'header',
-                'key': 'Authorization',
-                'value': 'Bearer ' + self.access_token
             }
         return auth
 
@@ -549,8 +560,8 @@ conf = finatic_server.Configuration(
         """
         return [
             {
-                'url': "",
-                'description': "No description provided",
+                'url': "https://api.finatic.dev",
+                'description': "Finatic production API",
             }
         ]
 
