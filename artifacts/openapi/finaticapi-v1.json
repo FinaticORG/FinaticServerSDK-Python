@@ -796,6 +796,8 @@
           "FOREX",
           "FUTURE",
           "FUTURE_OPTION",
+          "BOND",
+          "CFD",
           "EVENT_CONTRACT"
         ],
         "title": "FDXAssetType",

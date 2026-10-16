@@ -50,6 +50,8 @@ def test_event_contract_models_are_public_and_fail_closed() -> None:
         FDXAssetType,
     )
 
+    assert FDXAssetType.BOND.value == "BOND"
+    assert FDXAssetType.CFD.value == "CFD"
     assert FDXAssetType.EVENT_CONTRACT.value == "EVENT_CONTRACT"
     with pytest.raises(ValueError):
         FDXAssetType("UNSUPPORTED_EVENT_CONTRACT")

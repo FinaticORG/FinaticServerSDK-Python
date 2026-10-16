@@ -90,7 +90,7 @@ class FDXBrokerOrderEventDict(TypedDict, total=False):
 
 class FDXBrokerOrderFillDict(TypedDict, total=False):
     _id: str
-    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str
+    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'BOND', 'CFD', 'EVENT_CONTRACT'] | str
     commission: str | float | None
     executedAt: str
     executionId: str | None
@@ -110,7 +110,7 @@ class FDXBrokerOrderFillDict(TypedDict, total=False):
 
 class FDXBrokerPositionDict(TypedDict, total=False):
     accountId: str
-    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str
+    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'BOND', 'CFD', 'EVENT_CONTRACT'] | str
     averageBuyPrice: str | float | None
     averageSellPrice: str | float | None
     connectionId: str
@@ -163,7 +163,7 @@ class FDXInstrumentDescriptorDict(TypedDict, total=False):
 
 
 class FDXOrderLegDict(TypedDict, total=False):
-    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str
+    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'BOND', 'CFD', 'EVENT_CONTRACT'] | str
     averageFillPrice: str | float | None
     brokerProvidedSymbol: str | None
     contractCode: str | None
@@ -171,7 +171,7 @@ class FDXOrderLegDict(TypedDict, total=False):
     cryptoQuoteSymbol: str | None
     expirationDate: str | None
     filledQuantity: str | float | None
-    futureUnderlyingAssetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str | None
+    futureUnderlyingAssetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'BOND', 'CFD', 'EVENT_CONTRACT'] | str | None
     instrument: FDXInstrumentDescriptorDict | None
     legIndex: int
     limitPrice: str | float | None

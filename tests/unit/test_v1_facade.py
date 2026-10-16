@@ -739,6 +739,22 @@ def test_v1_preserves_event_contract_capability_without_coercion_or_field_loss()
     }
 
 
+@pytest.mark.parametrize("asset_type", ["BOND", "CFD", "EVENT_CONTRACT"])
+def test_v1_preserves_public_asset_type_literals(asset_type: str) -> None:
+    sdk = FinaticServer(api_key="fntc_live_key")
+    response = sdk.v1._deserialize_response(
+        FakeResponse(
+            {
+                "data": [{"id": "position-1", "assetType": asset_type}],
+                "warnings": [],
+                "errors": [],
+            }
+        )
+    )
+
+    assert response["data"][0]["assetType"] == asset_type
+
+
 def test_v1_reads_trace_header_from_generated_response() -> None:
     sdk = FinaticServer(api_key="fntc_live_key")
 

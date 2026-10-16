@@ -32,6 +32,8 @@ class FDXAssetType(str, Enum):
     FOREX = 'FOREX'
     FUTURE = 'FUTURE'
     FUTURE_OPTION = 'FUTURE_OPTION'
+    BOND = 'BOND'
+    CFD = 'CFD'
     EVENT_CONTRACT = 'EVENT_CONTRACT'
 
     @classmethod
