@@ -6,9 +6,19 @@ from typing import Any
 
 import pytest
 
-from finatic_server_python import AccountOrderPayload
+import src.v1 as v1_module
+from finatic_server_python import (
+    AccountOrderPayload,
+    SessionStartResult,
+    SessionStatus,
+)
 from src.FinaticServerCore import FinaticServer
 from src.v1 import V1Client
+
+
+def test_public_session_types_match_v1_contract() -> None:
+    assert SessionStartResult is v1_module.SessionStartResult
+    assert SessionStatus is v1_module.SessionStatus
 
 
 class FakeResponse:
@@ -76,6 +86,29 @@ class DescriptorApiClient(FakeApiClient):
         else:
             data = [{"orderId": "order-1", "legs": [{"instrument": instrument}]}]
         return FakeResponse({"data": data, "warnings": [], "errors": []})
+
+
+class SessionApiClient(FakeApiClient):
+    def __init__(self, payloads: list[dict[str, Any]]) -> None:
+        super().__init__()
+        self.payloads = payloads
+
+    def call_api(
+        self,
+        method: str,
+        url: str,
+        header_params: dict[str, str] | None = None,
+        body: dict[str, Any] | None = None,
+    ) -> FakeResponse:
+        self.calls.append(
+            {
+                "method": method,
+                "url": url,
+                "headers": header_params or {},
+                "body": body,
+            }
+        )
+        return FakeResponse(self.payloads.pop(0))
 
 
 V1_DATA_OPERATION_METHODS = {
@@ -192,6 +225,262 @@ def test_finatic_server_exposes_v1_facade_with_environment() -> None:
 
     assert isinstance(sdk.v1, V1Client)
     assert sdk.v1.environment == "sandbox"
+
+
+@pytest.mark.asyncio
+async def test_start_session_preserves_authoritative_active_identity() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = SessionApiClient(
+        [
+            {
+                "data": {
+                    "session_id": "session-1",
+                    "company_id": "company-1",
+                    "csrf_token": "csrf-1",
+                    "status": "active",
+                    "user_id": "server-user",
+                    "provided_user_id_rejected": False,
+                    "portal_connection_management_pending": True,
+                },
+                "errors": [],
+            }
+        ]
+    )
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    result: SessionStartResult = await sdk.v1.start_session(
+        one_time_token="token-1", user_id="requested-user"
+    )
+
+    assert result == {
+        "success": True,
+        "session_id": "session-1",
+        "company_id": "company-1",
+        "error": None,
+        "status": "active",
+        "user_id": "server-user",
+        "provided_user_id_rejected": False,
+        "portal_connection_management_pending": True,
+        "authenticated": True,
+    }
+    assert fake_api_client.calls[0]["body"] == {"user_id": "requested-user"}
+    assert sdk.v1.get_user_id() == "server-user"
+    assert sdk.v1.is_authed() is True
+
+
+@pytest.mark.asyncio
+async def test_rejected_session_clears_reused_identity_and_accepts_wire_aliases() -> (
+    None
+):
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    sdk.v1.api_client = SessionApiClient(  # type: ignore[assignment]
+        [
+            {
+                "data": {
+                    "sessionId": "session-1",
+                    "companyId": "company-1",
+                    "status": "active",
+                    "userId": "server-user",
+                },
+                "errors": [],
+            },
+            {
+                "data": {
+                    "sessionId": "session-2",
+                    "companyId": "company-1",
+                    "status": "authenticating",
+                    "userId": None,
+                    "providedUserIdRejected": True,
+                    "portalConnectionManagementPending": True,
+                },
+                "errors": [],
+            },
+        ]
+    )
+
+    active = await sdk.v1.start_session(one_time_token="token-1")
+    rejected = await sdk.v1.start_session(
+        one_time_token="token-2", user_id="requested-user"
+    )
+
+    assert active["authenticated"] is True
+    assert rejected == {
+        "success": True,
+        "session_id": "session-2",
+        "company_id": "company-1",
+        "error": None,
+        "status": "authenticating",
+        "user_id": None,
+        "provided_user_id_rejected": True,
+        "portal_connection_management_pending": True,
+        "authenticated": False,
+    }
+    assert sdk.v1.get_user_id() is None
+    assert sdk.v1.is_authed() is False
+
+
+@pytest.mark.asyncio
+async def test_session_state_fails_closed_for_unknown_status_and_truthy_flags() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    sdk.v1.user_id = "stale-user"
+    sdk.v1.authenticated = True
+    sdk.v1.api_client = SessionApiClient(  # type: ignore[assignment]
+        [
+            {
+                "data": {
+                    "session_id": "session-2",
+                    "company_id": "company-1",
+                    "status": "ACTIVE",
+                    "user_id": "server-user",
+                    "provided_user_id_rejected": 1,
+                    "portal_connection_management_pending": "true",
+                },
+                "errors": [],
+            }
+        ]
+    )
+
+    result = await sdk.v1.start_session(one_time_token="token-2")
+
+    assert result["status"] is None
+    assert result["provided_user_id_rejected"] is False
+    assert result["portal_connection_management_pending"] is False
+    assert result["authenticated"] is False
+    assert sdk.v1.get_user_id() is None
+    assert sdk.v1.is_authed() is False
+
+
+@pytest.mark.parametrize(
+    "session_data",
+    [
+        {"status": "active"},
+        {"status": "active", "user_id": 123},
+        {"user_id": "server-user"},
+        {},
+    ],
+)
+@pytest.mark.asyncio
+async def test_session_state_fails_closed_for_missing_or_malformed_identity(
+    session_data: dict[str, Any],
+) -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    sdk.v1.user_id = "stale-user"
+    sdk.v1.authenticated = True
+    sdk.v1.api_client = SessionApiClient(  # type: ignore[assignment]
+        [
+            {
+                "data": {
+                    "session_id": "session-2",
+                    "company_id": "company-1",
+                    **session_data,
+                },
+                "errors": [],
+            }
+        ]
+    )
+
+    result = await sdk.v1.start_session(one_time_token="token-2")
+
+    assert result["authenticated"] is False
+    assert sdk.v1.get_user_id() is None
+    assert sdk.v1.is_authed() is False
+
+
+@pytest.mark.asyncio
+async def test_automatic_and_supplied_token_paths_share_result_shape(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    response = {
+        "data": {
+            "session_id": "session-1",
+            "company_id": "company-1",
+            "status": "pending",
+        },
+        "errors": [],
+    }
+    fake_api_client = SessionApiClient([response, response])
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    async def fake_get_token(api_key: str | None = None) -> str:
+        return "automatic-token"
+
+    monkeypatch.setattr(sdk.v1, "get_token", fake_get_token)
+
+    automatic = await sdk.v1.start_session()
+    supplied = await sdk.v1.start_session(one_time_token="supplied-token")
+
+    assert automatic == supplied
+    assert set(automatic) == set(SessionStartResult.__required_keys__)
+    assert fake_api_client.calls[0]["headers"]["One-Time-Token"] == "automatic-token"
+    assert fake_api_client.calls[1]["headers"]["One-Time-Token"] == "supplied-token"
+
+
+@pytest.mark.asyncio
+async def test_start_session_request_errors_use_the_normalized_failure_shape() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    sdk.v1.api_client = SessionApiClient(  # type: ignore[assignment]
+        [{"data": None, "errors": [{"message": "token rejected"}]}]
+    )
+
+    result = await sdk.v1.start_session(one_time_token="bad-token")
+
+    assert result == {
+        "success": False,
+        "session_id": None,
+        "company_id": None,
+        "error": "token rejected",
+        "status": None,
+        "user_id": None,
+        "provided_user_id_rejected": False,
+        "portal_connection_management_pending": False,
+        "authenticated": False,
+    }
+
+
+@pytest.mark.asyncio
+async def test_finatic_server_init_requires_requested_user_authentication(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def pending_start_session(
+        self: V1Client,
+        *,
+        one_time_token: str | None = None,
+        user_id: str | None = None,
+    ) -> SessionStartResult:
+        self.set_session_context("session-1", "company-1")
+        status: SessionStatus = "authenticating"
+        return {
+            "success": True,
+            "session_id": "session-1",
+            "company_id": "company-1",
+            "error": None,
+            "status": status,
+            "user_id": None,
+            "provided_user_id_rejected": user_id is not None,
+            "portal_connection_management_pending": True,
+            "authenticated": False,
+        }
+
+    monkeypatch.setattr(V1Client, "start_session", pending_start_session)
+
+    with pytest.raises(ValueError, match="requested user identity"):
+        await FinaticServer.init("fntc_live_key", user_id="requested-user")
+
+    unauthenticated = await FinaticServer.init("fntc_live_key")
+    assert unauthenticated.v1.get_session_id() == "session-1"
 
 
 @pytest.mark.asyncio

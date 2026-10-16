@@ -14,6 +14,9 @@
 
 ## Unreleased
 
+- Preserve server-authoritative session status and provisional-identity flags,
+  expose authenticated readiness consistently, and clear rejected or stale
+  local identities instead of falling back to caller input.
 - Regenerate the account-resource client from FinaticAPI PR #748 and expose
   typed instrument descriptors for orders, fills, events, positions, lots, and
   lot fills.
