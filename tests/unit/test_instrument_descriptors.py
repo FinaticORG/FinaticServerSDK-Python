@@ -46,7 +46,11 @@ def test_committed_openapi_artifact_matches_pinned_provenance() -> None:
     )
     artifact = root / provenance["artifact_path"]
 
-    assert provenance["source_sha"] == "2e792ca86086301d981673bf32399258288f0470"
+    assert provenance["source_pr"] == 870
+    assert provenance["source_sha"] == "6297805aeb0eb2844c96ce939b430545c9a1ce06"
+    assert provenance["sha256"] == (
+        "ffee54688da302eda523038e199aca4c5aa1bc2c3b9a88c17221364b2809f4fc"
+    )
     assert hashlib.sha256(artifact.read_bytes()).hexdigest() == provenance["sha256"]
 
 

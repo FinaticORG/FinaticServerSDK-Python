@@ -20,7 +20,7 @@ from typing_extensions import Self
 
 class FDXAssetType(str, Enum):
     """
-    FDX broker asset types.
+    Public asset types, including Finatic extensions to FDX.
     """
 
     """
@@ -32,6 +32,7 @@ class FDXAssetType(str, Enum):
     FOREX = 'FOREX'
     FUTURE = 'FUTURE'
     FUTURE_OPTION = 'FUTURE_OPTION'
+    EVENT_CONTRACT = 'EVENT_CONTRACT'
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:

@@ -21,6 +21,7 @@ from typing import Optional
 from typing_extensions import Annotated
 from uuid import UUID
 from finatic_server.models.account_order_command_request import AccountOrderCommandRequest
+from finatic_server.models.finatic_response_account_order_schema_response import FinaticResponseAccountOrderSchemaResponse
 from finatic_server.models.finatic_response_dict_str_any import FinaticResponseDictStrAny
 from finatic_server.models.finatic_response_fdx_broker_order import FinaticResponseFDXBrokerOrder
 from finatic_server.models.finatic_response_fdx_broker_order_command_result import FinaticResponseFDXBrokerOrderCommandResult
@@ -394,6 +395,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -681,6 +683,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -983,6 +986,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -1319,6 +1323,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -1358,7 +1363,7 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> FinaticResponseDictStrAny:
+    ) -> FinaticResponseAccountOrderSchemaResponse:
         """Get Account Order Schema
 
         Return JSON Schema for broker-specific order fields for this account.
@@ -1405,7 +1410,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrAny",
+            '200': "FinaticResponseAccountOrderSchemaResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1446,7 +1451,7 @@ class AccountsApi:
         _content_type: Optional[StrictStr] = None,
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
-    ) -> ApiResponse[FinaticResponseDictStrAny]:
+    ) -> ApiResponse[FinaticResponseAccountOrderSchemaResponse]:
         """Get Account Order Schema
 
         Return JSON Schema for broker-specific order fields for this account.
@@ -1493,7 +1498,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrAny",
+            '200': "FinaticResponseAccountOrderSchemaResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1581,7 +1586,7 @@ class AccountsApi:
         )
 
         _response_types_map: Dict[str, Optional[str]] = {
-            '200': "FinaticResponseDictStrAny",
+            '200': "FinaticResponseAccountOrderSchemaResponse",
             '400': "FinaticAPIErrorResponse",
             '401': "FinaticAPIErrorResponse",
             '403': "FinaticAPIErrorResponse",
@@ -1655,6 +1660,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -1991,6 +1997,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -2308,6 +2315,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -2625,6 +2633,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -2942,6 +2951,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -3278,6 +3288,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -3629,6 +3640,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -3965,6 +3977,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -4325,6 +4338,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(
@@ -4670,6 +4684,7 @@ class AccountsApi:
 
         # authentication setting
         _auth_settings: List[str] = [
+            'FinaticSession'
         ]
 
         return self.api_client.param_serialize(

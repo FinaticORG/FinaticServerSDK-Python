@@ -13,6 +13,26 @@ from typing import Any, Literal
 from typing_extensions import TypedDict
 
 
+class AccountOrderSchemaResponseDict(TypedDict, total=False):
+    action: Literal['PLACE', 'MODIFY', 'CANCEL']
+    brokerId: str
+    brokerWireSchema: dict[str, Any] | None
+    eventContract: EventContractCapabilityResponseDict
+    orderSchema: dict[str, Any]
+    supportedOrderTypesByAssetClass: dict[str, list[str]]
+
+
+class EventContractCapabilityResponseDict(TypedDict, total=False):
+    accountEntitled: bool | None
+    closingOnly: bool | None
+    implementationEvidenced: bool
+    implementationRef: str
+    observedAt: str | None
+    provenanceSource: str | None
+    providerOffered: bool
+    publicEnabled: bool
+
+
 class FDXBrokerOrderDict(TypedDict, total=False):
     _id: str
     accountId: str
@@ -70,7 +90,7 @@ class FDXBrokerOrderEventDict(TypedDict, total=False):
 
 class FDXBrokerOrderFillDict(TypedDict, total=False):
     _id: str
-    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION'] | str
+    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str
     commission: str | float | None
     executedAt: str
     executionId: str | None
@@ -90,7 +110,7 @@ class FDXBrokerOrderFillDict(TypedDict, total=False):
 
 class FDXBrokerPositionDict(TypedDict, total=False):
     accountId: str
-    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION'] | str
+    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str
     averageBuyPrice: str | float | None
     averageSellPrice: str | float | None
     connectionId: str
@@ -136,14 +156,14 @@ class FDXInstrumentDescriptorDict(TypedDict, total=False):
     finaticInstrumentId: str
     future: FDXFutureInstrumentDetailsDict | None
     observedAt: str | None
-    provenance: dict[str, Any] | None
+    provenance: dict[str, str] | None
     providerNativeId: str | None
     providerSymbol: str | None
     version: str
 
 
 class FDXOrderLegDict(TypedDict, total=False):
-    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION'] | str
+    assetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str
     averageFillPrice: str | float | None
     brokerProvidedSymbol: str | None
     contractCode: str | None
@@ -151,7 +171,7 @@ class FDXOrderLegDict(TypedDict, total=False):
     cryptoQuoteSymbol: str | None
     expirationDate: str | None
     filledQuantity: str | float | None
-    futureUnderlyingAssetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION'] | str | None
+    futureUnderlyingAssetType: Literal['EQUITY', 'OPTION', 'CRYPTO', 'FOREX', 'FUTURE', 'FUTURE_OPTION', 'EVENT_CONTRACT'] | str | None
     instrument: FDXInstrumentDescriptorDict | None
     legIndex: int
     limitPrice: str | float | None
@@ -168,10 +188,20 @@ class FDXOrderLegDict(TypedDict, total=False):
     underlyingSymbol: str | None
 
 
+class FinaticV1ErrorDict(TypedDict, total=False):
+    category: Literal['AUTHENTICATION', 'AUTHORIZATION', 'VALIDATION', 'RATE_LIMITED', 'REAUTH_REQUIRED', 'PROVIDER_ERROR', 'CONFLICT', 'NOT_FOUND', 'INTERNAL']
+    code: str
+    details: dict[str, Any]
+    message: str
+
+
 __all__ = [
-    "FDXBrokerOrderDict",
+    "AccountOrderSchemaResponseDict",
+    "EventContractCapabilityResponseDict",
     "FDXBrokerOrderCommandResultDict",
+    "FDXBrokerOrderDict",
     "FDXBrokerOrderEventDict",
     "FDXBrokerOrderFillDict",
     "FDXBrokerPositionDict",
+    "FinaticV1ErrorDict",
 ]

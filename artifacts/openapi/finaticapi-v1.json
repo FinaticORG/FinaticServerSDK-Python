@@ -68,6 +68,82 @@
         "title": "AccountOrderPayload",
         "type": "object"
       },
+      "AccountOrderSchemaResponse": {
+        "additionalProperties": false,
+        "description": "Public broker order schema and account-specific capability response.",
+        "properties": {
+          "action": {
+            "description": "Normalized order command action.",
+            "enum": [
+              "PLACE",
+              "MODIFY",
+              "CANCEL"
+            ],
+            "title": "Action",
+            "type": "string"
+          },
+          "brokerId": {
+            "description": "Broker adapter selected by the grant.",
+            "title": "Brokerid",
+            "type": "string"
+          },
+          "brokerWireSchema": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Raw broker wire JSON Schema when available.",
+            "title": "Brokerwireschema"
+          },
+          "eventContract": {
+            "$ref": "#/components/schemas/EventContractCapabilityResponse",
+            "description": "Account-scoped Event Contract capability axes."
+          },
+          "orderSchema": {
+            "additionalProperties": true,
+            "description": "Developer-facing normalized order JSON Schema.",
+            "title": "Orderschema",
+            "type": "object"
+          },
+          "supportedOrderTypesByAssetClass": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "description": "Supported order types keyed by normalized asset class.",
+            "title": "Supportedordertypesbyassetclass",
+            "type": "object"
+          }
+        },
+        "required": [
+          "brokerId",
+          "action",
+          "orderSchema",
+          "brokerWireSchema",
+          "supportedOrderTypesByAssetClass",
+          "eventContract"
+        ],
+        "title": "AccountOrderSchemaResponse",
+        "type": "object"
+      },
+      "AuthenticationType": {
+        "description": "Customer-facing provider authentication mechanism.",
+        "enum": [
+          "oauth",
+          "username_password",
+          "api_key",
+          "push_agent"
+        ],
+        "title": "AuthenticationType",
+        "type": "string"
+      },
       "BrokerConnectionOffboardingRequest": {
         "additionalProperties": false,
         "description": "Public selector for one broker connection without exposing its ID.",
@@ -274,6 +350,15 @@
         "title": "BrokerPermissions",
         "type": "object"
       },
+      "CatalogEnvironment": {
+        "description": "Requested Finatic execution environment.",
+        "enum": [
+          "live",
+          "sandbox"
+        ],
+        "title": "CatalogEnvironment",
+        "type": "string"
+      },
       "CompleteSessionResponse": {
         "description": "Complete session response model.",
         "properties": {
@@ -367,6 +452,19 @@
         "title": "CreateSessionRequest",
         "type": "object"
       },
+      "DeliveryMode": {
+        "description": "Provider delivery mechanism for one resource.",
+        "enum": [
+          "broker_api",
+          "broker_api_snapshot",
+          "cash_log_api",
+          "flex_reports",
+          "stream_push",
+          "none"
+        ],
+        "title": "DeliveryMode",
+        "type": "string"
+      },
       "EaConfigurationPayload": {
         "description": "One-time connector bootstrap payload.",
         "properties": {
@@ -410,6 +508,91 @@
           "snapshot_required"
         ],
         "title": "EaConfigurationPayload",
+        "type": "object"
+      },
+      "EventContractCapabilityResponse": {
+        "additionalProperties": false,
+        "description": "Independent account-scoped Event Contract capability axes.",
+        "properties": {
+          "accountEntitled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this account is entitled for Event Contracts; null when it has not been observed.",
+            "title": "Accountentitled"
+          },
+          "closingOnly": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Whether this account is restricted to closing Event Contract positions; null when it has not been observed.",
+            "title": "Closingonly"
+          },
+          "implementationEvidenced": {
+            "description": "Whether Finatic has implementation evidence for Event Contract identity and validation.",
+            "title": "Implementationevidenced",
+            "type": "boolean"
+          },
+          "implementationRef": {
+            "description": "Exact FinaticCore commit used for this capability contract.",
+            "title": "Implementationref",
+            "type": "string"
+          },
+          "observedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "ISO 8601 timestamp for the account capability observation.",
+            "title": "Observedat"
+          },
+          "provenanceSource": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Redacted source label for the capability observation.",
+            "title": "Provenancesource"
+          },
+          "providerOffered": {
+            "description": "Whether the provider offers Event Contracts independently of this account's observed entitlement.",
+            "title": "Provideroffered",
+            "type": "boolean"
+          },
+          "publicEnabled": {
+            "description": "Whether Finatic currently permits public Event Contract writes.",
+            "title": "Publicenabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "providerOffered",
+          "implementationEvidenced",
+          "publicEnabled",
+          "accountEntitled",
+          "closingOnly",
+          "observedAt",
+          "implementationRef"
+        ],
+        "title": "EventContractCapabilityResponse",
         "type": "object"
       },
       "FDXAccountGrant": {
@@ -605,14 +788,15 @@
         "type": "object"
       },
       "FDXAssetType": {
-        "description": "FDX broker asset types.",
+        "description": "Public asset types, including Finatic extensions to FDX.",
         "enum": [
           "EQUITY",
           "OPTION",
           "CRYPTO",
           "FOREX",
           "FUTURE",
-          "FUTURE_OPTION"
+          "FUTURE_OPTION",
+          "EVENT_CONTRACT"
         ],
         "title": "FDXAssetType",
         "type": "string"
@@ -656,6 +840,7 @@
           "commission": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1190,6 +1375,7 @@
           "commission": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1269,6 +1455,7 @@
           "price": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1281,6 +1468,7 @@
           "quantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1495,6 +1683,7 @@
           "averageBuyPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1510,6 +1699,7 @@
           "averageSellPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1530,6 +1720,7 @@
           "costBasis": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1545,6 +1736,7 @@
           "costBasisWithCommission": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1560,6 +1752,7 @@
           "currentPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1616,6 +1809,7 @@
           "marketValue": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1695,6 +1889,7 @@
           "quantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1707,6 +1902,7 @@
           "realizedProfitLoss": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1722,6 +1918,7 @@
           "realizedProfitLossPercent": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1737,6 +1934,7 @@
           "realizedProfitLossWithCommission": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1812,6 +2010,7 @@
           "units": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1827,6 +2026,7 @@
           "unrealizedProfitLoss": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1842,6 +2042,7 @@
           "unrealizedProfitLossPercent": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1894,6 +2095,7 @@
           "closePriceAvg": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1922,6 +2124,7 @@
           "closedQuantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1946,6 +2149,7 @@
           "costBasis": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -1958,6 +2162,7 @@
           "costBasisWithCommission": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2011,6 +2216,7 @@
           "openPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2023,6 +2229,7 @@
           "openQuantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2061,6 +2268,7 @@
           "realizedProfitLoss": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2073,6 +2281,7 @@
           "realizedProfitLossWithCommission": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2085,6 +2294,7 @@
           "remainingQuantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2144,6 +2354,7 @@
           "commissionShare": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2165,6 +2376,7 @@
           "fillPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2177,6 +2389,7 @@
           "fillQuantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2321,6 +2534,7 @@
           "transactionAmount": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2827,6 +3041,7 @@
           "averageFillPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2903,6 +3118,7 @@
           "filledQuantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2949,6 +3165,7 @@
           "limitPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -2964,6 +3181,7 @@
           "notional": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -3006,6 +3224,7 @@
           "quantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -3018,6 +3237,7 @@
           "remainingQuantity": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -3062,6 +3282,7 @@
           "stopPrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -3077,6 +3298,7 @@
           "strikePrice": {
             "anyOf": [
               {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
                 "type": "string"
               },
               {
@@ -3240,6 +3462,167 @@
           "description"
         ],
         "title": "FDXWebhookEventDefinition",
+        "type": "object"
+      },
+      "FDXWebhookPayload": {
+        "additionalProperties": false,
+        "description": "Documented customer-facing webhook payload envelope.",
+        "examples": [
+          {
+            "accountId": "account_123",
+            "companyAccountId": "company_123",
+            "createdAt": "2026-10-12T08:45:00Z",
+            "data": {
+              "status": "filled"
+            },
+            "environment": "live",
+            "eventId": "evt_123",
+            "eventType": "order.filled",
+            "grantId": "grant_123",
+            "resource": {
+              "accountId": "account_123",
+              "grantId": "grant_123",
+              "resourceId": "order_123",
+              "resourceType": "order"
+            },
+            "schemaVersion": "v1"
+          }
+        ],
+        "properties": {
+          "accountId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Accountid"
+          },
+          "companyAccountId": {
+            "title": "Companyaccountid",
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "title": "Createdat",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "title": "Data",
+            "type": "object"
+          },
+          "environment": {
+            "enum": [
+              "live",
+              "sandbox"
+            ],
+            "title": "Environment",
+            "type": "string"
+          },
+          "eventId": {
+            "title": "Eventid",
+            "type": "string"
+          },
+          "eventType": {
+            "enum": [
+              "account.grant.created",
+              "account.grant.updated",
+              "account.grant.revoked",
+              "account.sync.started",
+              "account.sync.succeeded",
+              "account.sync.failed",
+              "account.balance.updated",
+              "account.position.updated",
+              "account.transaction.created",
+              "order.created",
+              "order.updated",
+              "order.filled",
+              "order.cancelled",
+              "order.rejected",
+              "connection.reauth.required"
+            ],
+            "title": "Eventtype",
+            "type": "string"
+          },
+          "grantId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Grantid"
+          },
+          "resource": {
+            "$ref": "#/components/schemas/FDXWebhookPayloadResource"
+          },
+          "schemaVersion": {
+            "const": "v1",
+            "default": "v1",
+            "title": "Schemaversion",
+            "type": "string"
+          }
+        },
+        "required": [
+          "eventId",
+          "eventType",
+          "createdAt",
+          "environment",
+          "companyAccountId",
+          "resource"
+        ],
+        "title": "FDXWebhookPayload",
+        "type": "object"
+      },
+      "FDXWebhookPayloadResource": {
+        "additionalProperties": false,
+        "description": "Resource pointer included in outbound webhook payloads.",
+        "properties": {
+          "accountId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Accountid"
+          },
+          "grantId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Grantid"
+          },
+          "resourceId": {
+            "title": "Resourceid",
+            "type": "string"
+          },
+          "resourceType": {
+            "title": "Resourcetype",
+            "type": "string"
+          }
+        },
+        "required": [
+          "resourceType",
+          "resourceId"
+        ],
+        "title": "FDXWebhookPayloadResource",
         "type": "object"
       },
       "FDXWebhookSubscription": {
@@ -3533,6 +3916,58 @@
           "sandbox"
         ],
         "type": "string"
+      },
+      "FinaticResponse_AccountOrderSchemaResponse_": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_AccountOrderSchemaResponse_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[AccountOrderSchemaResponse]",
+        "type": "object"
       },
       "FinaticResponse_Any_": {
         "properties": {
@@ -4416,6 +4851,58 @@
           }
         },
         "title": "FinaticResponse[PortalUrlResponse]",
+        "type": "object"
+      },
+      "FinaticResponse_PublicIntegrationCatalog_": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_PublicIntegrationCatalog_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[PublicIntegrationCatalog]",
         "type": "object"
       },
       "FinaticResponse_PushAgentSetupResponse_": {
@@ -5921,30 +6408,52 @@
       "FinaticV1ResponseEnvelope": {
         "additionalProperties": false,
         "properties": {
-          "data": {
-            "description": "Successful response payload. The concrete operation schema defines the payload shape."
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Error payload containing type, code, message, status, and optional details."
           },
-          "errors": {
-            "items": {
-              "$ref": "#/components/schemas/FinaticV1Error"
-            },
-            "type": "array"
+          "success": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. The concrete operation response is authoritative."
           },
-          "traceId": {
+          "trace_id": {
+            "description": "Request trace identifier.",
             "type": "string"
           },
-          "warnings": {
-            "items": {
-              "$ref": "#/components/schemas/FinaticV1Warning"
-            },
-            "type": "array"
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects."
           }
         },
         "required": [
-          "traceId",
-          "data",
-          "warnings",
-          "errors"
+          "trace_id"
         ],
         "type": "object"
       },
@@ -5980,6 +6489,37 @@
         },
         "title": "HTTPValidationError",
         "type": "object"
+      },
+      "HealthFreshness": {
+        "description": "Freshness of the newest provider-resource measurement.",
+        "enum": [
+          "fresh",
+          "stale",
+          "unavailable"
+        ],
+        "title": "HealthFreshness",
+        "type": "string"
+      },
+      "HealthStatus": {
+        "description": "Derived provider-resource health state.",
+        "enum": [
+          "healthy",
+          "degraded",
+          "unknown"
+        ],
+        "title": "HealthStatus",
+        "type": "string"
+      },
+      "IntegrationKind": {
+        "description": "Public integration category.",
+        "enum": [
+          "broker",
+          "exchange",
+          "bank",
+          "insurance"
+        ],
+        "title": "IntegrationKind",
+        "type": "string"
       },
       "LinkUserToSessionResponse": {
         "description": "Link user to session response model.",
@@ -6080,6 +6620,17 @@
         ],
         "title": "MTConnectResponseData",
         "type": "object"
+      },
+      "ModifyStrategy": {
+        "description": "Supported provider order-modification implementation.",
+        "enum": [
+          "native_modify",
+          "cancel_and_replace",
+          "async_command",
+          "unsupported"
+        ],
+        "title": "ModifyStrategy",
+        "type": "string"
       },
       "MtTerminalServerEntry": {
         "description": "One MT terminal login server row for a provider alias.",
@@ -7096,6 +7647,420 @@
         "title": "PortalUserLinkRequest",
         "type": "object"
       },
+      "PublicAliasIdentity": {
+        "additionalProperties": false,
+        "description": "Canonical identity information for provider aliases.",
+        "properties": {
+          "canonicalId": {
+            "description": "Canonical provider identifier for capabilities and health.",
+            "minLength": 1,
+            "title": "Canonicalid",
+            "type": "string"
+          },
+          "isAlias": {
+            "description": "Whether this entry is an alias.",
+            "title": "Isalias",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isAlias",
+          "canonicalId"
+        ],
+        "title": "PublicAliasIdentity",
+        "type": "object"
+      },
+      "PublicIntegration": {
+        "additionalProperties": false,
+        "description": "One allowlisted browser-safe public integration entry.",
+        "properties": {
+          "active": {
+            "description": "Whether the catalog entry is active.",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "alias": {
+            "$ref": "#/components/schemas/PublicAliasIdentity",
+            "description": "Alias and canonical provider identity."
+          },
+          "authType": {
+            "$ref": "#/components/schemas/AuthenticationType",
+            "description": "Customer-facing authentication mechanism."
+          },
+          "capabilities": {
+            "$ref": "#/components/schemas/PublicIntegrationCapabilities",
+            "description": "Normalized capability contract."
+          },
+          "description": {
+            "description": "Public integration description.",
+            "title": "Description",
+            "type": "string"
+          },
+          "displayName": {
+            "description": "Human-readable integration name.",
+            "minLength": 1,
+            "title": "Displayname",
+            "type": "string"
+          },
+          "health": {
+            "$ref": "#/components/schemas/PublicIntegrationHealth",
+            "description": "Health for balances, positions, orders, and transactions."
+          },
+          "id": {
+            "description": "Stable integration identifier.",
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/IntegrationKind"
+          },
+          "logoPath": {
+            "description": "Public logo asset path.",
+            "title": "Logopath",
+            "type": "string"
+          },
+          "name": {
+            "description": "Stable integration slug.",
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "releaseStage": {
+            "$ref": "#/components/schemas/ReleaseStage",
+            "description": "alpha, beta, or stable public release stage."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "displayName",
+          "description",
+          "logoPath",
+          "kind",
+          "active",
+          "authType",
+          "releaseStage",
+          "alias",
+          "capabilities",
+          "health"
+        ],
+        "title": "PublicIntegration",
+        "type": "object"
+      },
+      "PublicIntegrationCapabilities": {
+        "additionalProperties": false,
+        "description": "Normalized resource, trading, and order-execution capabilities.",
+        "properties": {
+          "orderExecution": {
+            "$ref": "#/components/schemas/PublicOrderExecutionCapability"
+          },
+          "resources": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PublicResourceCapability"
+            },
+            "description": "Capabilities keyed by canonical resource.",
+            "maxProperties": 5,
+            "minProperties": 5,
+            "propertyNames": {
+              "$ref": "#/components/schemas/ResourceKind"
+            },
+            "title": "Resources",
+            "type": "object"
+          },
+          "trading": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PublicTradeCapability"
+            },
+            "description": "Trading capabilities keyed by asset class.",
+            "title": "Trading",
+            "type": "object"
+          }
+        },
+        "required": [
+          "resources",
+          "trading",
+          "orderExecution"
+        ],
+        "title": "PublicIntegrationCapabilities",
+        "type": "object"
+      },
+      "PublicIntegrationCatalog": {
+        "additionalProperties": false,
+        "description": "Versioned public integration catalog response payload.",
+        "properties": {
+          "catalogGeneratedAt": {
+            "description": "UTC time at which this response was assembled.",
+            "format": "date-time",
+            "title": "Cataloggeneratedat",
+            "type": "string"
+          },
+          "environment": {
+            "$ref": "#/components/schemas/CatalogEnvironment",
+            "description": "Requested Finatic environment."
+          },
+          "integrations": {
+            "description": "Deterministically ordered public integrations.",
+            "items": {
+              "$ref": "#/components/schemas/PublicIntegration"
+            },
+            "title": "Integrations",
+            "type": "array"
+          },
+          "schemaVersion": {
+            "description": "Public catalog schema version.",
+            "title": "Schemaversion",
+            "type": "string"
+          }
+        },
+        "required": [
+          "schemaVersion",
+          "environment",
+          "catalogGeneratedAt",
+          "integrations"
+        ],
+        "title": "PublicIntegrationCatalog",
+        "type": "object"
+      },
+      "PublicIntegrationHealth": {
+        "additionalProperties": false,
+        "description": "Complete health contract for the four measured resources.",
+        "properties": {
+          "balances": {
+            "$ref": "#/components/schemas/PublicResourceHealth",
+            "description": "Health summary for balance reads."
+          },
+          "orders": {
+            "$ref": "#/components/schemas/PublicResourceHealth",
+            "description": "Health summary for order reads."
+          },
+          "positions": {
+            "$ref": "#/components/schemas/PublicResourceHealth",
+            "description": "Health summary for position reads."
+          },
+          "transactions": {
+            "$ref": "#/components/schemas/PublicResourceHealth",
+            "description": "Health summary for transaction reads."
+          }
+        },
+        "required": [
+          "balances",
+          "positions",
+          "orders",
+          "transactions"
+        ],
+        "title": "PublicIntegrationHealth",
+        "type": "object"
+      },
+      "PublicOrderExecutionCapability": {
+        "additionalProperties": false,
+        "description": "Explicit provider order-modification behavior.",
+        "properties": {
+          "modifyBehavior": {
+            "description": "Conditions and behavior for the declared strategies.",
+            "minLength": 1,
+            "title": "Modifybehavior",
+            "type": "string"
+          },
+          "modifyStrategies": {
+            "description": "Provider modification strategies; never inferred.",
+            "items": {
+              "$ref": "#/components/schemas/ModifyStrategy"
+            },
+            "minItems": 1,
+            "title": "Modifystrategies",
+            "type": "array"
+          }
+        },
+        "required": [
+          "modifyStrategies",
+          "modifyBehavior"
+        ],
+        "title": "PublicOrderExecutionCapability",
+        "type": "object"
+      },
+      "PublicResourceCapability": {
+        "additionalProperties": false,
+        "description": "Public behavior contract for one canonical resource.",
+        "properties": {
+          "deliveryMode": {
+            "$ref": "#/components/schemas/DeliveryMode",
+            "description": "Provider delivery mechanism for the resource."
+          },
+          "ledgerSupported": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Transaction-ledger support; null for non-transaction resources.",
+            "title": "Ledgersupported"
+          },
+          "notes": {
+            "description": "Public implementation caveats.",
+            "title": "Notes",
+            "type": "string"
+          },
+          "positionsFromOrders": {
+            "description": "Whether positions are derived from order activity.",
+            "title": "Positionsfromorders",
+            "type": "boolean"
+          },
+          "supported": {
+            "description": "Whether the resource is supported.",
+            "title": "Supported",
+            "type": "boolean"
+          },
+          "syncMode": {
+            "$ref": "#/components/schemas/SyncMode",
+            "description": "Finatic synchronization mode for the resource."
+          },
+          "webhooksEnabled": {
+            "description": "Whether normalized updates may produce webhooks.",
+            "title": "Webhooksenabled",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "supported",
+          "deliveryMode",
+          "syncMode",
+          "ledgerSupported",
+          "webhooksEnabled",
+          "positionsFromOrders",
+          "notes"
+        ],
+        "title": "PublicResourceCapability",
+        "type": "object"
+      },
+      "PublicResourceHealth": {
+        "additionalProperties": false,
+        "description": "Derived public health summary for one measured resource.",
+        "properties": {
+          "freshness": {
+            "$ref": "#/components/schemas/HealthFreshness",
+            "description": "fresh, stale, or unavailable measurement state."
+          },
+          "lastFailureAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latest failed resource operation.",
+            "title": "Lastfailureat"
+          },
+          "lastSuccessAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Latest successful resource operation.",
+            "title": "Lastsuccessat"
+          },
+          "measuredAt": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Newest metric measurement used for this summary.",
+            "title": "Measuredat"
+          },
+          "p50LatencyMs": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Median provider latency in milliseconds when measured.",
+            "title": "P50Latencyms"
+          },
+          "status": {
+            "$ref": "#/components/schemas/HealthStatus",
+            "description": "healthy, degraded, or unknown derived health."
+          },
+          "successRate24h": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Rolling 24-hour success rate when measured.",
+            "title": "Successrate24H"
+          }
+        },
+        "required": [
+          "status",
+          "freshness",
+          "p50LatencyMs",
+          "successRate24h",
+          "lastSuccessAt",
+          "lastFailureAt",
+          "measuredAt"
+        ],
+        "title": "PublicResourceHealth",
+        "type": "object"
+      },
+      "PublicTradeCapability": {
+        "additionalProperties": false,
+        "description": "Trading capability for one provider asset class.",
+        "properties": {
+          "caveats": {
+            "description": "Public provider-specific trading caveats.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Caveats",
+            "type": "array"
+          },
+          "orderTypes": {
+            "description": "Supported normalized order types.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Ordertypes",
+            "type": "array"
+          },
+          "supportsTrading": {
+            "description": "Whether trading is supported for this asset class.",
+            "title": "Supportstrading",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "supportsTrading",
+          "orderTypes",
+          "caveats"
+        ],
+        "title": "PublicTradeCapability",
+        "type": "object"
+      },
       "PushAgentAliasOption": {
         "description": "One MT provider alias available on a platform connect form.",
         "properties": {
@@ -7380,6 +8345,28 @@
         "title": "ReauthNotificationPreferenceUpdateRequest",
         "type": "object"
       },
+      "ReleaseStage": {
+        "description": "Public availability stage for an integration.",
+        "enum": [
+          "alpha",
+          "beta",
+          "stable"
+        ],
+        "title": "ReleaseStage",
+        "type": "string"
+      },
+      "ResourceKind": {
+        "description": "Canonical Finatic resource names.",
+        "enum": [
+          "accounts",
+          "balances",
+          "positions",
+          "orders",
+          "transactions"
+        ],
+        "title": "ResourceKind",
+        "type": "string"
+      },
       "RotateSecretResponse": {
         "description": "Rotate secret response payload.\n\n``ea_configuration`` is the same block returned by the connect endpoint so\nportal clients can render the credentials popup without reconstructing\ntransport fields locally. When older callers (V1 router) do not have\nenough context to build the full block, the field is omitted.",
         "properties": {
@@ -7661,6 +8648,40 @@
           "user_id"
         ],
         "title": "SessionUserResponse",
+        "type": "object"
+      },
+      "SuccessPayload_AccountOrderSchemaResponse_": {
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AccountOrderSchemaResponse"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The response data (None when error is present)"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional metadata (pagination, etc.)",
+            "title": "Meta"
+          }
+        },
+        "title": "SuccessPayload[AccountOrderSchemaResponse]",
         "type": "object"
       },
       "SuccessPayload_Any_": {
@@ -8232,6 +9253,40 @@
           }
         },
         "title": "SuccessPayload[PortalUrlResponse]",
+        "type": "object"
+      },
+      "SuccessPayload_PublicIntegrationCatalog_": {
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicIntegrationCatalog"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The response data (None when error is present)"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional metadata (pagination, etc.)",
+            "title": "Meta"
+          }
+        },
+        "title": "SuccessPayload[PublicIntegrationCatalog]",
         "type": "object"
       },
       "SuccessPayload_PushAgentSetupResponse_": {
@@ -9224,6 +10279,18 @@
         "title": "SuccessPayload[list[dict[str, Any]]]",
         "type": "object"
       },
+      "SyncMode": {
+        "description": "Finatic synchronization mode for one resource.",
+        "enum": [
+          "poll",
+          "stream",
+          "hybrid",
+          "push_only",
+          "none"
+        ],
+        "title": "SyncMode",
+        "type": "string"
+      },
       "TokenResponseData": {
         "description": "Response data for token operations.",
         "example": {},
@@ -9381,15 +10448,33 @@
       }
     },
     "securitySchemes": {
-      "FinaticSession": {
-        "description": "Device-bound Finatic session established with the calling company's credentials.",
+      "FinaticCompanyApiKey": {
+        "description": "Company API key used to create and manage sessions.",
         "in": "header",
-        "name": "x-session-id",
+        "name": "x-api-key",
         "type": "apiKey"
       },
-      "HTTPBearer": {
+      "FinaticOwnerJWT": {
+        "bearerFormat": "JWT",
+        "description": "Supabase access-token JWT for owner-portal and user-linking operations.",
         "scheme": "bearer",
         "type": "http"
+      },
+      "FinaticSession": {
+        "description": "Device-bound Finatic session. Device continuity uses only User-Agent, Accept-Language, Sec-CH-UA, and Sec-CH-UA-Platform; IP address and Accept-Encoding are deliberately excluded.",
+        "in": "header",
+        "name": "x-session-id",
+        "type": "apiKey",
+        "x-finatic-device-continuity-excludes": [
+          "IP address",
+          "Accept-Encoding"
+        ],
+        "x-finatic-device-continuity-headers": [
+          "User-Agent",
+          "Accept-Language",
+          "Sec-CH-UA",
+          "Sec-CH-UA-Platform"
+        ]
       }
     }
   },
@@ -9421,7 +10506,7 @@
     },
     "/.well-known/oauth-authorization-server": {
       "get": {
-        "description": "RFC 8414 metadata so MCP clients (e.g. Cursor) do not 404 on issuer discovery.\n\nFinatic issues MCP tokens via ``POST /api/beta/session/mcp/bootstrap`` with\n``x-api-key``; this is not a full OAuth2 token endpoint but satisfies discovery.",
+        "description": "Compatibility discovery route describing Finatic's bespoke bootstrap.",
         "operationId": "oauth_authorization_server_metadata__well_known_oauth_authorization_server_get",
         "responses": {
           "200": {
@@ -9604,6 +10689,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Account Grants",
         "tags": [
           "account-grants"
@@ -9625,7 +10715,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-grants",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -9766,6 +10858,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Account Grant",
         "tags": [
           "account-grants"
@@ -9787,7 +10884,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-grants",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -9936,6 +11035,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Update Account Grant",
         "tags": [
           "account-grants"
@@ -9957,7 +11061,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-grants",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -10098,6 +11204,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Revoke Account Grant",
         "tags": [
           "account-grants"
@@ -10119,7 +11230,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-grants",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -10250,6 +11363,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Accounts",
         "tags": [
           "accounts"
@@ -10271,7 +11389,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -10414,6 +11534,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Account",
         "tags": [
           "accounts"
@@ -10435,7 +11560,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -10601,6 +11728,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Account Balances",
         "tags": [
           "accounts"
@@ -10622,7 +11754,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -10697,7 +11831,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_dict_str__Any__"
+                  "$ref": "#/components/schemas/FinaticResponse_AccountOrderSchemaResponse_"
                 }
               }
             },
@@ -10794,6 +11928,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Account Order Schema",
         "tags": [
           "accounts"
@@ -10815,7 +11954,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -10981,6 +12122,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Account Orders",
         "tags": [
           "accounts"
@@ -11002,7 +12148,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -11162,6 +12310,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Create Account Order",
         "tags": [
           "accounts"
@@ -11183,7 +12336,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -11374,6 +12529,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Cancel Account Order",
         "tags": [
           "accounts"
@@ -11395,7 +12555,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -11545,6 +12707,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Account Order",
         "tags": [
           "accounts"
@@ -11566,7 +12733,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -11735,6 +12904,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Modify Account Order",
         "tags": [
           "accounts"
@@ -11756,7 +12930,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -11908,6 +13084,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Account Order Events",
         "tags": [
           "accounts"
@@ -11929,7 +13110,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -12081,6 +13264,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Account Order Fills",
         "tags": [
           "accounts"
@@ -12102,7 +13290,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -12268,6 +13458,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Account Positions",
         "tags": [
           "accounts"
@@ -12289,7 +13484,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -12455,6 +13652,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Account Transactions",
         "tags": [
           "accounts"
@@ -12476,7 +13678,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -12651,6 +13855,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Account Resource",
         "tags": [
           "accounts"
@@ -12672,7 +13881,9 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "fdx-account-first",
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -13032,6 +14243,169 @@
         "x-sdk-audiences": [
           "internal"
         ]
+      }
+    },
+    "/api/v1/integrations": {
+      "get": {
+        "description": "Return public capability and health metadata without authentication.",
+        "operationId": "finaticV1GetIntegrations",
+        "parameters": [
+          {
+            "description": "Finatic catalog environment.",
+            "in": "query",
+            "name": "environment",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/CatalogEnvironment",
+              "default": "live",
+              "description": "Finatic catalog environment."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticResponse_PublicIntegrationCatalog_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Catalog Unavailable - A required catalog source could not be read (CATALOG_UNAVAILABLE)."
+          }
+        },
+        "security": [],
+        "summary": "List Public Integrations",
+        "tags": [
+          "integrations"
+        ],
+        "x-finatic-environments": [
+          "live",
+          "sandbox"
+        ],
+        "x-finatic-error-taxonomy": [
+          "AUTHENTICATION",
+          "AUTHORIZATION",
+          "VALIDATION",
+          "RATE_LIMITED",
+          "REAUTH_REQUIRED",
+          "PROVIDER_ERROR",
+          "CONFLICT",
+          "NOT_FOUND",
+          "INTERNAL"
+        ],
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
+        "x-mcp-export": true,
+        "x-sdk-audiences": [
+          "sdk",
+          "web",
+          "portal"
+        ],
+        "x-sdk-auth": "optional",
+        "x-sdk-session-headers": false,
+        "x-sdk-session-in-params": false
       }
     },
     "/api/v1/mt/connect": {
@@ -13713,7 +15087,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Update Owner Account Grant",
@@ -13769,7 +15143,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Revoke Owner Account Grant",
@@ -13803,7 +15177,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Get Owner Portal Bootstrap",
@@ -13857,7 +15231,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Owner Portal Connect Broker",
@@ -13913,7 +15287,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Owner Portal Delete Connection",
@@ -13969,7 +15343,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "List Owner Connection Account Grants",
@@ -14033,7 +15407,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Create Owner Connection Account Grant",
@@ -14089,7 +15463,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Revoke All Owner Connection Account Grants",
@@ -14155,7 +15529,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Revoke Owner Connection Account Grants",
@@ -14231,7 +15605,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Update Owner Connection Company Permissions",
@@ -14287,7 +15661,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "List Owner Connection Discovered Accounts",
@@ -14343,7 +15717,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Get Owner Reauth Notification Preference",
@@ -14407,7 +15781,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "Update Owner Reauth Notification Preference",
@@ -14441,7 +15815,7 @@
         },
         "security": [
           {
-            "HTTPBearer": []
+            "FinaticOwnerJWT": []
           }
         ],
         "summary": "List Owner Portal Institutions",
@@ -14503,6 +15877,7 @@
             "description": "Validation Error"
           }
         },
+        "security": [],
         "summary": "Consume Oauth Completion Token",
         "tags": [
           "portal"
@@ -14523,7 +15898,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -14597,7 +15974,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk",
@@ -14675,7 +16054,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -14756,7 +16137,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -14849,7 +16232,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -14932,7 +16317,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15015,7 +16402,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15098,7 +16487,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15181,7 +16572,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15263,7 +16656,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15336,7 +16731,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15409,7 +16806,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15492,7 +16891,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15583,7 +16984,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15666,7 +17069,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15749,7 +17154,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15832,7 +17239,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -15923,7 +17332,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -16016,7 +17427,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -16089,7 +17502,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -16172,7 +17587,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -16225,6 +17642,7 @@
             "description": "Validation Error"
           }
         },
+        "security": [],
         "summary": "Portal Root",
         "tags": [
           "portal"
@@ -16245,7 +17663,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -16405,6 +17825,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticCompanyApiKey": []
+          }
+        ],
         "summary": "Init Session",
         "tags": [
           "session"
@@ -16425,7 +17850,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -16577,6 +18004,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticOwnerJWT": []
+          }
+        ],
         "summary": "Link User To Session",
         "tags": [
           "session"
@@ -16597,7 +18029,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "portal"
@@ -16732,6 +18166,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Portal Url",
         "tags": [
           "session"
@@ -16752,7 +18191,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -16909,6 +18350,7 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [],
         "summary": "Start Session",
         "tags": [
           "session"
@@ -16929,7 +18371,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -17082,6 +18526,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Get Session User",
         "tags": [
           "session"
@@ -17102,7 +18551,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -17257,6 +18708,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticCompanyApiKey": []
+          }
+        ],
         "summary": "Create Session",
         "tags": [
           "sessions"
@@ -17277,7 +18733,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk",
@@ -17422,6 +18880,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticCompanyApiKey": []
+          }
+        ],
         "summary": "Get Session",
         "tags": [
           "sessions"
@@ -17442,7 +18905,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk",
@@ -17587,6 +19052,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticCompanyApiKey": []
+          }
+        ],
         "summary": "Create Portal Link",
         "tags": [
           "sessions"
@@ -17607,7 +19077,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk",
@@ -17752,6 +19224,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticCompanyApiKey": []
+          }
+        ],
         "summary": "Get Session Sync Status",
         "tags": [
           "sessions"
@@ -17772,7 +19249,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk",
@@ -17917,6 +19396,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticCompanyApiKey": []
+          }
+        ],
         "summary": "Get Session User",
         "tags": [
           "sessions"
@@ -17937,7 +19421,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk",
@@ -18189,7 +19675,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -18370,7 +19858,9 @@
           "NOT_FOUND",
           "INTERNAL"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -18503,6 +19993,7 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [],
         "summary": "Get Webhook Catalog",
         "tags": [
           "webhooks"
@@ -18529,7 +20020,9 @@
           "session",
           "accessible_accounts"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -18660,6 +20153,7 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [],
         "summary": "Get Webhook Payload Schema",
         "tags": [
           "webhooks"
@@ -18681,12 +20175,17 @@
           "INTERNAL"
         ],
         "x-finatic-extension": "webhooks",
+        "x-finatic-payload-schema": {
+          "$ref": "#/components/schemas/FDXWebhookPayload"
+        },
         "x-finatic-realtime-payload-shape": "webhook-event-v1",
         "x-finatic-realtime-scope": [
           "session",
           "accessible_accounts"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -18817,6 +20316,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "List Webhook Subscriptions",
         "tags": [
           "webhooks"
@@ -18843,7 +20347,9 @@
           "session",
           "accessible_accounts"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -18982,6 +20488,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Create Webhook Subscription",
         "tags": [
           "webhooks"
@@ -19008,7 +20519,9 @@
           "session",
           "accessible_accounts"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -19159,6 +20672,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Update Webhook Subscription",
         "tags": [
           "webhooks"
@@ -19185,7 +20703,9 @@
           "session",
           "accessible_accounts"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -19326,6 +20846,11 @@
             "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
           }
         },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
         "summary": "Revoke Webhook Subscription",
         "tags": [
           "webhooks"
@@ -19352,7 +20877,9 @@
           "session",
           "accessible_accounts"
         ],
-        "x-finatic-response-envelope": "FinaticV1ResponseEnvelope",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
         "x-mcp-export": true,
         "x-sdk-audiences": [
           "sdk"
@@ -19435,6 +20962,12 @@
       }
     }
   },
+  "servers": [
+    {
+      "description": "Finatic production API",
+      "url": "https://api.finatic.dev"
+    }
+  ],
   "tags": [
     {
       "description": "Methods for managing sessions and authentication.",
