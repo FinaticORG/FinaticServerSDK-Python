@@ -9,7 +9,13 @@ except ModuleNotFoundError:
 
 try:
     from .finatic_fdx_types import (
+        AccountOrderCommandRequest,
         AccountOrderPayload,
+        AccountOrderSchemaResponse,
+        AccountOrderSchemaResponseDict,
+        EventContractCapabilityResponse,
+        EventContractCapabilityResponseDict,
+        FDXAssetType,
         FDXBrokerOrder,
         FDXBrokerOrderCommandResult,
         FDXBrokerOrderCommandResultDict,
@@ -26,6 +32,10 @@ try:
         FDXBrokerTransaction,
         FDXFutureInstrumentDetails,
         FDXInstrumentDescriptor,
+        FinaticAPIErrorResponse,
+        FinaticV1Error,
+        FinaticV1ErrorCategory,
+        FinaticV1ErrorDict,
     )
 except ModuleNotFoundError:
     pass
