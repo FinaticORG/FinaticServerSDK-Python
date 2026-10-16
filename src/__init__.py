@@ -8,11 +8,6 @@ except ModuleNotFoundError:
     pass
 
 try:
-    from .v1 import AccountOrderCommand, V1Client
-except ModuleNotFoundError:
-    pass
-
-try:
     from .finatic_fdx_types import (
         AccountOrderPayload,
         FDXBrokerOrder,
@@ -37,5 +32,17 @@ except ModuleNotFoundError:
 
 try:
     from finatic_server import *  # type: ignore[F401,F403]
+except ModuleNotFoundError:
+    pass
+
+# Bind the hand-written facade exports after the generated wildcard import so
+# generated model names cannot replace the public v1 contract aliases.
+try:
+    from .v1 import (
+        AccountOrderCommand,
+        SessionStartResult,
+        SessionStatus,
+        V1Client,
+    )
 except ModuleNotFoundError:
     pass

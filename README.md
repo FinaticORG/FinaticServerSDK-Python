@@ -35,7 +35,7 @@ async def main() -> None:
     # After account.grant.created, start a session for that portal user, then read.
     portal_user_id = "user-from-connect-onSuccess"
     authed = await finatic.v1.start_session(user_id=portal_user_id)
-    if not authed.get("session_id"):
+    if not authed.get("authenticated"):
         raise RuntimeError(authed.get("error") or "Authenticated session start failed")
     accounts = await finatic.v1.list_accounts(include_sync_status=True)
     if accounts.get("errors"):
@@ -63,6 +63,13 @@ Connect UI lives in **FinaticConnect**. This SDK does not open an iframe.
 2. Or `v1.start_session()` then `v1.get_portal_url(...)` → redirect. Treat the full URL as secret.
 
 Wait for HTTPS webhook `account.grant.created` (or poll `list_accounts` on an ACTIVE session) before account-scoped reads.
+
+`start_session()` reports transport/session-start completion in `success` and
+account readiness separately in `authenticated`. Account reads require
+`authenticated=true`, which is returned only for an `active` session carrying
+the server-authoritative `user_id`. The result also exposes `status`,
+`provided_user_id_rejected`, and `portal_connection_management_pending` for
+portal-flow handling.
 
 ## Trading
 

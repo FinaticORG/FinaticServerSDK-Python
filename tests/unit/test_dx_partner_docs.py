@@ -65,12 +65,13 @@ def test_readme_guards_authenticated_session_before_account_reads() -> None:
     authenticated_session = readme.index(
         "authed = await finatic.v1.start_session(user_id=portal_user_id)"
     )
-    authenticated_session_guard = readme.index('if not authed.get("session_id"):')
     account_read = readme.index(
         "accounts = await finatic.v1.list_accounts(include_sync_status=True)"
     )
+    authenticated_session_guard = readme.index('if not authed.get("authenticated"):')
     assert authenticated_session < authenticated_session_guard < account_read
     assert (
         'raise RuntimeError(authed.get("error") or "Authenticated session start failed")'
         in readme
     )
+    assert "account readiness separately in `authenticated`" in readme
