@@ -5,6 +5,7 @@
     "generator_library": "asyncio",
     "generator_version": "7.18.0",
     "sha256": "ffee54688da302eda523038e199aca4c5aa1bc2c3b9a88c17221364b2809f4fc",
+    "source_branch": "feat/861-event-contract-api",
     "source_pr": 870,
     "source_repo": "FinaticORG/FinaticAPI",
     "source_sha": "6297805aeb0eb2844c96ce939b430545c9a1ce06"
