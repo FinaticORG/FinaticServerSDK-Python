@@ -52,6 +52,8 @@ try:
         AccountOrderCommand,
         SessionStartResult,
         SessionStatus,
+        SessionSyncAccountStatus,
+        SessionSyncStatusResponse,
         V1Client,
     )
 except ModuleNotFoundError:
