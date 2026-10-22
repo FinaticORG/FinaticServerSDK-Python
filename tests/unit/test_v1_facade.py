@@ -11,6 +11,8 @@ from finatic_server_python import (
     AccountOrderPayload,
     SessionStartResult,
     SessionStatus,
+    SessionSyncAccountStatus,
+    SessionSyncStatusResponse,
 )
 from src.FinaticServerCore import FinaticServer
 from src.v1 import V1Client
@@ -19,6 +21,8 @@ from src.v1 import V1Client
 def test_public_session_types_match_v1_contract() -> None:
     assert SessionStartResult is v1_module.SessionStartResult
     assert SessionStatus is v1_module.SessionStatus
+    assert SessionSyncAccountStatus is v1_module.SessionSyncAccountStatus
+    assert SessionSyncStatusResponse is v1_module.SessionSyncStatusResponse
 
 
 class FakeResponse:
@@ -215,6 +219,7 @@ def test_v1_facade_covers_data_openapi_sdk_audience_operations() -> None:
     assert not hasattr(V1Client, "create_session")
     assert hasattr(V1Client, "start_session")
     assert hasattr(V1Client, "get_portal_url")
+    assert hasattr(V1Client, "get_session_sync_status")
 
 
 def test_finatic_server_exposes_v1_facade_with_environment() -> None:
@@ -225,6 +230,97 @@ def test_finatic_server_exposes_v1_facade_with_environment() -> None:
 
     assert isinstance(sdk.v1, V1Client)
     assert sdk.v1.environment == "sandbox"
+
+
+@pytest.mark.asyncio
+async def test_session_sync_status_supports_pre_auth_explicit_polling() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = SessionApiClient(
+        [
+            {
+                "traceId": "sync-trace",
+                "data": {
+                    "sessionId": "session/explicit ?",
+                    "companyId": "company-1",
+                    "status": "waiting_for_provider",
+                    "accounts": [
+                        {
+                            "accountId": None,
+                            "brokerId": None,
+                            "lastSyncedAt": None,
+                            "providerHealth": "degraded_custom",
+                            "syncError": None,
+                            "syncStatus": "provider_specific_future_state",
+                        }
+                    ],
+                },
+                "warnings": [{"code": "FUTURE_WARNING"}],
+                "errors": [],
+            }
+        ]
+    )
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    assert sdk.v1.is_authed() is False
+    result = await sdk.v1.get_session_sync_status("session/explicit ?")
+    typed_result: SessionSyncStatusResponse | None = result["data"]
+
+    assert typed_result is not None
+    assert typed_result["status"] == "waiting_for_provider"
+    account: SessionSyncAccountStatus = typed_result["accounts"][0]
+    assert account == {
+        "accountId": None,
+        "brokerId": None,
+        "lastSyncedAt": None,
+        "providerHealth": "degraded_custom",
+        "syncError": None,
+        "syncStatus": "provider_specific_future_state",
+    }
+    assert result["traceId"] == "sync-trace"
+    assert result["warnings"] == [{"code": "FUTURE_WARNING"}]
+    assert result["errors"] == []
+    assert sdk.v1.is_authed() is False
+    assert fake_api_client.calls[0]["url"] == (
+        "https://api.test/api/v1/sessions/session%2Fexplicit%20%3F/sync-status"
+    )
+    assert fake_api_client.calls[0]["headers"]["X-API-Key"] == "fntc_live_key"
+    assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "live"
+
+
+@pytest.mark.asyncio
+async def test_session_sync_status_uses_stored_session_id() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_sandbox_key",
+        sdk_config={"base_url": "https://api.test", "environment": "sandbox"},
+    )
+    fake_api_client = SessionApiClient(
+        [{"data": {"status": "ready", "accounts": []}, "errors": []}]
+    )
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+    sdk.v1.set_session_context("stored/session")
+
+    await sdk.v1.get_session_sync_status()
+
+    assert fake_api_client.calls[0]["url"] == (
+        "https://api.test/api/v1/sessions/stored%2Fsession/sync-status"
+    )
+    assert fake_api_client.calls[0]["headers"]["X-Finatic-Environment"] == "sandbox"
+
+
+@pytest.mark.asyncio
+async def test_session_sync_status_requires_explicit_or_stored_session_id() -> None:
+    sdk = FinaticServer(
+        api_key="fntc_live_key", sdk_config={"base_url": "https://api.test"}
+    )
+    fake_api_client = FakeApiClient()
+    sdk.v1.api_client = fake_api_client  # type: ignore[assignment]
+
+    with pytest.raises(ValueError, match="Session ID is required"):
+        await sdk.v1.get_session_sync_status()
+
+    assert fake_api_client.calls == []
 
 
 @pytest.mark.asyncio
