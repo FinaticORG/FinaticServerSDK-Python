@@ -11,7 +11,7 @@ import json
 from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import Any, Literal, TypedDict, cast
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+from urllib.parse import parse_qs, quote, urlencode, urlparse, urlunparse
 
 from finatic_server.api_client import ApiClient
 from finatic_server.configuration import Configuration
@@ -49,6 +49,26 @@ _SESSION_STATUSES: set[str] = {
     "completed",
     "expired",
 }
+
+
+class SessionSyncAccountStatus(TypedDict):
+    """Public camelCase sync state for one selected account."""
+
+    accountId: str | None
+    brokerId: str | None
+    lastSyncedAt: str | None
+    providerHealth: str
+    syncError: str | None
+    syncStatus: str
+
+
+class SessionSyncStatusResponse(TypedDict):
+    """Pollable session sync state; status strings remain forward-compatible."""
+
+    accounts: list[SessionSyncAccountStatus]
+    companyId: str
+    sessionId: str
+    status: str
 
 
 class SessionStartResult(TypedDict):
@@ -362,6 +382,22 @@ class V1Client:
         if mode:
             portal_url = _append_query_param(portal_url, "mode", mode)
         return portal_url
+
+    async def get_session_sync_status(
+        self, session_id: str | None = None
+    ) -> FinaticResponse[SessionSyncStatusResponse]:
+        """Read selected-account sync readiness for an explicit or stored session."""
+        resolved_session_id = session_id if session_id is not None else self.session_id
+        if not resolved_session_id:
+            raise ValueError(
+                "Session ID is required. Pass session_id or initialize session context first."
+            )
+
+        response = await self._request(
+            "GET",
+            f"/api/v1/sessions/{quote(resolved_session_id, safe='')}/sync-status",
+        )
+        return cast(FinaticResponse[SessionSyncStatusResponse], response)
 
     async def get_session_user(self) -> dict[str, str]:
         if not self.session_id:
