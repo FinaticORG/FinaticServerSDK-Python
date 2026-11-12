@@ -4,11 +4,11 @@
     "generator": "@openapitools/openapi-generator-cli",
     "generator_library": "asyncio",
     "generator_version": "7.18.0",
-    "sha256": "c788d74954e3914f5ba228a3e1bea439a9020bc7cff1a8be0b5eaee479833021",
-    "source_branch": "feat/861-event-contract-api",
-    "source_pr": 870,
+    "sha256": "3e214865c34bfdf7735561fe8a4d0989feeba664901f59b7525614e601d11470",
+    "source_branch": "feat/971-grouped-sync-api-contract",
+    "source_pr": 972,
     "source_repo": "FinaticORG/FinaticAPI",
-    "source_sha": "b55f9b1dcddd51a0401a4eb969bf99530c4205f3"
+    "source_sha": "5798968718f60f2fee4ce1d1bf96fa83550fe93e"
   },
   "files": [
     {
@@ -29,7 +29,7 @@
     {
       "path": "finatic_server/api/accounts_api.py",
       "provenance": "current_artifact",
-      "sha256": "6b726a3e7c56baddcc35b0061e56d0630a7991c8ef05676deb358270e1249485"
+      "sha256": "3a79229d3169e449ed1f9634cd4b3e1f590b01946735518fa3f2d968c8737878"
     },
     {
       "path": "finatic_server/api/consents_api.py",
@@ -317,6 +317,11 @@
       "sha256": "67dafc56ed05312c1c800d562c11b82b2edff18ad1b0e4e3a90ca99f92ab6c9c"
     },
     {
+      "path": "finatic_server/models/changecounts.py",
+      "provenance": "current_artifact",
+      "sha256": "3aa4d297274f00ac63af1f4a31d750342bf19576c153422352a73ea44ab1ee11"
+    },
+    {
       "path": "finatic_server/models/closedquantity.py",
       "provenance": "current_artifact",
       "sha256": "891831fdf2deb9ef5c98702ee611c8313c09dbf3cd660a2d6d82f2d3e0433343"
@@ -385,6 +390,11 @@
       "path": "finatic_server/models/currentprice.py",
       "provenance": "current_artifact",
       "sha256": "8f3b86b44ffc782c4f143cf12ebdc41958dc462ce3e966a9e08ff3a94b30d590"
+    },
+    {
+      "path": "finatic_server/models/data.py",
+      "provenance": "current_artifact",
+      "sha256": "2d655259c842961204d143ded1aa246ee43a72b524bbcad8fb9aa12649e8648c"
     },
     {
       "path": "finatic_server/models/day_tif.py",
@@ -567,6 +577,11 @@
       "sha256": "13584f9c5c97e7f1a3e04779d0f6531a88dd96def76796ef8d24504445bec9ef"
     },
     {
+      "path": "finatic_server/models/fdx_orders_sync_summary_change_counts.py",
+      "provenance": "current_artifact",
+      "sha256": "51d5f78db4f7f56ea1e24c72105d806d618d9ae040a73ed60e7a0fcb12d9338f"
+    },
+    {
       "path": "finatic_server/models/fdx_position_side.py",
       "provenance": "current_artifact",
       "sha256": "de1febfb7ef910b825d9af34250ab671e9b20a66457439b5f890d6db0133b1a9"
@@ -582,6 +597,21 @@
       "sha256": "e7b1bb8d198e4f61889eb6e0cd4afa77a234a8310ffae91d5e7f96a95dcc31a9"
     },
     {
+      "path": "finatic_server/models/fdx_sync_summary_change_counts.py",
+      "provenance": "current_artifact",
+      "sha256": "8d76d40cd8286042b7ffd9f4f1a104d49021feb1d29324872286005349133400"
+    },
+    {
+      "path": "finatic_server/models/fdx_sync_summary_data.py",
+      "provenance": "current_artifact",
+      "sha256": "aa4c95bffab78df290a523561fba3e086288ec82457ddd815d24a6bedbfaea91"
+    },
+    {
+      "path": "finatic_server/models/fdx_sync_summary_result.py",
+      "provenance": "current_artifact",
+      "sha256": "a0837f3d0a0f996901048b0eb9a4fb41a7ff83a439995d62515a39647fcbd481"
+    },
+    {
       "path": "finatic_server/models/fdx_time_in_force.py",
       "provenance": "current_artifact",
       "sha256": "5c2c8634ce2248be474ce47330e0c605a94118e452a9d4d4a44de1b0f2972a3e"
@@ -592,19 +622,29 @@
       "sha256": "51ef3a9ffd189e4ef6b8d2b18073d694bcf14c2a54798f105aa59bf94b9627f3"
     },
     {
+      "path": "finatic_server/models/fdx_webhook_payload.py",
+      "provenance": "current_artifact",
+      "sha256": "261b1a33bb11f0c2feeec5ce0db5097caf89cb425e2168747dc2aa07775a4d2f"
+    },
+    {
+      "path": "finatic_server/models/fdx_webhook_payload_resource.py",
+      "provenance": "current_artifact",
+      "sha256": "d05e633821abbd6642084b25c4aab4dd6fbcbdf3b7890af88049a817e54d2131"
+    },
+    {
       "path": "finatic_server/models/fdx_webhook_subscription.py",
       "provenance": "legacy_snapshot",
       "sha256": "c0dd784e552564921e1e6d012b61fd3f3237a13135b88619e391c66ddec24768"
     },
     {
       "path": "finatic_server/models/fdx_webhook_subscription_create.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "ce96e998716af72de663ba61b10be0c77c02f7833d79c09ea8edfa37af895d19"
+      "provenance": "current_artifact",
+      "sha256": "c0bf838f36d891a417db1fadb5d0760c744e2c319dc45f827ffce963e0780438"
     },
     {
       "path": "finatic_server/models/fdx_webhook_subscription_update.py",
-      "provenance": "legacy_snapshot",
-      "sha256": "54065e82c7453fbefe53705478e7924d2fad7603a75637c301a13cd37ff68e05"
+      "provenance": "current_artifact",
+      "sha256": "8781b74e7cd104d717bed93e9bbfb19149a7273bf82df110f86943fbe3d13870"
     },
     {
       "path": "finatic_server/models/filledquantity.py",

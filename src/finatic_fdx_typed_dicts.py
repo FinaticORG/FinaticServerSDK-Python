@@ -159,7 +159,7 @@ class FDXInstrumentDescriptorDict(TypedDict, total=False):
     provenance: dict[str, str] | None
     providerNativeId: str | None
     providerSymbol: str | None
-    version: str
+    version: Literal['1.0']
 
 
 class FDXOrderLegDict(TypedDict, total=False):
@@ -188,6 +188,71 @@ class FDXOrderLegDict(TypedDict, total=False):
     underlyingSymbol: str | None
 
 
+class FDXOrdersSyncSummaryChangeCountsDict(TypedDict, total=False):
+    created: int
+    deleted: int
+    fillsCreated: int
+    unchanged: int
+    updated: int
+
+
+class FDXSyncSummaryChangeCountsDict(TypedDict, total=False):
+    created: int
+    deleted: int
+    unchanged: int
+    updated: int
+
+
+class FDXSyncSummaryDataDict(TypedDict, total=False):
+    batchId: str
+    changeCounts: FDXOrdersSyncSummaryChangeCountsDict | FDXSyncSummaryChangeCountsDict
+    completedAt: str
+    contractVersion: Literal['account.resource.sync-summary.v1']
+    origin: Literal['initialSync', 'poll']
+    result: FDXSyncSummaryResultDict
+
+
+class FDXSyncSummaryResultDict(TypedDict, total=False):
+    cursor: str
+    resourceUrl: str
+
+
+class FDXWebhookPayloadDict(TypedDict, total=False):
+    accountId: str | None
+    companyAccountId: str
+    createdAt: str
+    data: dict[str, Any] | FDXSyncSummaryDataDict
+    environment: Literal['live', 'sandbox']
+    eventId: str
+    eventType: Literal['account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'account.orders.updated', 'account.transactions.updated', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required']
+    grantId: str | None
+    resource: FDXWebhookPayloadResourceDict
+    schemaVersion: Literal['v1']
+
+
+class FDXWebhookPayloadResourceDict(TypedDict, total=False):
+    accountId: str | None
+    grantId: str | None
+    resourceId: str
+    resourceType: str
+
+
+class FDXWebhookSubscriptionCreateDict(TypedDict, total=False):
+    _id: str
+    description: str | None
+    environment: Literal['live', 'sandbox']
+    eventTypes: list[Literal['account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'account.orders.updated', 'account.transactions.updated', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required']]
+    url: str
+
+
+class FDXWebhookSubscriptionUpdateDict(TypedDict, total=False):
+    _id: str
+    description: str | None
+    eventTypes: list[Literal['account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'account.orders.updated', 'account.transactions.updated', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required']] | None
+    status: Literal['active', 'disabled', 'revoked'] | None
+    url: str | None
+
+
 class FinaticV1ErrorDict(TypedDict, total=False):
     category: Literal['AUTHENTICATION', 'AUTHORIZATION', 'VALIDATION', 'RATE_LIMITED', 'REAUTH_REQUIRED', 'PROVIDER_ERROR', 'CONFLICT', 'NOT_FOUND', 'INTERNAL']
     code: str
@@ -203,5 +268,13 @@ __all__ = [
     "FDXBrokerOrderEventDict",
     "FDXBrokerOrderFillDict",
     "FDXBrokerPositionDict",
+    "FDXOrdersSyncSummaryChangeCountsDict",
+    "FDXSyncSummaryChangeCountsDict",
+    "FDXSyncSummaryDataDict",
+    "FDXSyncSummaryResultDict",
+    "FDXWebhookPayloadDict",
+    "FDXWebhookPayloadResourceDict",
+    "FDXWebhookSubscriptionCreateDict",
+    "FDXWebhookSubscriptionUpdateDict",
     "FinaticV1ErrorDict",
 ]

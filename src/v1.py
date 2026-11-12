@@ -24,6 +24,8 @@ from .finatic_fdx_types import (
     FDXBrokerOrderEventDict,
     FDXBrokerOrderFillDict,
     FDXBrokerPositionDict,
+    FDXWebhookSubscriptionCreateDict,
+    FDXWebhookSubscriptionUpdateDict,
 )
 from .types import FinaticResponse
 from .utils.url_utils import (
@@ -622,14 +624,16 @@ class V1Client:
         return await self._request("GET", "/api/v1/webhooks/subscriptions")
 
     async def create_webhook_subscription(
-        self, subscription: dict[str, Any]
+        self, subscription: FDXWebhookSubscriptionCreateDict | dict[str, Any]
     ) -> FinaticResponse:
         return await self._request(
             "POST", "/api/v1/webhooks/subscriptions", body=subscription
         )
 
     async def update_webhook_subscription(
-        self, subscription_id: str, update: dict[str, Any]
+        self,
+        subscription_id: str,
+        update: FDXWebhookSubscriptionUpdateDict | dict[str, Any],
     ) -> FinaticResponse:
         return await self._request(
             "PATCH",

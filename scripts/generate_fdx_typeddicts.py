@@ -12,6 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT = ROOT / "artifacts/openapi/finaticapi-v1.json"
 OUTPUT = ROOT / "src/finatic_fdx_typed_dicts.py"
 ROOT_SCHEMAS = (
+    "FDXOrdersSyncSummaryChangeCounts",
+    "FDXSyncSummaryChangeCounts",
+    "FDXSyncSummaryData",
+    "FDXSyncSummaryResult",
+    "FDXWebhookPayload",
+    "FDXWebhookPayloadResource",
+    "FDXWebhookSubscriptionCreate",
+    "FDXWebhookSubscriptionUpdate",
     "AccountOrderSchemaResponse",
     "EventContractCapabilityResponse",
     "FDXBrokerOrder",
@@ -39,6 +47,8 @@ def annotation(schema: dict[str, Any], schemas: dict[str, Any]) -> str:
     if variants:
         rendered = list(dict.fromkeys(annotation(item, schemas) for item in variants))
         return " | ".join(rendered)
+    if "const" in schema:
+        return f"Literal[{schema['const']!r}]"
     enum = schema.get("enum")
     if enum:
         return "Literal[" + ", ".join(repr(value) for value in enum) + "]"

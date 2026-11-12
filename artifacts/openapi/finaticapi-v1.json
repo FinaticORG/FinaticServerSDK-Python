@@ -447,6 +447,19 @@
               }
             ],
             "title": "Deviceinfo"
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Existing Finatic user identifier. The user must already have an active company grant in the API-key environment.",
+            "title": "Userid"
           }
         },
         "title": "CreateSessionRequest",
@@ -726,6 +739,92 @@
           "canTrade"
         ],
         "title": "FDXAccountGrant",
+        "type": "object"
+      },
+      "FDXAccountGrantBatchRevoke": {
+        "additionalProperties": false,
+        "description": "Exact, bounded set of grants authorized for one batch revoke.",
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "confirmation": {
+            "const": "revoke-listed-grants",
+            "title": "Confirmation",
+            "type": "string"
+          },
+          "declaredCount": {
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Declaredcount",
+            "type": "integer"
+          },
+          "grantIds": {
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Grantids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "grantIds",
+          "declaredCount",
+          "confirmation"
+        ],
+        "title": "FDXAccountGrantBatchRevoke",
+        "type": "object"
+      },
+      "FDXAccountGrantBatchRevokeResult": {
+        "description": "Durable result for an exact batch revoke operation.",
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "completedCount": {
+            "title": "Completedcount",
+            "type": "integer"
+          },
+          "correlationId": {
+            "format": "uuid",
+            "title": "Correlationid",
+            "type": "string"
+          },
+          "failedCount": {
+            "title": "Failedcount",
+            "type": "integer"
+          },
+          "grants": {
+            "items": {
+              "$ref": "#/components/schemas/FDXAccountGrant"
+            },
+            "title": "Grants",
+            "type": "array"
+          },
+          "intendedCount": {
+            "title": "Intendedcount",
+            "type": "integer"
+          },
+          "operationId": {
+            "format": "uuid",
+            "title": "Operationid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "operationId",
+          "correlationId",
+          "intendedCount",
+          "completedCount",
+          "failedCount",
+          "grants"
+        ],
+        "title": "FDXAccountGrantBatchRevokeResult",
         "type": "object"
       },
       "FDXAccountGrantUpdate": {
@@ -3386,6 +3485,46 @@
         "title": "FDXOrderType",
         "type": "string"
       },
+      "FDXOrdersSyncSummaryChangeCounts": {
+        "additionalProperties": false,
+        "description": "Order changes with fills folded into the grouped order event.",
+        "properties": {
+          "created": {
+            "minimum": 0,
+            "title": "Created",
+            "type": "integer"
+          },
+          "deleted": {
+            "minimum": 0,
+            "title": "Deleted",
+            "type": "integer"
+          },
+          "fillsCreated": {
+            "minimum": 0,
+            "title": "Fillscreated",
+            "type": "integer"
+          },
+          "unchanged": {
+            "minimum": 0,
+            "title": "Unchanged",
+            "type": "integer"
+          },
+          "updated": {
+            "minimum": 0,
+            "title": "Updated",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "created",
+          "updated",
+          "deleted",
+          "unchanged",
+          "fillsCreated"
+        ],
+        "title": "FDXOrdersSyncSummaryChangeCounts",
+        "type": "object"
+      },
       "FDXPositionSide": {
         "description": "FDX broker position side.",
         "enum": [
@@ -3414,6 +3553,115 @@
         ],
         "title": "FDXSecurityIdType",
         "type": "string"
+      },
+      "FDXSyncSummaryChangeCounts": {
+        "additionalProperties": false,
+        "description": "Non-negative resource changes committed by one sync batch.",
+        "properties": {
+          "created": {
+            "minimum": 0,
+            "title": "Created",
+            "type": "integer"
+          },
+          "deleted": {
+            "minimum": 0,
+            "title": "Deleted",
+            "type": "integer"
+          },
+          "unchanged": {
+            "minimum": 0,
+            "title": "Unchanged",
+            "type": "integer"
+          },
+          "updated": {
+            "minimum": 0,
+            "title": "Updated",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "created",
+          "updated",
+          "deleted",
+          "unchanged"
+        ],
+        "title": "FDXSyncSummaryChangeCounts",
+        "type": "object"
+      },
+      "FDXSyncSummaryData": {
+        "additionalProperties": false,
+        "description": "Typed data contract for account resource grouped-sync events.",
+        "properties": {
+          "batchId": {
+            "format": "uuid",
+            "title": "Batchid",
+            "type": "string"
+          },
+          "changeCounts": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FDXOrdersSyncSummaryChangeCounts"
+              },
+              {
+                "$ref": "#/components/schemas/FDXSyncSummaryChangeCounts"
+              }
+            ],
+            "title": "Changecounts"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "title": "Completedat",
+            "type": "string"
+          },
+          "contractVersion": {
+            "const": "account.resource.sync-summary.v1",
+            "default": "account.resource.sync-summary.v1",
+            "title": "Contractversion",
+            "type": "string"
+          },
+          "origin": {
+            "enum": [
+              "initialSync",
+              "poll"
+            ],
+            "title": "Origin",
+            "type": "string"
+          },
+          "result": {
+            "$ref": "#/components/schemas/FDXSyncSummaryResult"
+          }
+        },
+        "required": [
+          "batchId",
+          "origin",
+          "completedAt",
+          "changeCounts",
+          "result"
+        ],
+        "title": "FDXSyncSummaryData",
+        "type": "object"
+      },
+      "FDXSyncSummaryResult": {
+        "additionalProperties": false,
+        "description": "Immutable result-set locator for a completed grouped sync.",
+        "properties": {
+          "cursor": {
+            "minLength": 1,
+            "title": "Cursor",
+            "type": "string"
+          },
+          "resourceUrl": {
+            "minLength": 1,
+            "title": "Resourceurl",
+            "type": "string"
+          }
+        },
+        "required": [
+          "resourceUrl",
+          "cursor"
+        ],
+        "title": "FDXSyncSummaryResult",
+        "type": "object"
       },
       "FDXTimeInForce": {
         "description": "FDX broker time in force.",
@@ -3513,9 +3761,16 @@
             "type": "string"
           },
           "data": {
-            "additionalProperties": true,
-            "title": "Data",
-            "type": "object"
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "$ref": "#/components/schemas/FDXSyncSummaryData"
+              }
+            ],
+            "title": "Data"
           },
           "environment": {
             "enum": [
@@ -3540,6 +3795,8 @@
               "account.balance.updated",
               "account.position.updated",
               "account.transaction.created",
+              "account.orders.updated",
+              "account.transactions.updated",
               "order.created",
               "order.updated",
               "order.filled",
@@ -3746,6 +4003,8 @@
                 "account.balance.updated",
                 "account.position.updated",
                 "account.transaction.created",
+                "account.orders.updated",
+                "account.transactions.updated",
                 "order.created",
                 "order.updated",
                 "order.filled",
@@ -3806,6 +4065,8 @@
                     "account.balance.updated",
                     "account.position.updated",
                     "account.transaction.created",
+                    "account.orders.updated",
+                    "account.transactions.updated",
                     "order.created",
                     "order.updated",
                     "order.filled",
@@ -4125,6 +4386,58 @@
           }
         },
         "title": "FinaticResponse[CompleteSessionResponse]",
+        "type": "object"
+      },
+      "FinaticResponse_FDXAccountGrantBatchRevokeResult_": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_FDXAccountGrantBatchRevokeResult_"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[FDXAccountGrantBatchRevokeResult]",
         "type": "object"
       },
       "FinaticResponse_FDXAccountGrant_": {
@@ -6259,6 +6572,58 @@
         "title": "FinaticResponse[list[OwnerPortalAccountGrant]]",
         "type": "object"
       },
+      "FinaticResponse_list_PortalInstitution__": {
+        "properties": {
+          "error": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional error object with message, code, status, and details",
+            "title": "Error"
+          },
+          "success": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SuccessPayload_list_PortalInstitution__"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Success payload containing data and optional meta. None when error is present."
+          },
+          "trace_id": {
+            "default": "",
+            "description": "Request trace identifier for tracking and debugging. Auto-generated if not provided.",
+            "title": "Trace Id",
+            "type": "string"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional array of warning objects",
+            "title": "Warning"
+          }
+        },
+        "title": "FinaticResponse[list[PortalInstitution]]",
+        "type": "object"
+      },
       "FinaticResponse_list_dict_str__Any___": {
         "properties": {
           "error": {
@@ -7068,6 +7433,11 @@
             ],
             "title": "Push Agent Last Heartbeat At"
           },
+          "reconnect_available": {
+            "default": false,
+            "title": "Reconnect Available",
+            "type": "boolean"
+          },
           "requires_customer_agent": {
             "default": false,
             "title": "Requires Customer Agent",
@@ -7149,10 +7519,27 @@
       "OwnerPortalRevokeAllCompaniesResult": {
         "description": "Result of revoking every company grant on a connection.",
         "properties": {
+          "completed_grant_count": {
+            "default": 0,
+            "title": "Completed Grant Count",
+            "type": "integer"
+          },
           "connection_id": {
             "format": "uuid",
             "title": "Connection Id",
             "type": "string"
+          },
+          "correlation_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Correlation Id"
           },
           "disconnect_operation_id": {
             "anyOf": [
@@ -7166,9 +7553,31 @@
             ],
             "title": "Disconnect Operation Id"
           },
+          "failed_grant_count": {
+            "default": 0,
+            "title": "Failed Grant Count",
+            "type": "integer"
+          },
+          "intended_grant_count": {
+            "default": 0,
+            "title": "Intended Grant Count",
+            "type": "integer"
+          },
           "message": {
             "title": "Message",
             "type": "string"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operation Id"
           },
           "revoked_company_count": {
             "title": "Revoked Company Count",
@@ -7288,6 +7697,20 @@
         },
         "title": "PortalAccountGrantUpdateRequest",
         "type": "object"
+      },
+      "PortalAssetClass": {
+        "description": "Canonical asset-class values exposed by the provider catalog.",
+        "enum": [
+          "bond",
+          "cfd",
+          "crypto",
+          "equity",
+          "forex",
+          "future",
+          "option"
+        ],
+        "title": "PortalAssetClass",
+        "type": "string"
       },
       "PortalAuthAttemptRequest": {
         "additionalProperties": false,
@@ -7430,6 +7853,153 @@
         ],
         "title": "PortalAuthAttemptResponse",
         "type": "object"
+      },
+      "PortalCapability": {
+        "description": "Canonical provider resource and action capabilities.",
+        "enum": [
+          "accounts",
+          "balances",
+          "fractional_shares",
+          "orders",
+          "positions",
+          "read_only",
+          "transactions"
+        ],
+        "title": "PortalCapability",
+        "type": "string"
+      },
+      "PortalInstitution": {
+        "additionalProperties": false,
+        "description": "Typed provider choice returned to portal clients.",
+        "properties": {
+          "apiPassphraseOptional": {
+            "title": "Apipassphraseoptional",
+            "type": "boolean"
+          },
+          "apiPassphraseRequired": {
+            "title": "Apipassphraserequired",
+            "type": "boolean"
+          },
+          "assetClasses": {
+            "description": "Canonical asset classes; never derived from features.",
+            "items": {
+              "$ref": "#/components/schemas/PortalAssetClass"
+            },
+            "title": "Assetclasses",
+            "type": "array"
+          },
+          "authType": {
+            "description": "Portal authentication mechanism.",
+            "title": "Authtype",
+            "type": "string"
+          },
+          "baseBrokerId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basebrokerid"
+          },
+          "brokerId": {
+            "description": "Stable provider id.",
+            "minLength": 1,
+            "title": "Brokerid",
+            "type": "string"
+          },
+          "capabilities": {
+            "description": "Canonical capabilities; never derived from features.",
+            "items": {
+              "$ref": "#/components/schemas/PortalCapability"
+            },
+            "title": "Capabilities",
+            "type": "array"
+          },
+          "displayName": {
+            "description": "Human-readable provider name.",
+            "minLength": 1,
+            "title": "Displayname",
+            "type": "string"
+          },
+          "features": {
+            "description": "Legacy provider features retained for compatibility.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Features",
+            "type": "array"
+          },
+          "isAlias": {
+            "title": "Isalias",
+            "type": "boolean"
+          },
+          "isAlpha": {
+            "title": "Isalpha",
+            "type": "boolean"
+          },
+          "isBeta": {
+            "title": "Isbeta",
+            "type": "boolean"
+          },
+          "kind": {
+            "description": "Legacy broker/exchange category retained for compatibility.",
+            "title": "Kind",
+            "type": "string"
+          },
+          "logoPath": {
+            "description": "Public provider logo path.",
+            "title": "Logopath",
+            "type": "string"
+          },
+          "name": {
+            "description": "Stable provider slug.",
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "providerKind": {
+            "$ref": "#/components/schemas/PortalProviderKind",
+            "description": "Canonical provider category from the database catalog."
+          },
+          "supportsTrading": {
+            "title": "Supportstrading",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "brokerId",
+          "name",
+          "displayName",
+          "logoPath",
+          "authType",
+          "kind",
+          "features",
+          "providerKind",
+          "assetClasses",
+          "capabilities",
+          "supportsTrading",
+          "isBeta",
+          "isAlpha",
+          "apiPassphraseRequired",
+          "apiPassphraseOptional",
+          "isAlias"
+        ],
+        "title": "PortalInstitution",
+        "type": "object"
+      },
+      "PortalProviderKind": {
+        "description": "Canonical provider category stored by the integration catalog.",
+        "enum": [
+          "brokerage",
+          "exchange",
+          "bank",
+          "insurance"
+        ],
+        "title": "PortalProviderKind",
+        "type": "string"
       },
       "PortalSessionResponse": {
         "description": "Portal session response model.",
@@ -8779,6 +9349,40 @@
           }
         },
         "title": "SuccessPayload[CompleteSessionResponse]",
+        "type": "object"
+      },
+      "SuccessPayload_FDXAccountGrantBatchRevokeResult_": {
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FDXAccountGrantBatchRevokeResult"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The response data (None when error is present)"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional metadata (pagination, etc.)",
+            "title": "Meta"
+          }
+        },
+        "title": "SuccessPayload[FDXAccountGrantBatchRevokeResult]",
         "type": "object"
       },
       "SuccessPayload_FDXAccountGrant_": {
@@ -10242,6 +10846,44 @@
         "title": "SuccessPayload[list[OwnerPortalAccountGrant]]",
         "type": "object"
       },
+      "SuccessPayload_list_PortalInstitution__": {
+        "properties": {
+          "_id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PortalInstitution"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "The response data (None when error is present)",
+            "title": "Data"
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional metadata (pagination, etc.)",
+            "title": "Meta"
+          }
+        },
+        "title": "SuccessPayload[list[PortalInstitution]]",
+        "type": "object"
+      },
       "SuccessPayload_list_dict_str__Any___": {
         "properties": {
           "_id": {
@@ -10726,6 +11368,218 @@
         ]
       }
     },
+    "/api/v1/account-grants/batch-revoke": {
+      "post": {
+        "description": "Revoke an exact, bounded grant set in one audited transaction.",
+        "operationId": "finaticV1PostAccountGrantsBatchRevoke",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Finatic-Environment",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Finatic-Environment"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FDXAccountGrantBatchRevoke"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticResponse_FDXAccountGrantBatchRevokeResult_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Bad Request - Domain error (e.g., BROKER_MISMATCH, CONNECTION_EXISTS, INVALID_CONNECTION_STATUS). See error.code for specific domain code."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Unauthorized - Authentication error (e.g., AUTH_ERROR, INVALID_API_KEY, INVALID_TOKEN, SESSION_NOT_FOUND). See error.code for specific auth code."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Forbidden - Access denied (e.g., ACCESS_DENIED, TRADE_ACCESS_DENIED, READ_ACCESS_DENIED). See error.code for specific access code."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Not Found - Resource not found (e.g., ORDER_NOT_FOUND, ACCOUNT_NOT_FOUND, CONNECTION_NOT_FOUND). See error.code for specific resource code."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict - Resource conflict (e.g., CONNECTION_EXISTS). See error.code for specific conflict code."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Validation Error - Request validation failed (e.g., VALIDATION_ERROR, MISSING_REQUIRED, MISSING_PERMISSIONS). See error.code for specific validation code."
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Rate Limit Exceeded - Too many requests (RATE_LIMIT_EXCEEDED). See error.code for specific rate limit code."
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Internal Server Error - Server error (e.g., INTERNAL_ERROR, ORDER_PLACEMENT_ERROR, MISSING_CONNECTION_ID). See error.code for specific internal error code."
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinaticAPIErrorResponse"
+                }
+              }
+            },
+            "description": "Broker Error - Broker API error (BROKER_ERROR). See error.code and error.details for broker-specific error information."
+          }
+        },
+        "security": [
+          {
+            "FinaticSession": []
+          }
+        ],
+        "summary": "Revoke Account Grants Batch",
+        "tags": [
+          "account-grants"
+        ],
+        "x-finatic-environment-header": "X-Finatic-Environment",
+        "x-finatic-environments": [
+          "live",
+          "sandbox"
+        ],
+        "x-finatic-error-taxonomy": [
+          "AUTHENTICATION",
+          "AUTHORIZATION",
+          "VALIDATION",
+          "RATE_LIMITED",
+          "REAUTH_REQUIRED",
+          "PROVIDER_ERROR",
+          "CONFLICT",
+          "NOT_FOUND",
+          "INTERNAL"
+        ],
+        "x-finatic-extension": "fdx-account-grants",
+        "x-finatic-response-envelope": {
+          "$ref": "#/components/schemas/FinaticV1ResponseEnvelope"
+        },
+        "x-mcp-export": true,
+        "x-sdk-audiences": [
+          "sdk"
+        ]
+      }
+    },
     "/api/v1/account-grants/{grantId}": {
       "get": {
         "description": "Get one account grant for the current company account.",
@@ -11074,7 +11928,7 @@
     },
     "/api/v1/account-grants/{grantId}/revoke": {
       "post": {
-        "description": "Revoke one account grant for the current company account.",
+        "description": "Revoke one account grant for the current company account.\n\nCallers that omit ``Idempotency-Key`` receive a stable server-managed\ngrant scope, while explicit keys retain the stricter replay contract.",
         "operationId": "finaticV1PostAccountGrantsGrantIdRevoke",
         "parameters": [
           {
@@ -11085,6 +11939,56 @@
               "format": "uuid",
               "title": "Grant Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
             }
           },
           {
@@ -11967,7 +12871,7 @@
     },
     "/api/v1/accounts/{accountId}/orders": {
       "get": {
-        "description": "List account-scoped orders.",
+        "description": "List account-scoped orders, optionally for one sync batch.",
         "operationId": "finaticV1GetAccountsAccountIdOrders",
         "parameters": [
           {
@@ -12003,6 +12907,40 @@
               "minimum": 0,
               "title": "Offset",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "syncBatchId",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Syncbatchid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
             }
           },
           {
@@ -13148,6 +14086,29 @@
             }
           },
           {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
             "in": "header",
             "name": "X-Finatic-Environment",
             "required": false,
@@ -13497,7 +14458,7 @@
     },
     "/api/v1/accounts/{accountId}/transactions": {
       "get": {
-        "description": "List account-scoped transactions.",
+        "description": "List account-scoped transactions, optionally for one sync batch.",
         "operationId": "finaticV1GetAccountsAccountIdTransactions",
         "parameters": [
           {
@@ -13533,6 +14494,40 @@
               "minimum": 0,
               "title": "Offset",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "syncBatchId",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Syncbatchid"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
             }
           },
           {
@@ -15119,6 +16114,56 @@
               "title": "Grant Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
+            }
           }
         ],
         "responses": {
@@ -15439,6 +16484,56 @@
               "title": "Connection Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
+            }
           }
         ],
         "responses": {
@@ -15505,6 +16600,56 @@
               "title": "Company Id",
               "type": "string"
             }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
+            }
           }
         ],
         "responses": {
@@ -15570,6 +16715,56 @@
               "format": "uuid",
               "title": "Company Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
             }
           }
         ],
@@ -16265,6 +17460,56 @@
               "format": "uuid",
               "title": "Grant Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Correlation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Correlation-Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Operation-ID",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Operation-Id"
             }
           },
           {
@@ -17467,7 +18712,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/FinaticResponse_list_dict_str__Any___"
+                  "$ref": "#/components/schemas/FinaticResponse_list_PortalInstitution__"
                 }
               }
             },

@@ -1687,6 +1687,8 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
+        sync_batch_id: Optional[UUID] = None,
+        cursor: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -1703,7 +1705,7 @@ class AccountsApi:
     ) -> FinaticResponseListFDXBrokerOrder:
         """List Account Orders
 
-        List account-scoped orders.
+        List account-scoped orders, optionally for one sync batch.
 
         :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
@@ -1711,6 +1713,10 @@ class AccountsApi:
         :type limit: int
         :param offset:
         :type offset: int
+        :param sync_batch_id:
+        :type sync_batch_id: UUID
+        :param cursor:
+        :type cursor: str
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1739,6 +1745,8 @@ class AccountsApi:
             account_id=account_id,
             limit=limit,
             offset=offset,
+            sync_batch_id=sync_batch_id,
+            cursor=cursor,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1775,6 +1783,8 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
+        sync_batch_id: Optional[UUID] = None,
+        cursor: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -1791,7 +1801,7 @@ class AccountsApi:
     ) -> ApiResponse[FinaticResponseListFDXBrokerOrder]:
         """List Account Orders
 
-        List account-scoped orders.
+        List account-scoped orders, optionally for one sync batch.
 
         :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
@@ -1799,6 +1809,10 @@ class AccountsApi:
         :type limit: int
         :param offset:
         :type offset: int
+        :param sync_batch_id:
+        :type sync_batch_id: UUID
+        :param cursor:
+        :type cursor: str
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1827,6 +1841,8 @@ class AccountsApi:
             account_id=account_id,
             limit=limit,
             offset=offset,
+            sync_batch_id=sync_batch_id,
+            cursor=cursor,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1863,6 +1879,8 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
+        sync_batch_id: Optional[UUID] = None,
+        cursor: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -1879,7 +1897,7 @@ class AccountsApi:
     ) -> RESTResponseType:
         """List Account Orders
 
-        List account-scoped orders.
+        List account-scoped orders, optionally for one sync batch.
 
         :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
@@ -1887,6 +1905,10 @@ class AccountsApi:
         :type limit: int
         :param offset:
         :type offset: int
+        :param sync_batch_id:
+        :type sync_batch_id: UUID
+        :param cursor:
+        :type cursor: str
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -1915,6 +1937,8 @@ class AccountsApi:
             account_id=account_id,
             limit=limit,
             offset=offset,
+            sync_batch_id=sync_batch_id,
+            cursor=cursor,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -1946,6 +1970,8 @@ class AccountsApi:
         account_id,
         limit,
         offset,
+        sync_batch_id,
+        cursor,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -1978,6 +2004,14 @@ class AccountsApi:
         if offset is not None:
 
             _query_params.append(('offset', offset))
+
+        if sync_batch_id is not None:
+
+            _query_params.append(('syncBatchId', sync_batch_id))
+
+        if cursor is not None:
+
+            _query_params.append(('cursor', cursor))
 
         # process the header parameters
         if x_finatic_environment is not None:
@@ -2659,6 +2693,8 @@ class AccountsApi:
         self,
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
+        limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
+        offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -2681,6 +2717,10 @@ class AccountsApi:
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2708,6 +2748,8 @@ class AccountsApi:
         _param = self._finatic_v1_get_accounts_account_id_orders_order_id_fills_serialize(
             account_id=account_id,
             order_id=order_id,
+            limit=limit,
+            offset=offset,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2743,6 +2785,8 @@ class AccountsApi:
         self,
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
+        limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
+        offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -2765,6 +2809,10 @@ class AccountsApi:
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2792,6 +2840,8 @@ class AccountsApi:
         _param = self._finatic_v1_get_accounts_account_id_orders_order_id_fills_serialize(
             account_id=account_id,
             order_id=order_id,
+            limit=limit,
+            offset=offset,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2827,6 +2877,8 @@ class AccountsApi:
         self,
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         order_id: StrictStr,
+        limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
+        offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -2849,6 +2901,10 @@ class AccountsApi:
         :type account_id: UUID
         :param order_id: (required)
         :type order_id: str
+        :param limit:
+        :type limit: int
+        :param offset:
+        :type offset: int
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -2876,6 +2932,8 @@ class AccountsApi:
         _param = self._finatic_v1_get_accounts_account_id_orders_order_id_fills_serialize(
             account_id=account_id,
             order_id=order_id,
+            limit=limit,
+            offset=offset,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -2906,6 +2964,8 @@ class AccountsApi:
         self,
         account_id,
         order_id,
+        limit,
+        offset,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -2933,6 +2993,14 @@ class AccountsApi:
         if order_id is not None:
             _path_params['orderId'] = order_id
         # process the query parameters
+        if limit is not None:
+
+            _query_params.append(('limit', limit))
+
+        if offset is not None:
+
+            _query_params.append(('offset', offset))
+
         # process the header parameters
         if x_finatic_environment is not None:
             _header_params['X-Finatic-Environment'] = x_finatic_environment
@@ -3667,6 +3735,8 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
+        sync_batch_id: Optional[UUID] = None,
+        cursor: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -3683,7 +3753,7 @@ class AccountsApi:
     ) -> FinaticResponseListDictStrAny:
         """List Account Transactions
 
-        List account-scoped transactions.
+        List account-scoped transactions, optionally for one sync batch.
 
         :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
@@ -3691,6 +3761,10 @@ class AccountsApi:
         :type limit: int
         :param offset:
         :type offset: int
+        :param sync_batch_id:
+        :type sync_batch_id: UUID
+        :param cursor:
+        :type cursor: str
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3719,6 +3793,8 @@ class AccountsApi:
             account_id=account_id,
             limit=limit,
             offset=offset,
+            sync_batch_id=sync_batch_id,
+            cursor=cursor,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3755,6 +3831,8 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
+        sync_batch_id: Optional[UUID] = None,
+        cursor: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -3771,7 +3849,7 @@ class AccountsApi:
     ) -> ApiResponse[FinaticResponseListDictStrAny]:
         """List Account Transactions
 
-        List account-scoped transactions.
+        List account-scoped transactions, optionally for one sync batch.
 
         :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
@@ -3779,6 +3857,10 @@ class AccountsApi:
         :type limit: int
         :param offset:
         :type offset: int
+        :param sync_batch_id:
+        :type sync_batch_id: UUID
+        :param cursor:
+        :type cursor: str
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3807,6 +3889,8 @@ class AccountsApi:
             account_id=account_id,
             limit=limit,
             offset=offset,
+            sync_batch_id=sync_batch_id,
+            cursor=cursor,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3843,6 +3927,8 @@ class AccountsApi:
         account_id: Annotated[UUID, Field(description="Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId.")],
         limit: Optional[Annotated[int, Field(le=1000, strict=True, ge=1)]] = None,
         offset: Optional[Annotated[int, Field(strict=True, ge=0)]] = None,
+        sync_batch_id: Optional[UUID] = None,
+        cursor: Optional[Annotated[str, Field(min_length=1, strict=True)]] = None,
         x_finatic_environment: Optional[StrictStr] = None,
         _request_timeout: Union[
             None,
@@ -3859,7 +3945,7 @@ class AccountsApi:
     ) -> RESTResponseType:
         """List Account Transactions
 
-        List account-scoped transactions.
+        List account-scoped transactions, optionally for one sync batch.
 
         :param account_id: Financial account ID returned by GET /api/v1/accounts; do not use companyAccountId. (required)
         :type account_id: UUID
@@ -3867,6 +3953,10 @@ class AccountsApi:
         :type limit: int
         :param offset:
         :type offset: int
+        :param sync_batch_id:
+        :type sync_batch_id: UUID
+        :param cursor:
+        :type cursor: str
         :param x_finatic_environment:
         :type x_finatic_environment: str
         :param _request_timeout: timeout setting for this request. If one
@@ -3895,6 +3985,8 @@ class AccountsApi:
             account_id=account_id,
             limit=limit,
             offset=offset,
+            sync_batch_id=sync_batch_id,
+            cursor=cursor,
             x_finatic_environment=x_finatic_environment,
             _request_auth=_request_auth,
             _content_type=_content_type,
@@ -3926,6 +4018,8 @@ class AccountsApi:
         account_id,
         limit,
         offset,
+        sync_batch_id,
+        cursor,
         x_finatic_environment,
         _request_auth,
         _content_type,
@@ -3958,6 +4052,14 @@ class AccountsApi:
         if offset is not None:
 
             _query_params.append(('offset', offset))
+
+        if sync_batch_id is not None:
+
+            _query_params.append(('syncBatchId', sync_batch_id))
+
+        if cursor is not None:
+
+            _query_params.append(('cursor', cursor))
 
         # process the header parameters
         if x_finatic_environment is not None:

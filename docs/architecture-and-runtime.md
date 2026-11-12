@@ -26,15 +26,19 @@
 
 ## OpenAPI provenance
 
-The committed v1 artifact comes from FinaticAPI PR #748 at
-`7e45c28e68b4e7fad7f7f890983ffe44e2ff1279` and has SHA-256
-`5c450a4e43aaad1e0f30d0bf0705183b0b882c86308ff78d9ff05cf2bde8054f`.
+The committed v1 artifact comes from FinaticAPI PR #972 at
+`5798968718f60f2fee4ce1d1bf96fa83550fe93e` and has SHA-256
+`3e214865c34bfdf7735561fe8a4d0989feeba664901f59b7525614e601d11470`.
 `artifacts/openapi/finaticapi-v1.provenance.json` is the machine-checked source
-record.
+record. The exact artifact also contains `/api/v1/account-grants/batch-revoke`;
+that destructive operation remains outside the hand-written Python facade in
+this grouped-webhook change. Its omission is explicitly inventoried in the
+facade coverage test, rather than mutating the pinned artifact.
 
 The generated asyncio client uses OpenAPI Generator `7.18.0`, pinned in
 `openapitools.json`. Regeneration is deliberately limited to the Accounts API,
-its transitive generated model graph, the public FDX models, and the generated
+its transitive generated model graph, the public FDX models (including grouped
+webhook subscription/payload models), and the generated
 runtime support files. This prevents unrelated broker/Core/MCP/telemetry
 surfaces from entering the packaged client.
 
