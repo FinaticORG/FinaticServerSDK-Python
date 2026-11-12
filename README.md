@@ -116,6 +116,52 @@ annotations make descriptor keys discoverable without changing existing
 mapping access. Generated model classes remain available when explicit
 validation or construction is desired.
 
+## Grouped sync webhooks
+
+Subscribe to `account.orders.updated` and `account.transactions.updated` for
+one summary per completed resource sync batch (including fills in order counts):
+
+```python
+from finatic_server_python import (
+    FDXSyncSummaryData,
+    FDXWebhookPayload,
+    FDXWebhookSubscriptionCreateDict,
+)
+
+subscription: FDXWebhookSubscriptionCreateDict = {
+    "url": "https://partner.example/webhooks",
+    "environment": "sandbox",
+    "eventTypes": ["account.orders.updated", "account.transactions.updated"],
+}
+result = await finatic.v1.create_webhook_subscription(subscription)
+if result.get("errors"):
+    raise RuntimeError(result["errors"])
+
+# In your webhook handler, after verifying the delivery's authenticity:
+event = FDXWebhookPayload.from_json(request_body)
+if event.event_type in {"account.orders.updated", "account.transactions.updated"}:
+    summary = FDXSyncSummaryData.from_dict(event.data.to_dict())
+    batch_id = summary.batch_id
+    counts = summary.change_counts.actual_instance
+    resource_url = summary.result.resource_url
+    cursor = summary.result.cursor
+```
+
+The summary contract is `account.resource.sync-summary.v1`: `batchId`,
+`origin` (`initialSync` or `poll`), `completedAt`, `changeCounts`, and
+`result` (`resourceUrl`, opaque `cursor`). Both count types expose `created`,
+`updated`, `deleted`, and `unchanged`; order counts also expose `fillsCreated`.
+Use the result locator to retrieve the batch result; summaries are not row data.
+
+`FDXWebhookPayloadDict`, `FDXSyncSummaryDataDict`,
+`FDXSyncSummaryResultDict`, `FDXSyncSummaryChangeCountsDict`,
+`FDXOrdersSyncSummaryChangeCountsDict`, and subscription create/update
+models and TypedDicts are available from `finatic_server_python`.
+TypedDicts describe raw mappings without runtime validation. The generated
+webhook envelope retains generic data for legacy events; explicitly decode
+`FDXSyncSummaryData` as above to validate grouped summary fields. Decoding
+models does not authenticate deliveries or enforce event-specific count variants.
+
 ## Package layout
 
 | Name | Role |

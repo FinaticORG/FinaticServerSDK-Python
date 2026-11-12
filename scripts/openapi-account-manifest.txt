@@ -14,6 +14,7 @@ src/openapi/finatic_server/models/averagesellprice.py
 src/openapi/finatic_server/models/broker_data_option_type_enum.py
 src/openapi/finatic_server/models/broker_data_order_side_enum.py
 src/openapi/finatic_server/models/broker_data_order_status_enum.py
+src/openapi/finatic_server/models/changecounts.py
 src/openapi/finatic_server/models/closedquantity.py
 src/openapi/finatic_server/models/closepriceavg.py
 src/openapi/finatic_server/models/commission.py
@@ -24,6 +25,7 @@ src/openapi/finatic_server/models/costbasis1.py
 src/openapi/finatic_server/models/costbasiswithcommission.py
 src/openapi/finatic_server/models/costbasiswithcommission1.py
 src/openapi/finatic_server/models/currentprice.py
+src/openapi/finatic_server/models/data.py
 src/openapi/finatic_server/models/event_contract_capability_response.py
 src/openapi/finatic_server/models/eventtype.py
 src/openapi/finatic_server/models/fdx_asset_type.py
@@ -47,10 +49,18 @@ src/openapi/finatic_server/models/fdx_order_position_intent.py
 src/openapi/finatic_server/models/fdx_order_side.py
 src/openapi/finatic_server/models/fdx_order_status.py
 src/openapi/finatic_server/models/fdx_order_type.py
+src/openapi/finatic_server/models/fdx_orders_sync_summary_change_counts.py
 src/openapi/finatic_server/models/fdx_position_side.py
 src/openapi/finatic_server/models/fdx_position_status.py
 src/openapi/finatic_server/models/fdx_security_id_type.py
+src/openapi/finatic_server/models/fdx_sync_summary_change_counts.py
+src/openapi/finatic_server/models/fdx_sync_summary_data.py
+src/openapi/finatic_server/models/fdx_sync_summary_result.py
 src/openapi/finatic_server/models/fdx_time_in_force.py
+src/openapi/finatic_server/models/fdx_webhook_payload.py
+src/openapi/finatic_server/models/fdx_webhook_payload_resource.py
+src/openapi/finatic_server/models/fdx_webhook_subscription_create.py
+src/openapi/finatic_server/models/fdx_webhook_subscription_update.py
 src/openapi/finatic_server/models/filledquantity.py
 src/openapi/finatic_server/models/fillprice.py
 src/openapi/finatic_server/models/fillquantity.py
