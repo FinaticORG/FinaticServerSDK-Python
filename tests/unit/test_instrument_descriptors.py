@@ -48,7 +48,7 @@ def test_committed_openapi_artifact_matches_pinned_provenance() -> None:
 
     assert provenance["source_pr"] == 972
     assert provenance["source_branch"] == "feat/971-grouped-sync-api-contract"
-    assert provenance["source_sha"] == "5798968718f60f2fee4ce1d1bf96fa83550fe93e"
+    assert provenance["source_sha"] == "f314d21c12fe903a67b56bb4fb973c3f6ceca189"
     assert provenance["sha256"] == (
         "3e214865c34bfdf7735561fe8a4d0989feeba664901f59b7525614e601d11470"
     )
