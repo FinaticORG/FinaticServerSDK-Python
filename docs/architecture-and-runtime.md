@@ -27,7 +27,7 @@
 ## OpenAPI provenance
 
 The committed v1 artifact comes from FinaticAPI PR #972 at
-`f314d21c12fe903a67b56bb4fb973c3f6ceca189` and has SHA-256
+`cbdeb6312d6817293b6dbc199e270d7f5ff320cc` and has SHA-256
 `3e214865c34bfdf7735561fe8a4d0989feeba664901f59b7525614e601d11470`.
 `artifacts/openapi/finaticapi-v1.provenance.json` is the machine-checked source
 record. The exact artifact also contains `/api/v1/account-grants/batch-revoke`;
