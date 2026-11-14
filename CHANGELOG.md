@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.10
+
+- Release from 0e73b80d12213471e62da1f4be100b93948a64bb.
+
 ## 1.0.8
 
 - Release from d308802b22a6619e425c85381cce760f27bf4334.
