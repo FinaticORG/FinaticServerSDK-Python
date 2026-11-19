@@ -22,7 +22,6 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
-from pydantic_core import to_jsonable_python
 
 class FDXWebhookSubscriptionUpdate(BaseModel):
     """
@@ -33,7 +32,6 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
     event_types: Optional[List[StrictStr]] = Field(default=None, alias="eventTypes")
     status: Optional[StrictStr] = None
     url: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=2083)]] = None
-    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["_id", "description", "eventTypes", "status", "url"]
 
     @field_validator('event_types')
@@ -43,8 +41,8 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
             return value
 
         for i in value:
-            if i not in set(['account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required']):
-                raise ValueError("each list item must be one of ('account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required')")
+            if i not in set(['account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'account.orders.updated', 'account.transactions.updated', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required']):
+                raise ValueError("each list item must be one of ('account.grant.created', 'account.grant.updated', 'account.grant.revoked', 'account.sync.started', 'account.sync.succeeded', 'account.sync.failed', 'account.balance.updated', 'account.position.updated', 'account.transaction.created', 'account.orders.updated', 'account.transactions.updated', 'order.created', 'order.updated', 'order.filled', 'order.cancelled', 'order.rejected', 'connection.reauth.required')")
         return value
 
     @field_validator('status')
@@ -58,8 +56,7 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
         return value
 
     model_config = ConfigDict(
-        validate_by_name=True,
-        validate_by_alias=True,
+        populate_by_name=True,
         validate_assignment=True,
         protected_namespaces=(),
     )
@@ -71,7 +68,8 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
-        return json.dumps(to_jsonable_python(self.to_dict()))
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
+        return json.dumps(self.to_dict())
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
@@ -87,10 +85,8 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -98,11 +94,6 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         # set to None if description (nullable) is None
         # and model_fields_set contains the field
         if self.description is None and "description" in self.model_fields_set:
@@ -141,11 +132,4 @@ class FDXWebhookSubscriptionUpdate(BaseModel):
             "status": obj.get("status"),
             "url": obj.get("url")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
-
-
