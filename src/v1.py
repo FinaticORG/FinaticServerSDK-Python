@@ -510,9 +510,16 @@ class V1Client:
             for row in page.get("data") or []:
                 yield row
             meta = page.get("meta") or {}
-            token = meta.get("next_page_token")
-            if not meta.get("has_more") or not isinstance(token, str) or not token:
+            next_token = meta.get("next_page_token")
+            if (
+                not meta.get("has_more")
+                or not isinstance(next_token, str)
+                or not next_token
+                # A repeated token would loop forever; stop instead.
+                or next_token == token
+            ):
                 return
+            token = next_token
 
     async def list_balances(
         self,

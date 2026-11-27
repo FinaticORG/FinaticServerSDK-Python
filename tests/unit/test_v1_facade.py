@@ -996,3 +996,23 @@ async def test_v1_iterate_account_resource_raises_on_api_error() -> None:
             "account-1", "orders", page_token="forged"
         ):
             pass
+
+
+@pytest.mark.asyncio
+async def test_v1_iterate_account_resource_stops_on_repeated_token() -> None:
+    client = PagedApiClient(
+        [
+            _page([{"id": "a"}], True, "tok-1"),
+            _page([{"id": "b"}], True, "tok-1"),
+            _page([{"id": "never"}], False, None),
+        ]
+    )
+    sdk = _sdk(client)
+
+    ids = [
+        row["id"]
+        async for row in sdk.v1.iterate_account_resource("account-1", "orders")
+    ]
+
+    assert ids == ["a", "b"]
+    assert len(client.calls) == 2
