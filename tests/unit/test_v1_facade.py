@@ -893,3 +893,106 @@ def test_trace_id_comes_from_trace_id_or_request_id_header_not_underscore_id() -
     assert trace_id(None, {"trace_id": "t-1", "_id": "legacy"}, None) == "t-1"
     assert trace_id(None, {"_id": "legacy"}, None) is None
     assert trace_id(None, {"success": {}}, {"x-request-id": "r-1"}) == "r-1"
+
+
+class PagedApiClient(FakeApiClient):
+    """Serves queued payloads, one per call."""
+
+    def __init__(self, payloads: list[dict[str, Any]]) -> None:
+        super().__init__()
+        self.payloads = payloads
+
+    def call_api(  # type: ignore[override]
+        self,
+        method: str,
+        url: str,
+        header_params: dict[str, str] | None = None,
+        body: dict[str, Any] | None = None,
+    ) -> FakeResponse:
+        super().call_api(method, url, header_params, body)
+        return FakeResponse(self.payloads.pop(0))
+
+
+def _page(rows: list[Any], has_more: bool, token: str | None) -> dict[str, Any]:
+    return {
+        "success": {
+            "data": rows,
+            "meta": {
+                "has_more": has_more,
+                "next_page_token": token,
+                "offset": 0,
+                "limit": 2,
+            },
+        },
+        "error": None,
+    }
+
+
+def _sdk(client: FakeApiClient) -> FinaticServer:
+    sdk = FinaticServer(
+        api_key="fntc_live_key",
+        sdk_config={"base_url": "https://api.test", "environment": "sandbox"},
+    )
+    sdk.v1.api_client = client  # type: ignore[assignment]
+    sdk.v1.set_session_context("session-1", "company-1")
+    return sdk
+
+
+@pytest.mark.asyncio
+async def test_v1_list_orders_sends_page_token_and_exposes_meta() -> None:
+    client = PagedApiClient([_page([{"id": "a"}], True, "tok-1")])
+    sdk = _sdk(client)
+
+    result = await sdk.v1.list_orders("account-1", limit=2, page_token="tok-0")
+
+    assert (
+        client.calls[0]["url"]
+        == "https://api.test/api/v1/accounts/account-1/orders?limit=2&pageToken=tok-0"
+    )
+    assert result["meta"]["next_page_token"] == "tok-1"
+    assert result["meta"]["has_more"] is True
+
+
+@pytest.mark.asyncio
+async def test_v1_iterate_account_resource_follows_next_page_token() -> None:
+    client = PagedApiClient(
+        [
+            _page([{"id": "a"}, {"id": "b"}], True, "tok-1"),
+            _page([{"id": "c"}, {"id": "d"}], True, "tok-2"),
+            _page([{"id": "e"}], False, None),
+        ]
+    )
+    sdk = _sdk(client)
+
+    ids = [
+        row["id"]
+        async for row in sdk.v1.iterate_account_resource(
+            "account-1", "transactions", limit=2
+        )
+    ]
+
+    assert ids == ["a", "b", "c", "d", "e"]
+    assert [call["url"].split("?", 1)[1] for call in client.calls] == [
+        "limit=2",
+        "limit=2&pageToken=tok-1",
+        "limit=2&pageToken=tok-2",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_v1_iterate_account_resource_raises_on_api_error() -> None:
+    client = PagedApiClient(
+        [
+            {
+                "success": None,
+                "error": {"code": "INVALID_PAGE_TOKEN", "message": "bad token"},
+            }
+        ]
+    )
+    sdk = _sdk(client)
+
+    with pytest.raises(ValueError, match="INVALID_PAGE_TOKEN"):
+        async for _ in sdk.v1.iterate_account_resource(
+            "account-1", "orders", page_token="forged"
+        ):
+            pass
