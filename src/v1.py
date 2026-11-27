@@ -863,9 +863,7 @@ class V1Client:
 
     def _trace_id(self, payload: Any, headers: Any) -> str | None:
         if isinstance(payload, dict):
-            trace_id = (
-                payload.get("traceId") or payload.get("trace_id") or payload.get("_id")
-            )
+            trace_id = payload.get("traceId") or payload.get("trace_id")
             if isinstance(trace_id, str):
                 return trace_id
         if headers is not None:

@@ -885,3 +885,11 @@ async def test_descriptor_facade_methods_return_typed_raw_mappings() -> None:
     assert fills[0]["instrument"]["finaticInstrumentId"] == "finatic:future:MGCZ6"
     assert events[0]["affectedInstruments"][0]["future"]["identityQuality"] == "EXACT"
     assert positions[0]["instrument"]["future"]["productRoot"] == "MGC"
+
+
+def test_trace_id_comes_from_trace_id_or_request_id_header_not_underscore_id() -> None:
+    trace_id = V1Client._trace_id
+
+    assert trace_id(None, {"trace_id": "t-1", "_id": "legacy"}, None) == "t-1"
+    assert trace_id(None, {"_id": "legacy"}, None) is None
+    assert trace_id(None, {"success": {}}, {"x-request-id": "r-1"}) == "r-1"
