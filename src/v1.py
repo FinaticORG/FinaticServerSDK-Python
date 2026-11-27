@@ -10,6 +10,7 @@ import inspect
 import json
 from collections.abc import Mapping
 from dataclasses import dataclass
+from collections.abc import AsyncIterator
 from typing import Any, Literal, TypedDict, cast
 from urllib.parse import parse_qs, quote, urlencode, urlparse, urlunparse
 
@@ -461,23 +462,88 @@ class V1Client:
         *,
         limit: int | None = None,
         offset: int | None = None,
+        page_token: str | None = None,
     ) -> FinaticResponse:
+        """List one page of an account resource.
+
+        Prefer ``page_token`` (the previous response's
+        ``meta["next_page_token"]``) over ``offset``; they cannot be combined.
+        """
         self._validate_resource(resource)
         return await self._request(
             "GET",
             f"/api/v1/accounts/{account_id}/{resource}",
-            query=self._compact_query({"limit": limit, "offset": offset}),
+            query=self._compact_query(
+                {"limit": limit, "offset": offset, "pageToken": page_token}
+            ),
         )
 
+    async def iterate_account_resource(
+        self,
+        account_id: str,
+        resource: str,
+        *,
+        limit: int | None = None,
+        page_token: str | None = None,
+    ) -> AsyncIterator[Any]:
+        """Yield every row of an account resource using keyset pagination.
+
+        Raises ``ValueError`` if any page returns an API error.
+
+        @example
+        ```python
+        async for order in finatic.v1.iterate_account_resource('acct_123', 'orders'):
+            print(order)
+        ```
+        """
+        token = page_token
+        while True:
+            page = await self.list_account_resource(
+                account_id, resource, limit=limit, page_token=token
+            )
+            errors = page.get("errors") or []
+            if errors:
+                raise ValueError(
+                    f"Listing {resource} failed: {errors[0].get('code')}: "
+                    f"{errors[0].get('message')}"
+                )
+            for row in page.get("data") or []:
+                yield row
+            meta = page.get("meta") or {}
+            next_token = meta.get("next_page_token")
+            if (
+                not meta.get("has_more")
+                or not isinstance(next_token, str)
+                or not next_token
+                # A repeated token would loop forever; stop instead.
+                or next_token == token
+            ):
+                return
+            token = next_token
+
     async def list_balances(
-        self, account_id: str, *, limit: int | None = None, offset: int | None = None
+        self,
+        account_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        page_token: str | None = None,
     ) -> FinaticResponse:
         return await self.list_account_resource(
-            account_id, "balances", limit=limit, offset=offset
+            account_id,
+            "balances",
+            limit=limit,
+            offset=offset,
+            page_token=page_token,
         )
 
     async def list_positions(
-        self, account_id: str, *, limit: int | None = None, offset: int | None = None
+        self,
+        account_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        page_token: str | None = None,
     ) -> FinaticResponse[list[FDXBrokerPositionDict]]:
         """Positions for one financial account.
 
@@ -487,21 +553,43 @@ class V1Client:
         ```
         """
         return await self.list_account_resource(
-            account_id, "positions", limit=limit, offset=offset
+            account_id,
+            "positions",
+            limit=limit,
+            offset=offset,
+            page_token=page_token,
         )
 
     async def list_transactions(
-        self, account_id: str, *, limit: int | None = None, offset: int | None = None
+        self,
+        account_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        page_token: str | None = None,
     ) -> FinaticResponse:
         return await self.list_account_resource(
-            account_id, "transactions", limit=limit, offset=offset
+            account_id,
+            "transactions",
+            limit=limit,
+            offset=offset,
+            page_token=page_token,
         )
 
     async def list_orders(
-        self, account_id: str, *, limit: int | None = None, offset: int | None = None
+        self,
+        account_id: str,
+        *,
+        limit: int | None = None,
+        offset: int | None = None,
+        page_token: str | None = None,
     ) -> FinaticResponse[list[FDXBrokerOrderDict]]:
         return await self.list_account_resource(
-            account_id, "orders", limit=limit, offset=offset
+            account_id,
+            "orders",
+            limit=limit,
+            offset=offset,
+            page_token=page_token,
         )
 
     async def get_account_order(
@@ -767,15 +855,16 @@ class V1Client:
             data = success.get("data") if isinstance(success, dict) else None
             errors = self._errors_from_api_error(payload.get("error"))
             warnings = payload.get("warnings", payload.get("warning")) or []
-            return cast(
-                FinaticResponse,
-                {
-                    "traceId": self._trace_id(payload, None) or trace_id,
-                    "data": data,
-                    "warnings": warnings,
-                    "errors": errors,
-                },
-            )
+            success_envelope: dict[str, Any] = {
+                "traceId": self._trace_id(payload, None) or trace_id,
+                "data": data,
+                "warnings": warnings,
+                "errors": errors,
+            }
+            meta = success.get("meta") if isinstance(success, dict) else None
+            if isinstance(meta, dict):
+                success_envelope["meta"] = meta
+            return cast(FinaticResponse, success_envelope)
 
         return cast(
             FinaticResponse,

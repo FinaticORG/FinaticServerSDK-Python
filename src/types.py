@@ -5,7 +5,7 @@ This file is regenerated on each run - do not edit directly.
 
 from typing import Any, Generic, TypeVar
 
-from typing_extensions import TypedDict
+from typing_extensions import NotRequired, TypedDict
 
 # Generic type variable for response data
 T = TypeVar("T")
@@ -16,6 +16,8 @@ class FinaticResponse(TypedDict, Generic[T]):
 
     traceId: str | None
     data: T | None
+    # Present on paginated list responses: has_more, next_page_token, ...
+    meta: NotRequired[dict[str, Any]]
     warnings: list[dict[str, Any]]
     errors: list[dict[str, Any]]
 
